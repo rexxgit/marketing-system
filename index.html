@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Marketing Strategy Generator</title>
+    <style>
+        body {
+            font-family: system-ui;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+        textarea {
+            width: 100%;
+            background: #1e293b;
+            color: white;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:disabled {
+            opacity: 0.5;
+        }
+        pre {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+        h2 {
+            color: #38bdf8;
+        }
+    </style>
+</head>
+<body>
+    <h2>🧠 Strategic Marketing System</h2>
+    <p>Powered by DeepSeek via OpenRouter — Unlimited, free, production-ready.</p>
+
+    <label>📊 Customer Data:</label>
+    <textarea id="customer" rows="4" placeholder="Example: Young freelancers in Addis Ababa, age 22-28, income $2-4k/month"></textarea>
+
+    <label>📦 Product Description:</label>
+    <textarea id="product" rows="4" placeholder="Example: Mobile app that turns daily tasks into social challenges with friends"></textarea>
+
+    <button onclick="generate()">🚀 Generate Complete Strategy</button>
+    <pre id="output">Ready. Enter data and click Generate.</pre>
+
+    <script>
+        async function generate() {
+            const customer = document.getElementById("customer").value;
+            const product = document.getElementById("product").value;
+            const output = document.getElementById("output");
+            const button = event.target;
+
+            if (!customer || !product) {
+                alert("Please fill both fields");
+                return;
+            }
+
+            button.disabled = true;
+            button.textContent = "⏳ Generating (30-60 seconds)...";
+            output.innerText = "Processing your request...\n\nYour marketing plan will appear here shortly.";
+
+            try {
+                const response = await fetch("https://marketing-system-api.onrender.com/generate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        customer_data: customer,
+                        product_description: product
+                    })
+                });
+
+                const data = await response.json();
+                output.innerText = data.plan || "Error: " + data.error;
+            } catch (error) {
+                output.innerText = "Error: " + error.message + "\n\nPlease try again.";
+            } finally {
+                button.disabled = false;
+                button.textContent = "🚀 Generate Complete Strategy";
+            }
+        }
+    </script>
+</body>
+</html>
