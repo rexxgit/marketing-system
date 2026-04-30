@@ -69,7 +69,7 @@ app = Flask(__name__)
 # ============================================================
 # ONLY THIS LINE WAS CHANGED
 # ============================================================
-CORS(app, origins=["https://marketing-system.vercel.app", "http://localhost:5000"])
+CORS(app, origins=["https://marketing-system-three.vercel.app", "https://marketing-system.vercel.app", "http://localhost:5000"])
 
 # ============================================================
 # YOUR SYSTEM PROMPT (COMPLETELY UNCHANGED)
