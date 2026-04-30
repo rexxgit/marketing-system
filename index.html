@@ -41,6 +41,8 @@
             white-space: pre-wrap;
             margin-top: 20px;
             font-size: 13px;
+            max-height: 600px;
+            overflow-y: auto;
         }
         h2 {
             color: #38bdf8;
@@ -51,11 +53,15 @@
             margin-bottom: 20px;
             font-size: 14px;
         }
-        .status.connected {
+        .status.working {
             background: #065f46;
             color: #d1d5db;
         }
-        .status.disconnected {
+        .status.testing {
+            background: #854d0e;
+            color: #fde047;
+        }
+        .status.error {
             background: #991b1b;
             color: #fca5a5;
         }
@@ -65,7 +71,7 @@
     <h2>🧠 Strategic Marketing System</h2>
     <p>Powered by DeepSeek via OpenRouter — Unlimited, free, production-ready.</p>
 
-    <div id="status" class="status disconnected">🟡 Proxy enabled — CORS bypassed</div>
+    <div id="status" class="status testing">🟡 Testing API connection...</div>
 
     <label>📊 Customer Data:</label>
     <textarea id="customer" rows="4" placeholder="Example: Young freelancers in Addis Ababa, age 22-28, income $2-4k/month"></textarea>
@@ -77,6 +83,24 @@
     <pre id="output">Ready. Enter data and click Generate.</pre>
 
     <script>
+        // Test API connection on page load
+        async function testAPI() {
+            const statusDiv = document.getElementById("status");
+            try {
+                const response = await fetch("https://marketing-system-api.onrender.com/health");
+                if (response.ok) {
+                    statusDiv.innerHTML = "🟢 API is online and ready";
+                    statusDiv.className = "status working";
+                } else {
+                    statusDiv.innerHTML = "🔴 API returned error. Please try again later.";
+                    statusDiv.className = "status error";
+                }
+            } catch (error) {
+                statusDiv.innerHTML = "🔴 Cannot reach API. Make sure your Render service is running.";
+                statusDiv.className = "status error";
+            }
+        }
+
         async function generate() {
             const customer = document.getElementById("customer").value;
             const product = document.getElementById("product").value;
@@ -91,15 +115,13 @@
 
             button.disabled = true;
             button.textContent = "⏳ Generating (30-60 seconds)...";
-            output.innerText = "Processing your request...\n\nYour marketing plan will appear here shortly.";
-            statusDiv.innerHTML = "🟡 Sending request via CORS proxy...";
+            output.innerText = "Processing your request...\n\nThis may take up to 60 seconds.";
+            statusDiv.innerHTML = "🟡 Sending request to API...";
+            statusDiv.className = "status testing";
 
             try {
-                // Using CORS proxy to bypass CORS restrictions
-                const proxyUrl = "https://api.allorigins.win/raw?url=";
-                const apiUrl = "https://marketing-system-api.onrender.com/generate";
-                
-                const response = await fetch(proxyUrl + encodeURIComponent(apiUrl), {
+                // Direct call to API (no proxy needed if CORS is fixed)
+                const response = await fetch("https://marketing-system-api.onrender.com/generate", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -108,28 +130,39 @@
                     })
                 });
 
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
                 const data = await response.json();
                 
                 if (data.error) {
                     output.innerText = "Error: " + data.error;
-                    statusDiv.innerHTML = "🔴 Request failed";
+                    statusDiv.innerHTML = "🔴 API returned an error";
+                    statusDiv.className = "status error";
                 } else {
                     output.innerText = data.plan;
-                    statusDiv.innerHTML = "✅ Request successful! Plan generated.";
+                    statusDiv.innerHTML = "✅ Plan generated successfully!";
+                    statusDiv.className = "status working";
                 }
             } catch (error) {
-                output.innerText = "Error: " + error.message + "\n\nIf this persists, the API may be down.";
+                console.error("Fetch error:", error);
+                output.innerText = "Error: " + error.message + "\n\n" +
+                    "Possible causes:\n" +
+                    "1. CORS issue - the API is not allowing requests from this domain\n" +
+                    "2. API is down or crashed\n" +
+                    "3. Network issue\n\n" +
+                    "Check Render logs at: https://dashboard.render.com";
                 statusDiv.innerHTML = "🔴 Error: " + error.message;
+                statusDiv.className = "status error";
             } finally {
                 button.disabled = false;
                 button.textContent = "🚀 Generate Complete Strategy";
-                setTimeout(() => {
-                    if (statusDiv.innerHTML.includes("✅")) {
-                        statusDiv.innerHTML = "🟢 Proxy enabled — CORS bypassed";
-                    }
-                }, 3000);
             }
         }
+
+        // Test API when page loads
+        testAPI();
     </script>
 </body>
 </html>
