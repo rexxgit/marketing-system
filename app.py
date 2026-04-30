@@ -66,10 +66,22 @@ except Exception as e:
         exit(1)
 
 app = Flask(__name__)
+
 # ============================================================
-# ONLY THIS LINE WAS CHANGED
+# IMPROVED CORS CONFIGURATION
 # ============================================================
-CORS(app, origins=["https://marketing-system-three.vercel.app", "https://marketing-system.vercel.app", "http://localhost:5000"])
+CORS(app, resources={
+    r"/*": {
+        "origins": [
+            "https://marketing-system-three.vercel.app",
+            "https://marketing-system.vercel.app",
+            "http://localhost:5000",
+            "http://localhost:5500"
+        ],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
 
 # ============================================================
 # YOUR SYSTEM PROMPT (COMPLETELY UNCHANGED)
@@ -400,8 +412,12 @@ def run_system(customer_data: str, product_description: str) -> str:
 # ============================================================
 # API ENDPOINTS
 # ============================================================
-@app.route("/generate", methods=["POST"])
+@app.route("/generate", methods=["POST", "OPTIONS"])
 def generate():
+    if request.method == "OPTIONS":
+        # Preflight request for CORS
+        return jsonify({}), 200
+    
     try:
         data = request.get_json()
         if not data:
