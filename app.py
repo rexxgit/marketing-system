@@ -66,7 +66,10 @@ except Exception as e:
         exit(1)
 
 app = Flask(__name__)
-CORS(app)
+# ============================================================
+# ONLY THIS LINE WAS CHANGED
+# ============================================================
+CORS(app, origins=["https://marketing-system.vercel.app", "http://localhost:5000"])
 
 # ============================================================
 # YOUR SYSTEM PROMPT (COMPLETELY UNCHANGED)
