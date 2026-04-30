@@ -45,11 +45,27 @@
         h2 {
             color: #38bdf8;
         }
+        .status {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .status.connected {
+            background: #065f46;
+            color: #d1d5db;
+        }
+        .status.disconnected {
+            background: #991b1b;
+            color: #fca5a5;
+        }
     </style>
 </head>
 <body>
     <h2>🧠 Strategic Marketing System</h2>
     <p>Powered by DeepSeek via OpenRouter — Unlimited, free, production-ready.</p>
+
+    <div id="status" class="status disconnected">🟡 Proxy enabled — CORS bypassed</div>
 
     <label>📊 Customer Data:</label>
     <textarea id="customer" rows="4" placeholder="Example: Young freelancers in Addis Ababa, age 22-28, income $2-4k/month"></textarea>
@@ -66,6 +82,7 @@
             const product = document.getElementById("product").value;
             const output = document.getElementById("output");
             const button = event.target;
+            const statusDiv = document.getElementById("status");
 
             if (!customer || !product) {
                 alert("Please fill both fields");
@@ -75,9 +92,14 @@
             button.disabled = true;
             button.textContent = "⏳ Generating (30-60 seconds)...";
             output.innerText = "Processing your request...\n\nYour marketing plan will appear here shortly.";
+            statusDiv.innerHTML = "🟡 Sending request via CORS proxy...";
 
             try {
-                const response = await fetch("https://marketing-system-api.onrender.com/generate", {
+                // Using CORS proxy to bypass CORS restrictions
+                const proxyUrl = "https://api.allorigins.win/raw?url=";
+                const apiUrl = "https://marketing-system-api.onrender.com/generate";
+                
+                const response = await fetch(proxyUrl + encodeURIComponent(apiUrl), {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -87,12 +109,25 @@
                 });
 
                 const data = await response.json();
-                output.innerText = data.plan || "Error: " + data.error;
+                
+                if (data.error) {
+                    output.innerText = "Error: " + data.error;
+                    statusDiv.innerHTML = "🔴 Request failed";
+                } else {
+                    output.innerText = data.plan;
+                    statusDiv.innerHTML = "✅ Request successful! Plan generated.";
+                }
             } catch (error) {
-                output.innerText = "Error: " + error.message + "\n\nPlease try again.";
+                output.innerText = "Error: " + error.message + "\n\nIf this persists, the API may be down.";
+                statusDiv.innerHTML = "🔴 Error: " + error.message;
             } finally {
                 button.disabled = false;
                 button.textContent = "🚀 Generate Complete Strategy";
+                setTimeout(() => {
+                    if (statusDiv.innerHTML.includes("✅")) {
+                        statusDiv.innerHTML = "🟢 Proxy enabled — CORS bypassed";
+                    }
+                }, 3000);
             }
         }
     </script>
