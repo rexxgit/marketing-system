@@ -70,6 +70,7 @@
 <body>
     <h2>🧠 Strategic Marketing System</h2>
     <p>Powered by DeepSeek via OpenRouter — Unlimited, free, production-ready.</p>
+    <p>🔗 Backend hosted on Hugging Face Spaces</p>
 
     <div id="status" class="status testing">🟡 Testing API connection...</div>
 
@@ -83,20 +84,23 @@
     <pre id="output">Ready. Enter data and click Generate.</pre>
 
     <script>
+        // Hugging Face Space URL
+        const API_BASE_URL = "https://Bisratprompt-marketing-system-api.hf.space";
+        
         // Test API connection on page load
         async function testAPI() {
             const statusDiv = document.getElementById("status");
             try {
-                const response = await fetch("https://marketing-system-api.onrender.com/health");
+                const response = await fetch(`${API_BASE_URL}/health`);
                 if (response.ok) {
-                    statusDiv.innerHTML = "🟢 API is online and ready";
+                    statusDiv.innerHTML = "🟢 API is online and ready (Hugging Face)";
                     statusDiv.className = "status working";
                 } else {
                     statusDiv.innerHTML = "🔴 API returned error. Please try again later.";
                     statusDiv.className = "status error";
                 }
             } catch (error) {
-                statusDiv.innerHTML = "🔴 Cannot reach API. Make sure your Render service is running.";
+                statusDiv.innerHTML = "🔴 Cannot reach API. Make sure your Hugging Face Space is running.";
                 statusDiv.className = "status error";
             }
         }
@@ -116,12 +120,11 @@
             button.disabled = true;
             button.textContent = "⏳ Generating (30-60 seconds)...";
             output.innerText = "Processing your request...\n\nThis may take up to 60 seconds.";
-            statusDiv.innerHTML = "🟡 Sending request to API...";
+            statusDiv.innerHTML = "🟡 Sending request to Hugging Face API...";
             statusDiv.className = "status testing";
 
             try {
-                // Direct call to API (no proxy needed if CORS is fixed)
-                const response = await fetch("https://marketing-system-api.onrender.com/generate", {
+                const response = await fetch(`${API_BASE_URL}/generate`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -142,17 +145,17 @@
                     statusDiv.className = "status error";
                 } else {
                     output.innerText = data.plan;
-                    statusDiv.innerHTML = "✅ Plan generated successfully!";
+                    statusDiv.innerHTML = "✅ Plan generated successfully via Hugging Face!";
                     statusDiv.className = "status working";
                 }
             } catch (error) {
                 console.error("Fetch error:", error);
                 output.innerText = "Error: " + error.message + "\n\n" +
                     "Possible causes:\n" +
-                    "1. CORS issue - the API is not allowing requests from this domain\n" +
-                    "2. API is down or crashed\n" +
+                    "1. Hugging Face Space is sleeping (wake up takes 30-60 seconds)\n" +
+                    "2. API key not set in Space secrets\n" +
                     "3. Network issue\n\n" +
-                    "Check Render logs at: https://dashboard.render.com";
+                    "Check your Space at: https://huggingface.co/spaces/Bisratprompt/marketing-system-api";
                 statusDiv.innerHTML = "🔴 Error: " + error.message;
                 statusDiv.className = "status error";
             } finally {
