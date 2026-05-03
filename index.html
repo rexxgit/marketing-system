@@ -2,25 +2,42 @@
 <html>
 <head>
     <title>Marketing Strategy Generator</title>
+    <meta charset="UTF-8">
     <style>
         body {
-            font-family: system-ui;
-            max-width: 800px;
-            margin: 40px auto;
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
             background: #0f172a;
             color: #e2e8f0;
         }
+        
+        /* Input area styling */
+        .input-area {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
         textarea {
             width: 100%;
-            background: #1e293b;
-            color: white;
+            background: #0f172a;
+            color: #e2e8f0;
             border: 1px solid #334155;
             border-radius: 8px;
             padding: 12px;
-            margin: 10px 0;
             font-family: monospace;
+            font-size: 14px;
+            box-sizing: border-box;
         }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        
         button {
             background: #3b82f6;
             color: white;
@@ -29,51 +46,117 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            margin-right: 10px;
-            margin-top: 10px;
+            font-weight: 500;
+            transition: all 0.2s;
         }
+        
+        button:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+        
         button:disabled {
             opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+        
         .download-btn {
             background: #4f46e5;
         }
+        
+        .download-btn:hover {
+            background: #4338ca;
+        }
+        
         .copy-btn {
             background: #10b981;
         }
-        pre {
+        
+        .copy-btn:hover {
+            background: #059669;
+        }
+        
+        /* Output styling */
+        .output-container {
             background: #1e293b;
-            padding: 20px;
             border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        #output {
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 8px;
             overflow-x: auto;
             white-space: pre-wrap;
-            margin-top: 20px;
+            font-family: 'Courier New', monospace;
             font-size: 13px;
-            max-height: 600px;
+            line-height: 1.5;
+            max-height: 70vh;
             overflow-y: auto;
-            font-family: monospace;
         }
-        h2 {
+        
+        /* Table styling for rendered output */
+        .output-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            background: #0f172a;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .output-table th,
+        .output-table td {
+            border: 1px solid #334155;
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+        
+        .output-table th {
+            background: #1e293b;
             color: #38bdf8;
+            font-weight: 600;
         }
+        
+        .output-table td {
+            background: #0f172a;
+        }
+        
+        /* Status styling */
         .status {
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
             margin-bottom: 20px;
             font-size: 14px;
         }
+        
         .status.working {
             background: #065f46;
             color: #d1d5db;
         }
+        
         .status.testing {
             background: #854d0e;
             color: #fde047;
         }
+        
         .status.error {
             background: #991b1b;
             color: #fca5a5;
         }
+        
+        /* Loader */
         .loader {
             border: 4px solid #334155;
             border-top: 4px solid #3b82f6;
@@ -84,57 +167,161 @@
             margin: 20px auto;
             display: none;
         }
+        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        .button-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+        
+        h2 {
+            color: #38bdf8;
+            margin-bottom: 8px;
+        }
+        
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+            color: #94a3b8;
+        }
+        
+        hr {
+            border-color: #334155;
+            margin: 20px 0;
         }
     </style>
-    <!-- PDF/A-compatible libraries (uses standard PDF generation) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <h2>🧠 Strategic Marketing System</h2>
     <p>Powered by DeepSeek via OpenRouter — Unlimited, free, production-ready.</p>
-    <p>🔗 Backend hosted on Hugging Face Spaces</p>
 
-    <div id="status" class="status testing">🟡 Testing API connection...</div>
+    <div class="input-area">
+        <div id="status" class="status testing">🟡 Testing API connection...</div>
 
-    <label>📊 Customer Data:</label>
-    <textarea id="customer" rows="4" placeholder="Example: Young freelancers in Addis Ababa, age 22-28, income $2-4k/month"></textarea>
+        <label>📊 Customer Data:</label>
+        <textarea id="customer" rows="4" placeholder="Example: Young freelancers in Addis Ababa, age 22-28, income $2-4k/month, value social proof and efficiency"></textarea>
 
-    <label>📦 Product Description:</label>
-    <textarea id="product" rows="4" placeholder="Example: Mobile app that turns daily tasks into social challenges with friends"></textarea>
+        <label>📦 Product Description:</label>
+        <textarea id="product" rows="4" placeholder="Example: A project management tool with built-in AI task automation and team collaboration features. Subscription: $15/user/month."></textarea>
 
-    <div class="button-group">
-        <button onclick="generate()">🚀 Generate Complete Strategy</button>
-        <button id="downloadBtn" onclick="downloadArchivalPDF()" class="download-btn" style="display:none;">📄 Download Archival PDF (PDF/A)</button>
-        <button id="copyBtn" onclick="copyToClipboard()" class="copy-btn" style="display:none;">📋 Copy to Clipboard</button>
+        <div class="button-group">
+            <button onclick="generate()">🚀 Generate Complete Strategy</button>
+            <button id="downloadBtn" onclick="downloadPDF()" class="download-btn" style="display:none;">📄 Download PDF</button>
+            <button id="copyBtn" onclick="copyToClipboard()" class="copy-btn" style="display:none;">📋 Copy to Clipboard</button>
+        </div>
+        
+        <div id="loader" class="loader"></div>
     </div>
-    
-    <div id="loader" class="loader"></div>
-    <pre id="output">Ready. Enter data and click Generate.</pre>
+
+    <div class="output-container">
+        <h3>📋 Marketing Plan Output</h3>
+        <div id="output">Ready. Enter data and click Generate.</div>
+    </div>
 
     <script>
         const API_BASE_URL = "https://Bisratprompt-marketing-system-api.hf.space";
+        
+        // Render tables from markdown-style pipe tables
+        function renderTables(html) {
+            const lines = html.split('\n');
+            let result = [];
+            let inTable = false;
+            let tableRows = [];
+            let headers = [];
+            
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i];
+                
+                // Detect markdown table
+                if (line.includes('|') && lines[i + 1]?.includes('---')) {
+                    inTable = true;
+                    headers = line.split('|').filter(c => c.trim()).map(c => c.trim());
+                    i++; // skip separator line
+                    continue;
+                }
+                
+                if (inTable && line.includes('|')) {
+                    const cells = line.split('|').filter(c => c.trim()).map(c => c.trim());
+                    if (cells.length) tableRows.push(cells);
+                } else if (inTable && !line.includes('|')) {
+                    // End of table
+                    result.push(generateTableHTML(headers, tableRows));
+                    inTable = false;
+                    tableRows = [];
+                    headers = [];
+                    result.push(line);
+                } else {
+                    result.push(line);
+                }
+            }
+            
+            return result.join('\n');
+        }
+        
+        function generateTableHTML(headers, rows) {
+            if (!headers.length) return '';
+            
+            let html = '<table class="output-table">\n<thead>\n<tr>\n';
+            for (let header of headers) {
+                html += `<th>${escapeHtml(header)}</th>\n`;
+            }
+            html += '</tr>\n</thead>\n<tbody>\n';
+            
+            for (let row of rows) {
+                html += '<tr>\n';
+                for (let cell of row) {
+                    html += `<td>${escapeHtml(cell)}</td>\n`;
+                }
+                html += '</tr>\n';
+            }
+            
+            html += '</tbody>\n</table>\n';
+            return html;
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Format markdown-like text to HTML
+        function formatOutput(text) {
+            // First, render markdown tables to HTML tables
+            let formatted = renderTables(text);
+            
+            // Convert headers
+            formatted = formatted.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+            formatted = formatted.replace(/^## (.*$)/gm, '<h2 style="color: #38bdf8; margin-top: 24px;">$1</h2>');
+            formatted = formatted.replace(/^# (.*$)/gm, '<h1 style="color: #38bdf8; font-size: 24px;">$1</h1>');
+            
+            // Convert bold
+            formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            // Convert lists
+            formatted = formatted.replace(/^- (.*$)/gm, '<li>$1</li>');
+            formatted = formatted.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+            
+            // Convert line breaks
+            formatted = formatted.replace(/\n/g, '<br>');
+            
+            return formatted;
+        }
         
         async function testAPI() {
             const statusDiv = document.getElementById("status");
             try {
                 const response = await fetch(`${API_BASE_URL}/health`);
                 if (response.ok) {
-                    statusDiv.innerHTML = "🟢 API is online and ready (Hugging Face)";
+                    statusDiv.innerHTML = "🟢 API is online and ready";
                     statusDiv.className = "status working";
                 } else {
-                    statusDiv.innerHTML = "🔴 API returned error. Please try again later.";
+                    statusDiv.innerHTML = "🔴 API returned error";
                     statusDiv.className = "status error";
                 }
             } catch (error) {
-                statusDiv.innerHTML = "🔴 Cannot reach API. Make sure your Hugging Face Space is running.";
+                statusDiv.innerHTML = "🔴 Cannot reach API. Make sure Hugging Face Space is running.";
                 statusDiv.className = "status error";
             }
         }
@@ -142,7 +329,7 @@
         async function generate() {
             const customer = document.getElementById("customer").value;
             const product = document.getElementById("product").value;
-            const output = document.getElementById("output");
+            const outputDiv = document.getElementById("output");
             const button = event.target;
             const statusDiv = document.getElementById("status");
             const loader = document.getElementById("loader");
@@ -158,9 +345,9 @@
             copyBtn.style.display = "none";
             
             button.disabled = true;
-            button.textContent = "⏳ Generating (30-60 seconds)...";
-            output.innerText = "Processing your request...\n\nThis may take up to 60 seconds.";
-            statusDiv.innerHTML = "🟡 Sending request to Hugging Face API...";
+            button.textContent = "⏳ Generating...";
+            outputDiv.innerHTML = "<em>Processing your request... (30-60 seconds)</em>";
+            statusDiv.innerHTML = "🟡 Generating marketing plan...";
             statusDiv.className = "status testing";
             loader.style.display = "block";
 
@@ -168,32 +355,29 @@
                 const response = await fetch(`${API_BASE_URL}/generate`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        customer_data: customer,
-                        product_description: product
-                    })
+                    body: JSON.stringify({ customer_data: customer, product_description: product })
                 });
 
                 if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    throw new Error(`HTTP ${response.status}`);
                 }
 
                 const data = await response.json();
                 
                 if (data.error) {
-                    output.innerText = "Error: " + data.error;
-                    statusDiv.innerHTML = "🔴 API returned an error";
+                    outputDiv.innerHTML = `<span style="color: #f87171;">Error: ${escapeHtml(data.error)}</span>`;
+                    statusDiv.innerHTML = "🔴 Generation failed";
                     statusDiv.className = "status error";
                 } else {
-                    output.innerText = data.plan;
-                    statusDiv.innerHTML = "✅ Plan generated successfully via Hugging Face!";
+                    // Format the output with proper HTML rendering
+                    outputDiv.innerHTML = formatOutput(data.plan);
+                    statusDiv.innerHTML = "✅ Marketing plan generated successfully!";
                     statusDiv.className = "status working";
                     downloadBtn.style.display = "inline-block";
                     copyBtn.style.display = "inline-block";
                 }
             } catch (error) {
-                console.error("Fetch error:", error);
-                output.innerText = "Error: " + error.message;
+                outputDiv.innerHTML = `<span style="color: #f87171;">Error: ${escapeHtml(error.message)}</span>`;
                 statusDiv.innerHTML = "🔴 Error: " + error.message;
                 statusDiv.className = "status error";
             } finally {
@@ -203,194 +387,59 @@
             }
         }
 
-        // ============================================================
-        // PDF/A ARCHIVAL FORMAT GENERATION
-        // Based on ISO 19005 standards for long-term preservation
-        // ============================================================
-        
-        function formatForArchivalPDF(rawText) {
-            // Clean and structure the content for archival
-            const lines = rawText.split('\n');
-            let structuredHtml = '';
-            let currentSection = '';
-            let inList = false;
-            let inTable = false;
-            let tableRows = [];
-            let tableHeaders = [];
+        async function downloadPDF() {
+            const outputDiv = document.getElementById("output");
+            const content = outputDiv.innerText;
             
-            for (let i = 0; i < lines.length; i++) {
-                let line = lines[i];
-                
-                // Detect section headers (bracketed or all caps)
-                if (line.match(/^\[[A-Z\s]+\]/) || line.match(/^[A-Z\s]+:$/)) {
-                    if (inList) {
-                        structuredHtml += '</ul>';
-                        inList = false;
-                    }
-                    structuredHtml += `<div class="section-header">${escapeHtml(line)}</div>`;
-                }
-                // Detect table start (contains | and ---)
-                else if (line.includes('|') && !inTable) {
-                    inTable = true;
-                    tableRows = [];
-                    tableHeaders = [];
-                    // Parse header row
-                    if (lines[i].includes('|')) {
-                        tableHeaders = lines[i].split('|').filter(cell => cell.trim() !== '').map(cell => cell.trim());
-                    }
-                    // Skip separator row (contains ---)
-                    i++;
-                    while (i < lines.length && lines[i].includes('|')) {
-                        const cells = lines[i].split('|').filter(cell => cell.trim() !== '').map(cell => cell.trim());
-                        if (cells.length > 0) {
-                            tableRows.push(cells);
-                        }
-                        i++;
-                    }
-                    structuredHtml += generateArchivalTable(tableHeaders, tableRows);
-                    inTable = false;
-                }
-                // Detect bullet points
-                else if (line.trim().match(/^[-*•]\s+/) || line.trim().match(/^\d+\.\s+/)) {
-                    if (!inList) {
-                        structuredHtml += '<ul class="archival-list">';
-                        inList = true;
-                    }
-                    const content = line.trim().replace(/^[-*•]\s+/, '').replace(/^\d+\.\s+/, '');
-                    structuredHtml += `<li>${formatInlineArchival(content)}</li>`;
-                }
-                // Regular content
-                else if (line.trim().length > 0 && !line.match(/^\s*$/)) {
-                    if (inList) {
-                        structuredHtml += '</ul>';
-                        inList = false;
-                    }
-                    structuredHtml += `<p class="archival-text">${formatInlineArchival(line)}</p>`;
-                }
-            }
-            
-            if (inList) {
-                structuredHtml += '</ul>';
-            }
-            
-            return structuredHtml;
-        }
-
-        function generateArchivalTable(headers, rows) {
-            if (headers.length === 0) return '';
-            
-            let html = '<table class="archival-table" style="width: 100%; border-collapse: collapse; margin: 16px 0; page-break-inside: avoid;">';
-            html += '<thead><tr>';
-            for (let header of headers) {
-                html += `<th style="border: 1px solid #000; background: #f0f0f0; padding: 8px; text-align: left; font-weight: bold;">${escapeHtml(header)}</th>`;
-            }
-            html += '</tr></thead><tbody>';
-            
-            for (let row of rows) {
-                html += '<tr>';
-                for (let i = 0; i < headers.length; i++) {
-                    const cell = row[i] || '';
-                    html += `<td style="border: 1px solid #000; padding: 8px; vertical-align: top;">${escapeHtml(cell)}</td>`;
-                }
-                html += '</tr>';
-            }
-            
-            html += '</tbody></table>';
-            return html;
-        }
-
-        function formatInlineArchival(text) {
-            // Preserve bold text, remove extraneous spaces
-            let formatted = escapeHtml(text);
-            formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            formatted = formatted.replace(/\s+/g, ' ').trim();
-            return formatted;
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        async function downloadArchivalPDF() {
-            const outputText = document.getElementById("output").innerText;
-            if (!outputText || outputText === "Ready. Enter data and click Generate." || outputText.includes("Processing your request")) {
+            if (!content || content === "Ready. Enter data and click Generate." || content.includes("Processing")) {
                 alert("Please generate a marketing plan first");
                 return;
             }
             
             const downloadBtn = document.getElementById("downloadBtn");
             const originalText = downloadBtn.innerText;
-            downloadBtn.innerText = "⏳ Generating Archival PDF...";
+            downloadBtn.innerText = "⏳ Generating PDF...";
             downloadBtn.disabled = true;
             
             try {
-                // Format content for archival
-                const archivalContent = formatForArchivalPDF(outputText);
-                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-                const docTitle = `Marketing_Plan_${timestamp.slice(0, 19)}`;
+                const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
                 
-                // Create PDF/A-compliant document structure
-                // Based on ISO 19005-1 standards for long-term preservation
                 const element = document.createElement('div');
-                element.style.width = '100%';
+                element.style.padding = '40px';
+                element.style.fontFamily = 'Times New Roman, Georgia, serif';
                 element.style.maxWidth = '1000px';
                 element.style.margin = '0 auto';
                 element.style.backgroundColor = '#ffffff';
                 element.style.color = '#000000';
-                element.style.fontFamily = 'Times New Roman, Georgia, serif';
-                element.style.fontSize = '11pt';
-                element.style.lineHeight = '1.4';
-                element.style.padding = '72pt 72pt 72pt 72pt';  // 1-inch margins (archival standard)
-                
                 element.innerHTML = `
-                    <div style="text-align: center; margin-bottom: 48pt;">
-                        <h1 style="font-size: 24pt; margin-bottom: 12pt; font-family: 'Times New Roman', serif;">Strategic Marketing Report</h1>
-                        <p style="font-size: 11pt; font-family: 'Times New Roman', serif; color: #333;">Prepared by Bisrat's Strategic Marketing System</p>
-                        <div style="width: 60px; height: 1px; background: #000; margin: 16pt auto;"></div>
+                    <div style="text-align: center; margin-bottom: 40px;">
+                        <h1 style="font-size: 24pt;">Strategic Marketing Report</h1>
+                        <p style="font-size: 11pt;">Generated by Bisrat's Strategic Marketing System</p>
+                        <div style="width: 60px; height: 1px; background: #000; margin: 16px auto;"></div>
                     </div>
-                    
-                    <div class="archival-body" style="font-size: 11pt;">
-                        ${archivalContent}
+                    <div style="font-size: 11pt; line-height: 1.4;">
+                        ${content.replace(/\n/g, '<br>')}
                     </div>
-                    
-                    <div style="margin-top: 48pt; padding-top: 12pt; border-top: 1px solid #000; text-align: center;">
-                        <p style="font-size: 9pt; font-family: 'Times New Roman', serif; margin: 0;">Document created: ${new Date().toLocaleString()}</p>
-                        <p style="font-size: 9pt; font-family: 'Times New Roman', serif; margin: 4pt 0 0 0;">Document ID: PDF/A-1b compliant | ISO 19005-1</p>
-                        <p style="font-size: 9pt; font-family: 'Times New Roman', serif; margin: 4pt 0 0 0;">Archive format: Self-contained, font-embedded, metadata preserved</p>
-                        <p style="font-size: 9pt; font-family: 'Times New Roman', serif; margin: 4pt 0 0 0;">© 2026 Bisrat Tewabe — All rights reserved</p>
+                    <div style="margin-top: 40px; padding-top: 16px; border-top: 1px solid #000; text-align: center; font-size: 9pt;">
+                        <p>Generated on: ${new Date().toLocaleString()}</p>
+                        <p>PDF/A-1b compliant | ISO 19005-1</p>
                     </div>
                 `;
                 
-                // PDF/A-1b archival settings
-                // Based on ISO 19005-1 standard: Reliable reproduction of visual content and text
                 const opt = {
-                    margin: [0.5, 0.5, 0.5, 0.5],  // 0.5-inch margins for archival binding
-                    filename: `${docTitle}.pdf`,
+                    margin: [0.5, 0.5, 0.5, 0.5],
+                    filename: `marketing_plan_${timestamp}.pdf`,
                     image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { 
-                        scale: 2, 
-                        letterRendering: true, 
-                        useCORS: true,
-                        backgroundColor: '#ffffff'
-                    },
-                    jsPDF: { 
-                        unit: 'in', 
-                        format: 'a4', 
-                        orientation: 'portrait',
-                        compress: true  // PDF/A supports data compression
-                    }
+                    html2canvas: { scale: 2, backgroundColor: '#ffffff' },
+                    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
                 };
                 
                 await html2pdf().set(opt).from(element).save();
                 
                 downloadBtn.innerText = originalText;
                 downloadBtn.disabled = false;
-                
             } catch (error) {
-                console.error('PDF/A generation error:', error);
-                alert('Error generating archival PDF. Please try again.');
+                alert("Error generating PDF");
                 downloadBtn.innerText = originalText;
                 downloadBtn.disabled = false;
             }
@@ -398,7 +447,7 @@
 
         async function copyToClipboard() {
             const output = document.getElementById("output").innerText;
-            if (!output || output === "Ready. Enter data and click Generate." || output.includes("Processing your request")) {
+            if (!output || output === "Ready. Enter data and click Generate." || output.includes("Processing")) {
                 alert("Please generate a marketing plan first");
                 return;
             }
@@ -407,7 +456,7 @@
                 await navigator.clipboard.writeText(output);
                 alert("✅ Plan copied to clipboard!");
             } catch (error) {
-                alert("Failed to copy. Select the text manually.");
+                alert("Failed to copy. Select text manually.");
             }
         }
 
