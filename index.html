@@ -29,9 +29,20 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
+            margin-right: 10px;
+            margin-top: 10px;
         }
         button:disabled {
             opacity: 0.5;
+        }
+        .action-buttons {
+            display: inline-block;
+        }
+        .download-btn {
+            background: #4f46e5;
+        }
+        .copy-btn {
+            background: #10b981;
         }
         pre {
             background: #1e293b;
@@ -65,7 +76,28 @@
             background: #991b1b;
             color: #fca5a5;
         }
+        .loader {
+            border: 4px solid #334155;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
     </style>
+    <!-- html2pdf library for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <h2>🧠 Strategic Marketing System</h2>
@@ -80,7 +112,13 @@
     <label>📦 Product Description:</label>
     <textarea id="product" rows="4" placeholder="Example: Mobile app that turns daily tasks into social challenges with friends"></textarea>
 
-    <button onclick="generate()">🚀 Generate Complete Strategy</button>
+    <div class="button-group">
+        <button onclick="generate()">🚀 Generate Complete Strategy</button>
+        <button id="downloadBtn" onclick="downloadPlan()" class="download-btn" style="display:none;">📄 Download as PDF</button>
+        <button id="copyBtn" onclick="copyToClipboard()" class="copy-btn" style="display:none;">📋 Copy to Clipboard</button>
+    </div>
+    
+    <div id="loader" class="loader"></div>
     <pre id="output">Ready. Enter data and click Generate.</pre>
 
     <script>
@@ -111,17 +149,25 @@
             const output = document.getElementById("output");
             const button = event.target;
             const statusDiv = document.getElementById("status");
+            const loader = document.getElementById("loader");
+            const downloadBtn = document.getElementById("downloadBtn");
+            const copyBtn = document.getElementById("copyBtn");
 
             if (!customer || !product) {
                 alert("Please fill both fields");
                 return;
             }
 
+            // Hide download/copy buttons from previous generation
+            downloadBtn.style.display = "none";
+            copyBtn.style.display = "none";
+            
             button.disabled = true;
             button.textContent = "⏳ Generating (30-60 seconds)...";
             output.innerText = "Processing your request...\n\nThis may take up to 60 seconds.";
             statusDiv.innerHTML = "🟡 Sending request to Hugging Face API...";
             statusDiv.className = "status testing";
+            loader.style.display = "block";
 
             try {
                 const response = await fetch(`${API_BASE_URL}/generate`, {
@@ -147,6 +193,9 @@
                     output.innerText = data.plan;
                     statusDiv.innerHTML = "✅ Plan generated successfully via Hugging Face!";
                     statusDiv.className = "status working";
+                    // Show download and copy buttons after successful generation
+                    downloadBtn.style.display = "inline-block";
+                    copyBtn.style.display = "inline-block";
                 }
             } catch (error) {
                 console.error("Fetch error:", error);
@@ -161,6 +210,65 @@
             } finally {
                 button.disabled = false;
                 button.textContent = "🚀 Generate Complete Strategy";
+                loader.style.display = "none";
+            }
+        }
+
+        // PDF Download Function
+        async function downloadPlan() {
+            const output = document.getElementById("output").innerText;
+            if (!output || output === "Ready. Enter data and click Generate." || output.includes("Processing your request")) {
+                alert("Please generate a marketing plan first");
+                return;
+            }
+            
+            // Create a styled document for PDF
+            const element = document.createElement('div');
+            element.style.padding = '40px';
+            element.style.fontFamily = 'Arial, sans-serif';
+            element.style.maxWidth = '800px';
+            element.style.margin = '0 auto';
+            element.style.backgroundColor = 'white';
+            element.style.color = 'black';
+            element.innerHTML = `
+                <h1 style="color: #1e293b; border-bottom: 3px solid #3b82f6; padding-bottom: 10px;">📊 Marketing Strategy Report</h1>
+                <p style="color: #64748b; margin-bottom: 30px;">Generated by Bisrat's Strategic Marketing System</p>
+                <div style="white-space: pre-wrap; font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.5;">${output}</div>
+                <hr style="margin: 30px 0 20px; border: none; border-top: 1px solid #e2e8f0;">
+                <p style="color: #94a3b8; font-size: 10px; text-align: center;">Generated on: ${new Date().toLocaleString()}</p>
+                <p style="color: #94a3b8; font-size: 10px; text-align: center;">Powered by DeepSeek via OpenRouter | Hugging Face Spaces</p>
+            `;
+            
+            try {
+                // Generate PDF
+                await html2pdf().set({
+                    margin: [0.5, 0.5, 0.5, 0.5],
+                    filename: 'marketing_plan.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, letterRendering: true },
+                    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                }).from(element).save();
+                
+                alert('PDF downloaded successfully!');
+            } catch (error) {
+                console.error('PDF error:', error);
+                alert('Error generating PDF. Check console for details.');
+            }
+        }
+
+        // Copy to Clipboard Function (Bonus)
+        async function copyToClipboard() {
+            const output = document.getElementById("output").innerText;
+            if (!output || output === "Ready. Enter data and click Generate." || output.includes("Processing your request")) {
+                alert("Please generate a marketing plan first");
+                return;
+            }
+            
+            try {
+                await navigator.clipboard.writeText(output);
+                alert("✅ Plan copied to clipboard!");
+            } catch (error) {
+                alert("Failed to copy. Select the text manually.");
             }
         }
 
