@@ -6,7 +6,7 @@
     <meta name="description" content="Generate complete strategic marketing plans in 60 seconds. Segmentation, PESTLE, SWOT, 4Ps, KPI, roadmap, and design prompts — powered by DeepSeek AI.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* [ALL YOUR EXISTING STYLES - KEEP THEM EXACTLY THE SAME] */
+        /* ALL YOUR EXISTING STYLES - KEEP THEM EXACTLY THE SAME */
         * { box-sizing: border-box; }
         body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #0f172a; color: #e2e8f0; }
         .hero { text-align: center; margin-bottom: 32px; padding: 24px 20px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 24px; border: 1px solid #334155; }
@@ -108,7 +108,9 @@
         let currentPlanHTML = "";
         let currentPlanText = "";
         
-        // Enhanced feedback function - saves to backend with summarized plan
+        // ============================================================
+        // UPDATED: Send feedback to backend (saves to both Hugging Face and GitHub)
+        // ============================================================
         async function sendFeedback(vote) {
             const customer = document.getElementById("customer").value || "Not provided";
             const product = document.getElementById("product").value || "Not provided";
@@ -118,10 +120,9 @@
             tempDiv.innerHTML = currentPlanHTML;
             const plainText = tempDiv.textContent || tempDiv.innerText || "";
             
-            // Create summary (first 300 characters)
+            // Create summary (first 300 characters, ends at sentence)
             let summary = plainText.substring(0, 300);
             if (plainText.length > 300) {
-                // Try to end at a sentence
                 const lastPeriod = summary.lastIndexOf('.');
                 if (lastPeriod > 200) {
                     summary = summary.substring(0, lastPeriod + 1);
@@ -137,6 +138,12 @@
                 plan_summary: summary
             };
             
+            // Disable buttons temporarily to prevent double submission
+            const yesLink = document.querySelector('.feedback-section a[onclick*="yes"]');
+            const noLink = document.querySelector('.feedback-section a[onclick*="no"]');
+            if (yesLink) yesLink.style.pointerEvents = 'none';
+            if (noLink) noLink.style.pointerEvents = 'none';
+            
             try {
                 const response = await fetch(`${API_BASE_URL}/feedback`, {
                     method: "POST",
@@ -144,28 +151,36 @@
                     body: JSON.stringify(feedbackData)
                 });
                 
+                const result = await response.json();
+                
                 if (response.ok) {
-                    alert(`Thank you for your ${vote === 'yes' ? 'positive' : 'honest'} feedback! 🙏\n\nYour feedback and a summary of your marketing plan have been saved.`);
+                    let message = `Thank you for your ${vote === 'yes' ? 'positive' : 'honest'} feedback! 🙏\n\n`;
+                    if (result.saved_to_huggingface) message += "✓ Saved to Hugging Face\n";
+                    if (result.saved_to_github) message += "✓ Saved to GitHub (permanent)\n";
+                    alert(message);
                 } else {
-                    alert(`Thank you for your feedback! 🙏`);
+                    alert(`Thank you for your feedback! Your response has been recorded.`);
                 }
             } catch (error) {
                 console.error("Feedback error:", error);
                 alert(`Thank you for your ${vote === 'yes' ? 'positive' : 'honest'} feedback! 🙏`);
+            } finally {
+                // Re-enable buttons
+                if (yesLink) yesLink.style.pointerEvents = 'auto';
+                if (noLink) noLink.style.pointerEvents = 'auto';
             }
         }
         
-        // [KEEP ALL YOUR EXISTING FUNCTIONS - renderMarkdownTables, generateTableHTML, markdownToHtml, escapeHtml, testAPI, generate, downloadPDF, copyToClipboard]
-        // They remain exactly the same as before
+        // ============================================================
+        // ALL YOUR EXISTING FUNCTIONS (keep them exactly the same)
+        // ============================================================
         
-        // Convert markdown-style tables to HTML tables
         function renderMarkdownTables(text) {
             const lines = text.split('\n');
             let result = [];
             let inTable = false;
             let tableRows = [];
             let headers = [];
-            let currentRow = [];
             
             for (let i = 0; i < lines.length; i++) {
                 let line = lines[i];
