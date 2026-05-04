@@ -1,6 +1,7 @@
 import os
 import traceback
 import json
+import requests
 from datetime import datetime
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -15,63 +16,70 @@ load_dotenv()
 api_key = os.getenv("DEEPSEEK_API_KEY")
 if not api_key:
     print("❌ ERROR: DEEPSEEK_API_KEY not found in .env file")
-    print("   Create a .env file with: DEEPSEEK_API_KEY=your-openrouter-key-here")
     exit(1)
 else:
-    print(f"✅ API key loaded (first 5 chars: {api_key[:5]}...)")
+    print(f"✅ API key loaded")
 
 # ============================================================
-# INITIALIZE OPENROUTER CLIENT (NOT DIRECT DEEPSEEK)
+# GITHUB CONFIGURATION (for saving feedback)
 # ============================================================
-# OpenRouter uses the same OpenAI library but different base URL
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")  # Add this to your Hugging Face secrets
+GITHUB_REPO = "rexxgit/marketing-system"
+GITHUB_FEEDBACK_PATH = "feedback/"
+
+# ============================================================
+# INITIALIZE OPENROUTER CLIENT
+# ============================================================
 client = OpenAI(
     api_key=api_key,
-    base_url="https://openrouter.ai/api/v1",  # OpenRouter endpoint
+    base_url="https://openrouter.ai/api/v1",
     default_headers={
-        "HTTP-Referer": "http://localhost:5000",  # Identifies your app
-        "X-Title": "Marketing Strategy System"     # Names your app
+        "HTTP-Referer": "https://marketing-system-api.onrender.com",
+        "X-Title": "Marketing Strategy System"
     }
 )
 
 # ============================================================
 # TEST OPENROUTER CONNECTION ON STARTUP
 # ============================================================
-print("🔌 Testing OpenRouter connection (using your OpenRouter key)...")
+print("🔌 Testing OpenRouter connection...")
 try:
-    # Try DeepSeek via OpenRouter first
     test_response = client.chat.completions.create(
-        model="deepseek/deepseek-chat",  # OpenRouter model name format
+        model="deepseek/deepseek-chat",
         messages=[{"role": "user", "content": "Say 'OK'"}],
-        max_tokens=5,
+        max_tokens=3,
         temperature=0
     )
     print("✅ OpenRouter + DeepSeek connection successful!")
     ACTIVE_MODEL = "deepseek/deepseek-chat"
 except Exception as e:
-    print(f"⚠️ DeepSeek via OpenRouter failed: {e}")
-    print("🔄 Trying fallback model: openai/gpt-3.5-turbo...")
+    print(f"⚠️ DeepSeek failed, trying fallback...")
     try:
         test_response = client.chat.completions.create(
             model="openai/gpt-3.5-turbo",
             messages=[{"role": "user", "content": "Say 'OK'"}],
-            max_tokens=5,
+            max_tokens=3,
             temperature=0
         )
-        print("✅ OpenRouter + GPT-3.5-Turbo connection successful!")
+        print("✅ OpenRouter + GPT-3.5-Turbo successful!")
         ACTIVE_MODEL = "openai/gpt-3.5-turbo"
     except Exception as e2:
-        print(f"❌ OpenRouter connection failed: {e2}")
-        print("   Possible issues:")
-        print("   1. No credits in OpenRouter account")
-        print("   2. Invalid API key format")
-        print("   3. Check your OpenRouter balance at: https://openrouter.ai/credits")
+        print(f"❌ OpenRouter failed: {e2}")
         exit(1)
 
 app = Flask(__name__)
 CORS(app)
 
 # ============================================================
-# ADD AFTER REQUEST HEADER FOR BETTER RESPONSE HANDLING
+# CREATE FEEDBACK DIRECTORY (Hugging Face local)
+# ============================================================
+FEEDBACK_DIR = "feedback"
+if not os.path.exists(FEEDBACK_DIR):
+    os.makedirs(FEEDBACK_DIR)
+    print(f"📁 Created feedback directory: {FEEDBACK_DIR}")
+
+# ============================================================
+# ADD AFTER REQUEST HEADER
 # ============================================================
 @app.after_request
 def add_header(response):
@@ -79,7 +87,65 @@ def add_header(response):
     return response
 
 # ============================================================
-# YOUR SYSTEM PROMPT (ONLY PESTLE SECTION IMPROVED)
+# FUNCTION TO SAVE TO GITHUB
+# ============================================================
+def save_to_github(feedback_data, filename):
+    """Save feedback file to GitHub repository"""
+    if not GITHUB_TOKEN:
+        print("⚠️ No GITHUB_TOKEN found, skipping GitHub save")
+        return False
+    
+    try:
+        # Create file content as JSON string
+        file_content = json.dumps(feedback_data, indent=2)
+        
+        # GitHub API URL
+        url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{GITHUB_FEEDBACK_PATH}{filename}"
+        
+        # Check if file already exists to get its SHA
+        existing_sha = None
+        try:
+            response = requests.get(url, headers={
+                "Authorization": f"token {GITHUB_TOKEN}",
+                "Accept": "application/vnd.github.v3+json"
+            })
+            if response.status_code == 200:
+                existing = response.json()
+                existing_sha = existing.get("sha")
+        except:
+            pass
+        
+        # Prepare payload
+        payload = {
+            "message": f"Add feedback: {filename}",
+            "content": __import__('base64').b64encode(file_content.encode()).decode(),
+            "branch": "main"
+        }
+        if existing_sha:
+            payload["sha"] = existing_sha
+        
+        # Push to GitHub
+        response = requests.put(url, 
+            headers={
+                "Authorization": f"token {GITHUB_TOKEN}",
+                "Accept": "application/vnd.github.v3+json"
+            },
+            json=payload
+        )
+        
+        if response.status_code in [200, 201]:
+            print(f"✅ Saved to GitHub: {filename}")
+            return True
+        else:
+            print(f"❌ GitHub save failed: {response.status_code} - {response.text}")
+            return False
+            
+    except Exception as e:
+        print(f"❌ GitHub save error: {e}")
+        return False
+
+# ============================================================
+# YOUR SYSTEM PROMPT (COMPLETE - SAME AS BEFORE)
 # ============================================================
 SYSTEM_PROMPT = """
 ## SYSTEM INSTRUCTION: Run these roles in EXACT order. Do not skip. Do not reorder.
@@ -385,40 +451,51 @@ Final output: One sentence stating whether the system is ready for production us
 """
 
 # ============================================================
-# FUNCTION TO RUN THE SYSTEM - UPDATED WITH STREAMING
+# FUNCTION TO RUN THE SYSTEM
 # ============================================================
 def run_system(customer_data: str, product_description: str) -> str:
-    """Replace placeholders and call OpenRouter API with streaming."""
     filled_prompt = SYSTEM_PROMPT.replace("[CUSTOMER DATA]", customer_data)
     filled_prompt = filled_prompt.replace("[PRODUCT DESCRIPTION]", product_description)
     
-    print(f"📊 Request stats:")
-    print(f"   Customer data: {len(customer_data)} chars")
-    print(f"   Product description: {len(product_description)} chars")
-    print(f"   Total prompt length: {len(filled_prompt)} chars")
-    print(f"   Estimated tokens: ~{len(filled_prompt) // 3}")
-    print(f"   Using model: {ACTIVE_MODEL}")
+    print(f"📊 Request: {len(filled_prompt)} chars, ~{len(filled_prompt)//3} tokens")
     
-    # Use streaming to prevent timeout and reduce memory pressure
     stream = client.chat.completions.create(
         model=ACTIVE_MODEL,
         messages=[
-            {"role": "system", "content": "You are a strategic marketing system that follows instructions exactly. Output the complete plan without cutting off."},
+            {"role": "system", "content": "You are a strategic marketing system that follows instructions exactly."},
             {"role": "user", "content": filled_prompt}
         ],
         temperature=0.5,
         max_tokens=8000,
-        stream=True  # Enable streaming
+        stream=True
     )
     
-    # Collect streaming chunks
     result = ""
     for chunk in stream:
         if chunk.choices[0].delta.content:
             result += chunk.choices[0].delta.content
     
-    print(f"✅ Response received: {len(result)} chars")
+    print(f"✅ Response: {len(result)} chars")
     return result
+
+
+def summarize_plan(plan: str, max_length: int = 300) -> str:
+    """Extract summary from the plan"""
+    if len(plan) <= max_length:
+        return plan
+    
+    summary = plan[:max_length]
+    last_period = summary.rfind('.')
+    last_newline = summary.rfind('\n')
+    
+    break_point = max(last_period, last_newline)
+    if break_point > max_length // 2:
+        summary = summary[:break_point + 1]
+    else:
+        summary = summary + "..."
+    
+    return summary.strip()
+
 
 # ============================================================
 # API ENDPOINTS
@@ -428,30 +505,24 @@ def generate():
     try:
         data = request.get_json()
         if not data:
-            return jsonify({"error": "No JSON data received"}), 400
+            return jsonify({"error": "No JSON data"}), 400
         
         customer_data = data.get("customer_data", "")
         product_description = data.get("product_description", "")
         
         if not customer_data or not product_description:
-            return jsonify({"error": "Both customer_data and product_description are required"}), 400
+            return jsonify({"error": "Both fields required"}), 400
         
-        print(f"\n📨 New request received")
-        print(f"   Customer: {customer_data[:100]}...")
-        print(f"   Product: {product_description[:100]}...")
+        print(f"\n📨 New request")
         
         result = run_system(customer_data, product_description)
         return jsonify({"plan": result})
         
     except Exception as e:
-        print(f"❌ Error in /generate: {e}")
-        print(traceback.format_exc())
-        return jsonify({"error": str(e), "traceback": traceback.format_exc()}), 500
+        print(f"❌ Error: {e}")
+        return jsonify({"error": str(e)}), 500
 
 
-# ============================================================
-# FEEDBACK ENDPOINT - SAVES FEEDBACK TO JSON FILE
-# ============================================================
 @app.route("/feedback", methods=["POST", "OPTIONS"])
 def save_feedback():
     if request.method == "OPTIONS":
@@ -460,55 +531,75 @@ def save_feedback():
     try:
         data = request.get_json()
         if not data:
-            return jsonify({"error": "No JSON data received"}), 400
+            return jsonify({"error": "No JSON data"}), 400
         
         vote = data.get("vote", "")
-        customer = data.get("customer", "")
-        product = data.get("product", "")
+        customer = data.get("customer", "")[:200]
+        product = data.get("product", "")[:200]
+        plan_summary = data.get("plan_summary", "")[:300]
         timestamp = datetime.now().isoformat()
         
-        # Load existing feedback
-        feedback_file = "feedback.json"
-        existing = []
+        # Create unique filename
+        filename = f"feedback_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')[:-3]}.json"
         
-        if os.path.exists(feedback_file):
-            try:
-                with open(feedback_file, 'r') as f:
-                    existing = json.load(f)
-            except (json.JSONDecodeError, IOError):
-                existing = []
-        
-        # Append new feedback
-        existing.append({
+        feedback_data = {
+            "id": filename,
             "vote": vote,
-            "customer": customer[:200],
-            "product": product[:200],
-            "timestamp": timestamp
-        })
+            "customer_preview": customer,
+            "product_preview": product,
+            "plan_summary": plan_summary,
+            "timestamp": timestamp,
+            "user_agent": request.headers.get("User-Agent", "Unknown")[:200],
+            "ip": request.headers.get("X-Forwarded-For", request.remote_addr)
+        }
         
-        # Save back to file
-        with open(feedback_file, 'w') as f:
-            json.dump(existing, f, indent=2)
+        # ============================================================
+        # PART 1: Save to Hugging Face (local file)
+        # ============================================================
+        local_saved = False
+        try:
+            filepath = os.path.join(FEEDBACK_DIR, filename)
+            with open(filepath, 'w') as f:
+                json.dump(feedback_data, f, indent=2)
+            print(f"📁 Saved to Hugging Face: {filename}")
+            local_saved = True
+        except Exception as e:
+            print(f"❌ Hugging Face save failed: {e}")
         
-        print(f"📝 Feedback saved: {vote} at {timestamp}")
-        return jsonify({"status": "ok", "message": "Feedback saved successfully"}), 200
+        # ============================================================
+        # PART 2: Save to GitHub (permanent storage)
+        # ============================================================
+        github_saved = save_to_github(feedback_data, filename)
+        
+        # ============================================================
+        # RETURN RESULT
+        # ============================================================
+        if local_saved or github_saved:
+            return jsonify({
+                "status": "ok",
+                "message": "Feedback saved successfully",
+                "saved_to_huggingface": local_saved,
+                "saved_to_github": github_saved
+            }), 200
+        else:
+            return jsonify({
+                "status": "warning",
+                "message": "Feedback could not be saved"
+            }), 500
         
     except Exception as e:
         print(f"❌ Error saving feedback: {e}")
         return jsonify({"error": str(e)}), 500
 
 
-@app.route("/feedback/view", methods=["GET"])
-def view_feedback():
-    """Optional endpoint to view all feedback (for debugging)"""
+@app.route("/feedback/list", methods=["GET"])
+def list_feedback():
+    """List all feedback files from Hugging Face"""
     try:
-        feedback_file = "feedback.json"
-        if os.path.exists(feedback_file):
-            with open(feedback_file, 'r') as f:
-                feedback = json.load(f)
-            return jsonify({"feedback": feedback}), 200
-        else:
-            return jsonify({"feedback": []}), 200
+        files = []
+        if os.path.exists(FEEDBACK_DIR):
+            files = [f for f in os.listdir(FEEDBACK_DIR) if f.endswith('.json')]
+        return jsonify({"count": len(files), "files": files}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -519,7 +610,8 @@ def home():
         "message": "Marketing System API is running via OpenRouter",
         "status": "healthy",
         "api_key_loaded": bool(api_key),
-        "active_model": ACTIVE_MODEL
+        "active_model": ACTIVE_MODEL,
+        "github_configured": bool(GITHUB_TOKEN)
     })
 
 @app.route("/health", methods=["GET"])
@@ -527,26 +619,20 @@ def health():
     return jsonify({"status": "ok", "model": ACTIVE_MODEL})
 
 # ============================================================
-# START SERVER - MODIFIED FOR HUGGING FACE SPACES
+# START SERVER
 # ============================================================
 if __name__ == "__main__":
     print("\n" + "="*50)
     print("🚀 Marketing System Server Starting...")
     print("="*50)
     print(f"📁 Prompt size: {len(SYSTEM_PROMPT)} characters")
-    print(f"🔑 API key: {'✓ Loaded' if api_key else '✗ Missing'}")
-    print(f"🌐 API Endpoint: https://openrouter.ai/api/v1")
+    print(f"🔑 API key: {'✓' if api_key else '✗'}")
     print(f"🤖 Active model: {ACTIVE_MODEL}")
+    print(f"📁 Feedback directory: {FEEDBACK_DIR}")
+    print(f"🐙 GitHub configured: {'✓' if GITHUB_TOKEN else '✗ (add GITHUB_TOKEN to save to GitHub)'}")
     print("="*50)
     print("\n🌐 Server running on Hugging Face Spaces")
-    print("📡 Endpoints:")
-    print("   GET  /        - Check API status")
-    print("   GET  /health  - Health check")
-    print("   POST /generate - Generate marketing plan")
-    print("   POST /feedback - Submit feedback")
-    print("   GET  /feedback/view - View all feedback")
-    print("\n" + "="*50 + "\n")
+    print("="*50 + "\n")
     
-    # Hugging Face Spaces uses port 7860
     port = int(os.environ.get("PORT", 7860))
     app.run(host="0.0.0.0", port=port)
