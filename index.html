@@ -3,55 +3,46 @@
 <head>
     <title>Strategic Marketing System | AI-Powered Marketing Plan Generator</title>
     <meta charset="UTF-8">
-    <meta name="description" content="Generate complete strategic marketing plans in 60 seconds. Segmentation, PESTLE, SWOT, 4Ps, KPI, roadmap, and design prompts — powered by DeepSeek AI.">
+    <meta name="description" content="Generate complete strategic marketing plans in 60 seconds.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* ALL YOUR EXISTING STYLES - KEEP THEM EXACTLY THE SAME */
         * { box-sizing: border-box; }
-        body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #0f172a; color: #e2e8f0; }
+        body { font-family: system-ui, -apple-system, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #0f172a; color: #e2e8f0; }
         .hero { text-align: center; margin-bottom: 32px; padding: 24px 20px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 24px; border: 1px solid #334155; }
         .hero h1 { font-size: 2.5rem; margin-bottom: 12px; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .hero .tagline { font-size: 1.1rem; color: #94a3b8; max-width: 700px; margin: 0 auto 16px auto; line-height: 1.5; }
         .hero-features { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-top: 20px; font-size: 0.85rem; color: #64748b; }
         .hero-features span { display: inline-flex; align-items: center; gap: 6px; }
         .input-area { background: #1e293b; border-radius: 16px; padding: 24px; margin-bottom: 24px; border: 1px solid #334155; }
-        textarea { width: 100%; background: #0f172a; color: #e2e8f0; border: 1px solid #334155; border-radius: 12px; padding: 12px 16px; font-family: 'Courier New', monospace; font-size: 14px; box-sizing: border-box; resize: vertical; }
-        textarea:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
-        button { background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 15px; font-weight: 500; transition: all 0.2s ease; }
+        textarea { width: 100%; background: #0f172a; color: #e2e8f0; border: 1px solid #334155; border-radius: 12px; padding: 12px 16px; font-family: monospace; font-size: 14px; box-sizing: border-box; resize: vertical; }
+        textarea:focus { outline: none; border-color: #3b82f6; }
+        button { background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 15px; font-weight: 500; transition: all 0.2s; }
         button:hover:not(:disabled) { background: #2563eb; transform: translateY(-1px); }
-        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
         .button-group { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
         .btn-download { background: #4f46e5; }
-        .btn-download:hover:not(:disabled) { background: #4338ca; }
         .btn-copy { background: #10b981; }
-        .btn-copy:hover:not(:disabled) { background: #059669; }
-        .output-container { background: #1e293b; border-radius: 16px; padding: 24px; border: 1px solid #334155; }
+        .output-container { background: #1e293b; border-radius: 16px; padding: 24px; border: 1px solid #334155; margin-top: 24px; }
         .output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
-        .output-header h3 { margin: 0; color: #38bdf8; font-size: 1.25rem; }
-        .rendered-output { background: #0f172a; border-radius: 12px; padding: 24px; overflow-x: auto; line-height: 1.5; color: #e2e8f0; font-family: system-ui, -apple-system, sans-serif; }
-        .rendered-output table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; background: #0f172a; }
+        .output-header h3 { margin: 0; color: #38bdf8; }
+        .rendered-output { background: #0f172a; border-radius: 12px; padding: 24px; overflow-x: auto; line-height: 1.5; }
+        .rendered-output table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #0f172a; }
         .rendered-output th, .rendered-output td { border: 1px solid #334155; padding: 12px; text-align: left; vertical-align: top; }
         .rendered-output th { background: #1e293b; color: #38bdf8; font-weight: 600; }
-        .rendered-output td { background: #0f172a; color: #e2e8f0; }
-        .rendered-output h1 { color: #38bdf8; font-size: 1.8rem; margin-top: 1.5rem; margin-bottom: 1rem; border-bottom: 2px solid #334155; padding-bottom: 0.5rem; }
-        .rendered-output h2 { color: #38bdf8; font-size: 1.4rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
-        .rendered-output h3 { color: #94a3b8; font-size: 1.1rem; margin-top: 1.2rem; margin-bottom: 0.6rem; }
-        .rendered-output ul, .rendered-output ol { margin: 12px 0; padding-left: 24px; }
-        .rendered-output li { margin: 6px 0; }
+        .rendered-output td { background: #0f172a; }
+        .rendered-output h1 { color: #38bdf8; font-size: 1.8rem; border-bottom: 2px solid #334155; padding-bottom: 0.5rem; }
+        .rendered-output h2 { color: #38bdf8; font-size: 1.4rem; }
+        .rendered-output h3 { color: #94a3b8; }
         .rendered-output strong { color: #facc15; }
-        .rendered-output hr { border-color: #334155; margin: 20px 0; }
-        .rendered-output p { margin: 12px 0; }
         .status { padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; }
         .status-working { background: #065f46; color: #d1d5db; }
         .status-testing { background: #854d0e; color: #fde047; }
         .status-error { background: #991b1b; color: #fca5a5; }
         .loader { border: 3px solid #334155; border-top: 3px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 0.8s linear infinite; margin: 20px auto; display: none; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        label { font-weight: 600; display: block; margin-bottom: 8px; color: #94a3b8; font-size: 14px; }
-        .hidden { display: none; }
-        .feedback-section { margin-top: 20px; text-align: center; font-size: 13px; color: #64748b; padding: 16px; border-top: 1px solid #334155; }
+        label { font-weight: 600; display: block; margin-bottom: 8px; color: #94a3b8; }
+        .feedback-section { margin-top: 24px; text-align: center; font-size: 13px; color: #64748b; padding: 16px; border-top: 1px solid #334155; }
         .feedback-section a { color: #10b981; text-decoration: none; cursor: pointer; margin: 0 8px; }
-        .feedback-section a:hover { text-decoration: underline; }
         .feedback-note { font-size: 11px; margin-top: 8px; color: #475569; }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -62,32 +53,32 @@
         <p class="tagline">Enter your customer data and product description.<br>Get a complete strategic marketing plan in 60 seconds.</p>
         <div class="hero-features">
             <span>📊 Segmentation</span> <span>📈 PESTLE + Mini-SWOT</span> <span>⚔️ Porter's Five Forces</span>
-            <span>🎯 Positioning (Kotler-style)</span> <span>🛠️ 4Ps</span> <span>📉 SWOT + Micro-SWOT</span>
-            <span>📏 KPI + Budget</span> <span>🗺️ 30-Day Roadmap</span> <span>🎨 Design & Media Prompts</span>
+            <span>🎯 Kotler Positioning</span> <span>🛠️ 4Ps</span> <span>📉 SWOT + Micro-SWOT</span>
+            <span>📏 KPI + Budget</span> <span>🗺️ 30-Day Roadmap</span> <span>🎨 Design Prompts</span>
         </div>
         <div class="hero-features" style="margin-top: 8px;">
-            <span>⚡ Powered by DeepSeek</span> <span>📄 Archival PDF (PDF/A)</span>
-            <span>🎨 UI + PDF Identical</span> <span>🚀 Unlimited & Free</span>
+            <span>⚡ DeepSeek via OpenRouter</span> <span>📄 PDF/A Archival</span>
+            <span>🎨 UI + PDF Identical</span> <span>🚀 Free & Unlimited</span>
         </div>
     </div>
 
     <div class="input-area">
         <div id="status" class="status status-testing">🟡 Testing API connection...</div>
         <label>📊 Customer Data:</label>
-        <textarea id="customer" rows="4" placeholder="Example: Young freelancers in Addis Ababa, age 22-28, income $2-4k/month, value social proof and efficiency"></textarea>
+        <textarea id="customer" rows="4" placeholder="Example: Young freelancers in Addis Ababa, age 22-28, income $2-4k/month"></textarea>
         <label>📦 Product Description:</label>
-        <textarea id="product" rows="4" placeholder="Example: A project management tool with built-in AI task automation and team collaboration features. Subscription: $15/user/month."></textarea>
+        <textarea id="product" rows="4" placeholder="Example: AI-powered project management tool, $15/user/month subscription"></textarea>
         <div class="button-group">
-            <button id="generateBtn" onclick="generate()">🚀 Generate Complete Strategy</button>
+            <button id="generateBtn" onclick="generate()">🚀 Generate Strategy</button>
             <button id="downloadBtn" onclick="downloadPDF()" class="btn-download" style="display:none;">📄 Download PDF</button>
-            <button id="copyBtn" onclick="copyToClipboard()" class="btn-copy" style="display:none;">📋 Copy to Clipboard</button>
+            <button id="copyBtn" onclick="copyToClipboard()" class="btn-copy" style="display:none;">📋 Copy Text</button>
         </div>
         <div id="loader" class="loader"></div>
     </div>
 
     <div class="output-container">
         <div class="output-header">
-            <h3>📋 Marketing Plan Output</h3>
+            <h3>📋 Marketing Plan</h3>
             <span id="timestamp" style="font-size: 12px; color: #64748b;"></span>
         </div>
         <div id="output" class="rendered-output">Ready. Enter data and click Generate.</div>
@@ -97,156 +88,38 @@
         <span>Was this helpful? </span>
         <a href="#" onclick="sendFeedback('yes')">👍 Yes</a>
         <a href="#" onclick="sendFeedback('no')">👎 No</a>
-        <span style="margin-left: 16px;">📧 Email: <a href="mailto:bisrattewabe373@gmail.com">bisrattewabe373@gmail.com</a></span>
-        <div class="feedback-note">
-            💡 Your feedback and a summary of your marketing plan will be saved anonymously for continuous improvement
-        </div>
+        <span style="margin-left: 16px;">📧 <a href="mailto:bisrattewabe373@gmail.com">bisrattewabe373@gmail.com</a></span>
+        <div class="feedback-note">💡 Feedback saves anonymously to improve the system</div>
     </div>
 
     <script>
         const API_BASE_URL = "https://Bisratprompt-marketing-system-api.hf.space";
         let currentPlanHTML = "";
-        let currentPlanText = "";
         
-        // ============================================================
-        // UPDATED: Send feedback to backend (saves to both Hugging Face and GitHub)
-        // ============================================================
         async function sendFeedback(vote) {
-            const customer = document.getElementById("customer").value || "Not provided";
-            const product = document.getElementById("product").value || "Not provided";
+            const customer = document.getElementById("customer").value || "";
+            const product = document.getElementById("product").value || "";
             
-            // Get plain text version of the plan (remove HTML tags)
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = currentPlanHTML;
-            const plainText = tempDiv.textContent || tempDiv.innerText || "";
-            
-            // Create summary (first 300 characters, ends at sentence)
+            let plainText = tempDiv.textContent || "";
             let summary = plainText.substring(0, 300);
             if (plainText.length > 300) {
                 const lastPeriod = summary.lastIndexOf('.');
-                if (lastPeriod > 200) {
-                    summary = summary.substring(0, lastPeriod + 1);
-                } else {
-                    summary = summary + "...";
-                }
+                if (lastPeriod > 200) summary = summary.substring(0, lastPeriod + 1);
+                else summary = summary + "...";
             }
-            
-            const feedbackData = {
-                vote: vote,
-                customer: customer,
-                product: product,
-                plan_summary: summary
-            };
-            
-            // Disable buttons temporarily to prevent double submission
-            const yesLink = document.querySelector('.feedback-section a[onclick*="yes"]');
-            const noLink = document.querySelector('.feedback-section a[onclick*="no"]');
-            if (yesLink) yesLink.style.pointerEvents = 'none';
-            if (noLink) noLink.style.pointerEvents = 'none';
             
             try {
                 const response = await fetch(`${API_BASE_URL}/feedback`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(feedbackData)
+                    body: JSON.stringify({ vote, customer, product, plan_summary: summary })
                 });
-                
-                const result = await response.json();
-                
-                if (response.ok) {
-                    let message = `Thank you for your ${vote === 'yes' ? 'positive' : 'honest'} feedback! 🙏\n\n`;
-                    if (result.saved_to_huggingface) message += "✓ Saved to Hugging Face\n";
-                    if (result.saved_to_github) message += "✓ Saved to GitHub (permanent)\n";
-                    alert(message);
-                } else {
-                    alert(`Thank you for your feedback! Your response has been recorded.`);
-                }
-            } catch (error) {
-                console.error("Feedback error:", error);
                 alert(`Thank you for your ${vote === 'yes' ? 'positive' : 'honest'} feedback! 🙏`);
-            } finally {
-                // Re-enable buttons
-                if (yesLink) yesLink.style.pointerEvents = 'auto';
-                if (noLink) noLink.style.pointerEvents = 'auto';
+            } catch (error) {
+                alert(`Thank you for your feedback!`);
             }
-        }
-        
-        // ============================================================
-        // ALL YOUR EXISTING FUNCTIONS (keep them exactly the same)
-        // ============================================================
-        
-        function renderMarkdownTables(text) {
-            const lines = text.split('\n');
-            let result = [];
-            let inTable = false;
-            let tableRows = [];
-            let headers = [];
-            
-            for (let i = 0; i < lines.length; i++) {
-                let line = lines[i];
-                
-                if (line.includes('|') && i + 1 < lines.length && lines[i + 1].includes('---')) {
-                    inTable = true;
-                    headers = line.split('|').filter(c => c.trim() !== '').map(c => c.trim());
-                    i++;
-                    tableRows = [];
-                    continue;
-                }
-                
-                if (inTable && line.includes('|')) {
-                    const cells = line.split('|').filter(c => c.trim() !== '').map(c => c.trim());
-                    if (cells.length) tableRows.push(cells);
-                } else if (inTable && !line.includes('|')) {
-                    result.push(generateTableHTML(headers, tableRows));
-                    inTable = false;
-                    headers = [];
-                    tableRows = [];
-                    result.push(line);
-                } else {
-                    result.push(line);
-                }
-            }
-            
-            if (inTable && headers.length) {
-                result.push(generateTableHTML(headers, tableRows));
-            }
-            
-            return result.join('\n');
-        }
-        
-        function generateTableHTML(headers, rows) {
-            if (!headers.length) return '';
-            
-            let html = '<table class="output-table">\n<thead>\n<tr>\n';
-            for (let header of headers) {
-                html += `<th>${escapeHtml(header)}</th>\n`;
-            }
-            html += '</tr>\n</thead>\n<tbody>\n';
-            
-            for (let row of rows) {
-                html += '<tr>\n';
-                for (let cell of row) {
-                    html += `<td>${escapeHtml(cell)}</td>\n`;
-                }
-                html += '</tr>\n';
-            }
-            
-            html += '</tbody>\n</table>\n';
-            return html;
-        }
-        
-        function markdownToHtml(text) {
-            let html = renderMarkdownTables(text);
-            html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
-            html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
-            html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
-            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            html = html.replace(/^---+$/gm, '<hr>');
-            html = html.replace(/^- (.*$)/gm, '<li>$1</li>');
-            html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
-            html = html.replace(/\n/g, '<br>');
-            html = html.replace(/(<br>\s*){3,}/g, '<br><br>');
-            return html;
         }
         
         function escapeHtml(text) {
@@ -255,187 +128,180 @@
             return div.innerHTML;
         }
         
+        function renderMarkdownTables(text) {
+            const lines = text.split('\n');
+            let result = [];
+            let inTable = false, headers = [], rows = [];
+            
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i];
+                if (line.includes('|') && i + 1 < lines.length && lines[i + 1].includes('---')) {
+                    inTable = true;
+                    headers = line.split('|').filter(c => c.trim()).map(c => c.trim());
+                    i++;
+                    rows = [];
+                    continue;
+                }
+                if (inTable && line.includes('|')) {
+                    const cells = line.split('|').filter(c => c.trim()).map(c => c.trim());
+                    if (cells.length) rows.push(cells);
+                } else if (inTable && !line.includes('|')) {
+                    let html = '<table>\n<thead><tr>';
+                    for (let h of headers) html += `<th>${escapeHtml(h)}</th>`;
+                    html += '</td></thead><tbody>';
+                    for (let row of rows) {
+                        html += '<tr>';
+                        for (let cell of row) html += `<td>${escapeHtml(cell)}</td>`;
+                        html += '</tr>';
+                    }
+                    html += '</tbody></table>';
+                    result.push(html);
+                    inTable = false;
+                    headers = [];
+                    rows = [];
+                    result.push(line);
+                } else {
+                    result.push(line);
+                }
+            }
+            if (inTable && headers.length) {
+                let html = '<table><thead><tr>';
+                for (let h of headers) html += `<th>${escapeHtml(h)}</th>`;
+                html += '</tr></thead><tbody>';
+                for (let row of rows) {
+                    html += '<tr>';
+                    for (let cell of row) html += `<td>${escapeHtml(cell)}</td>`;
+                    html += '</tr>';
+                }
+                html += '</tbody></table>';
+                result.push(html);
+            }
+            return result.join('\n');
+        }
+        
+        function markdownToHtml(text) {
+            let html = renderMarkdownTables(text);
+            html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+            html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+            html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/^- (.*$)/gm, '<li>$1</li>');
+            html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+            html = html.replace(/\n/g, '<br>');
+            return html;
+        }
+        
         async function testAPI() {
             const statusDiv = document.getElementById("status");
             try {
                 const response = await fetch(`${API_BASE_URL}/health`);
                 if (response.ok) {
-                    statusDiv.innerHTML = "🟢 API is online and ready";
+                    statusDiv.innerHTML = "🟢 API online";
                     statusDiv.className = "status status-working";
                 } else {
-                    statusDiv.innerHTML = "🔴 API returned error";
+                    statusDiv.innerHTML = "🔴 API error";
                     statusDiv.className = "status status-error";
                 }
             } catch (error) {
-                statusDiv.innerHTML = "🔴 Cannot reach API. Make sure Hugging Face Space is running.";
+                statusDiv.innerHTML = "🔴 Cannot reach API";
                 statusDiv.className = "status status-error";
             }
         }
-
+        
         async function generate() {
             const customer = document.getElementById("customer").value;
             const product = document.getElementById("product").value;
             const outputDiv = document.getElementById("output");
-            const generateBtn = document.getElementById("generateBtn");
+            const genBtn = document.getElementById("generateBtn");
             const downloadBtn = document.getElementById("downloadBtn");
             const copyBtn = document.getElementById("copyBtn");
             const statusDiv = document.getElementById("status");
             const loader = document.getElementById("loader");
-            const timestampSpan = document.getElementById("timestamp");
-
+            
             if (!customer || !product) {
                 alert("Please fill both fields");
                 return;
             }
-
+            
             downloadBtn.style.display = "none";
             copyBtn.style.display = "none";
-            
-            generateBtn.disabled = true;
-            generateBtn.textContent = "⏳ Generating...";
-            outputDiv.innerHTML = "<em>Processing your request... (30-60 seconds)</em>";
-            statusDiv.innerHTML = "🟡 Generating marketing plan...";
+            genBtn.disabled = true;
+            genBtn.textContent = "⏳ Generating...";
+            outputDiv.innerHTML = "<em>Processing... (30-60 seconds)</em>";
+            statusDiv.innerHTML = "🟡 Generating plan...";
             statusDiv.className = "status status-testing";
             loader.style.display = "block";
-
+            
             try {
                 const response = await fetch(`${API_BASE_URL}/generate`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ customer_data: customer, product_description: product })
                 });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-
                 const data = await response.json();
-                
-                if (data.error) {
-                    outputDiv.innerHTML = `<span style="color: #f87171;">Error: ${escapeHtml(data.error)}</span>`;
-                    statusDiv.innerHTML = "🔴 Generation failed";
-                    statusDiv.className = "status status-error";
-                } else {
-                    currentPlanHTML = markdownToHtml(data.plan);
-                    outputDiv.innerHTML = currentPlanHTML;
-                    currentPlanText = data.plan;
-                    
-                    const now = new Date();
-                    timestampSpan.innerHTML = `Generated: ${now.toLocaleString()}`;
-                    
-                    statusDiv.innerHTML = "✅ Marketing plan generated successfully!";
-                    statusDiv.className = "status status-working";
-                    downloadBtn.style.display = "inline-block";
-                    copyBtn.style.display = "inline-block";
-                }
+                if (data.error) throw new Error(data.error);
+                currentPlanHTML = markdownToHtml(data.plan);
+                outputDiv.innerHTML = currentPlanHTML;
+                document.getElementById("timestamp").innerHTML = `Generated: ${new Date().toLocaleString()}`;
+                statusDiv.innerHTML = "✅ Plan generated!";
+                statusDiv.className = "status status-working";
+                downloadBtn.style.display = "inline-block";
+                copyBtn.style.display = "inline-block";
             } catch (error) {
-                outputDiv.innerHTML = `<span style="color: #f87171;">Error: ${escapeHtml(error.message)}</span>`;
-                statusDiv.innerHTML = "🔴 Error: " + error.message;
+                outputDiv.innerHTML = `<span style="color:#f87171;">Error: ${error.message}</span>`;
+                statusDiv.innerHTML = "🔴 Generation failed";
                 statusDiv.className = "status status-error";
             } finally {
-                generateBtn.disabled = false;
-                generateBtn.textContent = "🚀 Generate Complete Strategy";
+                genBtn.disabled = false;
+                genBtn.textContent = "🚀 Generate Strategy";
                 loader.style.display = "none";
             }
         }
-
+        
         async function downloadPDF() {
-            const outputDiv = document.getElementById("output");
-            const contentHTML = outputDiv.innerHTML;
-            
-            if (!contentHTML || contentHTML === "Ready. Enter data and click Generate." || contentHTML.includes("Processing your request")) {
-                alert("Please generate a marketing plan first");
+            const content = document.getElementById("output").innerHTML;
+            if (!content || content.includes("Processing")) {
+                alert("Generate a plan first");
                 return;
             }
-            
-            const downloadBtn = document.getElementById("downloadBtn");
-            const originalText = downloadBtn.innerText;
-            downloadBtn.innerText = "⏳ Generating PDF...";
-            downloadBtn.disabled = true;
-            
+            const btn = document.getElementById("downloadBtn");
+            const original = btn.innerText;
+            btn.innerText = "⏳ Generating PDF...";
+            btn.disabled = true;
             try {
-                const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-                
                 const element = document.createElement('div');
                 element.style.padding = '40px';
-                element.style.fontFamily = 'system-ui, -apple-system, sans-serif';
-                element.style.maxWidth = '1000px';
-                element.style.margin = '0 auto';
-                element.style.backgroundColor = '#ffffff';
+                element.style.fontFamily = 'system-ui, sans-serif';
+                element.style.backgroundColor = '#fff';
                 element.style.color = '#1e293b';
-                element.style.lineHeight = '1.5';
-                
                 element.innerHTML = `
-                    <div style="text-align: center; margin-bottom: 40px;">
-                        <h1 style="color: #1e293b; font-size: 24pt; margin-bottom: 8px;">Strategic Marketing Report</h1>
-                        <p style="color: #64748b; font-size: 11pt;">Generated by Bisrat's Strategic Marketing System</p>
-                        <div style="width: 60px; height: 2px; background: #3b82f6; margin: 16px auto;"></div>
+                    <div style="text-align:center; margin-bottom:40px;">
+                        <h1 style="color:#1e293b;">Strategic Marketing Report</h1>
+                        <p>Generated by Bisrat's Strategic Marketing System</p>
+                        <hr style="width:60px; margin:16px auto;">
                     </div>
-                    <div style="font-size: 11pt; line-height: 1.5;">
-                        ${contentHTML}
-                    </div>
-                    <div style="margin-top: 40px; padding-top: 16px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 9pt; color: #94a3b8;">
-                        <p>Generated on: ${new Date().toLocaleString()}</p>
-                        <p>PDF/A-1b compliant | ISO 19005-1 | Archival Format</p>
-                        <p>© 2026 Bisrat Tewabe — All rights reserved</p>
+                    <div style="font-size:11pt;">${content}</div>
+                    <div style="text-align:center; margin-top:40px; font-size:9pt; color:#64748b;">
+                        <p>Generated: ${new Date().toLocaleString()}</p>
+                        <p>PDF/A-1b compliant | ISO 19005-1</p>
                     </div>
                 `;
-                
-                const styleClone = document.createElement('style');
-                styleClone.textContent = `
-                    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-                    th, td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; vertical-align: top; }
-                    th { background: #f1f5f9; font-weight: 600; }
-                    h1 { color: #1e293b; font-size: 20pt; margin-top: 24px; margin-bottom: 12px; }
-                    h2 { color: #1e293b; font-size: 16pt; margin-top: 20px; margin-bottom: 10px; }
-                    h3 { color: #475569; font-size: 13pt; margin-top: 16px; margin-bottom: 8px; }
-                    ul, ol { margin: 8px 0; padding-left: 24px; }
-                    li { margin: 4px 0; }
-                    strong { color: #1e293b; }
-                    hr { border: none; border-top: 1px solid #e2e8f0; margin: 16px 0; }
-                    p { margin: 8px 0; }
-                `;
-                
-                element.prepend(styleClone);
-                
-                const opt = {
-                    margin: [0.5, 0.5, 0.5, 0.5],
-                    filename: `marketing_plan_${timestamp}.pdf`,
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 2, backgroundColor: '#ffffff', letterRendering: true },
-                    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait', compress: true }
-                };
-                
+                const opt = { margin: [0.5,0.5,0.5,0.5], filename: `marketing_plan.pdf`, html2canvas: { scale:2, backgroundColor:'#fff' }, jsPDF: { unit:'in', format:'a4', orientation:'portrait' } };
                 await html2pdf().set(opt).from(element).save();
-                
-                downloadBtn.innerText = originalText;
-                downloadBtn.disabled = false;
-            } catch (error) {
-                console.error('PDF error:', error);
-                alert('Error generating PDF. Please try again.');
-                downloadBtn.innerText = originalText;
-                downloadBtn.disabled = false;
-            }
+            } catch (e) { alert("PDF error"); }
+            finally { btn.innerText = original; btn.disabled = false; }
         }
-
+        
         async function copyToClipboard() {
-            const output = document.getElementById("output").innerText;
-            if (!output || output === "Ready. Enter data and click Generate." || output.includes("Processing")) {
-                alert("Please generate a marketing plan first");
-                return;
-            }
-            
-            try {
-                await navigator.clipboard.writeText(output);
-                const copyBtn = document.getElementById("copyBtn");
-                const originalText = copyBtn.innerText;
-                copyBtn.innerText = "✅ Copied!";
-                setTimeout(() => { copyBtn.innerText = originalText; }, 2000);
-            } catch (error) {
-                alert("Failed to copy. Select text manually.");
-            }
+            const text = document.getElementById("output").innerText;
+            if (!text || text.includes("Processing")) { alert("Generate a plan first"); return; }
+            await navigator.clipboard.writeText(text);
+            const btn = document.getElementById("copyBtn");
+            const original = btn.innerText;
+            btn.innerText = "✅ Copied!";
+            setTimeout(() => btn.innerText = original, 2000);
         }
-
+        
         testAPI();
     </script>
 </body>
