@@ -27,7 +27,7 @@
         .output-header h3 { margin: 0; color: #38bdf8; }
         .rendered-output { background: #0f172a; border-radius: 12px; padding: 24px; overflow-x: auto; line-height: 1.5; }
         
-        /* Adaptive Table Styling - Automatically adjusts to content */
+        /* Adaptive Table Styling */
         .rendered-output table {
             width: 100%;
             border-collapse: collapse;
@@ -43,7 +43,6 @@
             padding: 12px 15px;
             text-align: left;
             border: 1px solid #334155;
-            white-space: nowrap;
         }
         .rendered-output td {
             border: 1px solid #334155;
@@ -53,11 +52,6 @@
             background: #0f172a;
             color: #e2e8f0;
             word-wrap: break-word;
-        }
-        /* Make first column slightly wider for category names */
-        .rendered-output table tr th:first-child {
-            white-space: normal;
-            min-width: 100px;
         }
         
         .rendered-output h1 { color: #38bdf8; font-size: 1.8rem; border-bottom: 2px solid #334155; padding-bottom: 0.5rem; }
@@ -92,20 +86,6 @@
         .testimonial-text { color: #e2e8f0; font-style: italic; }
         .testimonial-user { color: #64748b; font-size: 12px; margin-top: 8px; }
         
-        /* Hidden Admin Link - Invisible but clickable in footer */
-        .admin-hidden-link {
-            position: fixed;
-            bottom: 5px;
-            right: 5px;
-            width: 30px;
-            height: 30px;
-            opacity: 0;
-            cursor: pointer;
-            z-index: 9999;
-            background: transparent;
-        }
-        
-        /* Footer note - visible to everyone for credibility */
         .footer-note {
             margin-top: 30px;
             text-align: center;
@@ -118,9 +98,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
-
-<!-- Hidden Admin Link (Invisible - double-click to open admin in new tab) -->
-<a id="adminHiddenLink" class="admin-hidden-link" ondblclick="openAdminTab()"></a>
 
 <div class="hero">
     <h1>🧠 Strategic Marketing System</h1>
@@ -181,11 +158,7 @@
     const API_BASE_URL = "https://Bisratprompt-marketing-system-api.hf.space";
     let currentPlanHTML = "";
     
-    // Open admin dashboard in a new tab (no visible button)
-    function openAdminTab() {
-        const adminUrl = `${API_BASE_URL}/admin-dashboard.html`;
-        window.open(adminUrl, '_blank');
-    }
+    // Admin access is only via direct URL: /admin or /admin-dashboard.html
     
     async function sendFeedback(vote) {
         const customer = document.getElementById("customer").value || "";
@@ -265,10 +238,10 @@
             } else if (inTable && !line.includes('|')) {
                 let html = '<table>\n<thead><tr>';
                 for (let h of headers) html += `<th>${escapeHtml(h)}</th>`;
-                html += '</tr></thead><tbody>';
+                html += '</td></thead><tbody>';
                 for (let row of rows) {
                     html += '<tr>';
-                    for (let cell of row) html += `<td>${escapeHtml(cell)}</td>`;
+                    for (let cell of row) html += `<td style="padding: 10px 12px; border: 1px solid #334155;">${escapeHtml(cell)}</td>`;
                     html += '</tr>';
                 }
                 html += '</tbody></table>';
@@ -284,13 +257,13 @@
         if (inTable && headers.length) {
             let html = '<table><thead><tr>';
             for (let h of headers) html += `<th>${escapeHtml(h)}</th>`;
-            html += '</td></thead><tbody>';
+            html += '</tr></thead><tbody>';
             for (let row of rows) {
                 html += '<tr>';
-                for (let cell of row) html += `<td>${escapeHtml(cell)}</td>`;
+                for (let cell of row) html += `<td style="padding: 10px 12px; border: 1px solid #334155;">${escapeHtml(cell)}</td>`;
                 html += '</tr>';
             }
-            html += '</tbody></tr>';
+            html += '</tbody></table>';
             result.push(html);
         }
         return result.join('\n');
