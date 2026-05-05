@@ -44,6 +44,63 @@
         .feedback-section { margin-top: 24px; text-align: center; font-size: 13px; color: #64748b; padding: 16px; border-top: 1px solid #334155; }
         .feedback-section a { color: #10b981; text-decoration: none; cursor: pointer; margin: 0 8px; }
         .feedback-note { font-size: 11px; margin-top: 8px; color: #475569; }
+        
+        /* Dashboard Styles - ADDED */
+        .dashboard-section {
+            margin-top: 30px;
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #334155;
+        }
+        .dashboard-section h3 {
+            color: #38bdf8;
+            margin-bottom: 16px;
+        }
+        .dashboard-section h4 {
+            color: #cbd5e1;
+            margin-bottom: 12px;
+        }
+        .stats-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 12px;
+            flex: 1;
+            text-align: center;
+            min-width: 100px;
+        }
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .stat-label {
+            color: #94a3b8;
+            font-size: 13px;
+        }
+        .feedback-item {
+            background: #0f172a;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .feedback-vote-yes { color: #10b981; font-weight: bold; }
+        .feedback-vote-no { color: #ef4444; font-weight: bold; }
+        .feedback-time { color: #64748b; font-size: 12px; }
+        .feedback-summary { color: #94a3b8; font-size: 13px; margin-top: 4px; }
+        .feedback-product { color: #64748b; font-size: 11px; margin-top: 4px; }
+        .export-btn { background: #4f46e5; margin-top: 16px; }
+        .feedback-list-container { max-height: 300px; overflow-y: auto; }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
@@ -92,6 +149,30 @@
         <div class="feedback-note">💡 Feedback saves anonymously to improve the system</div>
     </div>
 
+    <!-- Feedback Dashboard - ADDED -->
+    <div class="dashboard-section">
+        <h3>📊 Feedback Dashboard</h3>
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" id="total-feedback">0</div>
+                <div class="stat-label">Total Feedback</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" style="color: #10b981;" id="positive-count">0</div>
+                <div class="stat-label">Positive (👍)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" style="color: #ef4444;" id="negative-count">0</div>
+                <div class="stat-label">Negative (👎)</div>
+            </div>
+        </div>
+        <h4>Recent Feedback</h4>
+        <div id="feedback-list" class="feedback-list-container">
+            <div style="color: #64748b; text-align: center; padding: 20px;">Loading feedback...</div>
+        </div>
+        <button onclick="exportFeedback()" class="export-btn">📥 Export Feedback as CSV</button>
+    </div>
+
     <script>
         const API_BASE_URL = "https://Bisratprompt-marketing-system-api.hf.space";
         let currentPlanHTML = "";
@@ -117,8 +198,96 @@
                     body: JSON.stringify({ vote, customer, product, plan_summary: summary })
                 });
                 alert(`Thank you for your ${vote === 'yes' ? 'positive' : 'honest'} feedback! 🙏`);
+                // Refresh dashboard after feedback
+                loadFeedbackDashboard();
             } catch (error) {
                 alert(`Thank you for your feedback!`);
+            }
+        }
+        
+        // Dashboard Functions - ADDED
+        async function loadFeedbackDashboard() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/feedback/list`);
+                const data = await response.json();
+                
+                if (data.files) {
+                    let allFeedback = [];
+                    for (const file of data.files) {
+                        if (file !== 'all_feedback.json') {
+                            const fileRes = await fetch(`${API_BASE_URL}/feedback/${file}`);
+                            const feedback = await fileRes.json();
+                            allFeedback.push(feedback);
+                        }
+                    }
+                    
+                    allFeedback.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                    
+                    document.getElementById('total-feedback').textContent = allFeedback.length;
+                    const positiveCount = allFeedback.filter(f => f.vote === 'yes').length;
+                    const negativeCount = allFeedback.filter(f => f.vote === 'no').length;
+                    document.getElementById('positive-count').textContent = positiveCount;
+                    document.getElementById('negative-count').textContent = negativeCount;
+                    
+                    const feedbackListDiv = document.getElementById('feedback-list');
+                    if (allFeedback.length === 0) {
+                        feedbackListDiv.innerHTML = '<div style="color: #64748b; text-align: center; padding: 20px;">No feedback yet. Generate a plan and vote!</div>';
+                    } else {
+                        feedbackListDiv.innerHTML = allFeedback.slice(0, 10).map(f => `
+                            <div class="feedback-item">
+                                <div class="feedback-header">
+                                    <span class="${f.vote === 'yes' ? 'feedback-vote-yes' : 'feedback-vote-no'}">${f.vote === 'yes' ? '👍 Yes' : '👎 No'}</span>
+                                    <span class="feedback-time">${new Date(f.timestamp).toLocaleString()}</span>
+                                </div>
+                                <div class="feedback-summary">${f.plan_summary ? f.plan_summary.substring(0, 150) + '...' : 'No summary'}</div>
+                                <div class="feedback-product">📦 ${f.product_preview ? f.product_preview.substring(0, 80) + '...' : 'No product'}</div>
+                            </div>
+                        `).join('');
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                document.getElementById('feedback-list').innerHTML = '<div style="color: #f87171; text-align: center; padding: 20px;">Error loading feedback</div>';
+            }
+        }
+        
+        async function exportFeedback() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/feedback/list`);
+                const data = await response.json();
+                
+                let allFeedback = [];
+                for (const file of data.files) {
+                    if (file !== 'all_feedback.json') {
+                        const fileRes = await fetch(`${API_BASE_URL}/feedback/${file}`);
+                        const feedback = await fileRes.json();
+                        allFeedback.push(feedback);
+                    }
+                }
+                
+                const headers = ['Timestamp', 'Vote', 'Customer Preview', 'Product Preview', 'Plan Summary', 'User Agent'];
+                const rows = allFeedback.map(f => [
+                    f.timestamp,
+                    f.vote,
+                    `"${(f.customer_preview || '').replace(/"/g, '""')}"`,
+                    `"${(f.product_preview || '').replace(/"/g, '""')}"`,
+                    `"${(f.plan_summary || '').replace(/"/g, '""')}"`,
+                    `"${(f.user_agent || '').substring(0, 100).replace(/"/g, '""')}"`
+                ]);
+                
+                const csvContent = [headers, ...rows].map(row => row.join(',')).join('\n');
+                const blob = new Blob([csvContent], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `feedback_export_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                alert('Feedback exported successfully!');
+            } catch (error) {
+                console.error('Export error:', error);
+                alert('Error exporting feedback');
             }
         }
         
@@ -148,9 +317,9 @@
                 } else if (inTable && !line.includes('|')) {
                     let html = '<table>\n<thead><tr>';
                     for (let h of headers) html += `<th>${escapeHtml(h)}</th>`;
-                    html += '</td></thead><tbody>';
+                    html += '</tr></thead><tbody>';
                     for (let row of rows) {
-                        html += '<tr>';
+                        html += '</tr>';
                         for (let cell of row) html += `<td>${escapeHtml(cell)}</td>`;
                         html += '</tr>';
                     }
@@ -303,6 +472,7 @@
         }
         
         testAPI();
+        loadFeedbackDashboard();
     </script>
 </body>
 </html>
