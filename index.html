@@ -26,14 +26,52 @@
         .output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
         .output-header h3 { margin: 0; color: #38bdf8; }
         .rendered-output { background: #0f172a; border-radius: 12px; padding: 24px; overflow-x: auto; line-height: 1.5; }
-        .rendered-output table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #0f172a; }
-        .rendered-output th, .rendered-output td { border: 1px solid #334155; padding: 12px; text-align: left; vertical-align: top; }
-        .rendered-output th { background: #1e293b; color: #38bdf8; font-weight: 600; }
-        .rendered-output td { background: #0f172a; }
+        
+        /* Improved Table Styling - Balanced */
+        .rendered-output table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #0f172a;
+            font-size: 14px;
+        }
+        .rendered-output th {
+            background: #1e293b;
+            color: #38bdf8;
+            font-weight: 600;
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #334155;
+        }
+        .rendered-output td {
+            border: 1px solid #334155;
+            padding: 10px 12px;
+            text-align: left;
+            vertical-align: top;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+        /* Ensure consistent column width */
+        .rendered-output table tr th:first-child,
+        .rendered-output table tr td:first-child {
+            width: 18%;
+        }
+        .rendered-output table tr th:nth-child(2),
+        .rendered-output table tr td:nth-child(2) {
+            width: 40%;
+        }
+        .rendered-output table tr th:nth-child(3),
+        .rendered-output table tr td:nth-child(3) {
+            width: 42%;
+        }
+        
         .rendered-output h1 { color: #38bdf8; font-size: 1.8rem; border-bottom: 2px solid #334155; padding-bottom: 0.5rem; }
-        .rendered-output h2 { color: #38bdf8; font-size: 1.4rem; }
+        .rendered-output h2 { color: #38bdf8; font-size: 1.4rem; margin-top: 1.5rem; }
         .rendered-output h3 { color: #94a3b8; }
         .rendered-output strong { color: #facc15; }
+        .rendered-output ul, .rendered-output ol { margin: 12px 0; padding-left: 24px; }
+        .rendered-output li { margin: 6px 0; }
+        
         .status { padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; }
         .status-working { background: #065f46; color: #d1d5db; }
         .status-testing { background: #854d0e; color: #fde047; }
@@ -59,463 +97,489 @@
         .testimonial-text { color: #e2e8f0; font-style: italic; }
         .testimonial-user { color: #64748b; font-size: 12px; margin-top: 8px; }
         
-        /* Admin Dashboard - Always Visible but Locked */
-        .dashboard-section {
-            margin-top: 30px;
-            background: #1e293b;
-            border-radius: 16px;
-            padding: 20px;
-            border: 1px solid #334155;
+        /* Invisible Admin Button */
+        .admin-secret-area {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+            width: 20px;
+            height: 20px;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 9999;
         }
-        .dashboard-section h3 { color: #38bdf8; margin-bottom: 16px; }
-        .dashboard-section h4 { color: #cbd5e1; margin-bottom: 12px; }
-        .stats-container { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
-        .stat-card { background: #0f172a; padding: 15px; border-radius: 12px; flex: 1; text-align: center; min-width: 100px; }
-        .stat-number { font-size: 28px; font-weight: bold; }
-        .stat-label { color: #94a3b8; font-size: 13px; }
-        .feedback-item { background: #0f172a; padding: 12px; border-radius: 8px; margin-bottom: 8px; }
-        .feedback-header { display: flex; justify-content: space-between; align-items: center; }
-        .feedback-vote-yes { color: #10b981; font-weight: bold; }
-        .feedback-vote-no { color: #ef4444; font-weight: bold; }
-        .feedback-time { color: #64748b; font-size: 12px; }
-        .feedback-summary { color: #94a3b8; font-size: 13px; margin-top: 4px; }
-        .feedback-product { color: #64748b; font-size: 11px; margin-top: 4px; }
-        .export-btn { background: #4f46e5; margin-top: 16px; }
-        .feedback-list-container { max-height: 300px; overflow-y: auto; }
-        .admin-note { background: #0f172a; padding: 8px 12px; border-radius: 8px; margin-bottom: 16px; font-size: 12px; color: #94a3b8; border-left: 3px solid #f59e0b; }
-        .admin-input-area { display: flex; gap: 12px; margin-bottom: 20px; align-items: center; flex-wrap: wrap; }
-        .admin-input-area input { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 10px; color: white; min-width: 250px; flex: 1; }
-        .locked-content { opacity: 0.5; pointer-events: none; }
-        .locked-message { text-align: center; padding: 40px; color: #64748b; }
-        .unlock-btn { background: #f59e0b; }
+        
+        /* Modal for admin access */
+        .admin-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+        .admin-modal-content {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid #334155;
+            min-width: 300px;
+            text-align: center;
+        }
+        .admin-modal-content input {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: white;
+        }
+        .admin-modal-content button {
+            margin: 5px;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
-    <div class="hero">
-        <h1>🧠 Strategic Marketing System</h1>
-        <p class="tagline">Enter your customer data and product description.<br>Get a complete strategic marketing plan in 60 seconds.</p>
-        <div class="hero-features">
-            <span>📊 Segmentation</span> <span>📈 PESTLE + Mini-SWOT</span> <span>⚔️ Porter's Five Forces</span>
-            <span>🎯 Kotler Positioning</span> <span>🛠️ 4Ps</span> <span>📉 SWOT + Micro-SWOT</span>
-            <span>📏 KPI + Budget</span> <span>🗺️ 30-Day Roadmap</span> <span>🎨 Design Prompts</span>
-        </div>
-        <div class="hero-features" style="margin-top: 8px;">
-            <span>⚡ DeepSeek</span> <span>📄 PDF/A Archival</span>
-            <span>🎨 UI + PDF Identical</span> <span>🚀 Free & Unlimited</span>
+
+<!-- Invisible Admin Access Area (Double-click here) -->
+<div class="admin-secret-area" id="secretAdminArea" ondblclick="showAdminModal()"></div>
+
+<!-- Admin Modal -->
+<div id="adminModal" class="admin-modal">
+    <div class="admin-modal-content">
+        <h3>🔐 Admin Access</h3>
+        <input type="password" id="modalAdminKey" placeholder="Enter Admin Key">
+        <div>
+            <button onclick="authenticateAdmin()">Unlock</button>
+            <button onclick="closeAdminModal()">Cancel</button>
         </div>
     </div>
+</div>
 
-    <div class="input-area">
-        <div id="status" class="status status-testing">🟡 Testing API connection...</div>
-        <label>📊 Customer Data:</label>
-        <textarea id="customer" rows="4" placeholder="Example: Young freelancers in Addis Ababa, age 22-28, income $2-4k/month"></textarea>
-        <label>📦 Product Description:</label>
-        <textarea id="product" rows="4" placeholder="Example: AI-powered project management tool, $15/user/month subscription"></textarea>
-        <div class="button-group">
-            <button id="generateBtn" onclick="generate()">🚀 Generate Strategy</button>
-            <button id="downloadBtn" onclick="downloadPDF()" class="btn-download" style="display:none;">📄 Download PDF</button>
-            <button id="copyBtn" onclick="copyToClipboard()" class="btn-copy" style="display:none;">📋 Copy Text</button>
+<!-- Admin Panel Modal (After Authentication) -->
+<div id="adminPanelModal" class="admin-modal">
+    <div class="admin-modal-content" style="min-width: 500px; max-width: 80%; max-height: 80%; overflow-y: auto;">
+        <h3>📊 Admin Dashboard</h3>
+        <div id="adminPanelContent">
+            <div style="padding: 20px; text-align: center;">Loading...</div>
         </div>
-        <div id="loader" class="loader"></div>
+        <button onclick="closeAdminPanel()">Close</button>
     </div>
+</div>
 
-    <div class="output-container">
-        <div class="output-header">
-            <h3>📋 Marketing Plan</h3>
-            <span id="timestamp" style="font-size: 12px; color: #64748b;"></span>
-        </div>
-        <div id="output" class="rendered-output">Ready. Enter data and click Generate.</div>
+<div class="hero">
+    <h1>🧠 Strategic Marketing System</h1>
+    <p class="tagline">Enter your customer data and product description.<br>Get a complete strategic marketing plan in 60 seconds.</p>
+    <div class="hero-features">
+        <span>📊 Segmentation</span> <span>📈 PESTLE + Mini-SWOT</span> <span>⚔️ Porter's Five Forces</span>
+        <span>🎯 Kotler Positioning</span> <span>🛠️ 4Ps</span> <span>📉 SWOT + Micro-SWOT</span>
+        <span>📏 KPI + Budget</span> <span>🗺️ 30-Day Roadmap</span> <span>🎨 Design Prompts</span>
     </div>
-
-    <div class="feedback-section">
-        <span>Was this helpful? </span>
-        <a href="#" onclick="sendFeedback('yes')">👍 Yes</a>
-        <a href="#" onclick="sendFeedback('no')">👎 No</a>
-        <span style="margin-left: 16px;">📧 <a href="mailto:bisrattewabe373@gmail.com">bisrattewabe373@gmail.com</a></span>
-        <div class="feedback-note">💡 Your positive feedback may be featured as a testimonial. All feedback helps improve the system.</div>
+    <div class="hero-features" style="margin-top: 8px;">
+        <span>⚡ DeepSeek</span> <span>📄 PDF/A Archival</span>
+        <span>🎨 UI + PDF Identical</span> <span>🚀 Free & Unlimited</span>
     </div>
+</div>
 
-    <!-- Public Testimonials -->
-    <div class="testimonials-section">
-        <h3>🌟 What Users Are Saying</h3>
-        <div id="testimonials-list">
-            <div style="color: #64748b; text-align: center; padding: 20px;">Loading testimonials...</div>
-        </div>
+<div class="input-area">
+    <div id="status" class="status status-testing">🟡 Testing API connection...</div>
+    <label>📊 Customer Data:</label>
+    <textarea id="customer" rows="4" placeholder="Example: Young freelancers in Addis Ababa, age 22-28, income $2-4k/month"></textarea>
+    <label>📦 Product Description:</label>
+    <textarea id="product" rows="4" placeholder="Example: AI-powered project management tool, $15/user/month subscription"></textarea>
+    <div class="button-group">
+        <button id="generateBtn" onclick="generate()">🚀 Generate Strategy</button>
+        <button id="downloadBtn" onclick="downloadPDF()" class="btn-download" style="display:none;">📄 Download PDF</button>
+        <button id="copyBtn" onclick="copyToClipboard()" class="btn-copy" style="display:none;">📋 Copy Text</button>
     </div>
+    <div id="loader" class="loader"></div>
+</div>
 
-    <!-- Admin Dashboard - Always Visible (Locked by default) -->
-    <div class="dashboard-section">
-        <h3>🔐 Admin Dashboard</h3>
-        <div class="admin-note">
-            🔒 Private feedback analytics — Enter your admin key to unlock
-        </div>
-        
-        <div class="admin-input-area">
-            <input type="password" id="adminKeyInput" placeholder="Enter Admin Key">
-            <button onclick="unlockAdminDashboard()" class="unlock-btn">🔓 Unlock Dashboard</button>
-        </div>
-        
-        <div id="adminLockedContent" style="display: block;">
-            <div class="locked-message">
-                🔒 Dashboard is locked. Enter the admin key above to view private feedback analytics and export data.
-            </div>
-        </div>
-        
-        <div id="adminUnlockedContent" style="display: none;">
-            <h4>📊 Private Feedback Analytics</h4>
-            <div class="stats-container">
-                <div class="stat-card"><div class="stat-number" id="total-feedback">0</div><div class="stat-label">Total Feedback</div></div>
-                <div class="stat-card"><div class="stat-number" style="color: #10b981;" id="positive-count">0</div><div class="stat-label">Positive (👍)</div></div>
-                <div class="stat-card"><div class="stat-number" style="color: #ef4444;" id="negative-count">0</div><div class="stat-label">Negative (👎)</div></div>
-            </div>
-            <h4>Recent Private Feedback</h4>
-            <div id="feedback-list" class="feedback-list-container">
-                <div style="color: #64748b; text-align: center; padding: 20px;">Unlock to view feedback</div>
-            </div>
-            <button onclick="exportFeedback()" class="export-btn">📥 Export Feedback as CSV</button>
-        </div>
+<div class="output-container">
+    <div class="output-header">
+        <h3>📋 Marketing Plan</h3>
+        <span id="timestamp" style="font-size: 12px; color: #64748b;"></span>
     </div>
+    <div id="output" class="rendered-output">Ready. Enter data and click Generate.</div>
+</div>
 
-    <script>
-        const API_BASE_URL = "https://Bisratprompt-marketing-system-api.hf.space";
-        let currentPlanHTML = "";
-        let isAdminUnlocked = false;
-        
-        function unlockAdminDashboard() {
-            const keyInput = document.getElementById('adminKeyInput');
-            const adminKey = keyInput.value.trim();
-            
-            if (adminKey === 'BisratAdmin2026') {
-                isAdminUnlocked = true;
-                document.getElementById('adminLockedContent').style.display = 'none';
-                document.getElementById('adminUnlockedContent').style.display = 'block';
-                loadPrivateFeedback();
-            } else {
-                alert('Invalid admin key. Access denied.');
-                keyInput.value = '';
-            }
+<div class="feedback-section">
+    <span>Was this helpful? </span>
+    <a href="#" onclick="sendFeedback('yes')">👍 Yes</a>
+    <a href="#" onclick="sendFeedback('no')">👎 No</a>
+    <span style="margin-left: 16px;">📧 <a href="mailto:bisrattewabe373@gmail.com">bisrattewabe373@gmail.com</a></span>
+    <div class="feedback-note">💡 Your positive feedback may be featured as a testimonial. All feedback helps improve the system.</div>
+</div>
+
+<div class="testimonials-section">
+    <h3>🌟 What Users Are Saying</h3>
+    <div id="testimonials-list">
+        <div style="color: #64748b; text-align: center; padding: 20px;">Loading testimonials...</div>
+    </div>
+</div>
+
+<script>
+    const API_BASE_URL = "https://Bisratprompt-marketing-system-api.hf.space";
+    let currentPlanHTML = "";
+    
+    // Admin functions - Hidden access
+    function showAdminModal() {
+        document.getElementById('adminModal').style.display = 'flex';
+        document.getElementById('modalAdminKey').value = '';
+    }
+    
+    function closeAdminModal() {
+        document.getElementById('adminModal').style.display = 'none';
+    }
+    
+    function closeAdminPanel() {
+        document.getElementById('adminPanelModal').style.display = 'none';
+    }
+    
+    async function authenticateAdmin() {
+        const key = document.getElementById('modalAdminKey').value;
+        if (key === 'BisratAdmin2026') {
+            closeAdminModal();
+            await loadAdminPanel();
+            document.getElementById('adminPanelModal').style.display = 'flex';
+        } else {
+            alert('Invalid admin key');
         }
+    }
+    
+    async function loadAdminPanel() {
+        const panelContent = document.getElementById('adminPanelContent');
+        panelContent.innerHTML = '<div style="padding: 20px; text-align: center;">Loading private feedback...</div>';
         
-        async function sendFeedback(vote) {
-            const customer = document.getElementById("customer").value || "";
-            const product = document.getElementById("product").value || "";
+        try {
+            const response = await fetch(`${API_BASE_URL}/private-feedback`, {
+                headers: { "X-Admin-Key": "BisratAdmin2026" }
+            });
+            const data = await response.json();
             
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = currentPlanHTML;
-            let plainText = tempDiv.textContent || "";
-            let summary = plainText.substring(0, 300);
-            if (plainText.length > 300) {
-                const lastPeriod = summary.lastIndexOf('.');
-                if (lastPeriod > 200) summary = summary.substring(0, lastPeriod + 1);
-                else summary = summary + "...";
-            }
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/feedback`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ vote, customer, product, plan_summary: summary })
-                });
-                alert(`Thank you for your ${vote === 'yes' ? 'positive' : 'honest'} feedback! 🙏`);
-                loadTestimonials();
-                if (isAdminUnlocked) loadPrivateFeedback();
-            } catch (error) {
-                alert(`Thank you for your feedback!`);
-            }
-        }
-        
-        async function loadTestimonials() {
-            const testimonialsDiv = document.getElementById('testimonials-list');
-            testimonialsDiv.innerHTML = '<div style="color: #64748b; text-align: center; padding: 20px;">Loading testimonials...</div>';
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/public-testimonials`);
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                const data = await response.json();
-                
-                if (data.testimonials && data.testimonials.length > 0) {
-                    testimonialsDiv.innerHTML = data.testimonials.slice(0, 6).map(t => `
-                        <div class="testimonial-card">
-                            <div class="testimonial-stars">★★★★★</div>
-                            <div class="testimonial-text">"${escapeHtml(t.testimonial || t.plan_summary || 'Great experience!')}"</div>
-                            <div class="testimonial-user">✓ Verified User</div>
-                        </div>
-                    `).join('');
-                } else {
-                    testimonialsDiv.innerHTML = '<div style="color: #64748b; text-align: center; padding: 20px;">Be the first to share your experience! 🌟</div>';
-                }
-            } catch (error) {
-                console.error('Testimonials error:', error);
-                testimonialsDiv.innerHTML = '<div style="color: #94a3b8; text-align: center; padding: 20px;">⭐ Testimonials coming soon</div>';
-            }
-        }
-        
-        async function loadPrivateFeedback() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/private-feedback`, {
-                    headers: { "X-Admin-Key": "BisratAdmin2026" }
-                });
-                const data = await response.json();
-                
-                if (data.error) {
-                    console.error('Admin error:', data.error);
-                    return;
-                }
-                
-                document.getElementById('total-feedback').textContent = data.count || 0;
-                document.getElementById('positive-count').textContent = data.positive || 0;
-                document.getElementById('negative-count').textContent = data.negative || 0;
-                
-                const feedbackListDiv = document.getElementById('feedback-list');
-                if (data.feedback && data.feedback.length > 0) {
-                    feedbackListDiv.innerHTML = data.feedback.slice(0, 10).map(f => `
-                        <div class="feedback-item">
-                            <div class="feedback-header">
-                                <span class="${f.vote === 'yes' ? 'feedback-vote-yes' : 'feedback-vote-no'}">${f.vote === 'yes' ? '👍 Yes' : '👎 No'}</span>
-                                <span class="feedback-time">${new Date(f.timestamp).toLocaleString()}</span>
-                            </div>
-                            <div class="feedback-summary">${escapeHtml((f.plan_summary || '').substring(0, 150))}...</div>
-                            <div class="feedback-product">📦 ${escapeHtml((f.product_preview || '').substring(0, 80))}...</div>
-                        </div>
-                    `).join('');
-                } else {
-                    feedbackListDiv.innerHTML = '<div style="color: #64748b; text-align: center; padding: 20px;">No private feedback yet.</div>';
-                }
-            } catch (error) {
-                console.error('Load private feedback error:', error);
-            }
-        }
-        
-        async function exportFeedback() {
-            if (!isAdminUnlocked) {
-                alert('Please unlock the dashboard first with your admin key');
+            if (data.error) {
+                panelContent.innerHTML = `<div style="color: #f87171;">Error: ${data.error}</div>`;
                 return;
             }
             
-            try {
-                const response = await fetch(`${API_BASE_URL}/private-feedback`, {
-                    headers: { "X-Admin-Key": "BisratAdmin2026" }
-                });
-                const data = await response.json();
-                
-                if (data.error) {
-                    alert('Admin access required.');
-                    return;
-                }
-                
-                const allFeedback = data.feedback || [];
-                const headers = ['Timestamp', 'Vote', 'Customer Preview', 'Product Preview', 'Plan Summary', 'User Agent', 'IP'];
-                const rows = allFeedback.map(f => [
-                    f.timestamp,
-                    f.vote,
-                    `"${(f.customer_preview || '').replace(/"/g, '""')}"`,
-                    `"${(f.product_preview || '').replace(/"/g, '""')}"`,
-                    `"${(f.plan_summary || '').replace(/"/g, '""')}"`,
-                    `"${(f.user_agent || '').substring(0, 100).replace(/"/g, '""')}"`,
-                    `"${(f.ip || '').replace(/"/g, '""')}"`
-                ]);
-                
-                const csvContent = [headers, ...rows].map(row => row.join(',')).join('\n');
-                const blob = new Blob([csvContent], { type: 'text/csv' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `private_feedback_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.csv`;
-                a.click();
-                URL.revokeObjectURL(url);
-                
-                alert('Private feedback exported successfully!');
-            } catch (error) {
-                console.error('Export error:', error);
-                alert('Error exporting feedback');
-            }
+            panelContent.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <h4>Feedback Analytics</h4>
+                    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                        <div style="background: #0f172a; padding: 15px; border-radius: 12px; flex: 1; text-align: center;">
+                            <div style="font-size: 28px; font-weight: bold;">${data.count || 0}</div>
+                            <div style="color: #94a3b8;">Total Feedback</div>
+                        </div>
+                        <div style="background: #0f172a; padding: 15px; border-radius: 12px; flex: 1; text-align: center;">
+                            <div style="font-size: 28px; font-weight: bold; color: #10b981;">${data.positive || 0}</div>
+                            <div style="color: #94a3b8;">Positive (👍)</div>
+                        </div>
+                        <div style="background: #0f172a; padding: 15px; border-radius: 12px; flex: 1; text-align: center;">
+                            <div style="font-size: 28px; font-weight: bold; color: #ef4444;">${data.negative || 0}</div>
+                            <div style="color: #94a3b8;">Negative (👎)</div>
+                        </div>
+                    </div>
+                </div>
+                <h4>Recent Feedback</h4>
+                <div style="max-height: 400px; overflow-y: auto;">
+                    ${data.feedback && data.feedback.length > 0 ? data.feedback.slice(0, 20).map(f => `
+                        <div style="background: #0f172a; padding: 12px; border-radius: 8px; margin-bottom: 8px;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: ${f.vote === 'yes' ? '#10b981' : '#ef4444'}; font-weight: bold;">${f.vote === 'yes' ? '👍 Yes' : '👎 No'}</span>
+                                <span style="color: #64748b;">${new Date(f.timestamp).toLocaleString()}</span>
+                            </div>
+                            <div style="color: #94a3b8; font-size: 13px; margin-top: 5px;">${(f.plan_summary || '').substring(0, 200)}...</div>
+                            <div style="color: #64748b; font-size: 11px; margin-top: 5px;">📦 ${(f.product_preview || '').substring(0, 80)}</div>
+                        </div>
+                    `).join('') : '<div style="color: #64748b; text-align: center; padding: 20px;">No feedback yet</div>'}
+                </div>
+                <button onclick="exportPrivateFeedback()" style="margin-top: 20px; background: #4f46e5;">📥 Export CSV</button>
+            `;
+        } catch (error) {
+            panelContent.innerHTML = `<div style="color: #f87171;">Error loading data: ${error.message}</div>`;
         }
-        
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-        
-        function renderMarkdownTables(text) {
-            const lines = text.split('\n');
-            let result = [];
-            let inTable = false, headers = [], rows = [];
+    }
+    
+    async function exportPrivateFeedback() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/private-feedback`, {
+                headers: { "X-Admin-Key": "BisratAdmin2026" }
+            });
+            const data = await response.json();
             
-            for (let i = 0; i < lines.length; i++) {
-                let line = lines[i];
-                if (line.includes('|') && i + 1 < lines.length && lines[i + 1].includes('---')) {
-                    inTable = true;
-                    headers = line.split('|').filter(c => c.trim()).map(c => c.trim());
-                    i++;
-                    rows = [];
-                    continue;
-                }
-                if (inTable && line.includes('|')) {
-                    const cells = line.split('|').filter(c => c.trim()).map(c => c.trim());
-                    if (cells.length) rows.push(cells);
-                } else if (inTable && !line.includes('|')) {
-                    let html = '<table>\n<thead><tr>';
-                    for (let h of headers) html += `<th>${escapeHtml(h)}</th>`;
-                    html += '</table></thead><tbody>';
-                    for (let row of rows) {
-                        html += '<tr>';
-                        for (let cell of row) html += `<tr>${escapeHtml(cell)}</td>`;
-                        html += '</tr>';
-                    }
-                    html += '</tbody></table>';
-                    result.push(html);
-                    inTable = false;
-                    headers = [];
-                    rows = [];
-                    result.push(line);
-                } else {
-                    result.push(line);
-                }
+            if (data.error) {
+                alert('Admin access required');
+                return;
             }
-            if (inTable && headers.length) {
-                let html = '<table><thead><tr>';
+            
+            const allFeedback = data.feedback || [];
+            const headers = ['Timestamp', 'Vote', 'Customer Preview', 'Product Preview', 'Plan Summary', 'User Agent', 'IP'];
+            const rows = allFeedback.map(f => [
+                f.timestamp,
+                f.vote,
+                `"${(f.customer_preview || '').replace(/"/g, '""')}"`,
+                `"${(f.product_preview || '').replace(/"/g, '""')}"`,
+                `"${(f.plan_summary || '').replace(/"/g, '""')}"`,
+                `"${(f.user_agent || '').substring(0, 100).replace(/"/g, '""')}"`,
+                `"${(f.ip || '').replace(/"/g, '""')}"`
+            ]);
+            
+            const csvContent = [headers, ...rows].map(row => row.join(',')).join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `private_feedback_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert('Private feedback exported successfully!');
+        } catch (error) {
+            alert('Error exporting feedback');
+        }
+    }
+    
+    async function sendFeedback(vote) {
+        const customer = document.getElementById("customer").value || "";
+        const product = document.getElementById("product").value || "";
+        
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = currentPlanHTML;
+        let plainText = tempDiv.textContent || "";
+        let summary = plainText.substring(0, 300);
+        if (plainText.length > 300) {
+            const lastPeriod = summary.lastIndexOf('.');
+            if (lastPeriod > 200) summary = summary.substring(0, lastPeriod + 1);
+            else summary = summary + "...";
+        }
+        
+        try {
+            await fetch(`${API_BASE_URL}/feedback`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ vote, customer, product, plan_summary: summary })
+            });
+            alert(`Thank you for your ${vote === 'yes' ? 'positive' : 'honest'} feedback! 🙏`);
+            loadTestimonials();
+        } catch (error) {
+            alert(`Thank you for your feedback!`);
+        }
+    }
+    
+    async function loadTestimonials() {
+        const testimonialsDiv = document.getElementById('testimonials-list');
+        testimonialsDiv.innerHTML = '<div style="color: #64748b; text-align: center; padding: 20px;">Loading testimonials...</div>';
+        
+        try {
+            const response = await fetch(`${API_BASE_URL}/public-testimonials`);
+            const data = await response.json();
+            
+            if (data.testimonials && data.testimonials.length > 0) {
+                testimonialsDiv.innerHTML = data.testimonials.slice(0, 6).map(t => `
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">★★★★★</div>
+                        <div class="testimonial-text">"${escapeHtml(t.testimonial || 'Great experience!')}"</div>
+                        <div class="testimonial-user">✓ Verified User</div>
+                    </div>
+                `).join('');
+            } else {
+                testimonialsDiv.innerHTML = '<div style="color: #64748b; text-align: center; padding: 20px;">Be the first to share your experience! 🌟</div>';
+            }
+        } catch (error) {
+            testimonialsDiv.innerHTML = '<div style="color: #94a3b8; text-align: center; padding: 20px;">⭐ Testimonials coming soon</div>';
+        }
+    }
+    
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    function renderMarkdownTables(text) {
+        const lines = text.split('\n');
+        let result = [];
+        let inTable = false, headers = [], rows = [];
+        
+        for (let i = 0; i < lines.length; i++) {
+            let line = lines[i];
+            if (line.includes('|') && i + 1 < lines.length && lines[i + 1].includes('---')) {
+                inTable = true;
+                headers = line.split('|').filter(c => c.trim()).map(c => c.trim());
+                i++;
+                rows = [];
+                continue;
+            }
+            if (inTable && line.includes('|')) {
+                const cells = line.split('|').filter(c => c.trim()).map(c => c.trim());
+                if (cells.length) rows.push(cells);
+            } else if (inTable && !line.includes('|')) {
+                let html = '<table>\n<thead><tr>';
                 for (let h of headers) html += `<th>${escapeHtml(h)}</th>`;
-                html += '</tr></thead><tbody>';
+                html += '</table></thead><tbody>';
                 for (let row of rows) {
                     html += '<tr>';
-                    for (let cell of row) html += `<td>${escapeHtml(cell)}</td>`;
+                    for (let cell of row) html += `<td style="padding: 10px 12px; border: 1px solid #334155;">${escapeHtml(cell)}</td>`;
                     html += '</tr>';
                 }
                 html += '</tbody></table>';
                 result.push(html);
-            }
-            return result.join('\n');
-        }
-        
-        function markdownToHtml(text) {
-            if (!text) return '';
-            let html = renderMarkdownTables(text);
-            html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
-            html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
-            html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
-            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            html = html.replace(/^- (.*$)/gm, '<li>$1</li>');
-            html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
-            html = html.replace(/\n/g, '<br>');
-            return html;
-        }
-        
-        async function testAPI() {
-            const statusDiv = document.getElementById("status");
-            try {
-                const response = await fetch(`${API_BASE_URL}/health`);
-                if (response.ok) {
-                    statusDiv.innerHTML = "🟢 API online";
-                    statusDiv.className = "status status-working";
-                } else {
-                    statusDiv.innerHTML = "🔴 API error";
-                    statusDiv.className = "status status-error";
-                }
-            } catch (error) {
-                statusDiv.innerHTML = "🔴 Cannot reach API";
-                statusDiv.className = "status status-error";
+                inTable = false;
+                headers = [];
+                rows = [];
+                result.push(line);
+            } else {
+                result.push(line);
             }
         }
-        
-        async function generate() {
-            const customer = document.getElementById("customer").value;
-            const product = document.getElementById("product").value;
-            const outputDiv = document.getElementById("output");
-            const genBtn = document.getElementById("generateBtn");
-            const downloadBtn = document.getElementById("downloadBtn");
-            const copyBtn = document.getElementById("copyBtn");
-            const statusDiv = document.getElementById("status");
-            const loader = document.getElementById("loader");
-            
-            if (!customer || !product) {
-                alert("Please fill both fields");
-                return;
+        if (inTable && headers.length) {
+            let html = '<table><thead><tr>';
+            for (let h of headers) html += `<th>${escapeHtml(h)}</th>`;
+            html += '</tr></thead><tbody>';
+            for (let row of rows) {
+                html += '<tr>';
+                for (let cell of row) html += `<td style="padding: 10px 12px; border: 1px solid #334155;">${escapeHtml(cell)}</td>`;
+                html += '</tr>';
             }
-            
-            downloadBtn.style.display = "none";
-            copyBtn.style.display = "none";
-            genBtn.disabled = true;
-            genBtn.textContent = "⏳ Generating...";
-            outputDiv.innerHTML = "<em>Processing... (30-60 seconds)</em>";
-            statusDiv.innerHTML = "🟡 Generating plan...";
-            statusDiv.className = "status status-testing";
-            loader.style.display = "block";
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/generate`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ customer_data: customer, product_description: product })
-                });
-                const data = await response.json();
-                if (data.error) throw new Error(data.error);
-                currentPlanHTML = markdownToHtml(data.plan);
-                outputDiv.innerHTML = currentPlanHTML;
-                document.getElementById("timestamp").innerHTML = `Generated: ${new Date().toLocaleString()}`;
-                statusDiv.innerHTML = "✅ Plan generated!";
+            html += '</tbody></table>';
+            result.push(html);
+        }
+        return result.join('\n');
+    }
+    
+    function markdownToHtml(text) {
+        if (!text) return '';
+        let html = renderMarkdownTables(text);
+        html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+        html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+        html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/^- (.*$)/gm, '<li>$1</li>');
+        html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+        html = html.replace(/\n/g, '<br>');
+        return html;
+    }
+    
+    async function testAPI() {
+        const statusDiv = document.getElementById("status");
+        try {
+            const response = await fetch(`${API_BASE_URL}/health`);
+            if (response.ok) {
+                statusDiv.innerHTML = "🟢 API online";
                 statusDiv.className = "status status-working";
-                downloadBtn.style.display = "inline-block";
-                copyBtn.style.display = "inline-block";
-            } catch (error) {
-                outputDiv.innerHTML = `<span style="color:#f87171;">Error: ${error.message}</span>`;
-                statusDiv.innerHTML = "🔴 Generation failed";
+            } else {
+                statusDiv.innerHTML = "🔴 API error";
                 statusDiv.className = "status status-error";
-            } finally {
-                genBtn.disabled = false;
-                genBtn.textContent = "🚀 Generate Strategy";
-                loader.style.display = "none";
             }
+        } catch (error) {
+            statusDiv.innerHTML = "🔴 Cannot reach API";
+            statusDiv.className = "status status-error";
+        }
+    }
+    
+    async function generate() {
+        const customer = document.getElementById("customer").value;
+        const product = document.getElementById("product").value;
+        const outputDiv = document.getElementById("output");
+        const genBtn = document.getElementById("generateBtn");
+        const downloadBtn = document.getElementById("downloadBtn");
+        const copyBtn = document.getElementById("copyBtn");
+        const statusDiv = document.getElementById("status");
+        const loader = document.getElementById("loader");
+        
+        if (!customer || !product) {
+            alert("Please fill both fields");
+            return;
         }
         
-        async function downloadPDF() {
-            const content = document.getElementById("output").innerHTML;
-            if (!content || content.includes("Processing")) {
-                alert("Generate a plan first");
-                return;
-            }
-            const btn = document.getElementById("downloadBtn");
-            const original = btn.innerText;
-            btn.innerText = "⏳ Generating PDF...";
-            btn.disabled = true;
-            try {
-                const element = document.createElement('div');
-                element.style.padding = '40px';
-                element.style.fontFamily = 'system-ui, sans-serif';
-                element.style.backgroundColor = '#fff';
-                element.style.color = '#1e293b';
-                element.innerHTML = `
-                    <div style="text-align:center; margin-bottom:40px;">
-                        <h1 style="color:#1e293b;">Strategic Marketing Report</h1>
-                        <p>Generated by Bisrat's Strategic Marketing System</p>
-                        <hr style="width:60px; margin:16px auto;">
-                    </div>
-                    <div style="font-size:11pt;">${content}</div>
-                    <div style="text-align:center; margin-top:40px; font-size:9pt; color:#64748b;">
-                        <p>Generated: ${new Date().toLocaleString()}</p>
-                        <p>PDF/A-1b compliant | ISO 19005-1</p>
-                    </div>
-                `;
-                const opt = { margin: [0.5,0.5,0.5,0.5], filename: `marketing_plan.pdf`, html2canvas: { scale:2, backgroundColor:'#fff' }, jsPDF: { unit:'in', format:'a4', orientation:'portrait' } };
-                await html2pdf().set(opt).from(element).save();
-            } catch (e) { alert("PDF error"); }
-            finally { btn.innerText = original; btn.disabled = false; }
-        }
+        downloadBtn.style.display = "none";
+        copyBtn.style.display = "none";
+        genBtn.disabled = true;
+        genBtn.textContent = "⏳ Generating...";
+        outputDiv.innerHTML = "<em>Processing... (30-60 seconds)</em>";
+        statusDiv.innerHTML = "🟡 Generating plan...";
+        statusDiv.className = "status status-testing";
+        loader.style.display = "block";
         
-        async function copyToClipboard() {
-            const text = document.getElementById("output").innerText;
-            if (!text || text.includes("Processing")) { alert("Generate a plan first"); return; }
-            await navigator.clipboard.writeText(text);
-            const btn = document.getElementById("copyBtn");
-            const original = btn.innerText;
-            btn.innerText = "✅ Copied!";
-            setTimeout(() => btn.innerText = original, 2000);
+        try {
+            const response = await fetch(`${API_BASE_URL}/generate`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ customer_data: customer, product_description: product })
+            });
+            const data = await response.json();
+            if (data.error) throw new Error(data.error);
+            currentPlanHTML = markdownToHtml(data.plan);
+            outputDiv.innerHTML = currentPlanHTML;
+            document.getElementById("timestamp").innerHTML = `Generated: ${new Date().toLocaleString()}`;
+            statusDiv.innerHTML = "✅ Plan generated!";
+            statusDiv.className = "status status-working";
+            downloadBtn.style.display = "inline-block";
+            copyBtn.style.display = "inline-block";
+        } catch (error) {
+            outputDiv.innerHTML = `<span style="color:#f87171;">Error: ${error.message}</span>`;
+            statusDiv.innerHTML = "🔴 Generation failed";
+            statusDiv.className = "status status-error";
+        } finally {
+            genBtn.disabled = false;
+            genBtn.textContent = "🚀 Generate Strategy";
+            loader.style.display = "none";
         }
-        
-        testAPI();
-        loadTestimonials();
-    </script>
+    }
+    
+    async function downloadPDF() {
+        const content = document.getElementById("output").innerHTML;
+        if (!content || content.includes("Processing")) {
+            alert("Generate a plan first");
+            return;
+        }
+        const btn = document.getElementById("downloadBtn");
+        const original = btn.innerText;
+        btn.innerText = "⏳ Generating PDF...";
+        btn.disabled = true;
+        try {
+            const element = document.createElement('div');
+            element.style.padding = '40px';
+            element.style.fontFamily = 'system-ui, sans-serif';
+            element.style.backgroundColor = '#fff';
+            element.style.color = '#1e293b';
+            element.innerHTML = `
+                <div style="text-align:center; margin-bottom:40px;">
+                    <h1 style="color:#1e293b;">Strategic Marketing Report</h1>
+                    <p>Generated by Bisrat's Strategic Marketing System</p>
+                    <hr style="width:60px; margin:16px auto;">
+                </div>
+                <div style="font-size:11pt;">${content}</div>
+                <div style="text-align:center; margin-top:40px; font-size:9pt; color:#64748b;">
+                    <p>Generated: ${new Date().toLocaleString()}</p>
+                    <p>PDF/A-1b compliant | ISO 19005-1</p>
+                </div>
+            `;
+            const opt = { margin: [0.5,0.5,0.5,0.5], filename: `marketing_plan.pdf`, html2canvas: { scale:2, backgroundColor:'#fff' }, jsPDF: { unit:'in', format:'a4', orientation:'portrait' } };
+            await html2pdf().set(opt).from(element).save();
+        } catch (e) { alert("PDF error"); }
+        finally { btn.innerText = original; btn.disabled = false; }
+    }
+    
+    async function copyToClipboard() {
+        const text = document.getElementById("output").innerText;
+        if (!text || text.includes("Processing")) { alert("Generate a plan first"); return; }
+        await navigator.clipboard.writeText(text);
+        const btn = document.getElementById("copyBtn");
+        const original = btn.innerText;
+        btn.innerText = "✅ Copied!";
+        setTimeout(() => btn.innerText = original, 2000);
+    }
+    
+    testAPI();
+    loadTestimonials();
+</script>
 </body>
 </html>
