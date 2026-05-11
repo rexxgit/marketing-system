@@ -1,327 +1,403 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Strategic Marketing System | AI-Powered Marketing Plan Generator</title>
     <meta charset="UTF-8">
-    <meta name="description" content="Generate complete strategic marketing plans in 60 seconds.">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Strategic Marketing System | Journey Map</title>
     <style>
-        * { box-sizing: border-box; }
-        body { font-family: system-ui, -apple-system, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #0f172a; color: #e2e8f0; }
-        .hero { text-align: center; margin-bottom: 32px; padding: 24px 20px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 24px; border: 1px solid #334155; }
-        .hero h1 { font-size: 2.5rem; margin-bottom: 12px; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .hero .tagline { font-size: 1.1rem; color: #94a3b8; max-width: 700px; margin: 0 auto 16px auto; line-height: 1.5; }
-        .hero-features { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-top: 20px; font-size: 0.85rem; color: #64748b; }
-        .hero-features span { display: inline-flex; align-items: center; gap: 6px; }
-        .input-area { background: #1e293b; border-radius: 16px; padding: 24px; margin-bottom: 24px; border: 1px solid #334155; }
-        textarea { width: 100%; background: #0f172a; color: #e2e8f0; border: 1px solid #334155; border-radius: 12px; padding: 12px 16px; font-family: monospace; font-size: 14px; box-sizing: border-box; resize: vertical; }
-        textarea:focus { outline: none; border-color: #3b82f6; }
-        button { background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 15px; font-weight: 500; transition: all 0.2s; }
-        button:hover:not(:disabled) { background: #2563eb; transform: translateY(-1px); }
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
-        .button-group { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
-        .btn-download { background: #4f46e5; }
-        .btn-copy { background: #10b981; }
-        .output-container { background: #1e293b; border-radius: 16px; padding: 24px; border: 1px solid #334155; margin-top: 24px; }
-        .output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
-        .output-header h3 { margin: 0; color: #38bdf8; }
-        .rendered-output { background: #0f172a; border-radius: 12px; padding: 24px; overflow-x: auto; line-height: 1.5; }
-        
-        /* Adaptive Table Styling */
-        .rendered-output table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: #0f172a;
-            font-size: 14px;
-            table-layout: auto;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .rendered-output th {
-            background: #1e293b;
-            color: #38bdf8;
-            font-weight: 600;
-            padding: 12px 15px;
-            text-align: left;
-            border: 1px solid #334155;
-        }
-        .rendered-output td {
-            border: 1px solid #334155;
-            padding: 10px 15px;
-            text-align: left;
-            vertical-align: top;
-            background: #0f172a;
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
             color: #e2e8f0;
-            word-wrap: break-word;
+            line-height: 1.5;
+            min-height: 100vh;
         }
-        
-        .rendered-output h1 { color: #38bdf8; font-size: 1.8rem; border-bottom: 2px solid #334155; padding-bottom: 0.5rem; }
-        .rendered-output h2 { color: #38bdf8; font-size: 1.4rem; margin-top: 1.5rem; }
-        .rendered-output h3 { color: #94a3b8; }
-        .rendered-output strong { color: #facc15; }
-        .rendered-output ul, .rendered-output ol { margin: 12px 0; padding-left: 24px; }
-        .rendered-output li { margin: 6px 0; }
-        
-        .status { padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; }
-        .status-working { background: #065f46; color: #d1d5db; }
-        .status-testing { background: #854d0e; color: #fde047; }
-        .status-error { background: #991b1b; color: #fca5a5; }
-        .loader { border: 3px solid #334155; border-top: 3px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 0.8s linear infinite; margin: 20px auto; display: none; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        label { font-weight: 600; display: block; margin-bottom: 8px; color: #94a3b8; }
-        
-        .feedback-section { margin-top: 24px; text-align: center; font-size: 13px; color: #64748b; padding: 16px; border-top: 1px solid #334155; }
-        .feedback-section a { color: #10b981; text-decoration: none; cursor: pointer; margin: 0 8px; }
-        .feedback-note { font-size: 11px; margin-top: 8px; color: #475569; }
-        
-        .testimonials-section {
-            margin-top: 30px;
-            background: #1e293b;
-            border-radius: 16px;
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
             padding: 20px;
-            border: 1px solid #334155;
         }
-        .testimonials-section h3 { color: #38bdf8; margin-bottom: 16px; }
-        .testimonial-card { background: #0f172a; padding: 16px; border-radius: 12px; border-left: 3px solid #10b981; margin-bottom: 12px; }
-        .testimonial-stars { color: #facc15; margin-bottom: 8px; letter-spacing: 2px; }
-        .testimonial-text { color: #e2e8f0; font-style: italic; }
-        .testimonial-user { color: #64748b; font-size: 12px; margin-top: 8px; }
-        
-        .footer-note {
-            margin-top: 30px;
+
+        /* Journey Map Container */
+        .journey-map {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 32px;
+            padding: 32px 24px;
+            margin: 24px 0;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .journey-title {
             text-align: center;
-            font-size: 11px;
-            color: #475569;
-            padding: 15px;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .journey-subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 32px;
+            font-size: 0.9rem;
+        }
+
+        /* Delivery Toggle Controls */
+        .delivery-controls {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .delivery-btn {
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 40px;
+            padding: 10px 24px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #94a3b8;
+        }
+
+        .delivery-btn.active {
+            background: #3b82f6;
+            border-color: #60a5fa;
+            color: white;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .delivery-btn[data-speed="fast"]:hover { background: #10b981; border-color: #34d399; color: white; }
+        .delivery-btn[data-speed="delayed"]:hover { background: #f59e0b; border-color: #fbbf24; color: white; }
+        .delivery-btn[data-speed="none"]:hover { background: #ef4444; border-color: #f87171; color: white; }
+
+        /* Journey Stages - Flex Container */
+        .journey-stages {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        /* Individual Stage Card */
+        .stage-card {
+            flex: 1;
+            min-width: 180px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-radius: 20px;
+            padding: 20px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid #334155;
+            position: relative;
+        }
+
+        /* Satisfaction-based border colors (applied dynamically) */
+        .stage-card.delighted { border-color: #10b981; box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
+        .stage-card.satisfied { border-color: #f59e0b; }
+        .stage-card.dissatisfied { border-color: #ef4444; }
+
+        /* Hover Effects - WeWeb frontend principles */
+        .stage-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.5);
+            border-color: #60a5fa;
+        }
+
+        /* Bounce Animation for Delighted */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .stage-card.delighted .stage-icon { animation: bounce 0.5s ease; }
+
+        /* Pulse Animation for Satisfied */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; transform: scale(0.98); }
+        }
+        .stage-card.satisfied { animation: pulse 1.5s infinite; }
+
+        /* Shake Animation for Dissatisfied */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        .stage-card.dissatisfied .stage-icon { animation: shake 0.4s ease; }
+
+        .stage-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .stage-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #38bdf8;
+        }
+
+        .satisfaction-badge {
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        .badge-delighted { background: #10b98120; color: #34d399; border: 1px solid #10b981; }
+        .badge-satisfied { background: #f59e0b20; color: #fbbf24; border: 1px solid #f59e0b; }
+        .badge-dissatisfied { background: #ef444420; color: #f87171; border: 1px solid #ef4444; }
+
+        .stage-emotion {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+
+        .marketing-action {
+            font-size: 0.7rem;
+            color: #818cf8;
+            margin-top: 8px;
             border-top: 1px solid #334155;
+            padding-top: 8px;
+        }
+
+        /* Expanded Detail Panel */
+        .stage-detail {
+            display: none;
+            margin-top: 16px;
+            padding: 12px;
+            background: #0f172a;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            text-align: left;
+            color: #cbd5e1;
+        }
+
+        .stage-card.expanded .stage-detail {
+            display: block;
+        }
+
+        /* Arrow between stages - only on desktop */
+        .arrow {
+            font-size: 1.5rem;
+            color: #3b82f6;
+            align-self: center;
+        }
+
+        @media (max-width: 900px) {
+            .journey-stages {
+                flex-direction: column;
+            }
+            .arrow {
+                display: none;
+            }
+            .stage-card {
+                width: 100%;
+            }
+        }
+
+        /* Loading & Error States */
+        .loading-spinner {
+            text-align: center;
+            padding: 40px;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #334155;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Touchpoint and Tooltip */
+        .touchpoint {
+            font-size: 0.7rem;
+            color: #64748b;
+            margin-top: 6px;
+        }
+
+        /* Responsive utilities */
+        @media (max-width: 600px) {
+            .container { padding: 12px; }
+            .stage-name { font-size: 0.9rem; }
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .hero h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
-<div class="hero">
-    <h1>🧠 Strategic Marketing System</h1>
-    <p class="tagline">Enter your customer data and product description.<br>Get a complete strategic marketing plan in 60 seconds.</p>
-    <div class="hero-features">
-        <span>📊 Segmentation</span> <span>📈 PESTLE + Mini-SWOT</span> <span>⚔️ Porter's Five Forces</span>
-        <span>🎯 Kotler Positioning</span> <span>🛠️ 4Ps</span> <span>📉 SWOT + Micro-SWOT</span>
-        <span>📏 KPI + Budget</span> <span>🗺️ 30-Day Roadmap</span> <span>🎨 Design Prompts</span>
+<div class="container">
+    <div class="hero">
+        <h1>🧠 Strategic Marketing Intelligence System</h1>
+        <p style="color: #94a3b8;">Powered by DeepSeek | Real-time Journey Visualization</p>
     </div>
-    <div class="hero-features" style="margin-top: 8px;">
-        <span>⚡ DeepSeek</span> <span>📄 PDF/A Archival</span>
-        <span>🎨 UI + PDF Identical</span> <span>🚀 Free & Unlimited</span>
+
+    <!-- Delivery Simulation Controls -->
+    <div class="delivery-controls">
+        <button class="delivery-btn active" data-speed="fast" onclick="setDeliverySpeed('fast')">⚡ Fast Delivery (Delighted)</button>
+        <button class="delivery-btn" data-speed="delayed" onclick="setDeliverySpeed('delayed')">🕒 Minor Delay (Satisfied)</button>
+        <button class="delivery-btn" data-speed="none" onclick="setDeliverySpeed('none')">❌ No Delivery / Service Failure (Dissatisfied)</button>
     </div>
-</div>
 
-<div class="input-area">
-    <div id="status" class="status status-testing">🟡 Testing API connection...</div>
-    <label>📊 Customer Data:</label>
-    <textarea id="customer" rows="4" placeholder="Example: Young freelancers in Addis Ababa, age 22-28, income $2-4k/month"></textarea>
-    <label>📦 Product Description:</label>
-    <textarea id="product" rows="4" placeholder="Example: AI-powered project management tool, $15/user/month subscription"></textarea>
-    <div class="button-group">
-        <button id="generateBtn" onclick="generate()">🚀 Generate Strategy</button>
-        <button id="downloadBtn" onclick="downloadPDF()" class="btn-download" style="display:none;">📄 Download PDF</button>
-        <button id="copyBtn" onclick="copyToClipboard()" class="btn-copy" style="display:none;">📋 Copy Text</button>
+    <!-- Journey Map Container -->
+    <div class="journey-map">
+        <h2 class="journey-title">Customer Journey Map</h2>
+        <p class="journey-subtitle">5-Stage Experience Visualization | Click on any stage for deeper insights</p>
+        
+        <div id="journeyStages" class="journey-stages">
+            <!-- Will be populated dynamically -->
+            <div class="loading-spinner"><div class="spinner"></div><p>Loading journey map...</p></div>
+        </div>
     </div>
-    <div id="loader" class="loader"></div>
-</div>
 
-<div class="output-container">
-    <div class="output-header">
-        <h3>📋 Marketing Plan</h3>
-        <span id="timestamp" style="font-size: 12px; color: #64748b;"></span>
+    <div class="feedback-section" style="margin-top: 24px; text-align: center; font-size: 13px; color: #64748b; padding: 16px; border-top: 1px solid #334155;">
+        <span>Was this helpful? </span>
+        <a href="#" onclick="sendFeedback('yes')" style="color: #10b981;">👍 Yes</a>
+        <a href="#" onclick="sendFeedback('no')" style="color: #ef4444;">👎 No</a>
     </div>
-    <div id="output" class="rendered-output">Ready. Enter data and click Generate.</div>
-</div>
-
-<div class="feedback-section">
-    <span>Was this helpful? </span>
-    <a href="#" onclick="sendFeedback('yes')">👍 Yes</a>
-    <a href="#" onclick="sendFeedback('no')">👎 No</a>
-    <span style="margin-left: 16px;">📧 <a href="mailto:bisrattewabe373@gmail.com">bisrattewabe373@gmail.com</a></span>
-    <div class="feedback-note">💡 Your positive feedback may be featured as a testimonial. All feedback helps improve the system.</div>
-</div>
-
-<div class="testimonials-section">
-    <h3>🌟 What Users Are Saying</h3>
-    <div id="testimonials-list">
-        <div style="color: #64748b; text-align: center; padding: 20px;">Loading testimonials...</div>
-    </div>
-</div>
-
-<div class="footer-note">
-    Strategic Marketing System v2.0 | Powered by DeepSeek 
 </div>
 
 <script>
+    // API Configuration
     const API_BASE_URL = "https://Bisratprompt-marketing-system-api.hf.space";
+    let currentDeliverySpeed = "fast"; // fast, delayed, none
+    let journeyData = null;
     let currentPlanHTML = "";
-    
-    // Admin access is only via direct URL: /admin or /admin-dashboard.html
-    
-    async function sendFeedback(vote) {
-        const customer = document.getElementById("customer").value || "";
-        const product = document.getElementById("product").value || "";
-        
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = currentPlanHTML;
-        let plainText = tempDiv.textContent || "";
-        let summary = plainText.substring(0, 300);
-        if (plainText.length > 300) {
-            const lastPeriod = summary.lastIndexOf('.');
-            if (lastPeriod > 200) summary = summary.substring(0, lastPeriod + 1);
-            else summary = summary + "...";
-        }
-        
-        try {
-            await fetch(`${API_BASE_URL}/feedback`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ vote, customer, product, plan_summary: summary })
-            });
-            alert(`Thank you for your ${vote === 'yes' ? 'positive' : 'honest'} feedback! 🙏`);
-            loadTestimonials();
-        } catch (error) {
-            alert(`Thank you for your feedback!`);
-        }
+
+    // Stage definitions
+    const stages = [
+        { name: "AWARENESS", icon: "👁️", defaultEmotion: "Curious", defaultTouchpoint: "Social Media Ad", defaultAction: "Educational Content" },
+        { name: "CONSIDERATION", icon: "🤔", defaultEmotion: "Skeptical", defaultTouchpoint: "Comparison Site", defaultAction: "Case Studies" },
+        { name: "PURCHASE", icon: "💰", defaultEmotion: "Hesitant", defaultTouchpoint: "Pricing Page", defaultAction: "Risk Reversal" },
+        { name: "RETENTION", icon: "❤️", defaultEmotion: "Relieved", defaultTouchpoint: "Onboarding Email", defaultAction: "Loyalty Program" },
+        { name: "ADVOCACY", icon: "📢", defaultEmotion: "Proud", defaultTouchpoint: "Referral Link", defaultAction: "Referral Rewards" }
+    ];
+
+    // Satisfaction mapping based on delivery speed
+    function getSatisfactionStatus(speed, stageName) {
+        if (speed === "fast") return { status: "Delighted", badge: "badge-delighted", class: "delighted", emotion: "Excited → Thrilled" };
+        if (speed === "delayed") return { status: "Satisfied", badge: "badge-satisfied", class: "satisfied", emotion: "Accepting → Patient" };
+        return { status: "Dissatisfied", badge: "badge-dissatisfied", class: "dissatisfied", emotion: "Frustrated → Angry" };
     }
-    
-    async function loadTestimonials() {
-        const testimonialsDiv = document.getElementById('testimonials-list');
-        testimonialsDiv.innerHTML = '<div style="color: #64748b; text-align: center; padding: 20px;">Loading testimonials...</div>';
-        
-        try {
-            const response = await fetch(`${API_BASE_URL}/public-testimonials`);
-            const data = await response.json();
+
+    // Render journey map
+    function renderJourneyMap() {
+        const container = document.getElementById('journeyStages');
+        if (!container) return;
+
+        let html = '';
+        stages.forEach((stage, index) => {
+            const satisfaction = getSatisfactionStatus(currentDeliverySpeed, stage.name);
+            const isLast = index === stages.length - 1;
             
-            if (data.testimonials && data.testimonials.length > 0) {
-                testimonialsDiv.innerHTML = data.testimonials.slice(0, 6).map(t => `
-                    <div class="testimonial-card">
-                        <div class="testimonial-stars">★★★★★</div>
-                        <div class="testimonial-text">"${escapeHtml(t.testimonial || 'Great experience!')}"</div>
-                        <div class="testimonial-user">✓ Verified User</div>
+            html += `
+                <div class="stage-card ${satisfaction.class}" onclick="toggleDetail(this)">
+                    <div class="stage-icon">${stage.icon}</div>
+                    <div class="stage-name">${stage.name}</div>
+                    <div class="satisfaction-badge ${satisfaction.badge}">${satisfaction.status}</div>
+                    <div class="stage-emotion">😊 ${satisfaction.emotion}</div>
+                    <div class="touchpoint">📍 ${stage.defaultTouchpoint}</div>
+                    <div class="marketing-action">${stage.defaultAction}</div>
+                    <div class="stage-detail">
+                        <strong>🔍 Covetousness Principle:</strong><br>
+                        ${getCovetousnessForStage(stage.name, currentDeliverySpeed)}
+                        <br><br>
+                        <strong>📈 Marketing Implication:</strong><br>
+                        Based on ${satisfaction.status.toLowerCase()} status, ${getMarketingImplication(stage.name, currentDeliverySpeed)}
                     </div>
-                `).join('');
-            } else {
-                testimonialsDiv.innerHTML = '<div style="color: #64748b; text-align: center; padding: 20px;">Be the first to share your experience! 🌟</div>';
-            }
-        } catch (error) {
-            testimonialsDiv.innerHTML = '<div style="color: #94a3b8; text-align: center; padding: 20px;">⭐ Testimonials coming soon</div>';
-        }
-    }
-    
-    function escapeHtml(text) {
-        if (!text) return '';
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-    
-    function renderMarkdownTables(text) {
-        const lines = text.split('\n');
-        let result = [];
-        let inTable = false, headers = [], rows = [];
+                </div>
+                ${!isLast ? '<div class="arrow">➡</div>' : ''}
+            `;
+        });
         
-        for (let i = 0; i < lines.length; i++) {
-            let line = lines[i];
-            if (line.includes('|') && i + 1 < lines.length && lines[i + 1].includes('---')) {
-                inTable = true;
-                headers = line.split('|').filter(c => c.trim()).map(c => c.trim());
-                i++;
-                rows = [];
-                continue;
-            }
-            if (inTable && line.includes('|')) {
-                const cells = line.split('|').filter(c => c.trim()).map(c => c.trim());
-                if (cells.length) rows.push(cells);
-            } else if (inTable && !line.includes('|')) {
-                let html = '<table>\n<thead><tr>';
-                for (let h of headers) html += `<th>${escapeHtml(h)}</th>`;
-                html += '</td></thead><tbody>';
-                for (let row of rows) {
-                    html += '<tr>';
-                    for (let cell of row) html += `<td style="padding: 10px 12px; border: 1px solid #334155;">${escapeHtml(cell)}</td>`;
-                    html += '</tr>';
-                }
-                html += '</tbody></table>';
-                result.push(html);
-                inTable = false;
-                headers = [];
-                rows = [];
-                result.push(line);
-            } else {
-                result.push(line);
-            }
-        }
-        if (inTable && headers.length) {
-            let html = '<table><thead><tr>';
-            for (let h of headers) html += `<th>${escapeHtml(h)}</th>`;
-            html += '</tr></thead><tbody>';
-            for (let row of rows) {
-                html += '<tr>';
-                for (let cell of row) html += `<td style="padding: 10px 12px; border: 1px solid #334155;">${escapeHtml(cell)}</td>`;
-                html += '</tr>';
-            }
-            html += '</tbody></table>';
-            result.push(html);
-        }
-        return result.join('\n');
+        container.innerHTML = html;
     }
-    
-    function markdownToHtml(text) {
-        if (!text) return '';
-        let html = renderMarkdownTables(text);
-        html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
-        html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
-        html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
-        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        html = html.replace(/^- (.*$)/gm, '<li>$1</li>');
-        html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
-        html = html.replace(/\n/g, '<br>');
-        return html;
+
+    // Get Covetousness principle based on stage and delivery speed
+    function getCovetousnessForStage(stage, speed) {
+        const principles = {
+            AWARENESS: { fast: "Induction — imply scarcity and early access", delayed: "Withdraw — create anticipation despite delay", none: "Failed induction — trust broken" },
+            CONSIDERATION: { fast: "Rivalries — show social proof and rankings", delayed: "Withdraw — limited spots remain", none: "No rivalry — customers leave" },
+            PURCHASE: { fast: "Withdraw — 'Only 5 spots left'", delayed: "Withdraw softened — extend offer", none: "Abandonment — no withdrawal" },
+            RETENTION: { fast: "Induction — exclusive tier access", delayed: "Induction weakened — offer apology discount", none: "Churn — customer leaves" },
+            ADVOCACY: { fast: "Rivalries — referral leaderboard", delayed: "Reduced rivalry — lower incentive", none: "Negative advocacy — bad reviews" }
+        };
+        return principles[stage]?.[speed] || "Strategic withdrawal applied";
     }
-    
-    async function testAPI() {
-        const statusDiv = document.getElementById("status");
-        try {
-            const response = await fetch(`${API_BASE_URL}/health`);
-            if (response.ok) {
-                statusDiv.innerHTML = "🟢 API online";
-                statusDiv.className = "status status-working";
-            } else {
-                statusDiv.innerHTML = "🔴 API error";
-                statusDiv.className = "status status-error";
-            }
-        } catch (error) {
-            statusDiv.innerHTML = "🔴 Cannot reach API";
-            statusDiv.className = "status status-error";
-        }
+
+    function getMarketingImplication(stage, speed) {
+        const implications = {
+            AWARENESS: { fast: "accelerate ad spend, highlight speed", delayed: "manage expectations, offer tracking", none: "damage control, public apology" },
+            CONSIDERATION: { fast: "emphasize quick delivery in comparisons", delayed: "offer discounts for patience", none: "redirect to competitor analysis" },
+            PURCHASE: { fast: "upsell premium delivery options", delayed: "offer partial refund or credit", none: "process refunds, recover trust" },
+            RETENTION: { fast: "increase loyalty rewards", delayed: "send apology gift", none: "retention campaign, win-back offer" },
+            ADVOCACY: { fast: "boost referral rewards", delayed: "offer delayed referral bonus", none: "crisis management, review response" }
+        };
+        return implications[stage]?.[speed] || "adjust marketing strategy based on satisfaction level";
     }
-    
-    async function generate() {
-        const customer = document.getElementById("customer").value;
-        const product = document.getElementById("product").value;
-        const outputDiv = document.getElementById("output");
-        const genBtn = document.getElementById("generateBtn");
-        const downloadBtn = document.getElementById("downloadBtn");
-        const copyBtn = document.getElementById("copyBtn");
-        const statusDiv = document.getElementById("status");
-        const loader = document.getElementById("loader");
+
+    function toggleDetail(element) {
+        element.classList.toggle('expanded');
+    }
+
+    function setDeliverySpeed(speed) {
+        currentDeliverySpeed = speed;
+        // Update active button styling
+        document.querySelectorAll('.delivery-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-speed') === speed) btn.classList.add('active');
+        });
+        renderJourneyMap();
+    }
+
+    // API Calls
+    async function generatePlan() {
+        const customer = document.getElementById('customerInput')?.value || "B2B enterprises in Addis Ababa, age 30-45, income 260K-550K ETB";
+        const product = document.getElementById('productInput')?.value || "Premium branding, marketing, website development, and ERP/CRM solutions";
         
-        if (!customer || !product) {
-            alert("Please fill both fields");
-            return;
-        }
+        const outputDiv = document.getElementById('output');
+        const generateBtn = document.getElementById('generateBtn');
         
-        downloadBtn.style.display = "none";
-        copyBtn.style.display = "none";
-        genBtn.disabled = true;
-        genBtn.textContent = "⏳ Generating...";
-        outputDiv.innerHTML = "<em>Processing... (30-60 seconds)</em>";
-        statusDiv.innerHTML = "🟡 Generating plan...";
-        statusDiv.className = "status status-testing";
-        loader.style.display = "block";
+        if (generateBtn) {
+            generateBtn.disabled = true;
+            generateBtn.textContent = "⏳ Generating...";
+        }
         
         try {
             const response = await fetch(`${API_BASE_URL}/generate`, {
@@ -331,70 +407,62 @@
             });
             const data = await response.json();
             if (data.error) throw new Error(data.error);
-            currentPlanHTML = markdownToHtml(data.plan);
-            outputDiv.innerHTML = currentPlanHTML;
-            document.getElementById("timestamp").innerHTML = `Generated: ${new Date().toLocaleString()}`;
-            statusDiv.innerHTML = "✅ Plan generated!";
-            statusDiv.className = "status status-working";
-            downloadBtn.style.display = "inline-block";
-            copyBtn.style.display = "inline-block";
+            
+            // Extract journey data if present
+            const journeyMatch = data.plan.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\[|$)/i);
+            if (journeyMatch) {
+                // Optionally parse additional journey data from API
+                console.log("Journey data received from API");
+            }
+            
+            if (outputDiv) outputDiv.innerHTML = markdownToHtml(data.plan);
+            currentPlanHTML = data.plan;
+            
         } catch (error) {
-            outputDiv.innerHTML = `<span style="color:#f87171;">Error: ${error.message}</span>`;
-            statusDiv.innerHTML = "🔴 Generation failed";
-            statusDiv.className = "status status-error";
+            console.error("Generation error:", error);
         } finally {
-            genBtn.disabled = false;
-            genBtn.textContent = "🚀 Generate Strategy";
-            loader.style.display = "none";
+            if (generateBtn) {
+                generateBtn.disabled = false;
+                generateBtn.textContent = "🚀 Generate Strategy";
+            }
         }
     }
-    
-    async function downloadPDF() {
-        const content = document.getElementById("output").innerHTML;
-        if (!content || content.includes("Processing")) {
-            alert("Generate a plan first");
-            return;
-        }
-        const btn = document.getElementById("downloadBtn");
-        const original = btn.innerText;
-        btn.innerText = "⏳ Generating PDF...";
-        btn.disabled = true;
-        try {
-            const element = document.createElement('div');
-            element.style.padding = '40px';
-            element.style.fontFamily = 'system-ui, sans-serif';
-            element.style.backgroundColor = '#fff';
-            element.style.color = '#1e293b';
-            element.innerHTML = `
-                <div style="text-align:center; margin-bottom:40px;">
-                    <h1 style="color:#1e293b;">Strategic Marketing Report</h1>
-                    <p>Generated by Bisrat's Strategic Marketing System</p>
-                    <hr style="width:60px; margin:16px auto;">
-                </div>
-                <div style="font-size:11pt;">${content}</div>
-                <div style="text-align:center; margin-top:40px; font-size:9pt; color:#64748b;">
-                    <p>Generated: ${new Date().toLocaleString()}</p>
-                    <p>PDF/A-1b compliant | ISO 19005-1</p>
-                </div>
+
+    function markdownToHtml(text) {
+        if (!text) return '';
+        // Simple markdown to HTML conversion
+        let html = text.replace(/\n/g, '<br>');
+        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+        html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+        return html;
+    }
+
+    async function sendFeedback(vote) {
+        alert(`Thank you for your ${vote === 'yes' ? 'positive' : 'honest'} feedback! 🙏`);
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', () => {
+        renderJourneyMap();
+        
+        // Add input fields if not present
+        const inputArea = document.querySelector('.journey-map');
+        if (inputArea && !document.getElementById('customerInput')) {
+            const controlsDiv = document.createElement('div');
+            controlsDiv.style.marginTop = '24px';
+            controlsDiv.innerHTML = `
+                <label style="display: block; margin-top: 16px; font-weight: 600;">📊 Customer Data:</label>
+                <textarea id="customerInput" rows="3" style="width: 100%; background: #0f172a; color: white; border: 1px solid #334155; border-radius: 8px; padding: 12px;">B2B enterprises in Addis Ababa, age 30-45, income 260K-550K ETB, value premium branding and operational efficiency</textarea>
+                <label style="display: block; margin-top: 12px; font-weight: 600;">📦 Product Description:</label>
+                <textarea id="productInput" rows="3" style="width: 100%; background: #0f172a; color: white; border: 1px solid #334155; border-radius: 8px; padding: 12px;">Premium branding, marketing, website development, and ERP/CRM solutions for enterprise clients</textarea>
+                <button id="generateBtn" style="margin-top: 16px; background: #3b82f6; padding: 10px 24px; border-radius: 12px; border: none; color: white; cursor: pointer;">🚀 Generate Strategy</button>
+                <div id="output" style="margin-top: 20px; background: #0f172a; padding: 16px; border-radius: 12px; max-height: 400px; overflow-y: auto;"></div>
             `;
-            const opt = { margin: [0.5,0.5,0.5,0.5], filename: `marketing_plan.pdf`, html2canvas: { scale:2, backgroundColor:'#fff' }, jsPDF: { unit:'in', format:'a4', orientation:'portrait' } };
-            await html2pdf().set(opt).from(element).save();
-        } catch (e) { alert("PDF error"); }
-        finally { btn.innerText = original; btn.disabled = false; }
-    }
-    
-    async function copyToClipboard() {
-        const text = document.getElementById("output").innerText;
-        if (!text || text.includes("Processing")) { alert("Generate a plan first"); return; }
-        await navigator.clipboard.writeText(text);
-        const btn = document.getElementById("copyBtn");
-        const original = btn.innerText;
-        btn.innerText = "✅ Copied!";
-        setTimeout(() => btn.innerText = original, 2000);
-    }
-    
-    testAPI();
-    loadTestimonials();
+            inputArea.parentNode.insertBefore(controlsDiv, inputArea.nextSibling);
+            document.getElementById('generateBtn')?.addEventListener('click', generatePlan);
+        }
+    });
 </script>
 </body>
 </html>
