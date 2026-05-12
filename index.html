@@ -26,7 +26,123 @@
         .output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
         .output-header h3 { margin: 0; color: #38bdf8; }
         .rendered-output { background: #0f172a; border-radius: 12px; padding: 24px; overflow-x: auto; line-height: 1.5; }
-        
+
+        /* ─── KPI DASHBOARD ─── */
+        #kpi-dashboard {
+            display: none; /* hidden until generation completes */
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        #kpi-dashboard.visible {
+            display: grid;
+        }
+        .kpi-card {
+            position: relative;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 20px 18px;
+            cursor: default;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            overflow: visible;
+        }
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            border-color: #38bdf8;
+            box-shadow: 0 8px 32px rgba(56, 189, 248, 0.22), 0 0 0 1px rgba(56,189,248,0.15);
+        }
+        .kpi-card:nth-child(2):hover { border-color: #818cf8; box-shadow: 0 8px 32px rgba(129,140,248,0.22), 0 0 0 1px rgba(129,140,248,0.15); }
+        .kpi-card:nth-child(3):hover { border-color: #10b981; box-shadow: 0 8px 32px rgba(16,185,129,0.22), 0 0 0 1px rgba(16,185,129,0.15); }
+        .kpi-card:nth-child(4):hover { border-color: #facc15; box-shadow: 0 8px 32px rgba(250,204,21,0.22), 0 0 0 1px rgba(250,204,21,0.15); }
+        .kpi-icon {
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+            display: block;
+            line-height: 1;
+        }
+        .kpi-value {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #38bdf8;
+            margin-bottom: 4px;
+            word-break: break-word;
+            line-height: 1.2;
+        }
+        .kpi-card:nth-child(2) .kpi-value { color: #818cf8; }
+        .kpi-card:nth-child(3) .kpi-value { color: #10b981; }
+        .kpi-card:nth-child(4) .kpi-value { color: #facc15; }
+        .kpi-label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin-bottom: 6px;
+        }
+        .kpi-source {
+            font-size: 0.68rem;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        /* Tooltip */
+        .kpi-tooltip-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 14px;
+            background: #334155;
+            border-radius: 50%;
+            font-size: 0.6rem;
+            color: #94a3b8;
+            cursor: help;
+            position: relative;
+            font-style: normal;
+        }
+        .kpi-tooltip-icon::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #e2e8f0;
+            font-size: 0.7rem;
+            padding: 8px 10px;
+            border-radius: 8px;
+            width: 200px;
+            white-space: normal;
+            line-height: 1.4;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 100;
+            text-transform: none;
+            letter-spacing: 0;
+            font-weight: 400;
+        }
+        .kpi-tooltip-icon:hover::after { opacity: 1; }
+        /* Pulse shimmer on N/A cards */
+        .kpi-card.na-state .kpi-value {
+            color: #475569;
+            font-size: 1rem;
+        }
+        /* Divider label above dashboard */
+        #kpi-dashboard-label {
+            display: none;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #475569;
+            margin-bottom: 10px;
+        }
+        #kpi-dashboard-label.visible { display: block; }
+
         /* Journey Map Visual Styles */
         .journey-container {
             display: flex;
@@ -51,11 +167,9 @@
             transform: translateY(-6px);
             box-shadow: 0 12px 24px rgba(59, 130, 246, 0.2);
         }
-        /* Satisfaction-based border colors */
         .journey-card.delighted { border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
         .journey-card.satisfied { border-color: #f59e0b; }
         .journey-card.dissatisfied { border-color: #ef4444; }
-        /* Animations */
         @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
         @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
         @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
@@ -73,17 +187,13 @@
         .marketing-action { font-size: 0.7rem; color: #818cf8; margin-top: 8px; border-top: 1px solid #334155; padding-top: 8px; }
         .journey-detail { display: none; margin-top: 12px; padding-top: 10px; border-top: 1px solid #334155; font-size: 0.7rem; text-align: left; color: #cbd5e1; }
         .journey-card.expanded .journey-detail { display: block; }
-        .journey-arrow {
-            font-size: 1.3rem;
-            color: #3b82f6;
-            align-self: center;
-        }
+        .journey-arrow { font-size: 1.3rem; color: #3b82f6; align-self: center; }
         @media (max-width: 900px) {
             .journey-container { flex-direction: column; }
             .journey-arrow { display: none; }
             .journey-card { width: 100%; }
         }
-        
+
         /* Delivery Controls */
         .delivery-controls {
             display: flex;
@@ -103,56 +213,24 @@
             transition: all 0.2s;
             color: #94a3b8;
         }
-        .delivery-btn.active {
-            background: #3b82f6;
-            border-color: #60a5fa;
-            color: white;
-            box-shadow: 0 0 10px rgba(59,130,246,0.4);
-        }
+        .delivery-btn.active { background: #3b82f6; border-color: #60a5fa; color: white; box-shadow: 0 0 10px rgba(59,130,246,0.4); }
         .delivery-btn[data-speed="fast"]:hover { background: #10b981; border-color: #34d399; color: white; }
         .delivery-btn[data-speed="delayed"]:hover { background: #f59e0b; border-color: #fbbf24; color: white; }
         .delivery-btn[data-speed="none"]:hover { background: #ef4444; border-color: #f87171; color: white; }
-        
-        .journey-section-title {
-            font-size: 1.4rem;
-            text-align: center;
-            margin: 20px 0 10px;
-            color: #38bdf8;
-        }
-        
+
+        .journey-section-title { font-size: 1.4rem; text-align: center; margin: 20px 0 10px; color: #38bdf8; }
+
         /* Table styling */
-        .rendered-output table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: #0f172a;
-            font-size: 14px;
-            table-layout: auto;
-        }
-        .rendered-output th {
-            background: #1e293b;
-            color: #38bdf8;
-            font-weight: 600;
-            padding: 12px 15px;
-            text-align: left;
-            border: 1px solid #334155;
-        }
-        .rendered-output td {
-            border: 1px solid #334155;
-            padding: 10px 15px;
-            text-align: left;
-            vertical-align: top;
-            background: #0f172a;
-            color: #e2e8f0;
-            word-wrap: break-word;
-        }
+        .rendered-output table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #0f172a; font-size: 14px; table-layout: auto; }
+        .rendered-output th { background: #1e293b; color: #38bdf8; font-weight: 600; padding: 12px 15px; text-align: left; border: 1px solid #334155; }
+        .rendered-output td { border: 1px solid #334155; padding: 10px 15px; text-align: left; vertical-align: top; background: #0f172a; color: #e2e8f0; word-wrap: break-word; }
         .rendered-output h1 { color: #38bdf8; font-size: 1.8rem; border-bottom: 2px solid #334155; padding-bottom: 0.5rem; }
         .rendered-output h2 { color: #38bdf8; font-size: 1.4rem; margin-top: 1.5rem; }
         .rendered-output h3 { color: #94a3b8; }
         .rendered-output strong { color: #facc15; }
         .rendered-output ul, .rendered-output ol { margin: 12px 0; padding-left: 24px; }
         .rendered-output li { margin: 6px 0; }
-        
+
         .status { padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; }
         .status-working { background: #065f46; color: #d1d5db; }
         .status-testing { background: #854d0e; color: #fde047; }
@@ -160,32 +238,19 @@
         .loader { border: 3px solid #334155; border-top: 3px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 0.8s linear infinite; margin: 20px auto; display: none; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         label { font-weight: 600; display: block; margin-bottom: 8px; color: #94a3b8; }
-        
+
         .feedback-section { margin-top: 24px; text-align: center; font-size: 13px; color: #64748b; padding: 16px; border-top: 1px solid #334155; }
         .feedback-section a { color: #10b981; text-decoration: none; cursor: pointer; margin: 0 8px; }
         .feedback-note { font-size: 11px; margin-top: 8px; color: #475569; }
-        
-        .testimonials-section {
-            margin-top: 30px;
-            background: #1e293b;
-            border-radius: 16px;
-            padding: 20px;
-            border: 1px solid #334155;
-        }
+
+        .testimonials-section { margin-top: 30px; background: #1e293b; border-radius: 16px; padding: 20px; border: 1px solid #334155; }
         .testimonials-section h3 { color: #38bdf8; margin-bottom: 16px; }
         .testimonial-card { background: #0f172a; padding: 16px; border-radius: 12px; border-left: 3px solid #10b981; margin-bottom: 12px; }
         .testimonial-stars { color: #facc15; margin-bottom: 8px; letter-spacing: 2px; }
         .testimonial-text { color: #e2e8f0; font-style: italic; }
         .testimonial-user { color: #64748b; font-size: 12px; margin-top: 8px; }
-        
-        .footer-note {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 11px;
-            color: #475569;
-            padding: 15px;
-            border-top: 1px solid #334155;
-        }
+
+        .footer-note { margin-top: 30px; text-align: center; font-size: 11px; color: #475569; padding: 15px; border-top: 1px solid #334155; }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
@@ -224,10 +289,52 @@
         <h3>📋 Marketing Plan</h3>
         <span id="timestamp" style="font-size: 12px; color: #64748b;"></span>
     </div>
+
+    <!-- KPI DASHBOARD (renders above all content once generation completes) -->
+    <div id="kpi-dashboard-label">📊 Key Market Metrics</div>
+    <div id="kpi-dashboard" role="region" aria-label="Key Performance Indicators">
+        <div class="kpi-card" id="kpi-tam">
+            <span class="kpi-icon">🌍</span>
+            <div class="kpi-value" id="kpi-tam-value">—</div>
+            <div class="kpi-label">TAM</div>
+            <div class="kpi-source">
+                <span>TAM/SAM/SOM Output</span>
+                <i class="kpi-tooltip-icon" data-tip="Total Addressable Market — the theoretical maximum revenue if you captured 100% of the market.">?</i>
+            </div>
+        </div>
+        <div class="kpi-card" id="kpi-sam">
+            <span class="kpi-icon">🎯</span>
+            <div class="kpi-value" id="kpi-sam-value">—</div>
+            <div class="kpi-label">SAM</div>
+            <div class="kpi-source">
+                <span>TAM/SAM/SOM Output</span>
+                <i class="kpi-tooltip-icon" data-tip="Serviceable Available Market — the portion of TAM your business model and geography can realistically serve.">?</i>
+            </div>
+        </div>
+        <div class="kpi-card" id="kpi-som">
+            <span class="kpi-icon">🚀</span>
+            <div class="kpi-value" id="kpi-som-value">—</div>
+            <div class="kpi-label">SOM</div>
+            <div class="kpi-source">
+                <span>TAM/SAM/SOM Output</span>
+                <i class="kpi-tooltip-icon" data-tip="Serviceable Obtainable Market — the realistic slice of SAM you can capture given current resources and competition.">?</i>
+            </div>
+        </div>
+        <div class="kpi-card" id="kpi-primary">
+            <span class="kpi-icon">📈</span>
+            <div class="kpi-value" id="kpi-primary-value">—</div>
+            <div class="kpi-label">Primary KPI</div>
+            <div class="kpi-source">
+                <span>KPI Output</span>
+                <i class="kpi-tooltip-icon" data-tip="The single most important metric to track your marketing success, extracted from the KPI section of the plan.">?</i>
+            </div>
+        </div>
+    </div>
+
     <div id="output" class="rendered-output">Ready. Enter data and click Generate.</div>
 </div>
 
-<!-- Delivery Speed Controls (appears after journey map is rendered) -->
+<!-- Delivery Speed Controls -->
 <div id="journey-controls" style="display: none;">
     <div class="delivery-controls">
         <button class="delivery-btn active" data-speed="fast" onclick="setDeliverySpeed('fast')">⚡ Fast Delivery (Delighted)</button>
@@ -253,7 +360,7 @@
 </div>
 
 <div class="footer-note">
-    Strategic Marketing System v2.0 | Powered by DeepSeek 
+    Strategic Marketing System v2.0 | Powered by DeepSeek
 </div>
 
 <script>
@@ -261,56 +368,156 @@
     let currentPlanHTML = "";
     let currentDeliverySpeed = "fast";
     let currentJourneyHTML = "";
-    
+
+    // ─── KPI EXTRACTION ───────────────────────────────────────────────
+    /**
+     * Extract TAM, SAM, SOM from the raw plan text.
+     * Matches patterns like:
+     *   TAM: $2.4B  |  TAM = $2.4 billion  |  TAM** $2.4B
+     *   Works case-insensitively, tolerates markdown bold markers.
+     */
+    function extractMarketValue(text, label) {
+        if (!text) return null;
+        // Pattern: label (optional colon/equals/bold) then a value with $, digits, B/M/K/billion/million
+        const patterns = [
+            new RegExp(`\\b${label}\\b[:\\s=*]{0,4}([\\$€£]?[\\d,.]+\\s*(?:billion|million|trillion|B|M|T|K)(?:[\\s/](?:USD|ETB|EUR))?(?:\\s*[\\-–][\\s\\d.,]+(?:billion|million|B|M)?)?)`, 'i'),
+            new RegExp(`\\b${label}\\b[:\\s=*]{0,4}((?:USD|ETB|EUR|\\$|€|£)[\\s]?[\\d,.]+\\s*(?:billion|million|trillion|B|M|T|K)?)`, 'i'),
+        ];
+        for (const re of patterns) {
+            const m = text.match(re);
+            if (m && m[1] && m[1].trim().length > 0) return m[1].trim();
+        }
+        return null;
+    }
+
+    /**
+     * Extract the primary KPI from [KPI OUTPUT] or KPI section.
+     * Looks for the first bolded/labelled metric after "KPI" heading.
+     * Returns label + value, e.g. "CAC < $15" or "Monthly Active Users: 500"
+     */
+    function extractPrimaryKPI(text) {
+        if (!text) return null;
+
+        // Try to find the KPI section
+        const kpiSectionMatch = text.match(/\[KPI OUTPUT\]([\s\S]*?)(?=\[|$)/i)
+            || text.match(/#+\s*KPI[s]?\b([\s\S]*?)(?=#+\s|$)/i);
+
+        const searchText = kpiSectionMatch ? kpiSectionMatch[1] : text;
+
+        // Look for lines with a value pattern: "Metric Name: value" or "**Metric**: value"
+        const kpiLinePatterns = [
+            /\*\*([^*\n]{3,50})\*\*[:\s]+([^\n]{2,60})/,   // **Label**: value
+            /^\s*[-•]\s*\*\*([^*\n]{3,50})\*\*[:\s]+([^\n]{2,60})/m, // - **Label**: value
+            /(?:Primary KPI|Key Metric|North Star)[:\s]+([^\n]{3,80})/i,
+            /(?:KPI\s*#?1|Top KPI|Main KPI)[:\s]+([^\n]{3,80})/i,
+            /^\s*[-•1.]\s+([^\n]{5,80}(?:rate|growth|revenue|users|sales|retention|conversion|CAC|LTV|ROI|ROAS|MRR|ARR)[^\n]{0,40})/im,
+        ];
+
+        for (const re of kpiLinePatterns) {
+            const m = searchText.match(re);
+            if (m) {
+                // Prefer label:value pairs
+                const val = (m[2] || m[1] || '').replace(/\*\*/g, '').trim();
+                if (val.length > 2 && val.length < 80) return val;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Render KPI values into the dashboard cards.
+     * Call this after generation with the raw plan text.
+     */
+    function renderKPIDashboard(rawPlanText) {
+        const tam = extractMarketValue(rawPlanText, 'TAM');
+        const sam = extractMarketValue(rawPlanText, 'SAM');
+        const som = extractMarketValue(rawPlanText, 'SOM');
+        const kpi = extractPrimaryKPI(rawPlanText);
+
+        const setCard = (id, value) => {
+            const el = document.getElementById(id);
+            const card = el ? el.closest('.kpi-card') : null;
+            if (!el) return;
+            if (value) {
+                el.textContent = value;
+                if (card) card.classList.remove('na-state');
+            } else {
+                el.textContent = 'N/A';
+                if (card) card.classList.add('na-state');
+            }
+        };
+
+        setCard('kpi-tam-value', tam);
+        setCard('kpi-sam-value', sam);
+        setCard('kpi-som-value', som);
+        setCard('kpi-primary-value', kpi);
+
+        // Show dashboard
+        const dashboard = document.getElementById('kpi-dashboard');
+        const label = document.getElementById('kpi-dashboard-label');
+        if (dashboard) dashboard.classList.add('visible');
+        if (label) label.classList.add('visible');
+    }
+
+    /** Hide dashboard and reset values (called when a new generation starts) */
+    function resetKPIDashboard() {
+        ['kpi-tam-value','kpi-sam-value','kpi-som-value','kpi-primary-value'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = '—';
+        });
+        const dashboard = document.getElementById('kpi-dashboard');
+        const label = document.getElementById('kpi-dashboard-label');
+        if (dashboard) dashboard.classList.remove('visible');
+        if (label) label.classList.remove('visible');
+    }
+    // ──────────────────────────────────────────────────────────────────
+
     // Stage definitions for visual journey map
     const journeyStages = [
-        { name: "AWARENESS", icon: "👁️", defaultEmotion: "Curious", defaultTouchpoint: "Social Media Ad", defaultAction: "Educational Content" },
+        { name: "AWARENESS",     icon: "👁️", defaultEmotion: "Curious",  defaultTouchpoint: "Social Media Ad", defaultAction: "Educational Content" },
         { name: "CONSIDERATION", icon: "🤔", defaultEmotion: "Skeptical", defaultTouchpoint: "Comparison Site", defaultAction: "Case Studies" },
-        { name: "PURCHASE", icon: "💰", defaultEmotion: "Hesitant", defaultTouchpoint: "Pricing Page", defaultAction: "Risk Reversal" },
-        { name: "RETENTION", icon: "❤️", defaultEmotion: "Relieved", defaultTouchpoint: "Onboarding Email", defaultAction: "Loyalty Program" },
-        { name: "ADVOCACY", icon: "📢", defaultEmotion: "Proud", defaultTouchpoint: "Referral Link", defaultAction: "Referral Rewards" }
+        { name: "PURCHASE",      icon: "💰", defaultEmotion: "Hesitant",  defaultTouchpoint: "Pricing Page",    defaultAction: "Risk Reversal" },
+        { name: "RETENTION",     icon: "❤️", defaultEmotion: "Relieved",  defaultTouchpoint: "Onboarding Email", defaultAction: "Loyalty Program" },
+        { name: "ADVOCACY",      icon: "📢", defaultEmotion: "Proud",     defaultTouchpoint: "Referral Link",   defaultAction: "Referral Rewards" }
     ];
-    
+
     function getSatisfactionStatus(speed) {
-        if (speed === "fast") return { status: "Delighted", badge: "badge-delighted", class: "delighted", emotion: "Excited → Thrilled" };
-        if (speed === "delayed") return { status: "Satisfied", badge: "badge-satisfied", class: "satisfied", emotion: "Accepting → Patient" };
-        return { status: "Dissatisfied", badge: "badge-dissatisfied", class: "dissatisfied", emotion: "Frustrated → Angry" };
+        if (speed === "fast")    return { status: "Delighted",    badge: "badge-delighted",    class: "delighted",    emotion: "Excited → Thrilled" };
+        if (speed === "delayed") return { status: "Satisfied",    badge: "badge-satisfied",    class: "satisfied",    emotion: "Accepting → Patient" };
+        return                          { status: "Dissatisfied", badge: "badge-dissatisfied", class: "dissatisfied", emotion: "Frustrated → Angry" };
     }
-    
+
     function getCovetousnessForStage(stage, speed) {
         const principles = {
-            AWARENESS: { fast: "Induction — imply scarcity and early access", delayed: "Withdraw — create anticipation despite delay", none: "Failed induction — trust broken" },
-            CONSIDERATION: { fast: "Rivalries — show social proof and rankings", delayed: "Withdraw — limited spots remain", none: "No rivalry — customers leave" },
-            PURCHASE: { fast: "Withdraw — 'Only 5 spots left'", delayed: "Withdraw softened — extend offer", none: "Abandonment — no withdrawal" },
-            RETENTION: { fast: "Induction — exclusive tier access", delayed: "Induction weakened — offer apology discount", none: "Churn — customer leaves" },
-            ADVOCACY: { fast: "Rivalries — referral leaderboard", delayed: "Reduced rivalry — lower incentive", none: "Negative advocacy — bad reviews" }
+            AWARENESS:     { fast: "Induction — imply scarcity and early access", delayed: "Withdraw — create anticipation despite delay", none: "Failed induction — trust broken" },
+            CONSIDERATION: { fast: "Rivalries — show social proof and rankings",   delayed: "Withdraw — limited spots remain",             none: "No rivalry — customers leave" },
+            PURCHASE:      { fast: "Withdraw — 'Only 5 spots left'",               delayed: "Withdraw softened — extend offer",            none: "Abandonment — no withdrawal" },
+            RETENTION:     { fast: "Induction — exclusive tier access",            delayed: "Induction weakened — offer apology discount",  none: "Churn — customer leaves" },
+            ADVOCACY:      { fast: "Rivalries — referral leaderboard",             delayed: "Reduced rivalry — lower incentive",            none: "Negative advocacy — bad reviews" }
         };
         return principles[stage]?.[speed] || "Strategic withdrawal applied";
     }
-    
+
     function getMarketingImplication(stage, speed) {
         const implications = {
-            AWARENESS: { fast: "accelerate ad spend, highlight speed", delayed: "manage expectations, offer tracking", none: "damage control, public apology" },
-            CONSIDERATION: { fast: "emphasize quick delivery in comparisons", delayed: "offer discounts for patience", none: "redirect to competitor analysis" },
-            PURCHASE: { fast: "upsell premium delivery options", delayed: "offer partial refund or credit", none: "process refunds, recover trust" },
-            RETENTION: { fast: "increase loyalty rewards", delayed: "send apology gift", none: "retention campaign, win-back offer" },
-            ADVOCACY: { fast: "boost referral rewards", delayed: "offer delayed referral bonus", none: "crisis management, review response" }
+            AWARENESS:     { fast: "accelerate ad spend, highlight speed",  delayed: "manage expectations, offer tracking",   none: "damage control, public apology" },
+            CONSIDERATION: { fast: "emphasize quick delivery in comparisons", delayed: "offer discounts for patience",          none: "redirect to competitor analysis" },
+            PURCHASE:      { fast: "upsell premium delivery options",         delayed: "offer partial refund or credit",        none: "process refunds, recover trust" },
+            RETENTION:     { fast: "increase loyalty rewards",                delayed: "send apology gift",                    none: "retention campaign, win-back offer" },
+            ADVOCACY:      { fast: "boost referral rewards",                  delayed: "offer delayed referral bonus",          none: "crisis management, review response" }
         };
         return implications[stage]?.[speed] || "adjust marketing strategy based on satisfaction level";
     }
-    
+
     function renderVisualJourneyMap() {
         const container = document.getElementById('visual-journey-container');
         if (!container) return;
-        
         const satisfaction = getSatisfactionStatus(currentDeliverySpeed);
         let html = `<div class="journey-container">`;
-        
         journeyStages.forEach((stage, index) => {
             const isLast = index === journeyStages.length - 1;
             const covetousness = getCovetousnessForStage(stage.name, currentDeliverySpeed);
-            const implication = getMarketingImplication(stage.name, currentDeliverySpeed);
-            
+            const implication  = getMarketingImplication(stage.name, currentDeliverySpeed);
             html += `
                 <div class="journey-card ${satisfaction.class}" onclick="this.classList.toggle('expanded')">
                     <div class="journey-icon">${stage.icon}</div>
@@ -327,12 +534,11 @@
                 ${!isLast ? '<div class="journey-arrow">➡</div>' : ''}
             `;
         });
-        
         html += `</div>`;
         container.innerHTML = html;
         document.getElementById('journey-controls').style.display = 'block';
     }
-    
+
     function setDeliverySpeed(speed) {
         currentDeliverySpeed = speed;
         document.querySelectorAll('.delivery-btn').forEach(btn => {
@@ -341,34 +547,27 @@
         });
         renderVisualJourneyMap();
     }
-    
-    // Extract journey section and replace with visual map
+
     function enhanceOutputWithVisualJourney(htmlContent) {
-        // Check if there's a CUSTOMER JOURNEY OUTPUT section
         const journeyMatch = htmlContent.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\[|$)/i);
         if (journeyMatch) {
-            // Remove original journey text and insert visual journey marker
             let enhanced = htmlContent.replace(/\[CUSTOMER JOURNEY OUTPUT\][\s\S]*?(?=\[|$)/i, '[VISUAL_JOURNEY_MARKER]');
-            // The visual journey will be rendered separately
             return enhanced;
         }
         return htmlContent;
     }
-    
+
     async function sendFeedback(vote) {
         const customer = document.getElementById("customer").value || "";
-        const product = document.getElementById("product").value || "";
-        
-        const tempDiv = document.createElement('div');
+        const product  = document.getElementById("product").value  || "";
+        const tempDiv  = document.createElement('div');
         tempDiv.innerHTML = currentPlanHTML;
         let plainText = tempDiv.textContent || "";
-        let summary = plainText.substring(0, 300);
+        let summary   = plainText.substring(0, 300);
         if (plainText.length > 300) {
             const lastPeriod = summary.lastIndexOf('.');
-            if (lastPeriod > 200) summary = summary.substring(0, lastPeriod + 1);
-            else summary = summary + "...";
+            summary = lastPeriod > 200 ? summary.substring(0, lastPeriod + 1) : summary + "...";
         }
-        
         try {
             await fetch(`${API_BASE_URL}/feedback`, {
                 method: "POST",
@@ -377,19 +576,15 @@
             });
             alert(`Thank you for your ${vote === 'yes' ? 'positive' : 'honest'} feedback! 🙏`);
             loadTestimonials();
-        } catch (error) {
-            alert(`Thank you for your feedback!`);
-        }
+        } catch { alert(`Thank you for your feedback!`); }
     }
-    
+
     async function loadTestimonials() {
         const testimonialsDiv = document.getElementById('testimonials-list');
         testimonialsDiv.innerHTML = '<div style="color: #64748b; text-align: center; padding: 20px;">Loading testimonials...</div>';
-        
         try {
             const response = await fetch(`${API_BASE_URL}/public-testimonials`);
-            const data = await response.json();
-            
+            const data     = await response.json();
             if (data.testimonials && data.testimonials.length > 0) {
                 testimonialsDiv.innerHTML = data.testimonials.slice(0, 6).map(t => `
                     <div class="testimonial-card">
@@ -401,28 +596,26 @@
             } else {
                 testimonialsDiv.innerHTML = '<div style="color: #64748b; text-align: center; padding: 20px;">Be the first to share your experience! 🌟</div>';
             }
-        } catch (error) {
+        } catch {
             testimonialsDiv.innerHTML = '<div style="color: #94a3b8; text-align: center; padding: 20px;">⭐ Testimonials coming soon</div>';
         }
     }
-    
+
     function escapeHtml(text) {
         if (!text) return '';
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
     }
-    
+
     function renderMarkdownTables(text) {
         const lines = text.split('\n');
-        let result = [];
-        let inTable = false, headers = [], rows = [];
-        
+        let result = [], inTable = false, headers = [], rows = [];
         for (let i = 0; i < lines.length; i++) {
             let line = lines[i];
             if (line.includes('|') && i + 1 < lines.length && lines[i + 1].includes('---')) {
-                inTable = true;
-                headers = line.split('|').filter(c => c.trim()).map(c => c.trim());
+                inTable  = true;
+                headers  = line.split('|').filter(c => c.trim()).map(c => c.trim());
                 i++;
                 rows = [];
                 continue;
@@ -441,13 +634,9 @@
                 }
                 html += '</tbody></table>';
                 result.push(html);
-                inTable = false;
-                headers = [];
-                rows = [];
+                inTable = false; headers = []; rows = [];
                 result.push(line);
-            } else {
-                result.push(line);
-            }
+            } else { result.push(line); }
         }
         if (inTable && headers.length) {
             let html = '<table><thead><tr>';
@@ -463,7 +652,7 @@
         }
         return result.join('\n');
     }
-    
+
     function markdownToHtml(text) {
         if (!text) return '';
         let html = renderMarkdownTables(text);
@@ -476,7 +665,7 @@
         html = html.replace(/\n/g, '<br>');
         return html;
     }
-    
+
     async function testAPI() {
         const statusDiv = document.getElementById("status");
         try {
@@ -488,36 +677,36 @@
                 statusDiv.innerHTML = "🔴 API error";
                 statusDiv.className = "status status-error";
             }
-        } catch (error) {
+        } catch {
             statusDiv.innerHTML = "🔴 Cannot reach API";
             statusDiv.className = "status status-error";
         }
     }
-    
+
     async function generate() {
-        const customer = document.getElementById("customer").value;
-        const product = document.getElementById("product").value;
-        const outputDiv = document.getElementById("output");
-        const genBtn = document.getElementById("generateBtn");
+        const customer    = document.getElementById("customer").value;
+        const product     = document.getElementById("product").value;
+        const outputDiv   = document.getElementById("output");
+        const genBtn      = document.getElementById("generateBtn");
         const downloadBtn = document.getElementById("downloadBtn");
-        const copyBtn = document.getElementById("copyBtn");
-        const statusDiv = document.getElementById("status");
-        const loader = document.getElementById("loader");
-        
-        if (!customer || !product) {
-            alert("Please fill both fields");
-            return;
-        }
-        
+        const copyBtn     = document.getElementById("copyBtn");
+        const statusDiv   = document.getElementById("status");
+        const loader      = document.getElementById("loader");
+
+        if (!customer || !product) { alert("Please fill both fields"); return; }
+
+        // Reset KPI dashboard while loading
+        resetKPIDashboard();
+
         downloadBtn.style.display = "none";
-        copyBtn.style.display = "none";
-        genBtn.disabled = true;
-        genBtn.textContent = "⏳ Generating...";
-        outputDiv.innerHTML = "<em>Processing... (30-60 seconds)</em>";
-        statusDiv.innerHTML = "🟡 Generating plan...";
-        statusDiv.className = "status status-testing";
-        loader.style.display = "block";
-        
+        copyBtn.style.display     = "none";
+        genBtn.disabled           = true;
+        genBtn.textContent        = "⏳ Generating...";
+        outputDiv.innerHTML       = "<em>Processing... (30-60 seconds)</em>";
+        statusDiv.innerHTML       = "🟡 Generating plan...";
+        statusDiv.className       = "status status-testing";
+        loader.style.display      = "block";
+
         try {
             const response = await fetch(`${API_BASE_URL}/generate`, {
                 method: "POST",
@@ -526,79 +715,96 @@
             });
             const data = await response.json();
             if (data.error) throw new Error(data.error);
-            
-            // Convert markdown to HTML
-            let htmlContent = markdownToHtml(data.plan);
-            
-            // Enhance with visual journey map (remove original journey text, marker added)
-            htmlContent = enhanceOutputWithVisualJourney(htmlContent);
-            
-            currentPlanHTML = htmlContent;
-            outputDiv.innerHTML = htmlContent;
-            
-            // Render visual journey map below
+
+            // Store raw plan text BEFORE converting to HTML (extraction needs raw markdown)
+            const rawPlan = data.plan || "";
+
+            // Convert markdown → HTML
+            let htmlContent = markdownToHtml(rawPlan);
+            htmlContent     = enhanceOutputWithVisualJourney(htmlContent);
+
+            currentPlanHTML       = htmlContent;
+            outputDiv.innerHTML   = htmlContent;
+
+            // ── Populate KPI dashboard from raw markdown ──
+            renderKPIDashboard(rawPlan);
+
             renderVisualJourneyMap();
-            
+
             document.getElementById("timestamp").innerHTML = `Generated: ${new Date().toLocaleString()}`;
-            statusDiv.innerHTML = "✅ Plan generated!";
-            statusDiv.className = "status status-working";
+            statusDiv.innerHTML   = "✅ Plan generated!";
+            statusDiv.className   = "status status-working";
             downloadBtn.style.display = "inline-block";
-            copyBtn.style.display = "inline-block";
+            copyBtn.style.display     = "inline-block";
         } catch (error) {
             outputDiv.innerHTML = `<span style="color:#f87171;">Error: ${error.message}</span>`;
             statusDiv.innerHTML = "🔴 Generation failed";
             statusDiv.className = "status status-error";
         } finally {
-            genBtn.disabled = false;
+            genBtn.disabled    = false;
             genBtn.textContent = "🚀 Generate Strategy";
             loader.style.display = "none";
         }
     }
-    
+
     async function downloadPDF() {
         const content = document.getElementById("output").innerHTML;
-        if (!content || content.includes("Processing")) {
-            alert("Generate a plan first");
-            return;
-        }
-        const btn = document.getElementById("downloadBtn");
+        if (!content || content.includes("Processing")) { alert("Generate a plan first"); return; }
+        const btn      = document.getElementById("downloadBtn");
         const original = btn.innerText;
-        btn.innerText = "⏳ Generating PDF...";
-        btn.disabled = true;
+        btn.innerText  = "⏳ Generating PDF...";
+        btn.disabled   = true;
         try {
             const element = document.createElement('div');
-            element.style.padding = '40px';
-            element.style.fontFamily = 'system-ui, sans-serif';
-            element.style.backgroundColor = '#fff';
-            element.style.color = '#1e293b';
+            element.style.cssText = "padding:40px;font-family:system-ui,sans-serif;background:#fff;color:#1e293b;";
+
+            // Build KPI summary for PDF
+            const kpiRows = [
+                { label: "TAM",         id: "kpi-tam-value",     icon: "🌍" },
+                { label: "SAM",         id: "kpi-sam-value",     icon: "🎯" },
+                { label: "SOM",         id: "kpi-som-value",     icon: "🚀" },
+                { label: "Primary KPI", id: "kpi-primary-value", icon: "📈" },
+            ].filter(k => {
+                const el = document.getElementById(k.id);
+                return el && el.textContent !== '—' && el.textContent !== 'N/A';
+            }).map(k => {
+                const val = document.getElementById(k.id).textContent;
+                return `<div style="display:inline-block;margin:0 12px 12px 0;padding:12px 18px;background:#f1f5f9;border-radius:10px;border:1px solid #e2e8f0;">
+                    <span style="font-size:1.3rem">${k.icon}</span>
+                    <strong style="color:#0f172a;margin-left:8px;">${k.label}:</strong>
+                    <span style="color:#0369a1;margin-left:6px;font-weight:700;">${val}</span>
+                </div>`;
+            }).join('');
+
             element.innerHTML = `
-                <div style="text-align:center; margin-bottom:40px;">
+                <div style="text-align:center;margin-bottom:40px;">
                     <h1 style="color:#1e293b;">Strategic Marketing Report</h1>
                     <p>Generated by Bisrat's Strategic Marketing System</p>
-                    <hr style="width:60px; margin:16px auto;">
+                    <hr style="width:60px;margin:16px auto;">
                 </div>
+                ${kpiRows ? `<div style="margin-bottom:24px;">${kpiRows}</div>` : ''}
                 <div style="font-size:11pt;">${content}</div>
-                <div style="text-align:center; margin-top:40px; font-size:9pt; color:#64748b;">
+                <div style="text-align:center;margin-top:40px;font-size:9pt;color:#64748b;">
                     <p>Generated: ${new Date().toLocaleString()}</p>
                     <p>PDF/A-1b compliant | ISO 19005-1</p>
                 </div>
             `;
-            const opt = { margin: [0.5,0.5,0.5,0.5], filename: `marketing_plan.pdf`, html2canvas: { scale:2, backgroundColor:'#fff' }, jsPDF: { unit:'in', format:'a4', orientation:'portrait' } };
+            const opt = { margin:[0.5,0.5,0.5,0.5], filename:`marketing_plan.pdf`, html2canvas:{scale:2,backgroundColor:'#fff'}, jsPDF:{unit:'in',format:'a4',orientation:'portrait'} };
             await html2pdf().set(opt).from(element).save();
-        } catch (e) { alert("PDF error"); }
+        } catch { alert("PDF error"); }
         finally { btn.innerText = original; btn.disabled = false; }
     }
-    
+
     async function copyToClipboard() {
         const text = document.getElementById("output").innerText;
         if (!text || text.includes("Processing")) { alert("Generate a plan first"); return; }
         await navigator.clipboard.writeText(text);
-        const btn = document.getElementById("copyBtn");
+        const btn      = document.getElementById("copyBtn");
         const original = btn.innerText;
-        btn.innerText = "✅ Copied!";
+        btn.innerText  = "✅ Copied!";
         setTimeout(() => btn.innerText = original, 2000);
     }
-    
+
     testAPI();
     loadTestimonials();
 </script>
