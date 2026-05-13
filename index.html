@@ -28,146 +28,57 @@
         .rendered-output { background: #0f172a; border-radius: 12px; padding: 24px; overflow-x: auto; line-height: 1.5; }
 
         /* ─── KPI DASHBOARD ─── */
-        #kpi-dashboard {
-            display: none; /* hidden until generation completes */
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 28px;
-        }
-        #kpi-dashboard.visible {
-            display: grid;
-        }
-        .kpi-card {
-            position: relative;
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border: 1px solid #334155;
-            border-radius: 16px;
-            padding: 20px 18px;
-            cursor: default;
-            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-            overflow: visible;
-        }
-        .kpi-card:hover {
-            transform: translateY(-4px);
-            border-color: #38bdf8;
-            box-shadow: 0 8px 32px rgba(56, 189, 248, 0.22), 0 0 0 1px rgba(56,189,248,0.15);
-        }
+        #kpi-dashboard { display: none; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+        #kpi-dashboard.visible { display: grid; }
+        .kpi-card { position: relative; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; border-radius: 16px; padding: 20px 18px; cursor: default; transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease; overflow: visible; }
+        .kpi-card:hover { transform: translateY(-4px); border-color: #38bdf8; box-shadow: 0 8px 32px rgba(56,189,248,0.22), 0 0 0 1px rgba(56,189,248,0.15); }
         .kpi-card:nth-child(2):hover { border-color: #818cf8; box-shadow: 0 8px 32px rgba(129,140,248,0.22), 0 0 0 1px rgba(129,140,248,0.15); }
         .kpi-card:nth-child(3):hover { border-color: #10b981; box-shadow: 0 8px 32px rgba(16,185,129,0.22), 0 0 0 1px rgba(16,185,129,0.15); }
         .kpi-card:nth-child(4):hover { border-color: #facc15; box-shadow: 0 8px 32px rgba(250,204,21,0.22), 0 0 0 1px rgba(250,204,21,0.15); }
-        .kpi-icon {
-            font-size: 1.6rem;
-            margin-bottom: 10px;
-            display: block;
-            line-height: 1;
-        }
-        .kpi-value {
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: #38bdf8;
-            margin-bottom: 4px;
-            word-break: break-word;
-            line-height: 1.2;
-        }
+        .kpi-icon { font-size: 1.6rem; margin-bottom: 10px; display: block; line-height: 1; }
+        .kpi-value { font-size: 1.35rem; font-weight: 700; color: #38bdf8; margin-bottom: 4px; word-break: break-word; line-height: 1.2; }
         .kpi-card:nth-child(2) .kpi-value { color: #818cf8; }
         .kpi-card:nth-child(3) .kpi-value { color: #10b981; }
         .kpi-card:nth-child(4) .kpi-value { color: #facc15; }
-        .kpi-label {
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.07em;
-            margin-bottom: 6px;
-        }
-        .kpi-source {
-            font-size: 0.68rem;
-            color: #475569;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        /* Tooltip */
-        .kpi-tooltip-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 14px;
-            height: 14px;
-            background: #334155;
-            border-radius: 50%;
-            font-size: 0.6rem;
-            color: #94a3b8;
-            cursor: help;
-            position: relative;
-            font-style: normal;
-        }
-        .kpi-tooltip-icon::after {
-            content: attr(data-tip);
-            position: absolute;
-            bottom: calc(100% + 6px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1e293b;
-            border: 1px solid #334155;
-            color: #e2e8f0;
-            font-size: 0.7rem;
-            padding: 8px 10px;
-            border-radius: 8px;
-            width: 200px;
-            white-space: normal;
-            line-height: 1.4;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s;
-            z-index: 100;
-            text-transform: none;
-            letter-spacing: 0;
-            font-weight: 400;
-        }
+        .kpi-label { font-size: 0.78rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+        .kpi-source { font-size: 0.68rem; color: #475569; display: flex; align-items: center; gap: 4px; }
+        .kpi-tooltip-icon { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; background: #334155; border-radius: 50%; font-size: 0.6rem; color: #94a3b8; cursor: help; position: relative; font-style: normal; }
+        .kpi-tooltip-icon::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #1e293b; border: 1px solid #334155; color: #e2e8f0; font-size: 0.7rem; padding: 8px 10px; border-radius: 8px; width: 200px; white-space: normal; line-height: 1.4; opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 100; text-transform: none; letter-spacing: 0; font-weight: 400; }
         .kpi-tooltip-icon:hover::after { opacity: 1; }
-        /* Pulse shimmer on N/A cards */
-        .kpi-card.na-state .kpi-value {
-            color: #475569;
-            font-size: 1rem;
-        }
-        /* Divider label above dashboard */
-        #kpi-dashboard-label {
-            display: none;
-            font-size: 0.72rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: #475569;
-            margin-bottom: 10px;
-        }
+        .kpi-card.na-state .kpi-value { color: #475569; font-size: 1rem; }
+        #kpi-dashboard-label { display: none; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #475569; margin-bottom: 10px; }
         #kpi-dashboard-label.visible { display: block; }
 
-        /* Journey Map Visual Styles */
-        .journey-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 16px;
-            margin: 30px 0;
-            flex-wrap: wrap;
-        }
-        .journey-card {
-            flex: 1;
-            min-width: 170px;
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            border-radius: 20px;
-            padding: 20px 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            border: 2px solid #334155;
-        }
-        .journey-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 24px rgba(59, 130, 246, 0.2);
-        }
-        .journey-card.delighted { border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+        /* ─── SWOT MATRIX ─── */
+        #swot-section { display: none; margin-bottom: 28px; }
+        #swot-section.visible { display: block; }
+        #swot-section-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #475569; margin-bottom: 10px; }
+        .swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 640px) { .swot-grid { grid-template-columns: 1fr; } }
+        .swot-card { background: #0f172a; border-radius: 16px; padding: 20px; transition: transform 0.25s ease, box-shadow 0.25s ease; cursor: default; }
+        .swot-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        .swot-card.green { border-left: 4px solid #10b981; }
+        .swot-card.red   { border-left: 4px solid #ef4444; }
+        .swot-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+        .swot-card-icon { font-size: 1.4rem; line-height: 1; }
+        .swot-card-title { font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+        .swot-card.green .swot-card-title { color: #10b981; }
+        .swot-card.red   .swot-card-title { color: #ef4444; }
+        .swot-card-subtitle { font-size: 0.68rem; color: #475569; margin-top: 2px; }
+        .swot-items { list-style: none; margin: 0; padding: 0; }
+        .swot-items li { font-size: 0.82rem; color: #cbd5e1; padding: 6px 0; border-bottom: 1px solid #1e293b; line-height: 1.4; display: flex; gap: 8px; }
+        .swot-items li:last-child { border-bottom: none; }
+        .swot-items li::before { content: '›'; font-weight: 700; flex-shrink: 0; }
+        .swot-card.green .swot-items li::before { color: #10b981; }
+        .swot-card.red   .swot-items li::before { color: #ef4444; }
+        .swot-empty { font-size: 0.8rem; color: #475569; font-style: italic; padding: 8px 0; }
+        .swot-fallback { text-align: center; padding: 20px; font-size: 0.85rem; color: #475569; font-style: italic; }
+
+        /* Journey Map */
+        .journey-container { display: flex; justify-content: space-between; gap: 16px; margin: 30px 0; flex-wrap: wrap; }
+        .journey-card { flex: 1; min-width: 170px; background: linear-gradient(135deg, #1e293b, #0f172a); border-radius: 20px; padding: 20px 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; border: 2px solid #334155; }
+        .journey-card:hover { transform: translateY(-6px); box-shadow: 0 12px 24px rgba(59,130,246,0.2); }
+        .journey-card.delighted { border-color: #10b981; box-shadow: 0 0 15px rgba(16,185,129,0.2); }
         .journey-card.satisfied { border-color: #f59e0b; }
         .journey-card.dissatisfied { border-color: #ef4444; }
         @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
@@ -180,7 +91,7 @@
         .journey-title { font-weight: bold; font-size: 1rem; margin-bottom: 8px; color: #38bdf8; }
         .satisfaction-badge { font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; display: inline-block; margin-bottom: 10px; font-weight: 600; }
         .badge-delighted { background: #10b98120; color: #34d399; border: 1px solid #10b981; }
-        .badge-satisfied { background: #f59e0b20; color: #fbbf24; border: 1px solid #f59e0b; }
+        .badge-satisfied  { background: #f59e0b20; color: #fbbf24; border: 1px solid #f59e0b; }
         .badge-dissatisfied { background: #ef444420; color: #f87171; border: 1px solid #ef4444; }
         .stage-emotion { font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; }
         .touchpoint { font-size: 0.7rem; color: #64748b; margin-top: 6px; }
@@ -188,37 +99,15 @@
         .journey-detail { display: none; margin-top: 12px; padding-top: 10px; border-top: 1px solid #334155; font-size: 0.7rem; text-align: left; color: #cbd5e1; }
         .journey-card.expanded .journey-detail { display: block; }
         .journey-arrow { font-size: 1.3rem; color: #3b82f6; align-self: center; }
-        @media (max-width: 900px) {
-            .journey-container { flex-direction: column; }
-            .journey-arrow { display: none; }
-            .journey-card { width: 100%; }
-        }
+        @media (max-width: 900px) { .journey-container { flex-direction: column; } .journey-arrow { display: none; } .journey-card { width: 100%; } }
 
         /* Delivery Controls */
-        .delivery-controls {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin: 20px 0 30px;
-            flex-wrap: wrap;
-        }
-        .delivery-btn {
-            background: #1e293b;
-            border: 2px solid #334155;
-            border-radius: 40px;
-            padding: 8px 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #94a3b8;
-        }
+        .delivery-controls { display: flex; justify-content: center; gap: 16px; margin: 20px 0 30px; flex-wrap: wrap; }
+        .delivery-btn { background: #1e293b; border: 2px solid #334155; border-radius: 40px; padding: 8px 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; color: #94a3b8; }
         .delivery-btn.active { background: #3b82f6; border-color: #60a5fa; color: white; box-shadow: 0 0 10px rgba(59,130,246,0.4); }
-        .delivery-btn[data-speed="fast"]:hover { background: #10b981; border-color: #34d399; color: white; }
+        .delivery-btn[data-speed="fast"]:hover    { background: #10b981; border-color: #34d399; color: white; }
         .delivery-btn[data-speed="delayed"]:hover { background: #f59e0b; border-color: #fbbf24; color: white; }
-        .delivery-btn[data-speed="none"]:hover { background: #ef4444; border-color: #f87171; color: white; }
-
-        .journey-section-title { font-size: 1.4rem; text-align: center; margin: 20px 0 10px; color: #38bdf8; }
+        .delivery-btn[data-speed="none"]:hover    { background: #ef4444; border-color: #f87171; color: white; }
 
         /* Table styling */
         .rendered-output table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #0f172a; font-size: 14px; table-layout: auto; }
@@ -232,9 +121,9 @@
         .rendered-output li { margin: 6px 0; }
 
         .status { padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; }
-        .status-working { background: #065f46; color: #d1d5db; }
-        .status-testing { background: #854d0e; color: #fde047; }
-        .status-error { background: #991b1b; color: #fca5a5; }
+        .status-working  { background: #065f46; color: #d1d5db; }
+        .status-testing  { background: #854d0e; color: #fde047; }
+        .status-error    { background: #991b1b; color: #fca5a5; }
         .loader { border: 3px solid #334155; border-top: 3px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 0.8s linear infinite; margin: 20px auto; display: none; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         label { font-weight: 600; display: block; margin-bottom: 8px; color: #94a3b8; }
@@ -290,7 +179,7 @@
         <span id="timestamp" style="font-size: 12px; color: #64748b;"></span>
     </div>
 
-    <!-- KPI DASHBOARD (renders above all content once generation completes) -->
+    <!-- KPI DASHBOARD -->
     <div id="kpi-dashboard-label">📊 Key Market Metrics</div>
     <div id="kpi-dashboard" role="region" aria-label="Key Performance Indicators">
         <div class="kpi-card" id="kpi-tam">
@@ -329,6 +218,12 @@
                 <i class="kpi-tooltip-icon" data-tip="The single most important metric to track your marketing success, extracted from the KPI section of the plan.">?</i>
             </div>
         </div>
+    </div>
+
+    <!-- SWOT MATRIX -->
+    <div id="swot-section">
+        <div id="swot-section-label">🔲 SWOT Analysis</div>
+        <div id="swot-matrix-container"></div>
     </div>
 
     <div id="output" class="rendered-output">Ready. Enter data and click Generate.</div>
@@ -370,15 +265,8 @@
     let currentJourneyHTML = "";
 
     // ─── KPI EXTRACTION ───────────────────────────────────────────────
-    /**
-     * Extract TAM, SAM, SOM from the raw plan text.
-     * Matches patterns like:
-     *   TAM: $2.4B  |  TAM = $2.4 billion  |  TAM** $2.4B
-     *   Works case-insensitively, tolerates markdown bold markers.
-     */
     function extractMarketValue(text, label) {
         if (!text) return null;
-        // Pattern: label (optional colon/equals/bold) then a value with $, digits, B/M/K/billion/million
         const patterns = [
             new RegExp(`\\b${label}\\b[:\\s=*]{0,4}([\\$€£]?[\\d,.]+\\s*(?:billion|million|trillion|B|M|T|K)(?:[\\s/](?:USD|ETB|EUR))?(?:\\s*[\\-–][\\s\\d.,]+(?:billion|million|B|M)?)?)`, 'i'),
             new RegExp(`\\b${label}\\b[:\\s=*]{0,4}((?:USD|ETB|EUR|\\$|€|£)[\\s]?[\\d,.]+\\s*(?:billion|million|trillion|B|M|T|K)?)`, 'i'),
@@ -390,33 +278,21 @@
         return null;
     }
 
-    /**
-     * Extract the primary KPI from [KPI OUTPUT] or KPI section.
-     * Looks for the first bolded/labelled metric after "KPI" heading.
-     * Returns label + value, e.g. "CAC < $15" or "Monthly Active Users: 500"
-     */
     function extractPrimaryKPI(text) {
         if (!text) return null;
-
-        // Try to find the KPI section
         const kpiSectionMatch = text.match(/\[KPI OUTPUT\]([\s\S]*?)(?=\[|$)/i)
             || text.match(/#+\s*KPI[s]?\b([\s\S]*?)(?=#+\s|$)/i);
-
         const searchText = kpiSectionMatch ? kpiSectionMatch[1] : text;
-
-        // Look for lines with a value pattern: "Metric Name: value" or "**Metric**: value"
         const kpiLinePatterns = [
-            /\*\*([^*\n]{3,50})\*\*[:\s]+([^\n]{2,60})/,   // **Label**: value
-            /^\s*[-•]\s*\*\*([^*\n]{3,50})\*\*[:\s]+([^\n]{2,60})/m, // - **Label**: value
+            /\*\*([^*\n]{3,50})\*\*[:\s]+([^\n]{2,60})/,
+            /^\s*[-•]\s*\*\*([^*\n]{3,50})\*\*[:\s]+([^\n]{2,60})/m,
             /(?:Primary KPI|Key Metric|North Star)[:\s]+([^\n]{3,80})/i,
             /(?:KPI\s*#?1|Top KPI|Main KPI)[:\s]+([^\n]{3,80})/i,
             /^\s*[-•1.]\s+([^\n]{5,80}(?:rate|growth|revenue|users|sales|retention|conversion|CAC|LTV|ROI|ROAS|MRR|ARR)[^\n]{0,40})/im,
         ];
-
         for (const re of kpiLinePatterns) {
             const m = searchText.match(re);
             if (m) {
-                // Prefer label:value pairs
                 const val = (m[2] || m[1] || '').replace(/\*\*/g, '').trim();
                 if (val.length > 2 && val.length < 80) return val;
             }
@@ -424,42 +300,28 @@
         return null;
     }
 
-    /**
-     * Render KPI values into the dashboard cards.
-     * Call this after generation with the raw plan text.
-     */
     function renderKPIDashboard(rawPlanText) {
         const tam = extractMarketValue(rawPlanText, 'TAM');
         const sam = extractMarketValue(rawPlanText, 'SAM');
         const som = extractMarketValue(rawPlanText, 'SOM');
         const kpi = extractPrimaryKPI(rawPlanText);
-
         const setCard = (id, value) => {
             const el = document.getElementById(id);
             const card = el ? el.closest('.kpi-card') : null;
             if (!el) return;
-            if (value) {
-                el.textContent = value;
-                if (card) card.classList.remove('na-state');
-            } else {
-                el.textContent = 'N/A';
-                if (card) card.classList.add('na-state');
-            }
+            if (value) { el.textContent = value; if (card) card.classList.remove('na-state'); }
+            else { el.textContent = 'N/A'; if (card) card.classList.add('na-state'); }
         };
-
         setCard('kpi-tam-value', tam);
         setCard('kpi-sam-value', sam);
         setCard('kpi-som-value', som);
         setCard('kpi-primary-value', kpi);
-
-        // Show dashboard
         const dashboard = document.getElementById('kpi-dashboard');
         const label = document.getElementById('kpi-dashboard-label');
         if (dashboard) dashboard.classList.add('visible');
         if (label) label.classList.add('visible');
     }
 
-    /** Hide dashboard and reset values (called when a new generation starts) */
     function resetKPIDashboard() {
         ['kpi-tam-value','kpi-sam-value','kpi-som-value','kpi-primary-value'].forEach(id => {
             const el = document.getElementById(id);
@@ -470,15 +332,139 @@
         if (dashboard) dashboard.classList.remove('visible');
         if (label) label.classList.remove('visible');
     }
+
+    // ─── SWOT EXTRACTION & RENDER ─────────────────────────────────────
+    function extractSWOTData(planText) {
+        if (!planText) return null;
+
+        // Try to isolate the SWOT section first
+        const swotSectionMatch = planText.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\[|$)/i)
+            || planText.match(/#+\s*SWOT\b([\s\S]*?)(?=#+\s[A-Z]|$)/i)
+            || planText.match(/\bSWOT\s*(?:Analysis|Matrix)?\b([\s\S]*?)(?=#+\s[A-Z]|\[|$)/i);
+
+        const searchText = swotSectionMatch ? swotSectionMatch[1] : planText;
+
+        // Extract bullet items under each category heading
+        function extractCategory(text, categoryName) {
+            // Match heading then collect bullet lines beneath it
+            const headingRe = new RegExp(
+                `(?:^|\\n)\\s*(?:\\*{1,2}|#{1,4}\\s*)?${categoryName}s?\\b[:\\*]*\\s*\\n([\\s\\S]*?)(?=\\n\\s*(?:\\*{1,2}|#{1,4}\\s*)?(?:Strength|Weakness|Opportunit|Threat|$))`,
+                'i'
+            );
+            const match = text.match(headingRe);
+            if (!match) return [];
+
+            const block = match[1];
+            // Match bullet lines: -, •, *, or numbered (1. 2.)
+            const bulletRe = /^\s*(?:[-•*]|\d+\.)\s+(.+)/gm;
+            const items = [];
+            let m;
+            while ((m = bulletRe.exec(block)) !== null) {
+                const item = m[1].replace(/\*\*/g, '').trim();
+                if (item.length > 2) items.push(item);
+                if (items.length >= 4) break;
+            }
+            return items;
+        }
+
+        const strengths     = extractCategory(searchText, 'Strength');
+        const weaknesses    = extractCategory(searchText, 'Weakness');
+        const opportunities = extractCategory(searchText, 'Opportunit'); // matches Opportunity/Opportunities
+        const threats       = extractCategory(searchText, 'Threat');
+
+        // If nothing found at all, signal missing
+        if (!strengths.length && !weaknesses.length && !opportunities.length && !threats.length) {
+            return null;
+        }
+
+        return { strengths, weaknesses, opportunities, threats };
+    }
+
+    function renderSWOTMatrix(swotData) {
+        if (!swotData) {
+            return `<div class="swot-fallback">⚠️ SWOT section not found in this plan. Ensure your API returns a [SWOT OUTPUT] section.</div>`;
+        }
+
+        const cards = [
+            {
+                key:      'strengths',
+                title:    'Strengths',
+                icon:     '💪',
+                color:    'green',
+                subtitle: 'What advantages do we leverage?',
+                items:    swotData.strengths
+            },
+            {
+                key:      'weaknesses',
+                title:    'Weaknesses',
+                icon:     '🔻',
+                color:    'red',
+                subtitle: 'What internal gaps must we fix?',
+                items:    swotData.weaknesses
+            },
+            {
+                key:      'opportunities',
+                title:    'Opportunities',
+                icon:     '✨',
+                color:    'green',
+                subtitle: 'Where is the market moving in our favor?',
+                items:    swotData.opportunities
+            },
+            {
+                key:      'threats',
+                title:    'Threats',
+                icon:     '⚠️',
+                color:    'red',
+                subtitle: 'What external risks require contingency plans?',
+                items:    swotData.threats
+            },
+        ];
+
+        const cardsHTML = cards.map(card => {
+            const itemsHTML = card.items.length
+                ? `<ul class="swot-items">${card.items.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul>`
+                : `<div class="swot-empty">No ${card.title.toLowerCase()} identified.</div>`;
+
+            return `
+                <div class="swot-card ${card.color}">
+                    <div class="swot-card-header">
+                        <span class="swot-card-icon">${card.icon}</span>
+                        <div>
+                            <div class="swot-card-title">${card.title}</div>
+                            <div class="swot-card-subtitle">${card.subtitle}</div>
+                        </div>
+                    </div>
+                    ${itemsHTML}
+                </div>
+            `;
+        }).join('');
+
+        return `<div class="swot-grid">${cardsHTML}</div>`;
+    }
+
+    function showSWOTMatrix(rawPlanText) {
+        const swotData = extractSWOTData(rawPlanText);
+        const html = renderSWOTMatrix(swotData);
+        const container = document.getElementById('swot-matrix-container');
+        const section   = document.getElementById('swot-section');
+        if (container) container.innerHTML = html;
+        if (section)   section.classList.add('visible');
+    }
+
+    function resetSWOTMatrix() {
+        const container = document.getElementById('swot-matrix-container');
+        const section   = document.getElementById('swot-section');
+        if (container) container.innerHTML = '';
+        if (section)   section.classList.remove('visible');
+    }
     // ──────────────────────────────────────────────────────────────────
 
-    // Stage definitions for visual journey map
     const journeyStages = [
-        { name: "AWARENESS",     icon: "👁️", defaultEmotion: "Curious",  defaultTouchpoint: "Social Media Ad", defaultAction: "Educational Content" },
-        { name: "CONSIDERATION", icon: "🤔", defaultEmotion: "Skeptical", defaultTouchpoint: "Comparison Site", defaultAction: "Case Studies" },
-        { name: "PURCHASE",      icon: "💰", defaultEmotion: "Hesitant",  defaultTouchpoint: "Pricing Page",    defaultAction: "Risk Reversal" },
+        { name: "AWARENESS",     icon: "👁️", defaultEmotion: "Curious",  defaultTouchpoint: "Social Media Ad",  defaultAction: "Educational Content" },
+        { name: "CONSIDERATION", icon: "🤔", defaultEmotion: "Skeptical", defaultTouchpoint: "Comparison Site",  defaultAction: "Case Studies" },
+        { name: "PURCHASE",      icon: "💰", defaultEmotion: "Hesitant",  defaultTouchpoint: "Pricing Page",     defaultAction: "Risk Reversal" },
         { name: "RETENTION",     icon: "❤️", defaultEmotion: "Relieved",  defaultTouchpoint: "Onboarding Email", defaultAction: "Loyalty Program" },
-        { name: "ADVOCACY",      icon: "📢", defaultEmotion: "Proud",     defaultTouchpoint: "Referral Link",   defaultAction: "Referral Rewards" }
+        { name: "ADVOCACY",      icon: "📢", defaultEmotion: "Proud",     defaultTouchpoint: "Referral Link",    defaultAction: "Referral Rewards" }
     ];
 
     function getSatisfactionStatus(speed) {
@@ -500,11 +486,11 @@
 
     function getMarketingImplication(stage, speed) {
         const implications = {
-            AWARENESS:     { fast: "accelerate ad spend, highlight speed",  delayed: "manage expectations, offer tracking",   none: "damage control, public apology" },
-            CONSIDERATION: { fast: "emphasize quick delivery in comparisons", delayed: "offer discounts for patience",          none: "redirect to competitor analysis" },
-            PURCHASE:      { fast: "upsell premium delivery options",         delayed: "offer partial refund or credit",        none: "process refunds, recover trust" },
-            RETENTION:     { fast: "increase loyalty rewards",                delayed: "send apology gift",                    none: "retention campaign, win-back offer" },
-            ADVOCACY:      { fast: "boost referral rewards",                  delayed: "offer delayed referral bonus",          none: "crisis management, review response" }
+            AWARENESS:     { fast: "accelerate ad spend, highlight speed",        delayed: "manage expectations, offer tracking",  none: "damage control, public apology" },
+            CONSIDERATION: { fast: "emphasize quick delivery in comparisons",      delayed: "offer discounts for patience",          none: "redirect to competitor analysis" },
+            PURCHASE:      { fast: "upsell premium delivery options",              delayed: "offer partial refund or credit",        none: "process refunds, recover trust" },
+            RETENTION:     { fast: "increase loyalty rewards",                     delayed: "send apology gift",                    none: "retention campaign, win-back offer" },
+            ADVOCACY:      { fast: "boost referral rewards",                       delayed: "offer delayed referral bonus",          none: "crisis management, review response" }
         };
         return implications[stage]?.[speed] || "adjust marketing strategy based on satisfaction level";
     }
@@ -614,10 +600,9 @@
         for (let i = 0; i < lines.length; i++) {
             let line = lines[i];
             if (line.includes('|') && i + 1 < lines.length && lines[i + 1].includes('---')) {
-                inTable  = true;
-                headers  = line.split('|').filter(c => c.trim()).map(c => c.trim());
-                i++;
-                rows = [];
+                inTable = true;
+                headers = line.split('|').filter(c => c.trim()).map(c => c.trim());
+                i++; rows = [];
                 continue;
             }
             if (inTable && line.includes('|')) {
@@ -695,8 +680,8 @@
 
         if (!customer || !product) { alert("Please fill both fields"); return; }
 
-        // Reset KPI dashboard while loading
         resetKPIDashboard();
+        resetSWOTMatrix();
 
         downloadBtn.style.display = "none";
         copyBtn.style.display     = "none";
@@ -716,24 +701,22 @@
             const data = await response.json();
             if (data.error) throw new Error(data.error);
 
-            // Store raw plan text BEFORE converting to HTML (extraction needs raw markdown)
             const rawPlan = data.plan || "";
 
-            // Convert markdown → HTML
             let htmlContent = markdownToHtml(rawPlan);
             htmlContent     = enhanceOutputWithVisualJourney(htmlContent);
 
-            currentPlanHTML       = htmlContent;
-            outputDiv.innerHTML   = htmlContent;
+            currentPlanHTML     = htmlContent;
+            outputDiv.innerHTML = htmlContent;
 
-            // ── Populate KPI dashboard from raw markdown ──
+            // Populate KPI dashboard and SWOT matrix from raw markdown
             renderKPIDashboard(rawPlan);
-
+            showSWOTMatrix(rawPlan);
             renderVisualJourneyMap();
 
             document.getElementById("timestamp").innerHTML = `Generated: ${new Date().toLocaleString()}`;
-            statusDiv.innerHTML   = "✅ Plan generated!";
-            statusDiv.className   = "status status-working";
+            statusDiv.innerHTML       = "✅ Plan generated!";
+            statusDiv.className       = "status status-working";
             downloadBtn.style.display = "inline-block";
             copyBtn.style.display     = "inline-block";
         } catch (error) {
@@ -741,8 +724,8 @@
             statusDiv.innerHTML = "🔴 Generation failed";
             statusDiv.className = "status status-error";
         } finally {
-            genBtn.disabled    = false;
-            genBtn.textContent = "🚀 Generate Strategy";
+            genBtn.disabled      = false;
+            genBtn.textContent   = "🚀 Generate Strategy";
             loader.style.display = "none";
         }
     }
@@ -758,7 +741,6 @@
             const element = document.createElement('div');
             element.style.cssText = "padding:40px;font-family:system-ui,sans-serif;background:#fff;color:#1e293b;";
 
-            // Build KPI summary for PDF
             const kpiRows = [
                 { label: "TAM",         id: "kpi-tam-value",     icon: "🌍" },
                 { label: "SAM",         id: "kpi-sam-value",     icon: "🎯" },
@@ -776,6 +758,9 @@
                 </div>`;
             }).join('');
 
+            // Grab SWOT grid for PDF
+            const swotHTML = document.getElementById('swot-matrix-container')?.innerHTML || '';
+
             element.innerHTML = `
                 <div style="text-align:center;margin-bottom:40px;">
                     <h1 style="color:#1e293b;">Strategic Marketing Report</h1>
@@ -783,6 +768,7 @@
                     <hr style="width:60px;margin:16px auto;">
                 </div>
                 ${kpiRows ? `<div style="margin-bottom:24px;">${kpiRows}</div>` : ''}
+                ${swotHTML ? `<h2 style="color:#1e293b;margin-bottom:12px;">🔲 SWOT Analysis</h2><div style="margin-bottom:24px;">${swotHTML}</div>` : ''}
                 <div style="font-size:11pt;">${content}</div>
                 <div style="text-align:center;margin-top:40px;font-size:9pt;color:#64748b;">
                     <p>Generated: ${new Date().toLocaleString()}</p>
