@@ -138,7 +138,6 @@
         .testimonial-stars { color: #facc15; margin-bottom: 8px; letter-spacing: 2px; }
         .testimonial-text { color: #e2e8f0; font-style: italic; }
         .testimonial-user { color: #64748b; font-size: 12px; margin-top: 8px; }
-
         .footer-note { margin-top: 30px; text-align: center; font-size: 11px; color: #475569; padding: 15px; border-top: 1px solid #334155; }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -263,86 +262,139 @@
     let currentPlanHTML = "";
     let currentDeliverySpeed = "fast";
 
-    // ─── KPI EXTRACTION ───────────────────────────────────────────────
-    // API outputs TAM/SAM/SOM as a markdown table with plain numbers in last column
-    // e.g. "| TAM | Total addressable market... | 10 million farmers x 10% | 1,000,000 |"
-    function extractMarketValue(text, label) {
-        if (!text) return null;
+    // ─── SECTION PARSER (no fragile regex — split by [TAG] markers) ───
+    /**
+     * Splits the raw plan into named sections using [TAG OUTPUT] markers.
+     * Returns a Map: { "TAMSAMSOM": "...text...", "SWOT": "...text...", "KPI": "...text...", ... }
+     */
+    function parseSections(planText) {
+        const sections = new Map();
+        if (!planText) return sections;
 
-        // Pattern 1: table row — | TAM | ... | ... | 1,000,000 |
-        // Grab the LAST pipe-cell on a row that starts with the label
-        const tableRe = new RegExp(
-            `^\\|\\s*${label}\\s*\\|[^\\n]+\\|\\s*([\\d,\\.]+(?:\\s*(?:million|billion|thousand))?(?:\\s*(?:ETB|USD|EUR))?(?:\\s*farmers|units)?)\\s*\\|`,
-            'im'
-        );
-        const tm = text.match(tableRe);
-        if (tm && tm[1].trim()) return tm[1].trim();
+        // Match all [SOMETHING OUTPUT] tags and split text between them
+        const tagPattern = /\[([A-Z0-9\s\/]+?)\s*OUTPUT\]/gi;
+        const tags = [];
+        let m;
+        while ((m = tagPattern.exec(planText)) !== null) {
+            tags.push({ name: m[1].trim().replace(/\s+/g, ''), index: m.index, end: m.index + m[0].length });
+        }
 
-        // Pattern 2: inline "TAM: X" or "TAM = X" with optional currency/units
-        const inlineRe = new RegExp(
-            `\\b${label}\\b[:\\s=*]{0,4}([\\$€£]?[\\d,\\.]+(?:\\s*(?:billion|million|trillion|B|M|T|K))?(?:\\s*(?:USD|ETB|EUR))?)`,
-            'i'
-        );
-        const im = text.match(inlineRe);
-        if (im && im[1].trim()) return im[1].trim();
+        for (let i = 0; i < tags.length; i++) {
+            const start = tags[i].end;
+            const end   = i + 1 < tags.length ? tags[i + 1].index : planText.length;
+            sections.set(tags[i].name, planText.slice(start, end).trim());
+        }
 
-        // Pattern 3: "TAM (1,000,000)" parenthetical
-        const parenRe = new RegExp(`\\b${label}\\b\\s*\\(([\\d,\\.]+)\\)`, 'i');
-        const pm = text.match(parenRe);
-        if (pm && pm[1].trim()) return pm[1].trim();
-
-        return null;
+        return sections;
     }
 
-    // API outputs: "1) Primary KPI: Year 1 sales volume (15,000 units)."
-    function extractPrimaryKPI(text) {
-        if (!text) return null;
-
-        // Isolate [KPI OUTPUT] section first
-        const sectionMatch = text.match(/\[KPI OUTPUT\]([\s\S]*?)(?=\[|$)/i)
-            || text.match(/#+\s*KPI[s]?\b([\s\S]*?)(?=#+\s[A-Z]|$)/i);
-        const searchText = sectionMatch ? sectionMatch[1] : text;
-
-        const patterns = [
-            // "1) Primary KPI: Year 1 sales volume (15,000 units)."
-            /(?:\d+\)?\s*)?Primary KPI[:\s]+([^\n.]{3,100})/i,
-            // "Primary KPI: ..."
-            /Primary KPI[:\s]+([^\n]{3,80})/i,
-            // "Key Metric: ..." / "North Star: ..."
-            /(?:Key Metric|North Star)[:\s]+([^\n]{3,80})/i,
-            // "KPI #1: ..." / "Top KPI: ..."
-            /(?:KPI\s*#?1|Top KPI|Main KPI)[:\s]+([^\n]{3,80})/i,
-            // First numbered/bulleted line with a KPI keyword
-            /^\s*(?:\d+[.)]\s*|[-•*]\s+)([^\n]{5,80}(?:sales|revenue|units|users|rate|growth|retention|conversion|CAC|LTV|ROI|MRR|ARR)[^\n]{0,40})/im,
-        ];
-
-        for (const re of patterns) {
-            const m = searchText.match(re);
-            if (m) {
-                const val = (m[1] || '').replace(/\*\*/g, '').trim().replace(/\.$/, '');
-                if (val.length > 2 && val.length < 120) return val;
+    // ─── TAM / SAM / SOM — parse the markdown table rows ─────────────
+    /**
+     * The TAMSAMSOM section contains a markdown table like:
+     * | TAM | Total addressable market... | 10 million farmers x 10% | 1,000,000 |
+     * We grab the LAST cell of the matching row as the value.
+     */
+    function extractFromTable(sectionText, label) {
+        if (!sectionText) return null;
+        const lines = sectionText.split('\n');
+        for (const line of lines) {
+            if (!line.includes('|')) continue;
+            const cells = line.split('|').map(c => c.trim()).filter(Boolean);
+            // First cell should match label (TAM / SAM / SOM)
+            if (cells.length >= 2 && cells[0].toUpperCase() === label.toUpperCase()) {
+                // Last cell is the number
+                const value = cells[cells.length - 1];
+                if (value && /[\d,.]/.test(value)) return value;
             }
         }
         return null;
     }
 
-    function renderKPIDashboard(rawPlanText) {
-        const tam = extractMarketValue(rawPlanText, 'TAM');
-        const sam = extractMarketValue(rawPlanText, 'SAM');
-        const som = extractMarketValue(rawPlanText, 'SOM');
-        const kpi = extractPrimaryKPI(rawPlanText);
+    // ─── PRIMARY KPI — find "Primary KPI:" line ───────────────────────
+    /**
+     * The KPI section contains:
+     * "1) Primary KPI: Year 1 sales volume (15,000 units)."
+     * We find that line and return the value after the colon.
+     */
+    function extractPrimaryKPI(sectionText) {
+        if (!sectionText) return null;
+        const lines = sectionText.split('\n');
+        for (const line of lines) {
+            const lower = line.toLowerCase();
+            if (lower.includes('primary kpi')) {
+                const colonIdx = line.indexOf(':');
+                if (colonIdx !== -1) {
+                    const val = line.slice(colonIdx + 1).replace(/\*\*/g, '').trim().replace(/\.$/, '');
+                    if (val.length > 2) return val;
+                }
+            }
+        }
+        // Fallback: first numbered line with a value keyword
+        for (const line of lines) {
+            if (/^\s*1[.)]\s+/.test(line) && /\d/.test(line)) {
+                const colonIdx = line.indexOf(':');
+                if (colonIdx !== -1) {
+                    const val = line.slice(colonIdx + 1).replace(/\*\*/g, '').trim().replace(/\.$/, '');
+                    if (val.length > 2 && val.length < 120) return val;
+                }
+            }
+        }
+        return null;
+    }
+
+    // ─── SWOT — parse "Label: item1, item2" lines ────────────────────
+    /**
+     * The SWOT section (Part A) contains lines like:
+     * "Strengths: Cultural authenticity, durable materials, strong alignment with customer values."
+     * We split by newline, find the label line, split by comma.
+     */
+    function extractSWOTCategory(sectionText, label) {
+        if (!sectionText) return [];
+        const lines = sectionText.split('\n');
+        for (const line of lines) {
+            const trimmed = line.trim();
+            // Match "Strengths:", "Weaknesses:", "Opportunities:", "Threats:" (with or without bold **)
+            const labelClean = trimmed.replace(/\*\*/g, '');
+            const colonIdx   = labelClean.indexOf(':');
+            if (colonIdx === -1) continue;
+
+            const lineLabel = labelClean.slice(0, colonIdx).trim().toLowerCase();
+            // Accept "strengths", "strength", "opportunities", "opportunity" etc.
+            if (!lineLabel.startsWith(label.toLowerCase())) continue;
+
+            const raw = labelClean.slice(colonIdx + 1).trim().replace(/\.$/, '');
+            if (!raw) continue;
+
+            return raw
+                .split(',')
+                .map(s => s.replace(/\*\*/g, '').trim())
+                .filter(s => s.length > 2)
+                .slice(0, 4);
+        }
+        return [];
+    }
+
+    // ─── RENDER KPI DASHBOARD ─────────────────────────────────────────
+    function renderKPIDashboard(sections) {
+        const tamsamsomText = sections.get('TAMSAMSOM') || sections.get('TAMSAM') || '';
+        const kpiText       = sections.get('KPI') || sections.get('KPIS') || '';
+
+        const tam = extractFromTable(tamsamsomText, 'TAM');
+        const sam = extractFromTable(tamsamsomText, 'SAM');
+        const som = extractFromTable(tamsamsomText, 'SOM');
+        const kpi = extractPrimaryKPI(kpiText);
 
         const setCard = (id, value) => {
-            const el = document.getElementById(id);
-            const card = el ? el.closest('.kpi-card') : null;
+            const el   = document.getElementById(id);
+            const card = el?.closest('.kpi-card');
             if (!el) return;
-            if (value) { el.textContent = value; if (card) card.classList.remove('na-state'); }
-            else { el.textContent = 'N/A'; if (card) card.classList.add('na-state'); }
+            if (value) { el.textContent = value; card?.classList.remove('na-state'); }
+            else       { el.textContent = 'N/A'; card?.classList.add('na-state'); }
         };
 
-        setCard('kpi-tam-value', tam);
-        setCard('kpi-sam-value', sam);
-        setCard('kpi-som-value', som);
+        setCard('kpi-tam-value',     tam);
+        setCard('kpi-sam-value',     sam);
+        setCard('kpi-som-value',     som);
         setCard('kpi-primary-value', kpi);
 
         document.getElementById('kpi-dashboard')?.classList.add('visible');
@@ -358,75 +410,35 @@
         document.getElementById('kpi-dashboard-label')?.classList.remove('visible');
     }
 
-    // ─── SWOT EXTRACTION & RENDER ─────────────────────────────────────
-    // API outputs SWOT as inline comma-separated lists:
-    // "Strengths: Cultural authenticity, durable materials, strong alignment with customer values."
-    // "Weaknesses: Limited brand recognition, higher production costs."
-    function extractSWOTData(planText) {
-        if (!planText) return null;
+    // ─── RENDER SWOT MATRIX ───────────────────────────────────────────
+    function renderSWOTMatrix(sections) {
+        const swotText = sections.get('SWOT') || sections.get('SWOTMICROSWOT') || '';
 
-        // Isolate [SWOT OUTPUT] section
-        const sectionMatch = planText.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\[|$)/i)
-            || planText.match(/#+\s*SWOT\b([\s\S]*?)(?=#+\s[A-Z]|$)/i);
-        const searchText = sectionMatch ? sectionMatch[1] : planText;
+        const strengths     = extractSWOTCategory(swotText, 'strength');
+        const weaknesses    = extractSWOTCategory(swotText, 'weakness');
+        const opportunities = extractSWOTCategory(swotText, 'opportunit');
+        const threats       = extractSWOTCategory(swotText, 'threat');
 
-        // Extract inline comma-separated format:
-        // "Strengths: item1, item2, item3."
-        function extractInlineCategory(text, label) {
-            const re = new RegExp(
-                `\\b${label}s?[:\\s]+([^\\n]{3,300})`,
-                'i'
-            );
-            const m = text.match(re);
-            if (!m) return [];
-            // Split by comma, clean up, limit to 4
-            return m[1]
-                .replace(/\.$/, '')          // remove trailing period
-                .split(/,\s*/)
-                .map(s => s.replace(/\*\*/g, '').trim())
-                .filter(s => s.length > 2)
-                .slice(0, 4);
+        const container = document.getElementById('swot-matrix-container');
+        const section   = document.getElementById('swot-section');
+        if (!container || !section) return;
+
+        const hasData = strengths.length || weaknesses.length || opportunities.length || threats.length;
+
+        if (!hasData) {
+            container.innerHTML = `<div class="swot-fallback">⚠️ SWOT section not found in this plan.</div>`;
+            section.classList.add('visible');
+            return;
         }
 
-        // Also try bullet-point format as fallback
-        function extractBulletCategory(text, label) {
-            const headingRe = new RegExp(
-                `(?:^|\\n)\\s*(?:\\*{1,2}|#{1,4}\\s*)?${label}s?\\b[:\\*]*\\s*\\n([\\s\\S]*?)(?=\\n\\s*(?:\\*{1,2}|#{1,4}\\s*)?(?:Strength|Weakness|Opportunit|Threat|Part B|$))`,
-                'i'
-            );
-            const match = text.match(headingRe);
-            if (!match) return [];
-            const bulletRe = /^\s*(?:[-•*]|\d+\.)\s+(.+)/gm;
-            const items = [];
-            let bm;
-            while ((bm = bulletRe.exec(match[1])) !== null) {
-                const item = bm[1].replace(/\*\*/g, '').trim();
-                if (item.length > 2) items.push(item);
-                if (items.length >= 4) break;
-            }
-            return items;
-        }
-
-        const strengths     = extractInlineCategory(searchText, 'Strength')     .length ? extractInlineCategory(searchText, 'Strength')     : extractBulletCategory(searchText, 'Strength');
-        const weaknesses    = extractInlineCategory(searchText, 'Weakness')     .length ? extractInlineCategory(searchText, 'Weakness')     : extractBulletCategory(searchText, 'Weakness');
-        const opportunities = extractInlineCategory(searchText, 'Opportunit')   .length ? extractInlineCategory(searchText, 'Opportunit')   : extractBulletCategory(searchText, 'Opportunit');
-        const threats       = extractInlineCategory(searchText, 'Threat')       .length ? extractInlineCategory(searchText, 'Threat')       : extractBulletCategory(searchText, 'Threat');
-
-        if (!strengths.length && !weaknesses.length && !opportunities.length && !threats.length) return null;
-        return { strengths, weaknesses, opportunities, threats };
-    }
-
-    function renderSWOTMatrix(swotData) {
-        if (!swotData) {
-            return `<div class="swot-fallback">⚠️ SWOT section not found in this plan.</div>`;
-        }
         const cards = [
-            { title: 'Strengths',     icon: '💪', color: 'green', subtitle: 'What advantages do we leverage?',             items: swotData.strengths },
-            { title: 'Weaknesses',    icon: '🔻', color: 'red',   subtitle: 'What internal gaps must we fix?',              items: swotData.weaknesses },
-            { title: 'Opportunities', icon: '✨', color: 'green', subtitle: 'Where is the market moving in our favor?',     items: swotData.opportunities },
-            { title: 'Threats',       icon: '⚠️', color: 'red',   subtitle: 'What external risks require contingency plans?', items: swotData.threats },
+            { title: 'Strengths',     icon: '💪', color: 'green', subtitle: 'What advantages do we leverage?',               items: strengths },
+            { title: 'Weaknesses',    icon: '🔻', color: 'red',   subtitle: 'What internal gaps must we fix?',                items: weaknesses },
+            { title: 'Opportunities', icon: '✨', color: 'green', subtitle: 'Where is the market moving in our favor?',       items: opportunities },
+            { title: 'Threats',       icon: '⚠️', color: 'red',   subtitle: 'What external risks require contingency plans?', items: threats },
         ];
-        return `<div class="swot-grid">${cards.map(card => `
+
+        container.innerHTML = `<div class="swot-grid">${cards.map(card => `
             <div class="swot-card ${card.color}">
                 <div class="swot-card-header">
                     <span class="swot-card-icon">${card.icon}</span>
@@ -441,25 +453,16 @@
                 }
             </div>`).join('')}
         </div>`;
-    }
 
-    function showSWOTMatrix(rawPlanText) {
-        const swotData = extractSWOTData(rawPlanText);
-        const html = renderSWOTMatrix(swotData);
-        const container = document.getElementById('swot-matrix-container');
-        const section   = document.getElementById('swot-section');
-        if (container) container.innerHTML = html;
-        if (section)   section.classList.add('visible');
+        section.classList.add('visible');
     }
 
     function resetSWOTMatrix() {
-        const container = document.getElementById('swot-matrix-container');
-        const section   = document.getElementById('swot-section');
-        if (container) container.innerHTML = '';
-        if (section)   section.classList.remove('visible');
+        document.getElementById('swot-matrix-container')?.replaceChildren();
+        document.getElementById('swot-section')?.classList.remove('visible');
     }
-    // ──────────────────────────────────────────────────────────────────
 
+    // ─── JOURNEY MAP ──────────────────────────────────────────────────
     const journeyStages = [
         { name: "AWARENESS",     icon: "👁️", defaultTouchpoint: "Social Media Ad",  defaultAction: "Educational Content" },
         { name: "CONSIDERATION", icon: "🤔", defaultTouchpoint: "Comparison Site",  defaultAction: "Case Studies" },
@@ -487,11 +490,11 @@
 
     function getMarketingImplication(stage, speed) {
         const p = {
-            AWARENESS:     { fast: "accelerate ad spend, highlight speed",        delayed: "manage expectations, offer tracking",  none: "damage control, public apology" },
-            CONSIDERATION: { fast: "emphasize quick delivery in comparisons",      delayed: "offer discounts for patience",          none: "redirect to competitor analysis" },
-            PURCHASE:      { fast: "upsell premium delivery options",              delayed: "offer partial refund or credit",        none: "process refunds, recover trust" },
-            RETENTION:     { fast: "increase loyalty rewards",                     delayed: "send apology gift",                    none: "retention campaign, win-back offer" },
-            ADVOCACY:      { fast: "boost referral rewards",                       delayed: "offer delayed referral bonus",          none: "crisis management, review response" }
+            AWARENESS:     { fast: "accelerate ad spend, highlight speed",     delayed: "manage expectations, offer tracking", none: "damage control, public apology" },
+            CONSIDERATION: { fast: "emphasize quick delivery in comparisons",   delayed: "offer discounts for patience",         none: "redirect to competitor analysis" },
+            PURCHASE:      { fast: "upsell premium delivery options",           delayed: "offer partial refund or credit",       none: "process refunds, recover trust" },
+            RETENTION:     { fast: "increase loyalty rewards",                  delayed: "send apology gift",                   none: "retention campaign, win-back offer" },
+            ADVOCACY:      { fast: "boost referral rewards",                    delayed: "offer delayed referral bonus",         none: "crisis management, review response" }
         };
         return p[stage]?.[speed] || "adjust marketing strategy based on satisfaction level";
     }
@@ -534,11 +537,18 @@
     }
 
     function enhanceOutputWithVisualJourney(htmlContent) {
-        const journeyMatch = htmlContent.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\[|$)/i);
-        if (journeyMatch) {
+        if (/\[CUSTOMER JOURNEY OUTPUT\]/i.test(htmlContent)) {
             return htmlContent.replace(/\[CUSTOMER JOURNEY OUTPUT\][\s\S]*?(?=\[|$)/i, '[VISUAL_JOURNEY_MARKER]');
         }
         return htmlContent;
+    }
+
+    // ─── UTILITIES ────────────────────────────────────────────────────
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
 
     async function sendFeedback(vote) {
@@ -564,32 +574,24 @@
     }
 
     async function loadTestimonials() {
-        const testimonialsDiv = document.getElementById('testimonials-list');
-        testimonialsDiv.innerHTML = '<div style="color: #64748b; text-align: center; padding: 20px;">Loading testimonials...</div>';
+        const div = document.getElementById('testimonials-list');
+        div.innerHTML = '<div style="color:#64748b;text-align:center;padding:20px;">Loading testimonials...</div>';
         try {
-            const response = await fetch(`${API_BASE_URL}/public-testimonials`);
-            const data     = await response.json();
-            if (data.testimonials && data.testimonials.length > 0) {
-                testimonialsDiv.innerHTML = data.testimonials.slice(0, 6).map(t => `
+            const res  = await fetch(`${API_BASE_URL}/public-testimonials`);
+            const data = await res.json();
+            if (data.testimonials?.length > 0) {
+                div.innerHTML = data.testimonials.slice(0, 6).map(t => `
                     <div class="testimonial-card">
                         <div class="testimonial-stars">★★★★★</div>
                         <div class="testimonial-text">"${escapeHtml(t.testimonial || 'Great experience!')}"</div>
                         <div class="testimonial-user">✓ Verified User</div>
-                    </div>
-                `).join('');
+                    </div>`).join('');
             } else {
-                testimonialsDiv.innerHTML = '<div style="color: #64748b; text-align: center; padding: 20px;">Be the first to share your experience! 🌟</div>';
+                div.innerHTML = '<div style="color:#64748b;text-align:center;padding:20px;">Be the first to share your experience! 🌟</div>';
             }
         } catch {
-            testimonialsDiv.innerHTML = '<div style="color: #94a3b8; text-align: center; padding: 20px;">⭐ Testimonials coming soon</div>';
+            div.innerHTML = '<div style="color:#94a3b8;text-align:center;padding:20px;">⭐ Testimonials coming soon</div>';
         }
-    }
-
-    function escapeHtml(text) {
-        if (!text) return '';
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
     }
 
     function renderMarkdownTables(text) {
@@ -640,10 +642,10 @@
         if (!text) return '';
         let html = renderMarkdownTables(text);
         html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
-        html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
-        html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+        html = html.replace(/^## (.*$)/gm,  '<h2>$1</h2>');
+        html = html.replace(/^# (.*$)/gm,   '<h1>$1</h1>');
         html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        html = html.replace(/^- (.*$)/gm, '<li>$1</li>');
+        html = html.replace(/^- (.*$)/gm,   '<li>$1</li>');
         html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
         html = html.replace(/\n/g, '<br>');
         return html;
@@ -652,14 +654,15 @@
     async function testAPI() {
         const statusDiv = document.getElementById("status");
         try {
-            const response = await fetch(`${API_BASE_URL}/health`);
-            if (response.ok) { statusDiv.innerHTML = "🟢 API online"; statusDiv.className = "status status-working"; }
-            else             { statusDiv.innerHTML = "🔴 API error";  statusDiv.className = "status status-error"; }
+            const res = await fetch(`${API_BASE_URL}/health`);
+            if (res.ok) { statusDiv.innerHTML = "🟢 API online"; statusDiv.className = "status status-working"; }
+            else        { statusDiv.innerHTML = "🔴 API error";  statusDiv.className = "status status-error"; }
         } catch {
             statusDiv.innerHTML = "🔴 Cannot reach API"; statusDiv.className = "status status-error";
         }
     }
 
+    // ─── MAIN GENERATE ────────────────────────────────────────────────
     async function generate() {
         const customer    = document.getElementById("customer").value;
         const product     = document.getElementById("product").value;
@@ -694,14 +697,19 @@
             if (data.error) throw new Error(data.error);
 
             const rawPlan = data.plan || "";
+
+            // Parse into sections FIRST — then extract from structured sections
+            const sections = parseSections(rawPlan);
+
             let htmlContent = markdownToHtml(rawPlan);
             htmlContent = enhanceOutputWithVisualJourney(htmlContent);
 
             currentPlanHTML     = htmlContent;
             outputDiv.innerHTML = htmlContent;
 
-            renderKPIDashboard(rawPlan);
-            showSWOTMatrix(rawPlan);
+            // Populate dashboard widgets from parsed sections
+            renderKPIDashboard(sections);
+            renderSWOTMatrix(sections);
             renderVisualJourneyMap();
 
             document.getElementById("timestamp").innerHTML = `Generated: ${new Date().toLocaleString()}`;
@@ -709,6 +717,7 @@
             statusDiv.className       = "status status-working";
             downloadBtn.style.display = "inline-block";
             copyBtn.style.display     = "inline-block";
+
         } catch (error) {
             outputDiv.innerHTML = `<span style="color:#f87171;">Error: ${error.message}</span>`;
             statusDiv.innerHTML = "🔴 Generation failed";
@@ -724,7 +733,7 @@
         const content = document.getElementById("output").innerHTML;
         if (!content || content.includes("Processing")) { alert("Generate a plan first"); return; }
         const btn = document.getElementById("downloadBtn");
-        const original = btn.innerText;
+        const orig = btn.innerText;
         btn.innerText = "⏳ Generating PDF...";
         btn.disabled  = true;
         try {
@@ -732,13 +741,13 @@
             element.style.cssText = "padding:40px;font-family:system-ui,sans-serif;background:#fff;color:#1e293b;";
 
             const kpiRows = [
-                { label: "TAM", id: "kpi-tam-value", icon: "🌍" },
-                { label: "SAM", id: "kpi-sam-value", icon: "🎯" },
-                { label: "SOM", id: "kpi-som-value", icon: "🚀" },
+                { label: "TAM",         id: "kpi-tam-value",     icon: "🌍" },
+                { label: "SAM",         id: "kpi-sam-value",     icon: "🎯" },
+                { label: "SOM",         id: "kpi-som-value",     icon: "🚀" },
                 { label: "Primary KPI", id: "kpi-primary-value", icon: "📈" },
             ].filter(k => {
                 const el = document.getElementById(k.id);
-                return el && el.textContent !== '—' && el.textContent !== 'N/A';
+                return el && !['—','N/A'].includes(el.textContent);
             }).map(k => {
                 const val = document.getElementById(k.id).textContent;
                 return `<div style="display:inline-block;margin:0 12px 12px 0;padding:12px 18px;background:#f1f5f9;border-radius:10px;border:1px solid #e2e8f0;">
@@ -762,12 +771,12 @@
                 <div style="text-align:center;margin-top:40px;font-size:9pt;color:#64748b;">
                     <p>Generated: ${new Date().toLocaleString()}</p>
                     <p>PDF/A-1b compliant | ISO 19005-1</p>
-                </div>
-            `;
+                </div>`;
+
             const opt = { margin:[0.5,0.5,0.5,0.5], filename:`marketing_plan.pdf`, html2canvas:{scale:2,backgroundColor:'#fff'}, jsPDF:{unit:'in',format:'a4',orientation:'portrait'} };
             await html2pdf().set(opt).from(element).save();
         } catch { alert("PDF error"); }
-        finally { btn.innerText = original; btn.disabled = false; }
+        finally { btn.innerText = orig; btn.disabled = false; }
     }
 
     async function copyToClipboard() {
@@ -775,9 +784,9 @@
         if (!text || text.includes("Processing")) { alert("Generate a plan first"); return; }
         await navigator.clipboard.writeText(text);
         const btn = document.getElementById("copyBtn");
-        const original = btn.innerText;
+        const orig = btn.innerText;
         btn.innerText = "✅ Copied!";
-        setTimeout(() => btn.innerText = original, 2000);
+        setTimeout(() => btn.innerText = orig, 2000);
     }
 
     testAPI();
