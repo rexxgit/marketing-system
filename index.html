@@ -49,30 +49,164 @@
         #kpi-dashboard-label { display: none; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #475569; margin-bottom: 10px; }
         #kpi-dashboard-label.visible { display: block; }
 
-        /* ─── SWOT MATRIX ─── */
-        #swot-section { display: none; margin-bottom: 28px; }
-        #swot-section.visible { display: block; }
-        #swot-section-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #475569; margin-bottom: 10px; }
-        .swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 640px) { .swot-grid { grid-template-columns: 1fr; } }
-        .swot-card { background: #0f172a; border-radius: 16px; padding: 20px; transition: transform 0.25s ease, box-shadow 0.25s ease; cursor: default; }
-        .swot-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
-        .swot-card.green { border-left: 4px solid #10b981; }
-        .swot-card.red   { border-left: 4px solid #ef4444; }
-        .swot-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-        .swot-card-icon { font-size: 1.4rem; line-height: 1; }
-        .swot-card-title { font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
-        .swot-card.green .swot-card-title { color: #10b981; }
-        .swot-card.red   .swot-card-title { color: #ef4444; }
-        .swot-card-subtitle { font-size: 0.68rem; color: #475569; margin-top: 2px; }
-        .swot-items { list-style: none; margin: 0; padding: 0; }
-        .swot-items li { font-size: 0.82rem; color: #cbd5e1; padding: 6px 0; border-bottom: 1px solid #1e293b; line-height: 1.4; display: flex; gap: 8px; }
-        .swot-items li:last-child { border-bottom: none; }
-        .swot-items li::before { content: '›'; font-weight: 700; flex-shrink: 0; }
-        .swot-card.green .swot-items li::before { color: #10b981; }
-        .swot-card.red   .swot-items li::before { color: #ef4444; }
+        /* ══════════════════════════════════════════
+           SWOT MATRIX — Da Vinci × Frontend Expert
+           Four quadrants, each with its own soul.
+           ══════════════════════════════════════════ */
+        .swot-section-label {
+            font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.12em; color: #475569; margin-bottom: 14px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .swot-section-label::before, .swot-section-label::after {
+            content: ''; flex: 1; height: 1px; background: #1e293b;
+        }
+
+        .swot-matrix {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        @media (max-width: 768px) { .swot-matrix { grid-template-columns: 1fr; gap: 16px; } }
+
+        /* Base card — the canvas */
+        .swot-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 20px;
+            padding: 0;
+            border: 1px solid #334155;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+        .swot-card:hover { transform: translateY(-4px); }
+
+        /* Quadrant accent strip at top */
+        .swot-card::before {
+            content: '';
+            display: block;
+            height: 3px;
+            width: 100%;
+        }
+        .swot-strengths::before     { background: linear-gradient(90deg, #10b981, #34d399); }
+        .swot-weaknesses::before    { background: linear-gradient(90deg, #ef4444, #f87171); }
+        .swot-opportunities::before { background: linear-gradient(90deg, #38bdf8, #818cf8); }
+        .swot-threats::before       { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+
+        .swot-strengths:hover     { border-color: #10b981; box-shadow: 0 8px 32px rgba(16,185,129,0.18); }
+        .swot-weaknesses:hover    { border-color: #ef4444; box-shadow: 0 8px 32px rgba(239,68,68,0.18); }
+        .swot-opportunities:hover { border-color: #38bdf8; box-shadow: 0 8px 32px rgba(56,189,248,0.18); }
+        .swot-threats:hover       { border-color: #f59e0b; box-shadow: 0 8px 32px rgba(245,158,11,0.18); }
+
+        /* Inner card body */
+        .swot-card-body { padding: 20px 20px 16px; }
+
+        /* Header row: icon + title + quadrant badge cluster */
+        .swot-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #1e293b;
+        }
+        .swot-header-left { display: flex; align-items: center; gap: 10px; }
+        .swot-main-icon { font-size: 1.5rem; line-height: 1; }
+        .swot-title {
+            font-size: 1rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.07em;
+        }
+        .swot-strengths     .swot-title { color: #10b981; }
+        .swot-weaknesses    .swot-title { color: #ef4444; }
+        .swot-opportunities .swot-title { color: #38bdf8; }
+        .swot-threats       .swot-title { color: #f59e0b; }
+
+        /* Personality badge cluster — top-right of each quadrant */
+        .swot-badge-cluster {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        .swot-badge {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 2px 7px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+        /* Strengths badges: strength, application, refinement */
+        .swot-strengths .swot-badge:nth-child(1) { background: #10b98118; color: #34d399; border: 1px solid #10b98140; }
+        .swot-strengths .swot-badge:nth-child(2) { background: #10b98110; color: #6ee7b7; border: 1px solid #10b98128; }
+        .swot-strengths .swot-badge:nth-child(3) { background: #10b98108; color: #a7f3d0; border: 1px solid #10b98118; }
+        /* Weaknesses badges: improvement, criticism, urgency */
+        .swot-weaknesses .swot-badge:nth-child(1) { background: #ef444418; color: #f87171; border: 1px solid #ef444440; }
+        .swot-weaknesses .swot-badge:nth-child(2) { background: #ef444410; color: #fca5a5; border: 1px solid #ef444428; }
+        .swot-weaknesses .swot-badge:nth-child(3) { background: #ef444408; color: #fecaca; border: 1px solid #ef444418; }
+        /* Opportunities badges: targeted, segmented, positioned */
+        .swot-opportunities .swot-badge:nth-child(1) { background: #38bdf818; color: #7dd3fc; border: 1px solid #38bdf840; }
+        .swot-opportunities .swot-badge:nth-child(2) { background: #38bdf810; color: #bae6fd; border: 1px solid #38bdf828; }
+        .swot-opportunities .swot-badge:nth-child(3) { background: #38bdf808; color: #e0f2fe; border: 1px solid #38bdf818; }
+        /* Threats badges: adaptability, realism, strategic */
+        .swot-threats .swot-badge:nth-child(1) { background: #f59e0b18; color: #fbbf24; border: 1px solid #f59e0b40; }
+        .swot-threats .swot-badge:nth-child(2) { background: #f59e0b10; color: #fcd34d; border: 1px solid #f59e0b28; }
+        .swot-threats .swot-badge:nth-child(3) { background: #f59e0b08; color: #fde68a; border: 1px solid #f59e0b18; }
+
+        /* Personality icon trio embedded in top-left of the quadrant content area */
+        .swot-personality-strip {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .swot-personality-icon {
+            font-size: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            flex: 1;
+        }
+        .swot-personality-icon span.label {
+            font-size: 0.52rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 600;
+            opacity: 0.6;
+            text-align: center;
+        }
+        .swot-strengths     .swot-personality-icon span.label { color: #10b981; }
+        .swot-weaknesses    .swot-personality-icon span.label { color: #ef4444; }
+        .swot-opportunities .swot-personality-icon span.label { color: #38bdf8; }
+        .swot-threats       .swot-personality-icon span.label { color: #f59e0b; }
+
+        /* Item list */
+        .swot-list { list-style: none; margin: 0; padding: 0; }
+        .swot-list li {
+            padding: 7px 0;
+            border-bottom: 1px solid #1e293b;
+            font-size: 0.82rem;
+            color: #cbd5e1;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.4;
+        }
+        .swot-list li:last-child { border-bottom: none; }
+        .swot-bullet { font-size: 0.8rem; flex-shrink: 0; margin-top: 2px; }
+        .swot-strengths     .swot-bullet { color: #10b981; }
+        .swot-weaknesses    .swot-bullet { color: #ef4444; }
+        .swot-opportunities .swot-bullet { color: #38bdf8; }
+        .swot-threats       .swot-bullet { color: #f59e0b; }
+
         .swot-empty { font-size: 0.8rem; color: #475569; font-style: italic; padding: 8px 0; }
-        .swot-fallback { text-align: center; padding: 20px; font-size: 0.85rem; color: #475569; font-style: italic; }
+        .swot-fallback { text-align: center; padding: 24px; font-size: 0.85rem; color: #475569; font-style: italic; background: #0f172a; border-radius: 16px; }
 
         /* Journey Map */
         .journey-container { display: flex; justify-content: space-between; gap: 16px; margin: 30px 0; flex-wrap: wrap; }
@@ -82,16 +216,16 @@
         .journey-card.satisfied { border-color: #f59e0b; }
         .journey-card.dissatisfied { border-color: #ef4444; }
         @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
-        @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
+        @keyframes pulse  { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
+        @keyframes shake  { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
         .journey-card.delighted .journey-icon { animation: bounce 0.5s ease; }
         .journey-card.satisfied { animation: pulse 1.5s infinite; }
         .journey-card.dissatisfied .journey-icon { animation: shake 0.4s ease; }
         .journey-icon { font-size: 2rem; margin-bottom: 12px; }
         .journey-title { font-weight: bold; font-size: 1rem; margin-bottom: 8px; color: #38bdf8; }
         .satisfaction-badge { font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; display: inline-block; margin-bottom: 10px; font-weight: 600; }
-        .badge-delighted { background: #10b98120; color: #34d399; border: 1px solid #10b981; }
-        .badge-satisfied  { background: #f59e0b20; color: #fbbf24; border: 1px solid #f59e0b; }
+        .badge-delighted    { background: #10b98120; color: #34d399; border: 1px solid #10b981; }
+        .badge-satisfied    { background: #f59e0b20; color: #fbbf24; border: 1px solid #f59e0b; }
         .badge-dissatisfied { background: #ef444420; color: #f87171; border: 1px solid #ef4444; }
         .stage-emotion { font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; }
         .touchpoint { font-size: 0.7rem; color: #64748b; margin-top: 6px; }
@@ -121,9 +255,9 @@
         .rendered-output li { margin: 6px 0; }
 
         .status { padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; }
-        .status-working  { background: #065f46; color: #d1d5db; }
-        .status-testing  { background: #854d0e; color: #fde047; }
-        .status-error    { background: #991b1b; color: #fca5a5; }
+        .status-working { background: #065f46; color: #d1d5db; }
+        .status-testing { background: #854d0e; color: #fde047; }
+        .status-error   { background: #991b1b; color: #fca5a5; }
         .loader { border: 3px solid #334155; border-top: 3px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 0.8s linear infinite; margin: 20px auto; display: none; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         label { font-weight: 600; display: block; margin-bottom: 8px; color: #94a3b8; }
@@ -131,13 +265,12 @@
         .feedback-section { margin-top: 24px; text-align: center; font-size: 13px; color: #64748b; padding: 16px; border-top: 1px solid #334155; }
         .feedback-section a { color: #10b981; text-decoration: none; cursor: pointer; margin: 0 8px; }
         .feedback-note { font-size: 11px; margin-top: 8px; color: #475569; }
-
         .testimonials-section { margin-top: 30px; background: #1e293b; border-radius: 16px; padding: 20px; border: 1px solid #334155; }
         .testimonials-section h3 { color: #38bdf8; margin-bottom: 16px; }
         .testimonial-card { background: #0f172a; padding: 16px; border-radius: 12px; border-left: 3px solid #10b981; margin-bottom: 12px; }
         .testimonial-stars { color: #facc15; margin-bottom: 8px; letter-spacing: 2px; }
-        .testimonial-text { color: #e2e8f0; font-style: italic; }
-        .testimonial-user { color: #64748b; font-size: 12px; margin-top: 8px; }
+        .testimonial-text  { color: #e2e8f0; font-style: italic; }
+        .testimonial-user  { color: #64748b; font-size: 12px; margin-top: 8px; }
         .footer-note { margin-top: 30px; text-align: center; font-size: 11px; color: #475569; padding: 15px; border-top: 1px solid #334155; }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -175,7 +308,7 @@
 <div class="output-container">
     <div class="output-header">
         <h3>📋 Marketing Plan</h3>
-        <span id="timestamp" style="font-size: 12px; color: #64748b;"></span>
+        <span id="timestamp" style="font-size:12px;color:#64748b;"></span>
     </div>
 
     <!-- KPI DASHBOARD -->
@@ -219,21 +352,18 @@
         </div>
     </div>
 
-    <!-- SWOT MATRIX -->
-    <div id="swot-section">
-        <div id="swot-section-label">🔲 SWOT Analysis</div>
-        <div id="swot-matrix-container"></div>
-    </div>
+    <!-- SWOT MATRIX — injected by JS -->
+    <div id="swot-wrapper"></div>
 
     <div id="output" class="rendered-output">Ready. Enter data and click Generate.</div>
 </div>
 
 <!-- Delivery Speed Controls -->
-<div id="journey-controls" style="display: none;">
+<div id="journey-controls" style="display:none;">
     <div class="delivery-controls">
-        <button class="delivery-btn active" data-speed="fast" onclick="setDeliverySpeed('fast')">⚡ Fast Delivery (Delighted)</button>
-        <button class="delivery-btn" data-speed="delayed" onclick="setDeliverySpeed('delayed')">🕒 Minor Delay (Satisfied)</button>
-        <button class="delivery-btn" data-speed="none" onclick="setDeliverySpeed('none')">❌ No Delivery (Dissatisfied)</button>
+        <button class="delivery-btn active" data-speed="fast"    onclick="setDeliverySpeed('fast')">⚡ Fast Delivery (Delighted)</button>
+        <button class="delivery-btn"        data-speed="delayed" onclick="setDeliverySpeed('delayed')">🕒 Minor Delay (Satisfied)</button>
+        <button class="delivery-btn"        data-speed="none"    onclick="setDeliverySpeed('none')">❌ No Delivery (Dissatisfied)</button>
     </div>
 </div>
 <div id="visual-journey-container"></div>
@@ -242,67 +372,54 @@
     <span>Was this helpful? </span>
     <a href="#" onclick="sendFeedback('yes')">👍 Yes</a>
     <a href="#" onclick="sendFeedback('no')">👎 No</a>
-    <span style="margin-left: 16px;">📧 <a href="mailto:bisrattewabe373@gmail.com">bisrattewabe373@gmail.com</a></span>
+    <span style="margin-left:16px;">📧 <a href="mailto:bisrattewabe373@gmail.com">bisrattewabe373@gmail.com</a></span>
     <div class="feedback-note">💡 Your positive feedback may be featured as a testimonial. All feedback helps improve the system.</div>
 </div>
 
 <div class="testimonials-section">
     <h3>🌟 What Users Are Saying</h3>
     <div id="testimonials-list">
-        <div style="color: #64748b; text-align: center; padding: 20px;">Loading testimonials...</div>
+        <div style="color:#64748b;text-align:center;padding:20px;">Loading testimonials...</div>
     </div>
 </div>
 
-<div class="footer-note">
-    Strategic Marketing System v2.0 | Powered by DeepSeek
-</div>
+<div class="footer-note">Strategic Marketing System v2.0 | Powered by DeepSeek</div>
 
 <script>
     const API_BASE_URL = "https://Bisratprompt-marketing-system-api.hf.space";
     let currentPlanHTML = "";
     let currentDeliverySpeed = "fast";
 
-    // ─── SECTION PARSER (no fragile regex — split by [TAG] markers) ───
-    /**
-     * Splits the raw plan into named sections using [TAG OUTPUT] markers.
-     * Returns a Map: { "TAMSAMSOM": "...text...", "SWOT": "...text...", "KPI": "...text...", ... }
-     */
+    // ══════════════════════════════════════════════════════════════
+    // SECTION PARSER — split raw plan by [TAG OUTPUT] markers
+    // Returns Map<string, string> of section name → content
+    // ══════════════════════════════════════════════════════════════
     function parseSections(planText) {
         const sections = new Map();
         if (!planText) return sections;
-
-        // Match all [SOMETHING OUTPUT] tags and split text between them
-        const tagPattern = /\[([A-Z0-9\s\/]+?)\s*OUTPUT\]/gi;
-        const tags = [];
+        const tagRe = /\[([A-Z0-9\s\/]+?)\s*OUTPUT\]/gi;
+        const tags  = [];
         let m;
-        while ((m = tagPattern.exec(planText)) !== null) {
+        while ((m = tagRe.exec(planText)) !== null) {
             tags.push({ name: m[1].trim().replace(/\s+/g, ''), index: m.index, end: m.index + m[0].length });
         }
-
         for (let i = 0; i < tags.length; i++) {
             const start = tags[i].end;
             const end   = i + 1 < tags.length ? tags[i + 1].index : planText.length;
             sections.set(tags[i].name, planText.slice(start, end).trim());
         }
-
         return sections;
     }
 
-    // ─── TAM / SAM / SOM — parse the markdown table rows ─────────────
-    /**
-     * The TAMSAMSOM section contains a markdown table like:
-     * | TAM | Total addressable market... | 10 million farmers x 10% | 1,000,000 |
-     * We grab the LAST cell of the matching row as the value.
-     */
+    // ══════════════════════════════════════════════════════════════
+    // KPI EXTRACTION — table row + inline fallbacks
+    // ══════════════════════════════════════════════════════════════
     function extractFromTable(sectionText, label) {
         if (!sectionText) return null;
-        const lines = sectionText.split('\n');
-        for (const line of lines) {
+        for (const line of sectionText.split('\n')) {
             if (!line.includes('|')) continue;
             const cells = line.split('|').map(c => c.trim()).filter(Boolean);
-            // First cell should match label (TAM / SAM / SOM)
             if (cells.length >= 2 && cells[0].toUpperCase() === label.toUpperCase()) {
-                // Last cell is the number
                 const value = cells[cells.length - 1];
                 if (value && /[\d,.]/.test(value)) return value;
             }
@@ -310,31 +427,23 @@
         return null;
     }
 
-    // ─── PRIMARY KPI — find "Primary KPI:" line ───────────────────────
-    /**
-     * The KPI section contains:
-     * "1) Primary KPI: Year 1 sales volume (15,000 units)."
-     * We find that line and return the value after the colon.
-     */
     function extractPrimaryKPI(sectionText) {
         if (!sectionText) return null;
-        const lines = sectionText.split('\n');
-        for (const line of lines) {
-            const lower = line.toLowerCase();
-            if (lower.includes('primary kpi')) {
-                const colonIdx = line.indexOf(':');
-                if (colonIdx !== -1) {
-                    const val = line.slice(colonIdx + 1).replace(/\*\*/g, '').trim().replace(/\.$/, '');
+        for (const line of sectionText.split('\n')) {
+            if (line.toLowerCase().includes('primary kpi')) {
+                const idx = line.indexOf(':');
+                if (idx !== -1) {
+                    const val = line.slice(idx + 1).replace(/\*\*/g, '').trim().replace(/\.$/, '');
                     if (val.length > 2) return val;
                 }
             }
         }
-        // Fallback: first numbered line with a value keyword
-        for (const line of lines) {
+        // Fallback: first numbered line with a digit
+        for (const line of sectionText.split('\n')) {
             if (/^\s*1[.)]\s+/.test(line) && /\d/.test(line)) {
-                const colonIdx = line.indexOf(':');
-                if (colonIdx !== -1) {
-                    const val = line.slice(colonIdx + 1).replace(/\*\*/g, '').trim().replace(/\.$/, '');
+                const idx = line.indexOf(':');
+                if (idx !== -1) {
+                    const val = line.slice(idx + 1).replace(/\*\*/g, '').trim().replace(/\.$/, '');
                     if (val.length > 2 && val.length < 120) return val;
                 }
             }
@@ -342,60 +451,21 @@
         return null;
     }
 
-    // ─── SWOT — parse "Label: item1, item2" lines ────────────────────
-    /**
-     * The SWOT section (Part A) contains lines like:
-     * "Strengths: Cultural authenticity, durable materials, strong alignment with customer values."
-     * We split by newline, find the label line, split by comma.
-     */
-    function extractSWOTCategory(sectionText, label) {
-        if (!sectionText) return [];
-        const lines = sectionText.split('\n');
-        for (const line of lines) {
-            const trimmed = line.trim();
-            // Match "Strengths:", "Weaknesses:", "Opportunities:", "Threats:" (with or without bold **)
-            const labelClean = trimmed.replace(/\*\*/g, '');
-            const colonIdx   = labelClean.indexOf(':');
-            if (colonIdx === -1) continue;
-
-            const lineLabel = labelClean.slice(0, colonIdx).trim().toLowerCase();
-            // Accept "strengths", "strength", "opportunities", "opportunity" etc.
-            if (!lineLabel.startsWith(label.toLowerCase())) continue;
-
-            const raw = labelClean.slice(colonIdx + 1).trim().replace(/\.$/, '');
-            if (!raw) continue;
-
-            return raw
-                .split(',')
-                .map(s => s.replace(/\*\*/g, '').trim())
-                .filter(s => s.length > 2)
-                .slice(0, 4);
-        }
-        return [];
-    }
-
-    // ─── RENDER KPI DASHBOARD ─────────────────────────────────────────
     function renderKPIDashboard(sections) {
-        const tamsamsomText = sections.get('TAMSAMSOM') || sections.get('TAMSAM') || '';
-        const kpiText       = sections.get('KPI') || sections.get('KPIS') || '';
+        const tsText  = sections.get('TAMSAMSOM') || sections.get('TAMSAM') || '';
+        const kpiText = sections.get('KPI') || sections.get('KPIS') || '';
 
-        const tam = extractFromTable(tamsamsomText, 'TAM');
-        const sam = extractFromTable(tamsamsomText, 'SAM');
-        const som = extractFromTable(tamsamsomText, 'SOM');
-        const kpi = extractPrimaryKPI(kpiText);
-
-        const setCard = (id, value) => {
-            const el   = document.getElementById(id);
+        const set = (id, value) => {
+            const el = document.getElementById(id);
             const card = el?.closest('.kpi-card');
             if (!el) return;
             if (value) { el.textContent = value; card?.classList.remove('na-state'); }
             else       { el.textContent = 'N/A'; card?.classList.add('na-state'); }
         };
-
-        setCard('kpi-tam-value',     tam);
-        setCard('kpi-sam-value',     sam);
-        setCard('kpi-som-value',     som);
-        setCard('kpi-primary-value', kpi);
+        set('kpi-tam-value',     extractFromTable(tsText, 'TAM'));
+        set('kpi-sam-value',     extractFromTable(tsText, 'SAM'));
+        set('kpi-som-value',     extractFromTable(tsText, 'SOM'));
+        set('kpi-primary-value', extractPrimaryKPI(kpiText));
 
         document.getElementById('kpi-dashboard')?.classList.add('visible');
         document.getElementById('kpi-dashboard-label')?.classList.add('visible');
@@ -410,59 +480,187 @@
         document.getElementById('kpi-dashboard-label')?.classList.remove('visible');
     }
 
-    // ─── RENDER SWOT MATRIX ───────────────────────────────────────────
+    // ══════════════════════════════════════════════════════════════
+    // SWOT EXTRACTION — line-by-line label parser
+    // Handles "Strengths: item1, item2" AND bullet lists
+    // ══════════════════════════════════════════════════════════════
+    function extractSWOTCategory(sectionText, labelPrefix) {
+        if (!sectionText) return [];
+        const lines = sectionText.split('\n');
+
+        // Strategy A: inline comma list — "Strengths: a, b, c."
+        for (const line of lines) {
+            const clean = line.replace(/\*\*/g, '').trim();
+            const colon = clean.indexOf(':');
+            if (colon === -1) continue;
+            const key = clean.slice(0, colon).trim().toLowerCase();
+            if (!key.startsWith(labelPrefix.toLowerCase())) continue;
+            const raw = clean.slice(colon + 1).trim().replace(/\.$/, '');
+            if (!raw) continue;
+            const items = raw.split(',').map(s => s.trim()).filter(s => s.length > 2).slice(0, 4);
+            if (items.length) return items;
+        }
+
+        // Strategy B: bullet points under a heading
+        let inSection = false;
+        const bullets = [];
+        for (const line of lines) {
+            const clean = line.replace(/\*\*/g, '').trim().toLowerCase();
+            if (clean.startsWith(labelPrefix.toLowerCase()) && clean.includes(':')) {
+                inSection = true; continue;
+            }
+            if (inSection) {
+                // Stop at next label heading
+                if (/^(strength|weakness|opportunit|threat)/i.test(line.trim())) break;
+                const bulletMatch = line.trim().match(/^(?:[-•*]|\d+\.)\s+(.+)/);
+                if (bulletMatch) {
+                    const item = bulletMatch[1].replace(/\*\*/g, '').trim();
+                    if (item.length > 2) bullets.push(item);
+                    if (bullets.length >= 4) break;
+                }
+            }
+        }
+        return bullets;
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // SWOT RENDER — Da Vinci × Frontend Expert
+    // Each quadrant has its own visual personality system
+    // ══════════════════════════════════════════════════════════════
     function renderSWOTMatrix(sections) {
         const swotText = sections.get('SWOT') || sections.get('SWOTMICROSWOT') || '';
+        const wrapper  = document.getElementById('swot-wrapper');
+        if (!wrapper) return;
 
         const strengths     = extractSWOTCategory(swotText, 'strength');
         const weaknesses    = extractSWOTCategory(swotText, 'weakness');
         const opportunities = extractSWOTCategory(swotText, 'opportunit');
         const threats       = extractSWOTCategory(swotText, 'threat');
 
-        const container = document.getElementById('swot-matrix-container');
-        const section   = document.getElementById('swot-section');
-        if (!container || !section) return;
-
         const hasData = strengths.length || weaknesses.length || opportunities.length || threats.length;
 
         if (!hasData) {
-            container.innerHTML = `<div class="swot-fallback">⚠️ SWOT section not found in this plan.</div>`;
-            section.classList.add('visible');
+            wrapper.innerHTML = `<div class="swot-fallback">⚠️ SWOT data not found in this plan output.</div>`;
             return;
         }
 
-        const cards = [
-            { title: 'Strengths',     icon: '💪', color: 'green', subtitle: 'What advantages do we leverage?',               items: strengths },
-            { title: 'Weaknesses',    icon: '🔻', color: 'red',   subtitle: 'What internal gaps must we fix?',                items: weaknesses },
-            { title: 'Opportunities', icon: '✨', color: 'green', subtitle: 'Where is the market moving in our favor?',       items: opportunities },
-            { title: 'Threats',       icon: '⚠️', color: 'red',   subtitle: 'What external risks require contingency plans?', items: threats },
+        // Quadrant personality definitions
+        // Each quadrant: position label, personality icons + labels, badge words, bullet symbol
+        const quadrants = [
+            {
+                cls:      'swot-strengths',
+                title:    'Strengths',
+                icon:     '💪',
+                position: 'Internal · Positive',
+                // Personality strip — top of content: strength, application, refinement
+                personality: [
+                    { emoji: '🔩', label: 'Strength' },
+                    { emoji: '⚙️', label: 'Application' },
+                    { emoji: '💎', label: 'Refinement' },
+                ],
+                badges:  ['Strength', 'Application', 'Refinement'],
+                bullets: ['◆', '●', '▲', '■'],
+                items:   strengths,
+            },
+            {
+                cls:      'swot-weaknesses',
+                title:    'Weaknesses',
+                icon:     '🔻',
+                position: 'Internal · Negative',
+                // improvement, criticism, urgency
+                personality: [
+                    { emoji: '🔧', label: 'Improve' },
+                    { emoji: '🎯', label: 'Criticise' },
+                    { emoji: '⚡', label: 'Urgency' },
+                ],
+                badges:  ['Improvement', 'Criticism', 'Urgency'],
+                bullets: ['◇', '○', '△', '□'],
+                items:   weaknesses,
+            },
+            {
+                cls:      'swot-opportunities',
+                title:    'Opportunities',
+                icon:     '✨',
+                position: 'External · Positive',
+                // targeted, segmented, positioned
+                personality: [
+                    { emoji: '🎯', label: 'Targeted' },
+                    { emoji: '📊', label: 'Segmented' },
+                    { emoji: '📍', label: 'Positioned' },
+                ],
+                badges:  ['Targeted', 'Segmented', 'Positioned'],
+                bullets: ['◆', '●', '▲', '■'],
+                items:   opportunities,
+            },
+            {
+                cls:      'swot-threats',
+                title:    'Threats',
+                icon:     '⚠️',
+                position: 'External · Negative',
+                // adaptability, realism, strategic thinking
+                personality: [
+                    { emoji: '🌊', label: 'Adaptability' },
+                    { emoji: '🔭', label: 'Realism' },
+                    { emoji: '♟️', label: 'Strategic' },
+                ],
+                badges:  ['Adaptability', 'Realism', 'Strategic'],
+                bullets: ['◇', '○', '△', '□'],
+                items:   threats,
+            },
         ];
 
-        container.innerHTML = `<div class="swot-grid">${cards.map(card => `
-            <div class="swot-card ${card.color}">
-                <div class="swot-card-header">
-                    <span class="swot-card-icon">${card.icon}</span>
-                    <div>
-                        <div class="swot-card-title">${card.title}</div>
-                        <div class="swot-card-subtitle">${card.subtitle}</div>
+        const cardsHTML = quadrants.map(q => `
+            <div class="swot-card ${q.cls}">
+                <div class="swot-card-body">
+                    <!-- Header: icon + title on left, badge cluster on right -->
+                    <div class="swot-header">
+                        <div class="swot-header-left">
+                            <span class="swot-main-icon">${q.icon}</span>
+                            <div>
+                                <div class="swot-title">${q.title}</div>
+                                <div style="font-size:0.6rem;color:#475569;margin-top:2px;">${q.position}</div>
+                            </div>
+                        </div>
+                        <div class="swot-badge-cluster">
+                            ${q.badges.map(b => `<span class="swot-badge">${b}</span>`).join('')}
+                        </div>
                     </div>
-                </div>
-                ${card.items.length
-                    ? `<ul class="swot-items">${card.items.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul>`
-                    : `<div class="swot-empty">No ${card.title.toLowerCase()} identified.</div>`
-                }
-            </div>`).join('')}
-        </div>`;
 
-        section.classList.add('visible');
+                    <!-- Personality strip: 3 trait icons embedded top of content area -->
+                    <div class="swot-personality-strip">
+                        ${q.personality.map(p => `
+                            <div class="swot-personality-icon">
+                                <span>${p.emoji}</span>
+                                <span class="label">${p.label}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Items list -->
+                    ${q.items.length
+                        ? `<ul class="swot-list">${q.items.map((item, i) =>
+                            `<li><span class="swot-bullet">${q.bullets[i % q.bullets.length]}</span>${escapeHtml(item)}</li>`
+                          ).join('')}</ul>`
+                        : `<div class="swot-empty">No ${q.title.toLowerCase()} identified.</div>`
+                    }
+                </div>
+            </div>
+        `).join('');
+
+        wrapper.innerHTML = `
+            <div class="swot-section-label">🔲 SWOT Analysis</div>
+            <div class="swot-matrix">${cardsHTML}</div>
+        `;
     }
 
     function resetSWOTMatrix() {
-        document.getElementById('swot-matrix-container')?.replaceChildren();
-        document.getElementById('swot-section')?.classList.remove('visible');
+        const wrapper = document.getElementById('swot-wrapper');
+        if (wrapper) wrapper.innerHTML = '';
     }
 
-    // ─── JOURNEY MAP ──────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════════════
+    // JOURNEY MAP
+    // ══════════════════════════════════════════════════════════════
     const journeyStages = [
         { name: "AWARENESS",     icon: "👁️", defaultTouchpoint: "Social Media Ad",  defaultAction: "Educational Content" },
         { name: "CONSIDERATION", icon: "🤔", defaultTouchpoint: "Comparison Site",  defaultAction: "Case Studies" },
@@ -502,21 +700,21 @@
     function renderVisualJourneyMap() {
         const container = document.getElementById('visual-journey-container');
         if (!container) return;
-        const satisfaction = getSatisfactionStatus(currentDeliverySpeed);
+        const s = getSatisfactionStatus(currentDeliverySpeed);
         let html = `<div class="journey-container">`;
         journeyStages.forEach((stage, index) => {
             const isLast = index === journeyStages.length - 1;
             html += `
-                <div class="journey-card ${satisfaction.class}" onclick="this.classList.toggle('expanded')">
+                <div class="journey-card ${s.class}" onclick="this.classList.toggle('expanded')">
                     <div class="journey-icon">${stage.icon}</div>
                     <div class="journey-title">${stage.name}</div>
-                    <div class="satisfaction-badge ${satisfaction.badge}">${satisfaction.status}</div>
-                    <div class="stage-emotion">😊 ${satisfaction.emotion}</div>
+                    <div class="satisfaction-badge ${s.badge}">${s.status}</div>
+                    <div class="stage-emotion">😊 ${s.emotion}</div>
                     <div class="touchpoint">📍 ${stage.defaultTouchpoint}</div>
                     <div class="marketing-action">${stage.defaultAction}</div>
                     <div class="journey-detail">
                         <strong>🔍 Covetousness:</strong> ${getCovetousnessForStage(stage.name, currentDeliverySpeed)}<br><br>
-                        <strong>📈 Marketing Implication:</strong><br>Based on ${satisfaction.status.toLowerCase()} status, ${getMarketingImplication(stage.name, currentDeliverySpeed)}
+                        <strong>📈 Marketing Implication:</strong><br>Based on ${s.status.toLowerCase()} status, ${getMarketingImplication(stage.name, currentDeliverySpeed)}
                     </div>
                 </div>
                 ${!isLast ? '<div class="journey-arrow">➡</div>' : ''}
@@ -543,29 +741,30 @@
         return htmlContent;
     }
 
-    // ─── UTILITIES ────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════════════
+    // UTILITIES
+    // ══════════════════════════════════════════════════════════════
     function escapeHtml(text) {
         if (!text) return '';
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
+        const d = document.createElement('div');
+        d.textContent = text;
+        return d.innerHTML;
     }
 
     async function sendFeedback(vote) {
         const customer = document.getElementById("customer").value || "";
         const product  = document.getElementById("product").value  || "";
-        const tempDiv  = document.createElement('div');
-        tempDiv.innerHTML = currentPlanHTML;
-        let plainText = tempDiv.textContent || "";
-        let summary   = plainText.substring(0, 300);
-        if (plainText.length > 300) {
-            const lastPeriod = summary.lastIndexOf('.');
-            summary = lastPeriod > 200 ? summary.substring(0, lastPeriod + 1) : summary + "...";
+        const tmp = document.createElement('div');
+        tmp.innerHTML = currentPlanHTML;
+        let plain   = tmp.textContent || "";
+        let summary = plain.substring(0, 300);
+        if (plain.length > 300) {
+            const lp = summary.lastIndexOf('.');
+            summary = lp > 200 ? summary.substring(0, lp + 1) : summary + "...";
         }
         try {
             await fetch(`${API_BASE_URL}/feedback`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+                method: "POST", headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ vote, customer, product, plan_summary: summary })
             });
             alert(`Thank you for your ${vote === 'yes' ? 'positive' : 'honest'} feedback! 🙏`);
@@ -652,17 +851,19 @@
     }
 
     async function testAPI() {
-        const statusDiv = document.getElementById("status");
+        const s = document.getElementById("status");
         try {
             const res = await fetch(`${API_BASE_URL}/health`);
-            if (res.ok) { statusDiv.innerHTML = "🟢 API online"; statusDiv.className = "status status-working"; }
-            else        { statusDiv.innerHTML = "🔴 API error";  statusDiv.className = "status status-error"; }
+            if (res.ok) { s.innerHTML = "🟢 API online"; s.className = "status status-working"; }
+            else        { s.innerHTML = "🔴 API error";  s.className = "status status-error"; }
         } catch {
-            statusDiv.innerHTML = "🔴 Cannot reach API"; statusDiv.className = "status status-error";
+            s.innerHTML = "🔴 Cannot reach API"; s.className = "status status-error";
         }
     }
 
-    // ─── MAIN GENERATE ────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════════════
+    // MAIN GENERATE
+    // ══════════════════════════════════════════════════════════════
     async function generate() {
         const customer    = document.getElementById("customer").value;
         const product     = document.getElementById("product").value;
@@ -696,20 +897,19 @@
             const data = await response.json();
             if (data.error) throw new Error(data.error);
 
-            const rawPlan = data.plan || "";
-
-            // Parse into sections FIRST — then extract from structured sections
+            const rawPlan  = data.plan || "";
             const sections = parseSections(rawPlan);
 
-            let htmlContent = markdownToHtml(rawPlan);
-            htmlContent = enhanceOutputWithVisualJourney(htmlContent);
-
-            currentPlanHTML     = htmlContent;
-            outputDiv.innerHTML = htmlContent;
-
-            // Populate dashboard widgets from parsed sections
+            // Render KPI cards and SWOT matrix from parsed sections
             renderKPIDashboard(sections);
             renderSWOTMatrix(sections);
+
+            // Render full markdown plan into output area
+            let htmlContent = markdownToHtml(rawPlan);
+            htmlContent     = enhanceOutputWithVisualJourney(htmlContent);
+            currentPlanHTML = htmlContent;
+            outputDiv.innerHTML = htmlContent;
+
             renderVisualJourneyMap();
 
             document.getElementById("timestamp").innerHTML = `Generated: ${new Date().toLocaleString()}`;
@@ -734,39 +934,36 @@
         if (!content || content.includes("Processing")) { alert("Generate a plan first"); return; }
         const btn = document.getElementById("downloadBtn");
         const orig = btn.innerText;
-        btn.innerText = "⏳ Generating PDF...";
-        btn.disabled  = true;
+        btn.innerText = "⏳ Generating PDF..."; btn.disabled = true;
         try {
-            const element = document.createElement('div');
-            element.style.cssText = "padding:40px;font-family:system-ui,sans-serif;background:#fff;color:#1e293b;";
+            const el = document.createElement('div');
+            el.style.cssText = "padding:40px;font-family:system-ui,sans-serif;background:#fff;color:#1e293b;";
 
             const kpiRows = [
-                { label: "TAM",         id: "kpi-tam-value",     icon: "🌍" },
-                { label: "SAM",         id: "kpi-sam-value",     icon: "🎯" },
-                { label: "SOM",         id: "kpi-som-value",     icon: "🚀" },
+                { label: "TAM", id: "kpi-tam-value", icon: "🌍" },
+                { label: "SAM", id: "kpi-sam-value", icon: "🎯" },
+                { label: "SOM", id: "kpi-som-value", icon: "🚀" },
                 { label: "Primary KPI", id: "kpi-primary-value", icon: "📈" },
             ].filter(k => {
-                const el = document.getElementById(k.id);
-                return el && !['—','N/A'].includes(el.textContent);
+                const e = document.getElementById(k.id);
+                return e && !['—','N/A'].includes(e.textContent);
             }).map(k => {
-                const val = document.getElementById(k.id).textContent;
+                const v = document.getElementById(k.id).textContent;
                 return `<div style="display:inline-block;margin:0 12px 12px 0;padding:12px 18px;background:#f1f5f9;border-radius:10px;border:1px solid #e2e8f0;">
-                    <span>${k.icon}</span>
-                    <strong style="color:#0f172a;margin-left:8px;">${k.label}:</strong>
-                    <span style="color:#0369a1;margin-left:6px;font-weight:700;">${val}</span>
-                </div>`;
+                    <span>${k.icon}</span><strong style="color:#0f172a;margin-left:8px;">${k.label}:</strong>
+                    <span style="color:#0369a1;margin-left:6px;font-weight:700;">${v}</span></div>`;
             }).join('');
 
-            const swotHTML = document.getElementById('swot-matrix-container')?.innerHTML || '';
+            const swotHTML = document.getElementById('swot-wrapper')?.innerHTML || '';
 
-            element.innerHTML = `
+            el.innerHTML = `
                 <div style="text-align:center;margin-bottom:40px;">
                     <h1 style="color:#1e293b;">Strategic Marketing Report</h1>
                     <p>Generated by Bisrat's Strategic Marketing System</p>
                     <hr style="width:60px;margin:16px auto;">
                 </div>
                 ${kpiRows ? `<div style="margin-bottom:24px;">${kpiRows}</div>` : ''}
-                ${swotHTML ? `<h2 style="color:#1e293b;margin-bottom:12px;">🔲 SWOT Analysis</h2><div style="margin-bottom:24px;">${swotHTML}</div>` : ''}
+                ${swotHTML ? `<div style="margin-bottom:24px;">${swotHTML}</div>` : ''}
                 <div style="font-size:11pt;">${content}</div>
                 <div style="text-align:center;margin-top:40px;font-size:9pt;color:#64748b;">
                     <p>Generated: ${new Date().toLocaleString()}</p>
@@ -774,7 +971,7 @@
                 </div>`;
 
             const opt = { margin:[0.5,0.5,0.5,0.5], filename:`marketing_plan.pdf`, html2canvas:{scale:2,backgroundColor:'#fff'}, jsPDF:{unit:'in',format:'a4',orientation:'portrait'} };
-            await html2pdf().set(opt).from(element).save();
+            await html2pdf().set(opt).from(el).save();
         } catch { alert("PDF error"); }
         finally { btn.innerText = orig; btn.disabled = false; }
     }
