@@ -51,7 +51,6 @@
 
         /* ══════════════════════════════════════════
            SWOT MATRIX — Da Vinci × Frontend Expert
-           Four quadrants, each with its own soul.
            ══════════════════════════════════════════ */
         .swot-section-label {
             font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
@@ -61,150 +60,62 @@
         .swot-section-label::before, .swot-section-label::after {
             content: ''; flex: 1; height: 1px; background: #1e293b;
         }
-
-        .swot-matrix {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 32px;
-        }
+        .swot-matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px; }
         @media (max-width: 768px) { .swot-matrix { grid-template-columns: 1fr; gap: 16px; } }
 
-        /* Base card — the canvas */
-        .swot-card {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border-radius: 20px;
-            padding: 0;
-            border: 1px solid #334155;
-            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.3s ease;
-            overflow: hidden;
-            position: relative;
-        }
+        .swot-card { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 20px; padding: 0; border: 1px solid #334155; transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.3s ease; overflow: hidden; position: relative; }
         .swot-card:hover { transform: translateY(-4px); }
-
-        /* Quadrant accent strip at top */
-        .swot-card::before {
-            content: '';
-            display: block;
-            height: 3px;
-            width: 100%;
-        }
+        .swot-card::before { content: ''; display: block; height: 3px; width: 100%; }
         .swot-strengths::before     { background: linear-gradient(90deg, #10b981, #34d399); }
         .swot-weaknesses::before    { background: linear-gradient(90deg, #ef4444, #f87171); }
         .swot-opportunities::before { background: linear-gradient(90deg, #38bdf8, #818cf8); }
         .swot-threats::before       { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-
         .swot-strengths:hover     { border-color: #10b981; box-shadow: 0 8px 32px rgba(16,185,129,0.18); }
         .swot-weaknesses:hover    { border-color: #ef4444; box-shadow: 0 8px 32px rgba(239,68,68,0.18); }
         .swot-opportunities:hover { border-color: #38bdf8; box-shadow: 0 8px 32px rgba(56,189,248,0.18); }
         .swot-threats:hover       { border-color: #f59e0b; box-shadow: 0 8px 32px rgba(245,158,11,0.18); }
 
-        /* Inner card body */
         .swot-card-body { padding: 20px 20px 16px; }
-
-        /* Header row: icon + title + quadrant badge cluster */
-        .swot-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-bottom: 14px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #1e293b;
-        }
+        .swot-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #1e293b; }
         .swot-header-left { display: flex; align-items: center; gap: 10px; }
         .swot-main-icon { font-size: 1.5rem; line-height: 1; }
-        .swot-title {
-            font-size: 1rem; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 0.07em;
-        }
+        .swot-title { font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; }
         .swot-strengths     .swot-title { color: #10b981; }
         .swot-weaknesses    .swot-title { color: #ef4444; }
         .swot-opportunities .swot-title { color: #38bdf8; }
         .swot-threats       .swot-title { color: #f59e0b; }
 
-        /* Personality badge cluster — top-right of each quadrant */
-        .swot-badge-cluster {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 4px;
-        }
-        .swot-badge {
-            font-size: 0.6rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            padding: 2px 7px;
-            border-radius: 20px;
-            white-space: nowrap;
-        }
-        /* Strengths badges: strength, application, refinement */
-        .swot-strengths .swot-badge:nth-child(1) { background: #10b98118; color: #34d399; border: 1px solid #10b98140; }
-        .swot-strengths .swot-badge:nth-child(2) { background: #10b98110; color: #6ee7b7; border: 1px solid #10b98128; }
-        .swot-strengths .swot-badge:nth-child(3) { background: #10b98108; color: #a7f3d0; border: 1px solid #10b98118; }
-        /* Weaknesses badges: improvement, criticism, urgency */
-        .swot-weaknesses .swot-badge:nth-child(1) { background: #ef444418; color: #f87171; border: 1px solid #ef444440; }
-        .swot-weaknesses .swot-badge:nth-child(2) { background: #ef444410; color: #fca5a5; border: 1px solid #ef444428; }
-        .swot-weaknesses .swot-badge:nth-child(3) { background: #ef444408; color: #fecaca; border: 1px solid #ef444418; }
-        /* Opportunities badges: targeted, segmented, positioned */
+        .swot-badge-cluster { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+        .swot-badge { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 2px 7px; border-radius: 20px; white-space: nowrap; }
+        .swot-strengths .swot-badge:nth-child(1)     { background: #10b98118; color: #34d399; border: 1px solid #10b98140; }
+        .swot-strengths .swot-badge:nth-child(2)     { background: #10b98110; color: #6ee7b7; border: 1px solid #10b98128; }
+        .swot-strengths .swot-badge:nth-child(3)     { background: #10b98108; color: #a7f3d0; border: 1px solid #10b98118; }
+        .swot-weaknesses .swot-badge:nth-child(1)    { background: #ef444418; color: #f87171; border: 1px solid #ef444440; }
+        .swot-weaknesses .swot-badge:nth-child(2)    { background: #ef444410; color: #fca5a5; border: 1px solid #ef444428; }
+        .swot-weaknesses .swot-badge:nth-child(3)    { background: #ef444408; color: #fecaca; border: 1px solid #ef444418; }
         .swot-opportunities .swot-badge:nth-child(1) { background: #38bdf818; color: #7dd3fc; border: 1px solid #38bdf840; }
         .swot-opportunities .swot-badge:nth-child(2) { background: #38bdf810; color: #bae6fd; border: 1px solid #38bdf828; }
         .swot-opportunities .swot-badge:nth-child(3) { background: #38bdf808; color: #e0f2fe; border: 1px solid #38bdf818; }
-        /* Threats badges: adaptability, realism, strategic */
-        .swot-threats .swot-badge:nth-child(1) { background: #f59e0b18; color: #fbbf24; border: 1px solid #f59e0b40; }
-        .swot-threats .swot-badge:nth-child(2) { background: #f59e0b10; color: #fcd34d; border: 1px solid #f59e0b28; }
-        .swot-threats .swot-badge:nth-child(3) { background: #f59e0b08; color: #fde68a; border: 1px solid #f59e0b18; }
+        .swot-threats .swot-badge:nth-child(1)       { background: #f59e0b18; color: #fbbf24; border: 1px solid #f59e0b40; }
+        .swot-threats .swot-badge:nth-child(2)       { background: #f59e0b10; color: #fcd34d; border: 1px solid #f59e0b28; }
+        .swot-threats .swot-badge:nth-child(3)       { background: #f59e0b08; color: #fde68a; border: 1px solid #f59e0b18; }
 
-        /* Personality icon trio embedded in top-left of the quadrant content area */
-        .swot-personality-strip {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 12px;
-            padding: 8px 10px;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.04);
-        }
-        .swot-personality-icon {
-            font-size: 1rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            flex: 1;
-        }
-        .swot-personality-icon span.label {
-            font-size: 0.52rem;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            font-weight: 600;
-            opacity: 0.6;
-            text-align: center;
-        }
+        .swot-personality-strip { display: flex; gap: 6px; margin-bottom: 12px; padding: 8px 10px; border-radius: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); }
+        .swot-personality-icon { font-size: 1rem; display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; }
+        .swot-personality-icon span.label { font-size: 0.52rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; opacity: 0.6; text-align: center; }
         .swot-strengths     .swot-personality-icon span.label { color: #10b981; }
         .swot-weaknesses    .swot-personality-icon span.label { color: #ef4444; }
         .swot-opportunities .swot-personality-icon span.label { color: #38bdf8; }
         .swot-threats       .swot-personality-icon span.label { color: #f59e0b; }
 
-        /* Item list */
         .swot-list { list-style: none; margin: 0; padding: 0; }
-        .swot-list li {
-            padding: 7px 0;
-            border-bottom: 1px solid #1e293b;
-            font-size: 0.82rem;
-            color: #cbd5e1;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            line-height: 1.4;
-        }
+        .swot-list li { padding: 7px 0; border-bottom: 1px solid #1e293b; font-size: 0.82rem; color: #cbd5e1; display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; }
         .swot-list li:last-child { border-bottom: none; }
         .swot-bullet { font-size: 0.8rem; flex-shrink: 0; margin-top: 2px; }
         .swot-strengths     .swot-bullet { color: #10b981; }
         .swot-weaknesses    .swot-bullet { color: #ef4444; }
         .swot-opportunities .swot-bullet { color: #38bdf8; }
         .swot-threats       .swot-bullet { color: #f59e0b; }
-
         .swot-empty { font-size: 0.8rem; color: #475569; font-style: italic; padding: 8px 0; }
         .swot-fallback { text-align: center; padding: 24px; font-size: 0.85rem; color: #475569; font-style: italic; background: #0f172a; border-radius: 16px; }
 
@@ -235,7 +146,6 @@
         .journey-arrow { font-size: 1.3rem; color: #3b82f6; align-self: center; }
         @media (max-width: 900px) { .journey-container { flex-direction: column; } .journey-arrow { display: none; } .journey-card { width: 100%; } }
 
-        /* Delivery Controls */
         .delivery-controls { display: flex; justify-content: center; gap: 16px; margin: 20px 0 30px; flex-wrap: wrap; }
         .delivery-btn { background: #1e293b; border: 2px solid #334155; border-radius: 40px; padding: 8px 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; color: #94a3b8; }
         .delivery-btn.active { background: #3b82f6; border-color: #60a5fa; color: white; box-shadow: 0 0 10px rgba(59,130,246,0.4); }
@@ -243,7 +153,6 @@
         .delivery-btn[data-speed="delayed"]:hover { background: #f59e0b; border-color: #fbbf24; color: white; }
         .delivery-btn[data-speed="none"]:hover    { background: #ef4444; border-color: #f87171; color: white; }
 
-        /* Table styling */
         .rendered-output table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #0f172a; font-size: 14px; table-layout: auto; }
         .rendered-output th { background: #1e293b; color: #38bdf8; font-weight: 600; padding: 12px 15px; text-align: left; border: 1px solid #334155; }
         .rendered-output td { border: 1px solid #334155; padding: 10px 15px; text-align: left; vertical-align: top; background: #0f172a; color: #e2e8f0; word-wrap: break-word; }
@@ -285,7 +194,7 @@
         <span>🎯 Kotler Positioning</span> <span>🛠️ 4Ps</span> <span>📉 SWOT + Micro-SWOT</span>
         <span>📏 KPI + Budget</span> <span>🗺️ 30-Day Roadmap</span> <span>🎨 Design Prompts</span>
     </div>
-    <div class="hero-features" style="margin-top: 8px;">
+    <div class="hero-features" style="margin-top:8px;">
         <span>⚡ DeepSeek</span> <span>📄 PDF/A Archival</span>
         <span>🎨 UI + PDF Identical</span> <span>🚀 Free & Unlimited</span>
     </div>
@@ -318,47 +227,34 @@
             <span class="kpi-icon">🌍</span>
             <div class="kpi-value" id="kpi-tam-value">—</div>
             <div class="kpi-label">TAM</div>
-            <div class="kpi-source">
-                <span>TAM/SAM/SOM Output</span>
-                <i class="kpi-tooltip-icon" data-tip="Total Addressable Market — the theoretical maximum revenue if you captured 100% of the market.">?</i>
-            </div>
+            <div class="kpi-source"><span>TAM/SAM/SOM Output</span><i class="kpi-tooltip-icon" data-tip="Total Addressable Market — theoretical maximum if you captured 100% of the market.">?</i></div>
         </div>
         <div class="kpi-card" id="kpi-sam">
             <span class="kpi-icon">🎯</span>
             <div class="kpi-value" id="kpi-sam-value">—</div>
             <div class="kpi-label">SAM</div>
-            <div class="kpi-source">
-                <span>TAM/SAM/SOM Output</span>
-                <i class="kpi-tooltip-icon" data-tip="Serviceable Available Market — the portion of TAM your business model and geography can realistically serve.">?</i>
-            </div>
+            <div class="kpi-source"><span>TAM/SAM/SOM Output</span><i class="kpi-tooltip-icon" data-tip="Serviceable Available Market — the portion of TAM your model can realistically serve.">?</i></div>
         </div>
         <div class="kpi-card" id="kpi-som">
             <span class="kpi-icon">🚀</span>
             <div class="kpi-value" id="kpi-som-value">—</div>
             <div class="kpi-label">SOM</div>
-            <div class="kpi-source">
-                <span>TAM/SAM/SOM Output</span>
-                <i class="kpi-tooltip-icon" data-tip="Serviceable Obtainable Market — the realistic slice of SAM you can capture given current resources and competition.">?</i>
-            </div>
+            <div class="kpi-source"><span>TAM/SAM/SOM Output</span><i class="kpi-tooltip-icon" data-tip="Serviceable Obtainable Market — realistic slice of SAM you can capture now.">?</i></div>
         </div>
         <div class="kpi-card" id="kpi-primary">
             <span class="kpi-icon">📈</span>
             <div class="kpi-value" id="kpi-primary-value">—</div>
             <div class="kpi-label">Primary KPI</div>
-            <div class="kpi-source">
-                <span>KPI Output</span>
-                <i class="kpi-tooltip-icon" data-tip="The single most important metric to track your marketing success, extracted from the KPI section of the plan.">?</i>
-            </div>
+            <div class="kpi-source"><span>KPI Output</span><i class="kpi-tooltip-icon" data-tip="The single most important metric to track marketing success.">?</i></div>
         </div>
     </div>
 
-    <!-- SWOT MATRIX — injected by JS -->
+    <!-- SWOT MATRIX injected here -->
     <div id="swot-wrapper"></div>
 
     <div id="output" class="rendered-output">Ready. Enter data and click Generate.</div>
 </div>
 
-<!-- Delivery Speed Controls -->
 <div id="journey-controls" style="display:none;">
     <div class="delivery-controls">
         <button class="delivery-btn active" data-speed="fast"    onclick="setDeliverySpeed('fast')">⚡ Fast Delivery (Delighted)</button>
@@ -373,14 +269,12 @@
     <a href="#" onclick="sendFeedback('yes')">👍 Yes</a>
     <a href="#" onclick="sendFeedback('no')">👎 No</a>
     <span style="margin-left:16px;">📧 <a href="mailto:bisrattewabe373@gmail.com">bisrattewabe373@gmail.com</a></span>
-    <div class="feedback-note">💡 Your positive feedback may be featured as a testimonial. All feedback helps improve the system.</div>
+    <div class="feedback-note">💡 Your positive feedback may be featured as a testimonial.</div>
 </div>
 
 <div class="testimonials-section">
     <h3>🌟 What Users Are Saying</h3>
-    <div id="testimonials-list">
-        <div style="color:#64748b;text-align:center;padding:20px;">Loading testimonials...</div>
-    </div>
+    <div id="testimonials-list"><div style="color:#64748b;text-align:center;padding:20px;">Loading testimonials...</div></div>
 </div>
 
 <div class="footer-note">Strategic Marketing System v2.0 | Powered by DeepSeek</div>
@@ -391,8 +285,7 @@
     let currentDeliverySpeed = "fast";
 
     // ══════════════════════════════════════════════════════════════
-    // SECTION PARSER — split raw plan by [TAG OUTPUT] markers
-    // Returns Map<string, string> of section name → content
+    // SECTION PARSER — split by [TAG OUTPUT] markers into a Map
     // ══════════════════════════════════════════════════════════════
     function parseSections(planText) {
         const sections = new Map();
@@ -401,39 +294,57 @@
         const tags  = [];
         let m;
         while ((m = tagRe.exec(planText)) !== null) {
-            tags.push({ name: m[1].trim().replace(/\s+/g, ''), index: m.index, end: m.index + m[0].length });
+            tags.push({ name: m[1].trim().replace(/\s+/g,''), index: m.index, end: m.index + m[0].length });
         }
         for (let i = 0; i < tags.length; i++) {
             const start = tags[i].end;
-            const end   = i + 1 < tags.length ? tags[i + 1].index : planText.length;
+            const end   = i + 1 < tags.length ? tags[i+1].index : planText.length;
             sections.set(tags[i].name, planText.slice(start, end).trim());
         }
         return sections;
     }
 
     // ══════════════════════════════════════════════════════════════
-    // KPI EXTRACTION — table row + inline fallbacks
+    // TAM/SAM/SOM — handles BOTH markdown pipe tables AND tab tables
+    // Your API uses tab-separated: "TAM\tDefinition\tCalc\t300 000"
     // ══════════════════════════════════════════════════════════════
     function extractFromTable(sectionText, label) {
         if (!sectionText) return null;
         for (const line of sectionText.split('\n')) {
-            if (!line.includes('|')) continue;
-            const cells = line.split('|').map(c => c.trim()).filter(Boolean);
-            if (cells.length >= 2 && cells[0].toUpperCase() === label.toUpperCase()) {
-                const value = cells[cells.length - 1];
-                if (value && /[\d,.]/.test(value)) return value;
+            // Try pipe-separated first
+            if (line.includes('|')) {
+                const cells = line.split('|').map(c => c.trim()).filter(Boolean);
+                if (cells.length >= 2 && cells[0].replace(/\*/g,'').trim().toUpperCase() === label.toUpperCase()) {
+                    const val = cells[cells.length - 1].replace(/\*/g,'').trim();
+                    if (val && /[\d]/.test(val)) return val;
+                }
             }
+            // Try tab-separated (your actual API format)
+            if (line.includes('\t')) {
+                const cells = line.split('\t').map(c => c.trim()).filter(Boolean);
+                if (cells.length >= 2 && cells[0].replace(/\*/g,'').trim().toUpperCase() === label.toUpperCase()) {
+                    const val = cells[cells.length - 1].replace(/\*/g,'').trim();
+                    if (val && /[\d]/.test(val)) return val;
+                }
+            }
+            // Try plain line starting with label: "TAM ... 300 000"
+            const plainRe = new RegExp(`^\\*?${label}\\*?[\\s\\t]+.*?([\\d][\\d\\s,\\.–‑-]*(?:k|K|m|M|000)?)\\s*$`, 'i');
+            const pm = line.match(plainRe);
+            if (pm) return pm[1].trim();
         }
         return null;
     }
 
+    // ══════════════════════════════════════════════════════════════
+    // PRIMARY KPI
+    // ══════════════════════════════════════════════════════════════
     function extractPrimaryKPI(sectionText) {
         if (!sectionText) return null;
         for (const line of sectionText.split('\n')) {
             if (line.toLowerCase().includes('primary kpi')) {
                 const idx = line.indexOf(':');
                 if (idx !== -1) {
-                    const val = line.slice(idx + 1).replace(/\*\*/g, '').trim().replace(/\.$/, '');
+                    const val = line.slice(idx+1).replace(/\*/g,'').trim().replace(/\.$/, '');
                     if (val.length > 2) return val;
                 }
             }
@@ -443,7 +354,7 @@
             if (/^\s*1[.)]\s+/.test(line) && /\d/.test(line)) {
                 const idx = line.indexOf(':');
                 if (idx !== -1) {
-                    const val = line.slice(idx + 1).replace(/\*\*/g, '').trim().replace(/\.$/, '');
+                    const val = line.slice(idx+1).replace(/\*/g,'').trim().replace(/\.$/, '');
                     if (val.length > 2 && val.length < 120) return val;
                 }
             }
@@ -454,19 +365,17 @@
     function renderKPIDashboard(sections) {
         const tsText  = sections.get('TAMSAMSOM') || sections.get('TAMSAM') || '';
         const kpiText = sections.get('KPI') || sections.get('KPIS') || '';
-
         const set = (id, value) => {
             const el = document.getElementById(id);
             const card = el?.closest('.kpi-card');
             if (!el) return;
             if (value) { el.textContent = value; card?.classList.remove('na-state'); }
-            else       { el.textContent = 'N/A'; card?.classList.add('na-state'); }
+            else       { el.textContent = 'N/A';  card?.classList.add('na-state'); }
         };
         set('kpi-tam-value',     extractFromTable(tsText, 'TAM'));
         set('kpi-sam-value',     extractFromTable(tsText, 'SAM'));
         set('kpi-som-value',     extractFromTable(tsText, 'SOM'));
         set('kpi-primary-value', extractPrimaryKPI(kpiText));
-
         document.getElementById('kpi-dashboard')?.classList.add('visible');
         document.getElementById('kpi-dashboard-label')?.classList.add('visible');
     }
@@ -481,138 +390,185 @@
     }
 
     // ══════════════════════════════════════════════════════════════
-    // SWOT EXTRACTION — line-by-line label parser
-    // Handles "Strengths: item1, item2" AND bullet lists
+    // SWOT EXTRACTION — multi-strategy parser
+    //
+    // Your API outputs SWOT as a 2-column markdown table:
+    //   Strengths          | Weaknesses
+    //   item; item; item   | item; item
+    //   Opportunities      | Threats
+    //   item; item         | item; item
+    //
+    // Strategy 1: 2-column table (actual format)
+    // Strategy 2: inline "Label: item, item"
+    // Strategy 3: bullet list under heading
     // ══════════════════════════════════════════════════════════════
-    function extractSWOTCategory(sectionText, labelPrefix) {
-        if (!sectionText) return [];
-        const lines = sectionText.split('\n');
+    function extractSWOTData(swotText) {
+        if (!swotText) return null;
 
-        // Strategy A: inline comma list — "Strengths: a, b, c."
-        for (const line of lines) {
-            const clean = line.replace(/\*\*/g, '').trim();
-            const colon = clean.indexOf(':');
-            if (colon === -1) continue;
-            const key = clean.slice(0, colon).trim().toLowerCase();
-            if (!key.startsWith(labelPrefix.toLowerCase())) continue;
-            const raw = clean.slice(colon + 1).trim().replace(/\.$/, '');
-            if (!raw) continue;
-            const items = raw.split(',').map(s => s.trim()).filter(s => s.length > 2).slice(0, 4);
-            if (items.length) return items;
+        const result = { strengths: [], weaknesses: [], opportunities: [], threats: [] };
+
+        // ── Strategy 1: 2-column table (Strengths | Weaknesses header row) ──
+        // Find the header row that has both "Strengths" and "Weaknesses"
+        const lines = swotText.split('\n');
+        let swHeaderIdx = -1;
+        let otHeaderIdx = -1;
+
+        for (let i = 0; i < lines.length; i++) {
+            const l = lines[i].toLowerCase();
+            if (l.includes('strength') && l.includes('weakness')) { swHeaderIdx = i; }
+            if (l.includes('opportunit') && l.includes('threat'))  { otHeaderIdx = i; }
         }
 
-        // Strategy B: bullet points under a heading
-        let inSection = false;
-        const bullets = [];
-        for (const line of lines) {
-            const clean = line.replace(/\*\*/g, '').trim().toLowerCase();
-            if (clean.startsWith(labelPrefix.toLowerCase()) && clean.includes(':')) {
-                inSection = true; continue;
-            }
-            if (inSection) {
-                // Stop at next label heading
-                if (/^(strength|weakness|opportunit|threat)/i.test(line.trim())) break;
-                const bulletMatch = line.trim().match(/^(?:[-•*]|\d+\.)\s+(.+)/);
-                if (bulletMatch) {
-                    const item = bulletMatch[1].replace(/\*\*/g, '').trim();
-                    if (item.length > 2) bullets.push(item);
-                    if (bullets.length >= 4) break;
+        function cellsFromLine(line) {
+            // Handle both pipe and tab separators
+            let parts = line.includes('|')
+                ? line.split('|').map(c => c.trim()).filter(Boolean)
+                : line.split('\t').map(c => c.trim()).filter(Boolean);
+            return parts;
+        }
+
+        function parseItems(raw) {
+            if (!raw) return [];
+            // Clean markdown formatting
+            raw = raw.replace(/\*/g, '').replace(/^[-–]\s*/, '').trim();
+            // Split by semicolons, periods followed by capital, or newlines
+            let items = raw.split(/[;]|\.\s+(?=[A-Z])/)
+                .map(s => s.replace(/^\s*[-–•]\s*/, '').trim())
+                .filter(s => s.length > 3 && !/^(strengths|weaknesses|opportunities|threats)$/i.test(s));
+            return items.slice(0, 4);
+        }
+
+        // Parse Strengths / Weaknesses table block
+        if (swHeaderIdx >= 0) {
+            for (let i = swHeaderIdx + 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line || /^[|\-\s]+$/.test(line)) continue; // skip separator rows
+                // Stop when we hit the Opportunities/Threats header
+                if (/opportunit/i.test(line) && /threat/i.test(line)) break;
+                // Stop at next [SECTION]
+                if (/^\[/.test(line)) break;
+                const cells = cellsFromLine(lines[i]);
+                if (cells.length >= 2) {
+                    // Skip header row itself
+                    if (/strength/i.test(cells[0]) && /weakness/i.test(cells[1])) continue;
+                    parseItems(cells[0]).forEach(item => { if (result.strengths.length < 4) result.strengths.push(item); });
+                    parseItems(cells[1]).forEach(item => { if (result.weaknesses.length < 4) result.weaknesses.push(item); });
+                } else if (cells.length === 1 && cells[0].length > 3) {
+                    if (result.strengths.length < 4) result.strengths.push(cells[0].replace(/\*/g,'').trim());
                 }
             }
         }
-        return bullets;
+
+        // Parse Opportunities / Threats table block
+        if (otHeaderIdx >= 0) {
+            for (let i = otHeaderIdx + 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line || /^[|\-\s]+$/.test(line)) continue;
+                if (/^\[/.test(line)) break;
+                // Stop at Part B
+                if (/part\s*b/i.test(line)) break;
+                const cells = cellsFromLine(lines[i]);
+                if (cells.length >= 2) {
+                    if (/opportunit/i.test(cells[0]) && /threat/i.test(cells[1])) continue;
+                    parseItems(cells[0]).forEach(item => { if (result.opportunities.length < 4) result.opportunities.push(item); });
+                    parseItems(cells[1]).forEach(item => { if (result.threats.length < 4) result.threats.push(item); });
+                } else if (cells.length === 1 && cells[0].length > 3) {
+                    if (result.opportunities.length < 4) result.opportunities.push(cells[0].replace(/\*/g,'').trim());
+                }
+            }
+        }
+
+        // ── Strategy 2: inline "Strengths: item, item" fallback ──
+        if (!result.strengths.length && !result.weaknesses.length) {
+            for (const line of lines) {
+                const clean = line.replace(/\*/g,'').trim();
+                const colon = clean.indexOf(':');
+                if (colon === -1) continue;
+                const key = clean.slice(0, colon).trim().toLowerCase();
+                const raw = clean.slice(colon+1).trim().replace(/\.$/, '');
+                if (!raw || raw.length < 3) continue;
+                const items = raw.split(',').map(s => s.trim()).filter(s => s.length > 2).slice(0, 4);
+                if (key.startsWith('strength'))    result.strengths     = items;
+                if (key.startsWith('weakness'))    result.weaknesses    = items;
+                if (key.startsWith('opportunit'))  result.opportunities = items;
+                if (key.startsWith('threat'))      result.threats       = items;
+            }
+        }
+
+        // ── Strategy 3: bullet list fallback ──
+        if (!result.strengths.length && !result.weaknesses.length) {
+            let current = null;
+            for (const line of lines) {
+                const clean = line.replace(/\*/g,'').trim();
+                if (/^strength/i.test(clean))    { current = 'strengths'; continue; }
+                if (/^weakness/i.test(clean))    { current = 'weaknesses'; continue; }
+                if (/^opportunit/i.test(clean))  { current = 'opportunities'; continue; }
+                if (/^threat/i.test(clean))      { current = 'threats'; continue; }
+                if (current && /^[-•*]\s+/.test(clean)) {
+                    const item = clean.replace(/^[-•*]\s+/, '').trim();
+                    if (item.length > 2 && result[current].length < 4) result[current].push(item);
+                }
+            }
+        }
+
+        const hasData = result.strengths.length || result.weaknesses.length ||
+                        result.opportunities.length || result.threats.length;
+        return hasData ? result : null;
     }
 
     // ══════════════════════════════════════════════════════════════
     // SWOT RENDER — Da Vinci × Frontend Expert
-    // Each quadrant has its own visual personality system
     // ══════════════════════════════════════════════════════════════
     function renderSWOTMatrix(sections) {
         const swotText = sections.get('SWOT') || sections.get('SWOTMICROSWOT') || '';
         const wrapper  = document.getElementById('swot-wrapper');
         if (!wrapper) return;
 
-        const strengths     = extractSWOTCategory(swotText, 'strength');
-        const weaknesses    = extractSWOTCategory(swotText, 'weakness');
-        const opportunities = extractSWOTCategory(swotText, 'opportunit');
-        const threats       = extractSWOTCategory(swotText, 'threat');
+        const data = extractSWOTData(swotText);
 
-        const hasData = strengths.length || weaknesses.length || opportunities.length || threats.length;
-
-        if (!hasData) {
+        if (!data) {
             wrapper.innerHTML = `<div class="swot-fallback">⚠️ SWOT data not found in this plan output.</div>`;
             return;
         }
 
-        // Quadrant personality definitions
-        // Each quadrant: position label, personality icons + labels, badge words, bullet symbol
         const quadrants = [
             {
-                cls:      'swot-strengths',
-                title:    'Strengths',
-                icon:     '💪',
+                cls: 'swot-strengths', title: 'Strengths', icon: '💪',
                 position: 'Internal · Positive',
-                // Personality strip — top of content: strength, application, refinement
-                personality: [
-                    { emoji: '🔩', label: 'Strength' },
-                    { emoji: '⚙️', label: 'Application' },
-                    { emoji: '💎', label: 'Refinement' },
-                ],
-                badges:  ['Strength', 'Application', 'Refinement'],
-                bullets: ['◆', '●', '▲', '■'],
-                items:   strengths,
+                personality: [{ emoji:'🔩', label:'Strength' },{ emoji:'⚙️', label:'Application' },{ emoji:'💎', label:'Refinement' }],
+                badges: ['Strength','Application','Refinement'],
+                bullets: ['◆','●','▲','■'],
+                items: data.strengths
             },
             {
-                cls:      'swot-weaknesses',
-                title:    'Weaknesses',
-                icon:     '🔻',
+                cls: 'swot-weaknesses', title: 'Weaknesses', icon: '🔻',
                 position: 'Internal · Negative',
-                // improvement, criticism, urgency
-                personality: [
-                    { emoji: '🔧', label: 'Improve' },
-                    { emoji: '🎯', label: 'Criticise' },
-                    { emoji: '⚡', label: 'Urgency' },
-                ],
-                badges:  ['Improvement', 'Criticism', 'Urgency'],
-                bullets: ['◇', '○', '△', '□'],
-                items:   weaknesses,
+                personality: [{ emoji:'🔧', label:'Improve' },{ emoji:'🎯', label:'Criticise' },{ emoji:'⚡', label:'Urgency' }],
+                badges: ['Improvement','Criticism','Urgency'],
+                bullets: ['◇','○','△','□'],
+                items: data.weaknesses
             },
             {
-                cls:      'swot-opportunities',
-                title:    'Opportunities',
-                icon:     '✨',
+                cls: 'swot-opportunities', title: 'Opportunities', icon: '✨',
                 position: 'External · Positive',
-                // targeted, segmented, positioned
-                personality: [
-                    { emoji: '🎯', label: 'Targeted' },
-                    { emoji: '📊', label: 'Segmented' },
-                    { emoji: '📍', label: 'Positioned' },
-                ],
-                badges:  ['Targeted', 'Segmented', 'Positioned'],
-                bullets: ['◆', '●', '▲', '■'],
-                items:   opportunities,
+                personality: [{ emoji:'🎯', label:'Targeted' },{ emoji:'📊', label:'Segmented' },{ emoji:'📍', label:'Positioned' }],
+                badges: ['Targeted','Segmented','Positioned'],
+                bullets: ['◆','●','▲','■'],
+                items: data.opportunities
             },
             {
-                cls:      'swot-threats',
-                title:    'Threats',
-                icon:     '⚠️',
+                cls: 'swot-threats', title: 'Threats', icon: '⚠️',
                 position: 'External · Negative',
-                // adaptability, realism, strategic thinking
-                personality: [
-                    { emoji: '🌊', label: 'Adaptability' },
-                    { emoji: '🔭', label: 'Realism' },
-                    { emoji: '♟️', label: 'Strategic' },
-                ],
-                badges:  ['Adaptability', 'Realism', 'Strategic'],
-                bullets: ['◇', '○', '△', '□'],
-                items:   threats,
-            },
+                personality: [{ emoji:'🌊', label:'Adaptability' },{ emoji:'🔭', label:'Realism' },{ emoji:'♟️', label:'Strategic' }],
+                badges: ['Adaptability','Realism','Strategic'],
+                bullets: ['◇','○','△','□'],
+                items: data.threats
+            }
         ];
 
         const cardsHTML = quadrants.map(q => `
             <div class="swot-card ${q.cls}">
                 <div class="swot-card-body">
-                    <!-- Header: icon + title on left, badge cluster on right -->
                     <div class="swot-header">
                         <div class="swot-header-left">
                             <span class="swot-main-icon">${q.icon}</span>
@@ -625,76 +581,54 @@
                             ${q.badges.map(b => `<span class="swot-badge">${b}</span>`).join('')}
                         </div>
                     </div>
-
-                    <!-- Personality strip: 3 trait icons embedded top of content area -->
                     <div class="swot-personality-strip">
                         ${q.personality.map(p => `
                             <div class="swot-personality-icon">
                                 <span>${p.emoji}</span>
                                 <span class="label">${p.label}</span>
-                            </div>
-                        `).join('')}
+                            </div>`).join('')}
                     </div>
-
-                    <!-- Items list -->
                     ${q.items.length
-                        ? `<ul class="swot-list">${q.items.map((item, i) =>
-                            `<li><span class="swot-bullet">${q.bullets[i % q.bullets.length]}</span>${escapeHtml(item)}</li>`
+                        ? `<ul class="swot-list">${q.items.map((item,i) =>
+                            `<li><span class="swot-bullet">${q.bullets[i%q.bullets.length]}</span>${escapeHtml(item)}</li>`
                           ).join('')}</ul>`
-                        : `<div class="swot-empty">No ${q.title.toLowerCase()} identified.</div>`
-                    }
+                        : `<div class="swot-empty">No ${q.title.toLowerCase()} identified.</div>`}
                 </div>
-            </div>
-        `).join('');
+            </div>`).join('');
 
         wrapper.innerHTML = `
             <div class="swot-section-label">🔲 SWOT Analysis</div>
-            <div class="swot-matrix">${cardsHTML}</div>
-        `;
+            <div class="swot-matrix">${cardsHTML}</div>`;
     }
 
     function resetSWOTMatrix() {
-        const wrapper = document.getElementById('swot-wrapper');
-        if (wrapper) wrapper.innerHTML = '';
+        const w = document.getElementById('swot-wrapper');
+        if (w) w.innerHTML = '';
     }
 
     // ══════════════════════════════════════════════════════════════
     // JOURNEY MAP
     // ══════════════════════════════════════════════════════════════
     const journeyStages = [
-        { name: "AWARENESS",     icon: "👁️", defaultTouchpoint: "Social Media Ad",  defaultAction: "Educational Content" },
-        { name: "CONSIDERATION", icon: "🤔", defaultTouchpoint: "Comparison Site",  defaultAction: "Case Studies" },
-        { name: "PURCHASE",      icon: "💰", defaultTouchpoint: "Pricing Page",     defaultAction: "Risk Reversal" },
-        { name: "RETENTION",     icon: "❤️", defaultTouchpoint: "Onboarding Email", defaultAction: "Loyalty Program" },
-        { name: "ADVOCACY",      icon: "📢", defaultTouchpoint: "Referral Link",    defaultAction: "Referral Rewards" }
+        { name:"AWARENESS",     icon:"👁️", defaultTouchpoint:"Social Media Ad",  defaultAction:"Educational Content" },
+        { name:"CONSIDERATION", icon:"🤔", defaultTouchpoint:"Comparison Site",  defaultAction:"Case Studies" },
+        { name:"PURCHASE",      icon:"💰", defaultTouchpoint:"Pricing Page",     defaultAction:"Risk Reversal" },
+        { name:"RETENTION",     icon:"❤️", defaultTouchpoint:"Onboarding Email", defaultAction:"Loyalty Program" },
+        { name:"ADVOCACY",      icon:"📢", defaultTouchpoint:"Referral Link",    defaultAction:"Referral Rewards" }
     ];
 
     function getSatisfactionStatus(speed) {
-        if (speed === "fast")    return { status: "Delighted",    badge: "badge-delighted",    class: "delighted",    emotion: "Excited → Thrilled" };
-        if (speed === "delayed") return { status: "Satisfied",    badge: "badge-satisfied",    class: "satisfied",    emotion: "Accepting → Patient" };
-        return                          { status: "Dissatisfied", badge: "badge-dissatisfied", class: "dissatisfied", emotion: "Frustrated → Angry" };
+        if (speed==="fast")    return {status:"Delighted",   badge:"badge-delighted",   class:"delighted",   emotion:"Excited → Thrilled"};
+        if (speed==="delayed") return {status:"Satisfied",   badge:"badge-satisfied",   class:"satisfied",   emotion:"Accepting → Patient"};
+        return                        {status:"Dissatisfied",badge:"badge-dissatisfied",class:"dissatisfied",emotion:"Frustrated → Angry"};
     }
-
-    function getCovetousnessForStage(stage, speed) {
-        const p = {
-            AWARENESS:     { fast: "Induction — imply scarcity and early access", delayed: "Withdraw — create anticipation despite delay", none: "Failed induction — trust broken" },
-            CONSIDERATION: { fast: "Rivalries — show social proof and rankings",   delayed: "Withdraw — limited spots remain",             none: "No rivalry — customers leave" },
-            PURCHASE:      { fast: "Withdraw — 'Only 5 spots left'",               delayed: "Withdraw softened — extend offer",            none: "Abandonment — no withdrawal" },
-            RETENTION:     { fast: "Induction — exclusive tier access",            delayed: "Induction weakened — offer apology discount",  none: "Churn — customer leaves" },
-            ADVOCACY:      { fast: "Rivalries — referral leaderboard",             delayed: "Reduced rivalry — lower incentive",            none: "Negative advocacy — bad reviews" }
-        };
-        return p[stage]?.[speed] || "Strategic withdrawal applied";
+    function getCovetousnessForStage(stage,speed){
+        const p={AWARENESS:{fast:"Induction — imply scarcity and early access",delayed:"Withdraw — create anticipation despite delay",none:"Failed induction — trust broken"},CONSIDERATION:{fast:"Rivalries — show social proof and rankings",delayed:"Withdraw — limited spots remain",none:"No rivalry — customers leave"},PURCHASE:{fast:"Withdraw — 'Only 5 spots left'",delayed:"Withdraw softened — extend offer",none:"Abandonment — no withdrawal"},RETENTION:{fast:"Induction — exclusive tier access",delayed:"Induction weakened — offer apology discount",none:"Churn — customer leaves"},ADVOCACY:{fast:"Rivalries — referral leaderboard",delayed:"Reduced rivalry — lower incentive",none:"Negative advocacy — bad reviews"}};
+        return p[stage]?.[speed]||"Strategic withdrawal applied";
     }
-
-    function getMarketingImplication(stage, speed) {
-        const p = {
-            AWARENESS:     { fast: "accelerate ad spend, highlight speed",     delayed: "manage expectations, offer tracking", none: "damage control, public apology" },
-            CONSIDERATION: { fast: "emphasize quick delivery in comparisons",   delayed: "offer discounts for patience",         none: "redirect to competitor analysis" },
-            PURCHASE:      { fast: "upsell premium delivery options",           delayed: "offer partial refund or credit",       none: "process refunds, recover trust" },
-            RETENTION:     { fast: "increase loyalty rewards",                  delayed: "send apology gift",                   none: "retention campaign, win-back offer" },
-            ADVOCACY:      { fast: "boost referral rewards",                    delayed: "offer delayed referral bonus",         none: "crisis management, review response" }
-        };
-        return p[stage]?.[speed] || "adjust marketing strategy based on satisfaction level";
+    function getMarketingImplication(stage,speed){
+        const p={AWARENESS:{fast:"accelerate ad spend, highlight speed",delayed:"manage expectations, offer tracking",none:"damage control, public apology"},CONSIDERATION:{fast:"emphasize quick delivery in comparisons",delayed:"offer discounts for patience",none:"redirect to competitor analysis"},PURCHASE:{fast:"upsell premium delivery options",delayed:"offer partial refund or credit",none:"process refunds, recover trust"},RETENTION:{fast:"increase loyalty rewards",delayed:"send apology gift",none:"retention campaign, win-back offer"},ADVOCACY:{fast:"boost referral rewards",delayed:"offer delayed referral bonus",none:"crisis management, review response"}};
+        return p[stage]?.[speed]||"adjust marketing strategy based on satisfaction level";
     }
 
     function renderVisualJourneyMap() {
@@ -713,12 +647,11 @@
                     <div class="touchpoint">📍 ${stage.defaultTouchpoint}</div>
                     <div class="marketing-action">${stage.defaultAction}</div>
                     <div class="journey-detail">
-                        <strong>🔍 Covetousness:</strong> ${getCovetousnessForStage(stage.name, currentDeliverySpeed)}<br><br>
-                        <strong>📈 Marketing Implication:</strong><br>Based on ${s.status.toLowerCase()} status, ${getMarketingImplication(stage.name, currentDeliverySpeed)}
+                        <strong>🔍 Covetousness:</strong> ${getCovetousnessForStage(stage.name,currentDeliverySpeed)}<br><br>
+                        <strong>📈 Marketing Implication:</strong><br>Based on ${s.status.toLowerCase()} status, ${getMarketingImplication(stage.name,currentDeliverySpeed)}
                     </div>
                 </div>
-                ${!isLast ? '<div class="journey-arrow">➡</div>' : ''}
-            `;
+                ${!isLast ? '<div class="journey-arrow">➡</div>' : ''}`;
         });
         html += `</div>`;
         container.innerHTML = html;
@@ -735,15 +668,11 @@
     }
 
     function enhanceOutputWithVisualJourney(htmlContent) {
-        if (/\[CUSTOMER JOURNEY OUTPUT\]/i.test(htmlContent)) {
-            return htmlContent.replace(/\[CUSTOMER JOURNEY OUTPUT\][\s\S]*?(?=\[|$)/i, '[VISUAL_JOURNEY_MARKER]');
-        }
+        if (/\[CUSTOMER JOURNEY OUTPUT\]/i.test(htmlContent))
+            return htmlContent.replace(/\[CUSTOMER JOURNEY OUTPUT\][\s\S]*?(?=\[|$)/i,'[VISUAL_JOURNEY_MARKER]');
         return htmlContent;
     }
 
-    // ══════════════════════════════════════════════════════════════
-    // UTILITIES
-    // ══════════════════════════════════════════════════════════════
     function escapeHtml(text) {
         if (!text) return '';
         const d = document.createElement('div');
@@ -756,18 +685,12 @@
         const product  = document.getElementById("product").value  || "";
         const tmp = document.createElement('div');
         tmp.innerHTML = currentPlanHTML;
-        let plain   = tmp.textContent || "";
-        let summary = plain.substring(0, 300);
-        if (plain.length > 300) {
-            const lp = summary.lastIndexOf('.');
-            summary = lp > 200 ? summary.substring(0, lp + 1) : summary + "...";
-        }
+        let plain = tmp.textContent || "";
+        let summary = plain.substring(0,300);
+        if (plain.length > 300) { const lp=summary.lastIndexOf('.'); summary=lp>200?summary.substring(0,lp+1):summary+"..."; }
         try {
-            await fetch(`${API_BASE_URL}/feedback`, {
-                method: "POST", headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ vote, customer, product, plan_summary: summary })
-            });
-            alert(`Thank you for your ${vote === 'yes' ? 'positive' : 'honest'} feedback! 🙏`);
+            await fetch(`${API_BASE_URL}/feedback`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({vote,customer,product,plan_summary:summary})});
+            alert(`Thank you for your ${vote==='yes'?'positive':'honest'} feedback! 🙏`);
             loadTestimonials();
         } catch { alert(`Thank you for your feedback!`); }
     }
@@ -779,59 +702,44 @@
             const res  = await fetch(`${API_BASE_URL}/public-testimonials`);
             const data = await res.json();
             if (data.testimonials?.length > 0) {
-                div.innerHTML = data.testimonials.slice(0, 6).map(t => `
+                div.innerHTML = data.testimonials.slice(0,6).map(t=>`
                     <div class="testimonial-card">
                         <div class="testimonial-stars">★★★★★</div>
-                        <div class="testimonial-text">"${escapeHtml(t.testimonial || 'Great experience!')}"</div>
+                        <div class="testimonial-text">"${escapeHtml(t.testimonial||'Great experience!')}"</div>
                         <div class="testimonial-user">✓ Verified User</div>
                     </div>`).join('');
             } else {
                 div.innerHTML = '<div style="color:#64748b;text-align:center;padding:20px;">Be the first to share your experience! 🌟</div>';
             }
-        } catch {
-            div.innerHTML = '<div style="color:#94a3b8;text-align:center;padding:20px;">⭐ Testimonials coming soon</div>';
-        }
+        } catch { div.innerHTML='<div style="color:#94a3b8;text-align:center;padding:20px;">⭐ Testimonials coming soon</div>'; }
     }
 
     function renderMarkdownTables(text) {
         const lines = text.split('\n');
-        let result = [], inTable = false, headers = [], rows = [];
-        for (let i = 0; i < lines.length; i++) {
+        let result=[], inTable=false, headers=[], rows=[];
+        for (let i=0; i<lines.length; i++) {
             let line = lines[i];
-            if (line.includes('|') && i + 1 < lines.length && lines[i + 1].includes('---')) {
-                inTable = true;
-                headers = line.split('|').filter(c => c.trim()).map(c => c.trim());
-                i++; rows = [];
-                continue;
+            if (line.includes('|') && i+1<lines.length && lines[i+1].includes('---')) {
+                inTable=true; headers=line.split('|').filter(c=>c.trim()).map(c=>c.trim()); i++; rows=[]; continue;
             }
             if (inTable && line.includes('|')) {
-                const cells = line.split('|').filter(c => c.trim()).map(c => c.trim());
+                const cells=line.split('|').filter(c=>c.trim()).map(c=>c.trim());
                 if (cells.length) rows.push(cells);
             } else if (inTable && !line.includes('|')) {
-                let html = '<table><thead><tr>';
-                for (let h of headers) html += `<th>${escapeHtml(h)}</th>`;
-                html += '</tr></thead><tbody>';
-                for (let row of rows) {
-                    html += '<tr>';
-                    for (let cell of row) html += `<td style="padding:10px 12px;border:1px solid #334155;">${escapeHtml(cell)}</td>`;
-                    html += '</tr>';
-                }
-                html += '</tbody></table>';
-                result.push(html);
-                inTable = false; headers = []; rows = [];
-                result.push(line);
+                let html='<table><thead><tr>';
+                for (let h of headers) html+=`<th>${escapeHtml(h)}</th>`;
+                html+='</tr></thead><tbody>';
+                for (let row of rows) { html+='<tr>'; for (let cell of row) html+=`<td style="padding:10px 12px;border:1px solid #334155;">${escapeHtml(cell)}</td>`; html+='</tr>'; }
+                html+='</tbody></table>';
+                result.push(html); inTable=false; headers=[]; rows=[]; result.push(line);
             } else { result.push(line); }
         }
         if (inTable && headers.length) {
-            let html = '<table><thead><tr>';
-            for (let h of headers) html += `<th>${escapeHtml(h)}</th>`;
-            html += '</tr></thead><tbody>';
-            for (let row of rows) {
-                html += '<tr>';
-                for (let cell of row) html += `<td style="padding:10px 12px;border:1px solid #334155;">${escapeHtml(cell)}</td>`;
-                html += '</tr>';
-            }
-            html += '</tbody></table>';
+            let html='<table><thead><tr>';
+            for (let h of headers) html+=`<th>${escapeHtml(h)}</th>`;
+            html+='</tr></thead><tbody>';
+            for (let row of rows) { html+='<tr>'; for (let cell of row) html+=`<td style="padding:10px 12px;border:1px solid #334155;">${escapeHtml(cell)}</td>`; html+='</tr>'; }
+            html+='</tbody></table>';
             result.push(html);
         }
         return result.join('\n');
@@ -840,13 +748,13 @@
     function markdownToHtml(text) {
         if (!text) return '';
         let html = renderMarkdownTables(text);
-        html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
-        html = html.replace(/^## (.*$)/gm,  '<h2>$1</h2>');
-        html = html.replace(/^# (.*$)/gm,   '<h1>$1</h1>');
-        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        html = html.replace(/^- (.*$)/gm,   '<li>$1</li>');
-        html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
-        html = html.replace(/\n/g, '<br>');
+        html = html.replace(/^### (.*$)/gm,'<h3>$1</h3>');
+        html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+        html = html.replace(/^# (.*$)/gm,  '<h1>$1</h1>');
+        html = html.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+        html = html.replace(/^- (.*$)/gm,  '<li>$1</li>');
+        html = html.replace(/(<li>.*<\/li>)/s,'<ul>$1</ul>');
+        html = html.replace(/\n/g,'<br>');
         return html;
     }
 
@@ -854,11 +762,9 @@
         const s = document.getElementById("status");
         try {
             const res = await fetch(`${API_BASE_URL}/health`);
-            if (res.ok) { s.innerHTML = "🟢 API online"; s.className = "status status-working"; }
-            else        { s.innerHTML = "🔴 API error";  s.className = "status status-error"; }
-        } catch {
-            s.innerHTML = "🔴 Cannot reach API"; s.className = "status status-error";
-        }
+            if (res.ok) { s.innerHTML="🟢 API online"; s.className="status status-working"; }
+            else        { s.innerHTML="🔴 API error";  s.className="status status-error"; }
+        } catch { s.innerHTML="🔴 Cannot reach API"; s.className="status status-error"; }
     }
 
     // ══════════════════════════════════════════════════════════════
@@ -879,20 +785,16 @@
         resetKPIDashboard();
         resetSWOTMatrix();
 
-        downloadBtn.style.display = "none";
-        copyBtn.style.display     = "none";
-        genBtn.disabled           = true;
-        genBtn.textContent        = "⏳ Generating...";
-        outputDiv.innerHTML       = "<em>Processing... (30-60 seconds)</em>";
-        statusDiv.innerHTML       = "🟡 Generating plan...";
-        statusDiv.className       = "status status-testing";
-        loader.style.display      = "block";
+        downloadBtn.style.display="none"; copyBtn.style.display="none";
+        genBtn.disabled=true; genBtn.textContent="⏳ Generating...";
+        outputDiv.innerHTML="<em>Processing... (30-60 seconds)</em>";
+        statusDiv.innerHTML="🟡 Generating plan..."; statusDiv.className="status status-testing";
+        loader.style.display="block";
 
         try {
-            const response = await fetch(`${API_BASE_URL}/generate`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ customer_data: customer, product_description: product })
+            const response = await fetch(`${API_BASE_URL}/generate`,{
+                method:"POST", headers:{"Content-Type":"application/json"},
+                body:JSON.stringify({customer_data:customer,product_description:product})
             });
             const data = await response.json();
             if (data.error) throw new Error(data.error);
@@ -900,90 +802,73 @@
             const rawPlan  = data.plan || "";
             const sections = parseSections(rawPlan);
 
-            // Render KPI cards and SWOT matrix from parsed sections
+            // Render widgets
             renderKPIDashboard(sections);
             renderSWOTMatrix(sections);
 
-            // Render full markdown plan into output area
+            // Render full plan
             let htmlContent = markdownToHtml(rawPlan);
-            htmlContent     = enhanceOutputWithVisualJourney(htmlContent);
+            htmlContent = enhanceOutputWithVisualJourney(htmlContent);
             currentPlanHTML = htmlContent;
             outputDiv.innerHTML = htmlContent;
 
             renderVisualJourneyMap();
 
-            document.getElementById("timestamp").innerHTML = `Generated: ${new Date().toLocaleString()}`;
-            statusDiv.innerHTML       = "✅ Plan generated!";
-            statusDiv.className       = "status status-working";
-            downloadBtn.style.display = "inline-block";
-            copyBtn.style.display     = "inline-block";
+            document.getElementById("timestamp").innerHTML=`Generated: ${new Date().toLocaleString()}`;
+            statusDiv.innerHTML="✅ Plan generated!"; statusDiv.className="status status-working";
+            downloadBtn.style.display="inline-block"; copyBtn.style.display="inline-block";
 
         } catch (error) {
-            outputDiv.innerHTML = `<span style="color:#f87171;">Error: ${error.message}</span>`;
-            statusDiv.innerHTML = "🔴 Generation failed";
-            statusDiv.className = "status status-error";
+            outputDiv.innerHTML=`<span style="color:#f87171;">Error: ${error.message}</span>`;
+            statusDiv.innerHTML="🔴 Generation failed"; statusDiv.className="status status-error";
         } finally {
-            genBtn.disabled      = false;
-            genBtn.textContent   = "🚀 Generate Strategy";
-            loader.style.display = "none";
+            genBtn.disabled=false; genBtn.textContent="🚀 Generate Strategy";
+            loader.style.display="none";
         }
     }
 
     async function downloadPDF() {
         const content = document.getElementById("output").innerHTML;
-        if (!content || content.includes("Processing")) { alert("Generate a plan first"); return; }
-        const btn = document.getElementById("downloadBtn");
-        const orig = btn.innerText;
-        btn.innerText = "⏳ Generating PDF..."; btn.disabled = true;
+        if (!content||content.includes("Processing")) { alert("Generate a plan first"); return; }
+        const btn=document.getElementById("downloadBtn"), orig=btn.innerText;
+        btn.innerText="⏳ Generating PDF..."; btn.disabled=true;
         try {
-            const el = document.createElement('div');
-            el.style.cssText = "padding:40px;font-family:system-ui,sans-serif;background:#fff;color:#1e293b;";
-
-            const kpiRows = [
-                { label: "TAM", id: "kpi-tam-value", icon: "🌍" },
-                { label: "SAM", id: "kpi-sam-value", icon: "🎯" },
-                { label: "SOM", id: "kpi-som-value", icon: "🚀" },
-                { label: "Primary KPI", id: "kpi-primary-value", icon: "📈" },
-            ].filter(k => {
-                const e = document.getElementById(k.id);
-                return e && !['—','N/A'].includes(e.textContent);
-            }).map(k => {
-                const v = document.getElementById(k.id).textContent;
+            const el=document.createElement('div');
+            el.style.cssText="padding:40px;font-family:system-ui,sans-serif;background:#fff;color:#1e293b;";
+            const kpiRows=[
+                {label:"TAM",id:"kpi-tam-value",icon:"🌍"},{label:"SAM",id:"kpi-sam-value",icon:"🎯"},
+                {label:"SOM",id:"kpi-som-value",icon:"🚀"},{label:"Primary KPI",id:"kpi-primary-value",icon:"📈"}
+            ].filter(k=>{ const e=document.getElementById(k.id); return e&&!['—','N/A'].includes(e.textContent); })
+             .map(k=>{ const v=document.getElementById(k.id).textContent;
                 return `<div style="display:inline-block;margin:0 12px 12px 0;padding:12px 18px;background:#f1f5f9;border-radius:10px;border:1px solid #e2e8f0;">
                     <span>${k.icon}</span><strong style="color:#0f172a;margin-left:8px;">${k.label}:</strong>
-                    <span style="color:#0369a1;margin-left:6px;font-weight:700;">${v}</span></div>`;
-            }).join('');
-
-            const swotHTML = document.getElementById('swot-wrapper')?.innerHTML || '';
-
-            el.innerHTML = `
+                    <span style="color:#0369a1;margin-left:6px;font-weight:700;">${v}</span></div>`; }).join('');
+            const swotHTML=document.getElementById('swot-wrapper')?.innerHTML||'';
+            el.innerHTML=`
                 <div style="text-align:center;margin-bottom:40px;">
                     <h1 style="color:#1e293b;">Strategic Marketing Report</h1>
                     <p>Generated by Bisrat's Strategic Marketing System</p>
                     <hr style="width:60px;margin:16px auto;">
                 </div>
-                ${kpiRows ? `<div style="margin-bottom:24px;">${kpiRows}</div>` : ''}
-                ${swotHTML ? `<div style="margin-bottom:24px;">${swotHTML}</div>` : ''}
+                ${kpiRows?`<div style="margin-bottom:24px;">${kpiRows}</div>`:''}
+                ${swotHTML?`<div style="margin-bottom:24px;">${swotHTML}</div>`:''}
                 <div style="font-size:11pt;">${content}</div>
                 <div style="text-align:center;margin-top:40px;font-size:9pt;color:#64748b;">
                     <p>Generated: ${new Date().toLocaleString()}</p>
                     <p>PDF/A-1b compliant | ISO 19005-1</p>
                 </div>`;
-
-            const opt = { margin:[0.5,0.5,0.5,0.5], filename:`marketing_plan.pdf`, html2canvas:{scale:2,backgroundColor:'#fff'}, jsPDF:{unit:'in',format:'a4',orientation:'portrait'} };
+            const opt={margin:[0.5,0.5,0.5,0.5],filename:`marketing_plan.pdf`,html2canvas:{scale:2,backgroundColor:'#fff'},jsPDF:{unit:'in',format:'a4',orientation:'portrait'}};
             await html2pdf().set(opt).from(el).save();
         } catch { alert("PDF error"); }
-        finally { btn.innerText = orig; btn.disabled = false; }
+        finally { btn.innerText=orig; btn.disabled=false; }
     }
 
     async function copyToClipboard() {
-        const text = document.getElementById("output").innerText;
-        if (!text || text.includes("Processing")) { alert("Generate a plan first"); return; }
+        const text=document.getElementById("output").innerText;
+        if (!text||text.includes("Processing")) { alert("Generate a plan first"); return; }
         await navigator.clipboard.writeText(text);
-        const btn = document.getElementById("copyBtn");
-        const orig = btn.innerText;
-        btn.innerText = "✅ Copied!";
-        setTimeout(() => btn.innerText = orig, 2000);
+        const btn=document.getElementById("copyBtn"), orig=btn.innerText;
+        btn.innerText="✅ Copied!"; setTimeout(()=>btn.innerText=orig,2000);
     }
 
     testAPI();
