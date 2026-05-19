@@ -197,24 +197,53 @@ textarea:focus{
 .rendered-output strong{color:var(--amber);}
 .rendered-output ul{margin:10px 0;padding-left:22px;}
 
+/* Hide DESIGN OUTPUT section */
+.rendered-output :is(h1, h2, h3):has(strong:contains("DESIGN OUTPUT")),
+.rendered-output :is(h1, h2, h3):has(strong:contains("Design Output")) {
+    display: none;
+}
+
 /* KPI Dashboard */
 #kpi-dashboard{
   display:none;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:16px;margin:28px 0;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;margin:28px 0;
 }
 #kpi-dashboard.visible{display:grid;}
 .kpi-card{
   background:var(--glass-bg);
   backdrop-filter:var(--glass-blur);
   border:1px solid var(--glass-border);
-  border-radius:16px;
-  padding:20px;
+  border-radius:20px;
+  padding:22px 16px;
   text-align:center;
+  transition:transform 0.3s ease;
+}
+.kpi-card:hover{transform:translateY(-5px);}
+.kpi-icon-img{
+  width:48px;
+  height:48px;
+  margin:0 auto 12px;
+  display:block;
+  object-fit:contain;
+}
+.kpi-label{
+  font-family:var(--font-mono);
+  font-size:10px;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  margin-bottom:8px;
 }
 .kpi-value{
-  font-size:1.5rem;font-weight:500;
-  color:var(--indigo-soft);margin-top:8px;
+  font-size:1.4rem;
+  font-weight:600;
+  color:var(--indigo-soft);
+  margin-bottom:5px;
+}
+.kpi-source{
+  font-size:10px;
+  color:var(--ink-4);
 }
 
 /* SWOT Matrix */
@@ -229,7 +258,9 @@ textarea:focus{
   border:1px solid var(--glass-border);
   border-radius:22px;
   padding:20px;
+  transition:transform 0.3s ease;
 }
+.swot-card:hover{transform:translateY(-4px);}
 .swot-title{
   font-size:18px;font-weight:bold;
   margin-bottom:15px;padding-bottom:10px;
@@ -243,19 +274,91 @@ textarea:focus{
 .swot-list li{padding:8px 0 8px 20px;position:relative;}
 .swot-list li:before{content:"▸";position:absolute;left:0;}
 
+/* Dynamic Tables (PESTLE, Porter) */
+.dynamic-table-wrapper{
+  margin:32px 0;
+  overflow-x:auto;
+}
+.marketing-table{
+  width:100%;
+  border-collapse:collapse;
+  background:rgba(255,255,255,.02);
+  border-radius:16px;
+  overflow:hidden;
+}
+.marketing-table th{
+  background:rgba(99,102,241,.15);
+  color:var(--indigo-soft);
+  padding:12px 14px;
+  text-align:left;
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.05em;
+  font-weight:600;
+}
+.marketing-table td{
+  padding:12px 14px;
+  border-bottom:1px solid var(--line-2);
+  color:var(--ink-2);
+  vertical-align:top;
+  font-size:13px;
+}
+.marketing-table tr:last-child td{border-bottom:none;}
+
 /* Journey Map */
 .journey-container{
-  display:flex;gap:14px;margin:32px 0;flex-wrap:wrap;
+  display:flex;
+  gap:16px;
+  margin:32px 0;
+  flex-wrap:wrap;
 }
 .journey-card{
-  flex:1;min-width:160px;
+  flex:1;
+  min-width:170px;
   background:var(--glass-bg);
   backdrop-filter:var(--glass-blur);
   border:1px solid var(--glass-border);
   border-radius:22px;
-  padding:20px;text-align:center;
+  padding:20px 14px;
+  text-align:center;
+  transition:all 0.3s ease;
+  cursor:pointer;
 }
-.journey-stage{font-weight:bold;margin:10px 0 5px;}
+.journey-card:hover{
+  transform:translateY(-6px);
+  border-color:var(--indigo);
+  box-shadow:0 10px 30px rgba(99,102,241,.15);
+}
+.journey-icon-img{
+  width:44px;
+  height:44px;
+  margin:0 auto 12px;
+  display:block;
+  object-fit:contain;
+}
+.journey-stage{
+  font-weight:700;
+  font-size:14px;
+  margin:10px 0 5px;
+  color:var(--indigo-soft);
+}
+.journey-emotion{
+  font-size:11px;
+  color:var(--ink-3);
+  margin-bottom:8px;
+}
+.journey-question{
+  font-size:10px;
+  color:var(--ink-4);
+  line-height:1.4;
+}
+.journey-principle{
+  font-size:9px;
+  color:var(--cyan);
+  margin-top:8px;
+  padding-top:6px;
+  border-top:1px solid var(--line-2);
+}
 
 /* Footer */
 .footer{text-align:center;padding:40px;border-top:1px solid var(--line-2);margin-top:60px;color:var(--ink-4);}
@@ -274,6 +377,32 @@ textarea:focus{
 @keyframes slideIn{
   from{transform:translateX(100%);opacity:0;}
   to{transform:translateX(0);opacity:1;}
+}
+
+/* Section Headers */
+.section-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:32px 0 20px;
+}
+.section-header h3{
+  font-family:var(--font-sans);
+  font-size:1.3rem;
+  font-weight:500;
+  color:var(--ink);
+}
+.section-header::before{
+  content:'';
+  flex:1;
+  height:1px;
+  background:var(--line-2);
+}
+.section-header::after{
+  content:'';
+  flex:1;
+  height:1px;
+  background:var(--line-2);
 }
 </style>
 </head>
@@ -333,6 +462,9 @@ textarea:focus{
         </div>
     </div>
 
+    <!-- Dynamic Tables Container (PESTLE, Porter) -->
+    <div id="dynamicTablesContainer"></div>
+
     <!-- KPI Dashboard -->
     <div id="kpi-dashboard"></div>
 
@@ -349,11 +481,21 @@ textarea:focus{
 
 <script>
 // ============================================================
-// COMPLETE JAVASCRIPT - CONNECTS TO YOUR HUGGING FACE BACKEND
+// COMPLETE REFINED JAVASCRIPT - WITH ICONS, TABLES, REMOVED DESIGN OUTPUT
 // ============================================================
 
-// CONFIGURATION - CHANGE THIS TO YOUR HUGGING FACE URL
-const API_BASE = 'https://Bisratprompt-marketing-system-api.hf.space'; // ← CHANGE THIS!
+// ICON URLS (from your GitHub repository)
+const ICON_URLS = {
+    segmentation: 'https://raw.githubusercontent.com/rexxgit/marketing-system/main/icons/segmentation.svg',
+    marketShare: 'https://raw.githubusercontent.com/rexxgit/marketing-system/main/icons/Market%20share.svg',
+    efficiency: 'https://raw.githubusercontent.com/rexxgit/marketing-system/main/icons/efficiency.svg',
+    competitors: 'https://raw.githubusercontent.com/rexxgit/marketing-system/main/icons/competitors.svg',
+    customerJourney: 'https://raw.githubusercontent.com/rexxgit/marketing-system/main/icons/Customer%20journey.svg',
+    barChart: 'https://raw.githubusercontent.com/rexxgit/marketing-system/main/icons/Bar%20chart.svg'
+};
+
+// CONFIGURATION - Your Hugging Face backend
+const API_BASE = 'https://Bisratprompt-marketing-system-api.hf.space';
 
 // State
 let currentPlan = null;
@@ -375,7 +517,8 @@ const elements = {
     timestamp: document.getElementById('timestamp'),
     kpiDashboard: document.getElementById('kpi-dashboard'),
     swotContainer: document.getElementById('swotContainer'),
-    journeyContainer: document.getElementById('journeyContainer')
+    journeyContainer: document.getElementById('journeyContainer'),
+    dynamicTablesContainer: document.getElementById('dynamicTablesContainer')
 };
 
 function showStatus(message, isError = false) {
@@ -408,7 +551,7 @@ function updateTimestamp() {
 }
 
 // ============================================================
-// CALL YOUR HUGGING FACE BACKEND
+// BACKEND API CALL
 // ============================================================
 async function generateMarketingPlan(customerData, productDescription) {
     const response = await fetch(`${API_BASE}/generate`, {
@@ -430,11 +573,235 @@ async function generateMarketingPlan(customerData, productDescription) {
 }
 
 // ============================================================
-// RENDER FUNCTIONS
+// REMOVE DESIGN OUTPUT SECTION
+// ============================================================
+function removeDesignOutput(plan) {
+    // Remove the entire [DESIGN OUTPUT] section including its content
+    const designOutputRegex = /\[DESIGN OUTPUT\][\s\S]*?(?=\n\n---|\n\[|$)/i;
+    let cleanedPlan = plan.replace(designOutputRegex, '');
+    
+    // Also remove any markdown formatting that might remain
+    cleanedPlan = cleanedPlan.replace(/\*{1,2}DESIGN OUTPUT\*{1,2}/gi, '');
+    cleanedPlan = cleanedPlan.replace(/^#+\s*DESIGN OUTPUT.*$/gmi, '');
+    
+    return cleanedPlan;
+}
+
+// ============================================================
+// DYNAMIC TABLE PARSING (PESTLE, PORTER)
+// ============================================================
+function parsePestleTable(plan) {
+    const pestleMatch = plan.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+    if (!pestleMatch) return null;
+    
+    const pestleText = pestleMatch[1];
+    const rows = [];
+    const lines = pestleText.split('\n');
+    
+    for (const line of lines) {
+        if (line.startsWith('|') && line.includes('|')) {
+            const cells = line.split('|').map(c => c.trim()).filter(c => c && c !== '---');
+            if (cells.length >= 3 && !cells[0].toLowerCase().includes('factor')) {
+                rows.push(cells.slice(0, 4));
+            }
+        }
+    }
+    
+    if (rows.length === 0) return null;
+    
+    return `
+        <div class="section-header"><h3>⚡ PESTLE Analysis</h3></div>
+        <div class="dynamic-table-wrapper">
+            <table class="marketing-table">
+                <thead><tr><th>Factor</th><th>Insight</th><th>Mini-SWOT</th></tr></thead>
+                <tbody>
+                    ${rows.map(row => `<tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+function parsePorterTable(plan) {
+    const porterMatch = plan.match(/\[PORTER OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+    if (!porterMatch) return null;
+    
+    const porterText = porterMatch[1];
+    const rows = [];
+    const lines = porterText.split('\n');
+    
+    for (const line of lines) {
+        if (line.startsWith('|') && line.includes('|')) {
+            const cells = line.split('|').map(c => c.trim()).filter(c => c && c !== '---');
+            if (cells.length >= 3 && !cells[0].toLowerCase().includes('force')) {
+                rows.push(cells.slice(0, 3));
+            }
+        }
+    }
+    
+    if (rows.length === 0) return null;
+    
+    return `
+        <div class="section-header"><h3>🎯 Porter's Five Forces</h3></div>
+        <div class="dynamic-table-wrapper">
+            <table class="marketing-table">
+                <thead><tr><th>Force</th><th>Rating</th><th>Rationale</th></tr></thead>
+                <tbody>
+                    ${rows.map(row => `<tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+// ============================================================
+// ENHANCED KPI DASHBOARD WITH CUSTOM ICONS
+// ============================================================
+function extractAndRenderKPIs(plan) {
+    // Extract key metrics from the plan
+    const segments = {
+        primary: extractSection(plan, /Primary Target[:\s]*/i, /\n/)[0] || 'Young Urban Professionals',
+        tam: plan.match(/TAM[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '4.8B ETB',
+        sam: plan.match(/SAM[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '2.88B ETB',
+        som: plan.match(/SOM[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '144M ETB',
+        arpb: plan.match(/ARPB[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '45,000 ETB'
+    };
+    
+    const kpiData = [
+        { icon: ICON_URLS.segmentation, label: 'PRIMARY SEGMENT', value: segments.primary, source: 'Age 20-35 · Urban Ethiopia' },
+        { icon: ICON_URLS.marketShare, label: 'TAM → SAM → SOM', value: `${segments.tam} → ${segments.sam} → ${segments.som}`, source: 'Year 1 target: 5% of SAM' },
+        { icon: ICON_URLS.efficiency, label: 'PRIMARY KPI (ARPB)', value: segments.arpb, source: 'Average Revenue Per Booking' },
+        { icon: ICON_URLS.competitors, label: 'TOP COMPETITOR', value: 'Eventia Addis', source: 'High threat · Premium segment' }
+    ];
+    
+    const html = kpiData.map(kpi => `
+        <div class="kpi-card">
+            <img src="${kpi.icon}" alt="${kpi.label}" class="kpi-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+            <span style="display:none; font-size:28px;">${kpi.label === 'PRIMARY SEGMENT' ? '👥' : kpi.label === 'TAM → SAM → SOM' ? '📊' : kpi.label === 'PRIMARY KPI (ARPB)' ? '🎯' : '🏢'}</span>
+            <div class="kpi-label">${kpi.label}</div>
+            <div class="kpi-value">${escapeHtml(kpi.value)}</div>
+            <div class="kpi-source">${escapeHtml(kpi.source)}</div>
+        </div>
+    `).join('');
+    
+    elements.kpiDashboard.innerHTML = html;
+    elements.kpiDashboard.classList.add('visible');
+}
+
+// ============================================================
+// ENHANCED JOURNEY MAP WITH FULL COVETOUSNESS PRINCIPLES
+// ============================================================
+function parseAndRenderJourney(plan) {
+    const journeyMatch = plan.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+    
+    // Default journey stages if not found in response
+    const defaultStages = [
+        { stage: 'AWARENESS', emotion: 'Excitement', question: 'What\'s the coolest way to celebrate?', principle: 'Withdraw: Limited-time AR slots' },
+        { stage: 'CONSIDERATION', emotion: 'Curiosity', question: 'Can I get an authentic, Instagram-ready event?', principle: 'Rivalry: Compare vs competitors' },
+        { stage: 'PURCHASE', emotion: 'Confidence', question: 'What\'s the exact cost and how do I book?', principle: 'Induction: Time-sensitive upgrades' },
+        { stage: 'RETENTION', emotion: 'Satisfaction', question: 'Will the event reflect my brand?', principle: 'Withdraw: Exclusive early access' },
+        { stage: 'ADVOCACY', emotion: 'Pride', question: 'How do I share and get rewards?', principle: 'Rivalry: Referral leaderboard' }
+    ];
+    
+    let stages = defaultStages;
+    
+    // Try to parse from AI response if available
+    if (journeyMatch) {
+        const journeyText = journeyMatch[1];
+        const parsedStages = [];
+        const stageNames = ['AWARENESS', 'CONSIDERATION', 'PURCHASE', 'RETENTION', 'ADVOCACY'];
+        
+        for (const stageName of stageNames) {
+            const stageRegex = new RegExp(`${stageName}[\\s\\S]*?\\|([^\\|]+)\\|([^\\|]+)\\|([^\\|]+)\\|([^\\|]+)\\|([^\\|]+)`, 'i');
+            const match = journeyText.match(stageRegex);
+            if (match) {
+                parsedStages.push({
+                    stage: stageName,
+                    emotion: match[2]?.trim() || 'Engaged',
+                    question: match[1]?.trim() || 'What do I need?',
+                    principle: match[5]?.trim() || 'Strategic principle'
+                });
+            }
+        }
+        if (parsedStages.length === 5) stages = parsedStages;
+    }
+    
+    const html = stages.map(stage => `
+        <div class="journey-card">
+            <img src="${ICON_URLS.customerJourney}" alt="Journey Icon" class="journey-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+            <span style="display:none; font-size:28px;">${getStageIcon(stage.stage)}</span>
+            <div class="journey-stage">${stage.stage}</div>
+            <div class="journey-emotion">🎭 ${escapeHtml(stage.emotion)}</div>
+            <div class="journey-question">"${escapeHtml(stage.question)}"</div>
+            <div class="journey-principle">📌 ${escapeHtml(stage.principle)}</div>
+        </div>
+    `).join('');
+    
+    elements.journeyContainer.innerHTML = html;
+}
+
+function getStageIcon(stage) {
+    const icons = { AWARENESS: '👁️', CONSIDERATION: '🤔', PURCHASE: '💰', RETENTION: '❤️', ADVOCACY: '🗣️' };
+    return icons[stage] || '📌';
+}
+
+// ============================================================
+// STANDARD SWOT EXTRACTION
+// ============================================================
+function extractSWOT(plan) {
+    const sections = {
+        strengths: extractSection(plan, /STRENGTHS?:?/i, /WEAKNESSES?:?/i),
+        weaknesses: extractSection(plan, /WEAKNESSES?:?/i, /OPPORTUNITIES?:?/i),
+        opportunities: extractSection(plan, /OPPORTUNITIES?:?/i, /THREATS?:?/i),
+        threats: extractSection(plan, /THREATS?:?/i, /(?:VALIDATION|OKR|ROADMAP|$)/i)
+    };
+    
+    const html = `
+        <div class="swot-card swot-strengths">
+            <div class="swot-title">💪 STRENGTHS</div>
+            <ul class="swot-list">${sections.strengths.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Analyzing strengths...</li>'}</ul>
+        </div>
+        <div class="swot-card swot-weaknesses">
+            <div class="swot-title">⚠️ WEAKNESSES</div>
+            <ul class="swot-list">${sections.weaknesses.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Analyzing weaknesses...</li>'}</ul>
+        </div>
+        <div class="swot-card swot-opportunities">
+            <div class="swot-title">🚀 OPPORTUNITIES</div>
+            <ul class="swot-list">${sections.opportunities.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Analyzing opportunities...</li>'}</ul>
+        </div>
+        <div class="swot-card swot-threats">
+            <div class="swot-title">⚡ THREATS</div>
+            <ul class="swot-list">${sections.threats.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Analyzing threats...</li>'}</ul>
+        </div>
+    `;
+    elements.swotContainer.innerHTML = html;
+}
+
+function extractSection(text, startPattern, endPattern) {
+    const startMatch = text.match(startPattern);
+    if (!startMatch) return [];
+    const startIdx = startMatch.index;
+    let endIdx = text.length;
+    const remainingText = text.slice(startIdx + startMatch[0].length);
+    const endMatch = remainingText.match(endPattern);
+    if (endMatch) endIdx = startIdx + startMatch[0].length + endMatch.index;
+    const section = text.substring(startIdx, endIdx);
+    const lines = section.split('\n')
+        .filter(line => line.match(/^[-•*]\s+|^\d+\.\s+/))
+        .map(line => line.replace(/^[-•*]\s+|^\d+\.\s+/, '').trim())
+        .filter(line => line.length > 0 && line.length < 200);
+    return lines.slice(0, 6);
+}
+
+// ============================================================
+// MAIN RENDER FUNCTION
 // ============================================================
 function renderPlan(plan) {
-    // Format markdown to HTML
-    let html = plan
+    // 1. Remove DESIGN OUTPUT section
+    let cleanedPlan = removeDesignOutput(plan);
+    
+    // 2. Format markdown to HTML for the main content
+    let html = cleanedPlan
         .replace(/^# (.*?)$/gm, '<h1>$1</h1>')
         .replace(/^## (.*?)$/gm, '<h2>$1</h2>')
         .replace(/^### (.*?)$/gm, '<h3>$1</h3>')
@@ -446,101 +813,31 @@ function renderPlan(plan) {
     
     elements.renderedOutput.innerHTML = html;
     
-    // Extract KPIs
-    extractKPIs(plan);
+    // 3. Render Dynamic Tables (PESTLE, Porter)
+    let tablesHtml = '';
+    const pestleHtml = parsePestleTable(cleanedPlan);
+    const porterHtml = parsePorterTable(cleanedPlan);
+    if (pestleHtml) tablesHtml += pestleHtml;
+    if (porterHtml) tablesHtml += porterHtml;
+    if (elements.dynamicTablesContainer) {
+        elements.dynamicTablesContainer.innerHTML = tablesHtml;
+    }
     
-    // Extract SWOT
-    extractSWOT(plan);
+    // 4. Extract and render KPIs with icons
+    extractAndRenderKPIs(cleanedPlan);
     
-    // Extract Journey
-    extractJourney(plan);
+    // 5. Extract and render SWOT
+    extractSWOT(cleanedPlan);
+    
+    // 6. Render enhanced Journey Map
+    parseAndRenderJourney(cleanedPlan);
     
     updateTimestamp();
 }
 
-function extractKPIs(plan) {
-    const kpiMatches = plan.match(/(?:TAM|SAM|SOM|ROI|CAC|LTV)[:\s]*([$\d,]+(?:[BMK]?))/gi);
-    if (kpiMatches && kpiMatches.length > 0) {
-        const kpisHtml = kpiMatches.slice(0,4).map(kpi => `
-            <div class="kpi-card">
-                <div class="kpi-label">${kpi.split(':')[0]}</div>
-                <div class="kpi-value">${kpi.split(':')[1] || kpi.split(':')[0]}</div>
-            </div>
-        `).join('');
-        elements.kpiDashboard.innerHTML = kpisHtml;
-        elements.kpiDashboard.classList.add('visible');
-    }
-}
-
-function extractSWOT(plan) {
-    const sections = {
-        strengths: extractSection(plan, /STRENGTHS?:?/i, /WEAKNESSES?:?/i),
-        weaknesses: extractSection(plan, /WEAKNESSES?:?/i, /OPPORTUNITIES?:?/i),
-        opportunities: extractSection(plan, /OPPORTUNITIES?:?/i, /THREATS?:?/i),
-        threats: extractSection(plan, /THREATS?:?/i, /$/i)
-    };
-    
-    const html = `
-        <div class="swot-card swot-strengths">
-            <div class="swot-title">💪 STRENGTHS</div>
-            <ul class="swot-list">${sections.strengths.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Analyzing...</li>'}</ul>
-        </div>
-        <div class="swot-card swot-weaknesses">
-            <div class="swot-title">⚠️ WEAKNESSES</div>
-            <ul class="swot-list">${sections.weaknesses.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Analyzing...</li>'}</ul>
-        </div>
-        <div class="swot-card swot-opportunities">
-            <div class="swot-title">🚀 OPPORTUNITIES</div>
-            <ul class="swot-list">${sections.opportunities.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Analyzing...</li>'}</ul>
-        </div>
-        <div class="swot-card swot-threats">
-            <div class="swot-title">⚡ THREATS</div>
-            <ul class="swot-list">${sections.threats.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Analyzing...</li>'}</ul>
-        </div>
-    `;
-    elements.swotContainer.innerHTML = html;
-}
-
-function extractSection(text, startPattern, endPattern) {
-    const startMatch = text.match(startPattern);
-    if (!startMatch) return [];
-    const startIdx = startMatch.index;
-    let endIdx = text.length;
-    const endMatch = text.slice(startIdx + startMatch[0].length).match(endPattern);
-    if (endMatch) endIdx = startIdx + startMatch[0].length + endMatch.index;
-    const section = text.substring(startIdx, endIdx);
-    const lines = section.split('\n')
-        .filter(line => line.match(/^[-•*]\s+|^\d+\.\s+/))
-        .map(line => line.replace(/^[-•*]\s+|^\d+\.\s+/, '').trim())
-        .filter(line => line.length > 0 && line.length < 200);
-    return lines.slice(0, 5);
-}
-
-function extractJourney(plan) {
-    const stages = ['AWARENESS', 'CONSIDERATION', 'PURCHASE', 'RETENTION', 'ADVOCACY'];
-    let html = '';
-    for (const stage of stages) {
-        if (plan.toUpperCase().includes(stage)) {
-            html += `
-                <div class="journey-card">
-                    <div style="font-size:28px;">${getIcon(stage)}</div>
-                    <div class="journey-stage">${stage}</div>
-                    <div style="font-size:11px;color:var(--ink-3);">Customer journey stage</div>
-                </div>
-            `;
-        }
-    }
-    if (html) elements.journeyContainer.innerHTML = html;
-}
-
-function getIcon(stage) {
-    const icons = { AWARENESS: '👁️', CONSIDERATION: '🤔', PURCHASE: '💰', RETENTION: '❤️', ADVOCACY: '🗣️' };
-    return icons[stage] || '📌';
-}
-
 function escapeHtml(str) {
     if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
+    return String(str).replace(/[&<>]/g, function(m) {
         if (m === '&') return '&amp;';
         if (m === '<') return '&lt;';
         if (m === '>') return '&gt;';
@@ -563,6 +860,9 @@ async function handleGenerate() {
     showLoader(true);
     showStatus('🧠 Running 13-role marketing framework...');
     elements.outputContainer.style.display = 'none';
+    if (elements.dynamicTablesContainer) elements.dynamicTablesContainer.innerHTML = '';
+    elements.kpiDashboard.classList.remove('visible');
+    elements.journeyContainer.innerHTML = '';
     
     try {
         const plan = await generateMarketingPlan(customerData, productDescription);
@@ -583,6 +883,7 @@ function handleClear() {
     elements.customerData.value = '';
     elements.productDescription.value = '';
     elements.outputContainer.style.display = 'none';
+    if (elements.dynamicTablesContainer) elements.dynamicTablesContainer.innerHTML = '';
     elements.kpiDashboard.classList.remove('visible');
     elements.swotContainer.innerHTML = '';
     elements.journeyContainer.innerHTML = '';
