@@ -6,7 +6,7 @@
 <meta name="description" content="Generate complete strategic marketing plans in 60 seconds.">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-/* ===== COMPLETE CSS (SELF-CONTAINED - NO EXTERNAL DEPS) ===== */
+/* ===== COMPLETE CSS ===== */
 :root{
   --bg:#0a0e1a;
   --ink:#ffffff;
@@ -205,11 +205,10 @@ textarea:focus{
 
 /* KPI Dashboard */
 #kpi-dashboard{
-  display:none;
+  display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:20px;margin:28px 0;
 }
-#kpi-dashboard.visible{display:grid;}
 .kpi-card{
   background:var(--glass-bg);
   backdrop-filter:var(--glass-blur);
@@ -236,10 +235,11 @@ textarea:focus{
   margin-bottom:8px;
 }
 .kpi-value{
-  font-size:1.4rem;
-  font-weight:600;
+  font-size:1.2rem;
+  font-weight:500;
   color:var(--indigo-soft);
   margin-bottom:5px;
+  line-height:1.3;
 }
 .kpi-source{
   font-size:10px;
@@ -465,13 +465,13 @@ textarea:focus{
     <!-- Dynamic Tables Container (PESTLE, Porter) -->
     <div id="dynamicTablesContainer"></div>
 
-    <!-- KPI Dashboard -->
+    <!-- KPI Dashboard - VISIBLE ON LOAD WITH PLACEHOLDERS -->
     <div id="kpi-dashboard"></div>
 
-    <!-- SWOT Matrix -->
+    <!-- SWOT Matrix - VISIBLE ON LOAD WITH PLACEHOLDERS -->
     <div id="swotContainer" class="swot-matrix"></div>
 
-    <!-- Journey Map -->
+    <!-- Journey Map - VISIBLE ON LOAD WITH PLACEHOLDERS -->
     <div id="journeyContainer" class="journey-container"></div>
 </div>
 
@@ -481,7 +481,7 @@ textarea:focus{
 
 <script>
 // ============================================================
-// COMPLETE REFINED JAVASCRIPT - WITH ICONS, TABLES, REMOVED DESIGN OUTPUT
+// COMPLETE REFINED JAVASCRIPT - WITH IMMEDIATE ICON DISPLAY
 // ============================================================
 
 // ICON URLS (from your GitHub repository)
@@ -551,6 +551,89 @@ function updateTimestamp() {
 }
 
 // ============================================================
+// INITIAL LOAD - DISPLAY ICONS WITH SMART PLACEHOLDER TEXT
+// ============================================================
+function initializeDashboard() {
+    // Initial KPI Dashboard with placeholder text
+    const initialKpis = [
+        { 
+            icon: ICON_URLS.segmentation, 
+            label: 'SEGMENTATION', 
+            value: 'Analyzing your audience...',
+            source: 'Segmenting your audience for precision targeting'
+        },
+        { 
+            icon: ICON_URLS.marketShare, 
+            label: 'MARKET SIZE', 
+            value: 'Calculating TAM/SAM/SOM...',
+            source: 'Understanding your total addressable market'
+        },
+        { 
+            icon: ICON_URLS.efficiency, 
+            label: 'KEY METRICS', 
+            value: 'Identifying KPIs...',
+            source: 'Tracking what matters for growth'
+        },
+        { 
+            icon: ICON_URLS.competitors, 
+            label: 'COMPETITION', 
+            value: 'Analyzing rivals...',
+            source: 'Finding your competitive advantage'
+        }
+    ];
+    
+    elements.kpiDashboard.innerHTML = initialKpis.map(kpi => `
+        <div class="kpi-card">
+            <img src="${kpi.icon}" alt="${kpi.label}" class="kpi-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+            <span style="display:none; font-size:28px;">${kpi.label === 'SEGMENTATION' ? '👥' : kpi.label === 'MARKET SIZE' ? '📊' : kpi.label === 'KEY METRICS' ? '🎯' : '🏢'}</span>
+            <div class="kpi-label">${kpi.label}</div>
+            <div class="kpi-value">${kpi.value}</div>
+            <div class="kpi-source">${kpi.source}</div>
+        </div>
+    `).join('');
+    
+    // Initial SWOT with placeholder content
+    elements.swotContainer.innerHTML = `
+        <div class="swot-card swot-strengths">
+            <div class="swot-title">💪 STRENGTHS</div>
+            <ul class="swot-list"><li>Identifying internal advantages...</li></ul>
+        </div>
+        <div class="swot-card swot-weaknesses">
+            <div class="swot-title">⚠️ WEAKNESSES</div>
+            <ul class="swot-list"><li>Analyzing areas for improvement...</li></ul>
+        </div>
+        <div class="swot-card swot-opportunities">
+            <div class="swot-title">🚀 OPPORTUNITIES</div>
+            <ul class="swot-list"><li>Discovering market potential...</li></ul>
+        </div>
+        <div class="swot-card swot-threats">
+            <div class="swot-title">⚡ THREATS</div>
+            <ul class="swot-list"><li>Assessing external risks...</li></ul>
+        </div>
+    `;
+    
+    // Initial Journey Map with placeholder content
+    const initialStages = [
+        { stage: 'AWARENESS', emotion: 'Curiosity', question: 'Understanding your customer\'s first touch', principle: 'First impression matters' },
+        { stage: 'CONSIDERATION', emotion: 'Interest', question: 'Evaluating options and solutions', principle: 'Build trust through value' },
+        { stage: 'PURCHASE', emotion: 'Confidence', question: 'Making the decision to buy', principle: 'Remove friction points' },
+        { stage: 'RETENTION', emotion: 'Satisfaction', question: 'Keeping customers engaged', principle: 'Deliver ongoing value' },
+        { stage: 'ADVOCACY', emotion: 'Loyalty', question: 'Turning customers into promoters', principle: 'Create referral loops' }
+    ];
+    
+    elements.journeyContainer.innerHTML = initialStages.map(stage => `
+        <div class="journey-card">
+            <img src="${ICON_URLS.customerJourney}" alt="Journey Icon" class="journey-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+            <span style="display:none; font-size:28px;">${getStageIcon(stage.stage)}</span>
+            <div class="journey-stage">${stage.stage}</div>
+            <div class="journey-emotion">🎭 ${stage.emotion}</div>
+            <div class="journey-question">"${stage.question}"</div>
+            <div class="journey-principle">📌 ${stage.principle}</div>
+        </div>
+    `).join('');
+}
+
+// ============================================================
 // BACKEND API CALL
 // ============================================================
 async function generateMarketingPlan(customerData, productDescription) {
@@ -576,14 +659,10 @@ async function generateMarketingPlan(customerData, productDescription) {
 // REMOVE DESIGN OUTPUT SECTION
 // ============================================================
 function removeDesignOutput(plan) {
-    // Remove the entire [DESIGN OUTPUT] section including its content
     const designOutputRegex = /\[DESIGN OUTPUT\][\s\S]*?(?=\n\n---|\n\[|$)/i;
     let cleanedPlan = plan.replace(designOutputRegex, '');
-    
-    // Also remove any markdown formatting that might remain
     cleanedPlan = cleanedPlan.replace(/\*{1,2}DESIGN OUTPUT\*{1,2}/gi, '');
     cleanedPlan = cleanedPlan.replace(/^#+\s*DESIGN OUTPUT.*$/gmi, '');
-    
     return cleanedPlan;
 }
 
@@ -655,94 +734,74 @@ function parsePorterTable(plan) {
 }
 
 // ============================================================
-// ENHANCED KPI DASHBOARD WITH CUSTOM ICONS
+// ENHANCED KPI DASHBOARD - UPDATES FROM AI RESPONSE
 // ============================================================
 function extractAndRenderKPIs(plan) {
     // Extract key metrics from the plan
-    const segments = {
-        primary: extractSection(plan, /Primary Target[:\s]*/i, /\n/)[0] || 'Young Urban Professionals',
-        tam: plan.match(/TAM[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '4.8B ETB',
-        sam: plan.match(/SAM[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '2.88B ETB',
-        som: plan.match(/SOM[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '144M ETB',
-        arpb: plan.match(/ARPB[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '45,000 ETB'
-    };
+    const primarySegment = extractPrimarySegment(plan);
+    const tamSamSom = extractTAMSAMSOM(plan);
+    const primaryKpi = extractPrimaryKPI(plan);
+    const topCompetitor = extractTopCompetitor(plan);
     
     const kpiData = [
-        { icon: ICON_URLS.segmentation, label: 'PRIMARY SEGMENT', value: segments.primary, source: 'Age 20-35 · Urban Ethiopia' },
-        { icon: ICON_URLS.marketShare, label: 'TAM → SAM → SOM', value: `${segments.tam} → ${segments.sam} → ${segments.som}`, source: 'Year 1 target: 5% of SAM' },
-        { icon: ICON_URLS.efficiency, label: 'PRIMARY KPI (ARPB)', value: segments.arpb, source: 'Average Revenue Per Booking' },
-        { icon: ICON_URLS.competitors, label: 'TOP COMPETITOR', value: 'Eventia Addis', source: 'High threat · Premium segment' }
+        { 
+            icon: ICON_URLS.segmentation, 
+            label: 'SEGMENTATION', 
+            value: primarySegment || 'Analyzing your audience...',
+            source: 'Primary target segment identified'
+        },
+        { 
+            icon: ICON_URLS.marketShare, 
+            label: 'MARKET SIZE', 
+            value: tamSamSom || 'Calculating market potential...',
+            source: 'TAM → SAM → SOM analysis'
+        },
+        { 
+            icon: ICON_URLS.efficiency, 
+            label: 'PRIMARY KPI', 
+            value: primaryKpi || 'Identifying key metrics...',
+            source: 'Decision-impact metric'
+        },
+        { 
+            icon: ICON_URLS.competitors, 
+            label: 'TOP COMPETITOR', 
+            value: topCompetitor || 'Analyzing competition...',
+            source: 'Competitive threat assessment'
+        }
     ];
     
-    const html = kpiData.map(kpi => `
+    elements.kpiDashboard.innerHTML = kpiData.map(kpi => `
         <div class="kpi-card">
             <img src="${kpi.icon}" alt="${kpi.label}" class="kpi-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
-            <span style="display:none; font-size:28px;">${kpi.label === 'PRIMARY SEGMENT' ? '👥' : kpi.label === 'TAM → SAM → SOM' ? '📊' : kpi.label === 'PRIMARY KPI (ARPB)' ? '🎯' : '🏢'}</span>
+            <span style="display:none; font-size:28px;">${kpi.label === 'SEGMENTATION' ? '👥' : kpi.label === 'MARKET SIZE' ? '📊' : kpi.label === 'PRIMARY KPI' ? '🎯' : '🏢'}</span>
             <div class="kpi-label">${kpi.label}</div>
             <div class="kpi-value">${escapeHtml(kpi.value)}</div>
             <div class="kpi-source">${escapeHtml(kpi.source)}</div>
         </div>
     `).join('');
-    
-    elements.kpiDashboard.innerHTML = html;
-    elements.kpiDashboard.classList.add('visible');
 }
 
-// ============================================================
-// ENHANCED JOURNEY MAP WITH FULL COVETOUSNESS PRINCIPLES
-// ============================================================
-function parseAndRenderJourney(plan) {
-    const journeyMatch = plan.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-    
-    // Default journey stages if not found in response
-    const defaultStages = [
-        { stage: 'AWARENESS', emotion: 'Excitement', question: 'What\'s the coolest way to celebrate?', principle: 'Withdraw: Limited-time AR slots' },
-        { stage: 'CONSIDERATION', emotion: 'Curiosity', question: 'Can I get an authentic, Instagram-ready event?', principle: 'Rivalry: Compare vs competitors' },
-        { stage: 'PURCHASE', emotion: 'Confidence', question: 'What\'s the exact cost and how do I book?', principle: 'Induction: Time-sensitive upgrades' },
-        { stage: 'RETENTION', emotion: 'Satisfaction', question: 'Will the event reflect my brand?', principle: 'Withdraw: Exclusive early access' },
-        { stage: 'ADVOCACY', emotion: 'Pride', question: 'How do I share and get rewards?', principle: 'Rivalry: Referral leaderboard' }
-    ];
-    
-    let stages = defaultStages;
-    
-    // Try to parse from AI response if available
-    if (journeyMatch) {
-        const journeyText = journeyMatch[1];
-        const parsedStages = [];
-        const stageNames = ['AWARENESS', 'CONSIDERATION', 'PURCHASE', 'RETENTION', 'ADVOCACY'];
-        
-        for (const stageName of stageNames) {
-            const stageRegex = new RegExp(`${stageName}[\\s\\S]*?\\|([^\\|]+)\\|([^\\|]+)\\|([^\\|]+)\\|([^\\|]+)\\|([^\\|]+)`, 'i');
-            const match = journeyText.match(stageRegex);
-            if (match) {
-                parsedStages.push({
-                    stage: stageName,
-                    emotion: match[2]?.trim() || 'Engaged',
-                    question: match[1]?.trim() || 'What do I need?',
-                    principle: match[5]?.trim() || 'Strategic principle'
-                });
-            }
-        }
-        if (parsedStages.length === 5) stages = parsedStages;
-    }
-    
-    const html = stages.map(stage => `
-        <div class="journey-card">
-            <img src="${ICON_URLS.customerJourney}" alt="Journey Icon" class="journey-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
-            <span style="display:none; font-size:28px;">${getStageIcon(stage.stage)}</span>
-            <div class="journey-stage">${stage.stage}</div>
-            <div class="journey-emotion">🎭 ${escapeHtml(stage.emotion)}</div>
-            <div class="journey-question">"${escapeHtml(stage.question)}"</div>
-            <div class="journey-principle">📌 ${escapeHtml(stage.principle)}</div>
-        </div>
-    `).join('');
-    
-    elements.journeyContainer.innerHTML = html;
+function extractPrimarySegment(plan) {
+    const match = plan.match(/Primary Target[:\s]*([^\n]+)/i);
+    return match ? match[1].substring(0, 40) : null;
 }
 
-function getStageIcon(stage) {
-    const icons = { AWARENESS: '👁️', CONSIDERATION: '🤔', PURCHASE: '💰', RETENTION: '❤️', ADVOCACY: '🗣️' };
-    return icons[stage] || '📌';
+function extractTAMSAMSOM(plan) {
+    const tam = plan.match(/TAM[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '';
+    const sam = plan.match(/SAM[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '';
+    const som = plan.match(/SOM[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '';
+    if (tam || sam || som) return `${tam} → ${sam} → ${som}`;
+    return null;
+}
+
+function extractPrimaryKPI(plan) {
+    const match = plan.match(/Primary KPI[:\s]*([^\n]+)/i);
+    return match ? match[1].substring(0, 35) : null;
+}
+
+function extractTopCompetitor(plan) {
+    const match = plan.match(/Direct\s*\|\s*🔴\s*\|\s*([^\|]+)/i);
+    return match ? match[1].trim() : null;
 }
 
 // ============================================================
@@ -759,19 +818,19 @@ function extractSWOT(plan) {
     const html = `
         <div class="swot-card swot-strengths">
             <div class="swot-title">💪 STRENGTHS</div>
-            <ul class="swot-list">${sections.strengths.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Analyzing strengths...</li>'}</ul>
+            <ul class="swot-list">${sections.strengths.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Identifying internal advantages...</li>'}</ul>
         </div>
         <div class="swot-card swot-weaknesses">
             <div class="swot-title">⚠️ WEAKNESSES</div>
-            <ul class="swot-list">${sections.weaknesses.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Analyzing weaknesses...</li>'}</ul>
+            <ul class="swot-list">${sections.weaknesses.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Analyzing areas for improvement...</li>'}</ul>
         </div>
         <div class="swot-card swot-opportunities">
             <div class="swot-title">🚀 OPPORTUNITIES</div>
-            <ul class="swot-list">${sections.opportunities.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Analyzing opportunities...</li>'}</ul>
+            <ul class="swot-list">${sections.opportunities.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Discovering market potential...</li>'}</ul>
         </div>
         <div class="swot-card swot-threats">
             <div class="swot-title">⚡ THREATS</div>
-            <ul class="swot-list">${sections.threats.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Analyzing threats...</li>'}</ul>
+            <ul class="swot-list">${sections.threats.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Assessing external risks...</li>'}</ul>
         </div>
     `;
     elements.swotContainer.innerHTML = html;
@@ -791,6 +850,90 @@ function extractSection(text, startPattern, endPattern) {
         .map(line => line.replace(/^[-•*]\s+|^\d+\.\s+/, '').trim())
         .filter(line => line.length > 0 && line.length < 200);
     return lines.slice(0, 6);
+}
+
+// ============================================================
+// ENHANCED JOURNEY MAP - UPDATES FROM AI RESPONSE
+// ============================================================
+function parseAndRenderJourney(plan) {
+    const journeyMatch = plan.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+    
+    // Try to parse from AI response
+    if (journeyMatch) {
+        const journeyText = journeyMatch[1];
+        const stages = [];
+        const stageNames = ['AWARENESS', 'CONSIDERATION', 'PURCHASE', 'RETENTION', 'ADVOCACY'];
+        
+        for (const stageName of stageNames) {
+            const stageRegex = new RegExp(`${stageName}[\\s\\S]*?\\|([^\\|]+)\\|([^\\|]+)\\|([^\\|]+)\\|([^\\|]+)\\|([^\\|]+)`, 'i');
+            const match = journeyText.match(stageRegex);
+            if (match) {
+                stages.push({
+                    stage: stageName,
+                    question: match[1]?.trim() || 'What do I need?',
+                    emotion: match[2]?.trim() || 'Engaged',
+                    principle: match[5]?.trim() || 'Strategic principle'
+                });
+            } else {
+                stages.push(getDefaultStage(stageName));
+            }
+        }
+        
+        if (stages.length === 5) {
+            elements.journeyContainer.innerHTML = stages.map(stage => `
+                <div class="journey-card">
+                    <img src="${ICON_URLS.customerJourney}" alt="Journey Icon" class="journey-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                    <span style="display:none; font-size:28px;">${getStageIcon(stage.stage)}</span>
+                    <div class="journey-stage">${stage.stage}</div>
+                    <div class="journey-emotion">🎭 ${escapeHtml(stage.emotion)}</div>
+                    <div class="journey-question">"${escapeHtml(stage.question)}"</div>
+                    <div class="journey-principle">📌 ${escapeHtml(stage.principle)}</div>
+                </div>
+            `).join('');
+            return;
+        }
+    }
+    
+    // Fallback to default if no journey found
+    const defaultStages = [
+        { stage: 'AWARENESS', emotion: 'Curiosity', question: 'What\'s the coolest way to celebrate?', principle: 'Withdraw: Limited-time offers' },
+        { stage: 'CONSIDERATION', emotion: 'Interest', question: 'Can I get an authentic, quality event?', principle: 'Rivalry: Compare vs competitors' },
+        { stage: 'PURCHASE', emotion: 'Confidence', question: 'What\'s the cost and how do I book?', principle: 'Induction: Time-sensitive upgrades' },
+        { stage: 'RETENTION', emotion: 'Satisfaction', question: 'Will the event reflect my brand?', principle: 'Withdraw: Exclusive access' },
+        { stage: 'ADVOCACY', emotion: 'Pride', question: 'How do I share and get rewards?', principle: 'Rivalry: Referral leaderboard' }
+    ];
+    
+    elements.journeyContainer.innerHTML = defaultStages.map(stage => `
+        <div class="journey-card">
+            <img src="${ICON_URLS.customerJourney}" alt="Journey Icon" class="journey-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+            <span style="display:none; font-size:28px;">${getStageIcon(stage.stage)}</span>
+            <div class="journey-stage">${stage.stage}</div>
+            <div class="journey-emotion">🎭 ${stage.emotion}</div>
+            <div class="journey-question">"${stage.question}"</div>
+            <div class="journey-principle">📌 ${stage.principle}</div>
+        </div>
+    `).join('');
+}
+
+function getDefaultStage(stageName) {
+    const defaults = {
+        'AWARENESS': { question: 'What solutions exist?', emotion: 'Curiosity', principle: 'First touch matters' },
+        'CONSIDERATION': { question: 'Which option is best?', emotion: 'Evaluation', principle: 'Build trust' },
+        'PURCHASE': { question: 'Is this worth it?', emotion: 'Decision', principle: 'Remove friction' },
+        'RETENTION': { question: 'Am I getting value?', emotion: 'Satisfaction', principle: 'Deliver consistently' },
+        'ADVOCACY': { question: 'Should I tell others?', emotion: 'Loyalty', principle: 'Reward referrals' }
+    };
+    return {
+        stage: stageName,
+        question: defaults[stageName]?.question || 'What do I need?',
+        emotion: defaults[stageName]?.emotion || 'Engaged',
+        principle: defaults[stageName]?.principle || 'Strategic principle'
+    };
+}
+
+function getStageIcon(stage) {
+    const icons = { AWARENESS: '👁️', CONSIDERATION: '🤔', PURCHASE: '💰', RETENTION: '❤️', ADVOCACY: '🗣️' };
+    return icons[stage] || '📌';
 }
 
 // ============================================================
@@ -823,13 +966,13 @@ function renderPlan(plan) {
         elements.dynamicTablesContainer.innerHTML = tablesHtml;
     }
     
-    // 4. Extract and render KPIs with icons
+    // 4. Extract and render KPIs with icons (updates placeholders)
     extractAndRenderKPIs(cleanedPlan);
     
-    // 5. Extract and render SWOT
+    // 5. Extract and render SWOT (updates placeholders)
     extractSWOT(cleanedPlan);
     
-    // 6. Render enhanced Journey Map
+    // 6. Render enhanced Journey Map (updates placeholders)
     parseAndRenderJourney(cleanedPlan);
     
     updateTimestamp();
@@ -861,8 +1004,6 @@ async function handleGenerate() {
     showStatus('🧠 Running 13-role marketing framework...');
     elements.outputContainer.style.display = 'none';
     if (elements.dynamicTablesContainer) elements.dynamicTablesContainer.innerHTML = '';
-    elements.kpiDashboard.classList.remove('visible');
-    elements.journeyContainer.innerHTML = '';
     
     try {
         const plan = await generateMarketingPlan(customerData, productDescription);
@@ -884,10 +1025,15 @@ function handleClear() {
     elements.productDescription.value = '';
     elements.outputContainer.style.display = 'none';
     if (elements.dynamicTablesContainer) elements.dynamicTablesContainer.innerHTML = '';
-    elements.kpiDashboard.classList.remove('visible');
-    elements.swotContainer.innerHTML = '';
-    elements.journeyContainer.innerHTML = '';
+    // Reset to initial placeholder state
+    initializeDashboard();
     currentPlan = null;
+    showStatus('Cleared. Ready for new strategy.', false);
+    setTimeout(() => {
+        if (elements.statusBar.style.display === 'flex') {
+            elements.statusBar.style.display = 'none';
+        }
+    }, 2000);
 }
 
 function handleCopy() {
@@ -922,8 +1068,11 @@ async function handleFeedback(vote) {
 }
 
 // ============================================================
-// INITIALIZATION
+// INITIALIZATION - ICONS POP UP IMMEDIATELY
 // ============================================================
+initializeDashboard();
+
+// Event Listeners
 elements.generateBtn.addEventListener('click', handleGenerate);
 elements.clearBtn.addEventListener('click', handleClear);
 elements.copyBtn.addEventListener('click', handleCopy);
