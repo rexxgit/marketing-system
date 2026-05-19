@@ -5,54 +5,294 @@
 <meta charset="UTF-8">
 <meta name="description" content="Generate complete strategic marketing plans in 60 seconds.">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-/* ===== YOUR EXISTING CSS (keep all your beautiful styles) ===== */
-/* ... [PASTE YOUR ENTIRE CSS HERE - it's all perfect] ... */
-
-/* Additional integration styles */
-.toast-notification {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--r-md);
-    padding: 12px 20px;
-    z-index: 10000;
-    animation: slideInRight 0.3s ease;
+/* ===== COMPLETE CSS (SELF-CONTAINED - NO EXTERNAL DEPS) ===== */
+:root{
+  --bg:#0a0e1a;
+  --ink:#ffffff;
+  --ink-2:rgba(255,255,255,.7);
+  --ink-3:rgba(255,255,255,.5);
+  --ink-4:rgba(255,255,255,.3);
+  --line:rgba(255,255,255,.1);
+  --line-2:rgba(255,255,255,.06);
+  --glass-bg:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  --glass-border:rgba(255,255,255,.1);
+  --glass-blur:blur(40px);
+  --indigo:#6366f1;
+  --indigo-soft:#a5b4fc;
+  --pink:#ec4899;
+  --pink-soft:#f9a8d4;
+  --cyan:#22d3ee;
+  --green:#4ade80;
+  --amber:#fbbf24;
+  --grad-a:linear-gradient(135deg,#fff 0%,#a5b4fc 50%,#ec4899 100%);
+  --grad-b:linear-gradient(135deg,#6366f1,#ec4899);
+  --font-sans:'Space Grotesk',system-ui,-apple-system,sans-serif;
+  --font-body:'DM Sans',system-ui,-apple-system,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
 }
 
-@keyframes slideInRight {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:var(--font-body);
+  background:var(--bg);
+  color:var(--ink);
+  min-height:100vh;
+}
+
+/* Ambient Background */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(circle at 15% 20%,rgba(99,102,241,.18) 0%,transparent 50%),
+             radial-gradient(circle at 85% 80%,rgba(236,72,153,.12) 0%,transparent 50%);
+  z-index:0;pointer-events:none;
+}
+
+.page-wrap{
+  position:relative;z-index:1;
+  max-width:1200px;margin:0 auto;
+  padding:32px 24px 80px;
+}
+
+/* Glass Card */
+.glass{
+  background:var(--glass-bg);
+  backdrop-filter:var(--glass-blur);
+  border:1px solid var(--glass-border);
+  border-radius:22px;
+}
+
+/* Hero */
+.hero{
+  text-align:center;
+  padding:56px 32px 48px;
+  margin-bottom:32px;
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(236,72,153,.08));
+  border-radius:30px;
+}
+.hero h1{
+  font-family:var(--font-sans);
+  font-size:clamp(36px,5.5vw,70px);
+  font-weight:500;
+  background:var(--grad-a);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  margin-bottom:16px;
+}
+.hero .tagline{
+  font-size:clamp(15px,1.4vw,18px);
+  color:var(--ink-2);
+  max-width:640px;margin:0 auto;
+}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:9px;
+  background:rgba(99,102,241,.12);
+  border:1px solid rgba(99,102,241,.3);
+  padding:7px 16px;border-radius:100px;
+  font-size:12px;
+  color:var(--indigo-soft);
+  margin-bottom:24px;
+}
+.hero-chips{
+  display:flex;justify-content:center;
+  gap:8px;flex-wrap:wrap;margin-top:28px;
+}
+.hero-chip{
+  font-family:var(--font-mono);
+  font-size:10px;
+  color:var(--ink-3);
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--line-2);
+  padding:5px 12px;border-radius:100px;
+}
+
+/* Input Area */
+.input-area{padding:28px;margin-bottom:28px;}
+.field-label{
+  font-family:var(--font-mono);font-size:10px;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:10px;display:block;
+}
+textarea{
+  width:100%;
+  background:rgba(255,255,255,.03);
+  color:var(--ink);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:14px 18px;
+  font-family:var(--font-mono);font-size:13px;
+  resize:vertical;
+  margin-bottom:18px;
+}
+textarea:focus{
+  outline:none;
+  border-color:rgba(99,102,241,.6);
+}
+
+/* Buttons */
+.btn-group{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px;}
+.btn{
+  padding:12px 24px;border-radius:100px;
+  font-size:14px;font-weight:600;
+  cursor:pointer;transition:all .28s;
+  border:none;
+}
+.btn-primary{
+  background:#fff;color:var(--bg);
+}
+.btn-primary:hover{
+  background:linear-gradient(135deg,var(--indigo-soft),#fff);
+  transform:translateY(-2px);
+}
+.btn-indigo{
+  background:rgba(99,102,241,.18);
+  border:1px solid rgba(99,102,241,.4);
+  color:var(--indigo-soft);
+}
+.btn-green{
+  background:rgba(74,222,128,.15);
+  border:1px solid rgba(74,222,128,.35);
+  color:var(--green);
+}
+.loader{
+  width:36px;height:36px;
+  border:3px solid var(--line);
+  border-top:3px solid var(--indigo-soft);
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+  margin:20px auto;display:none;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Status Bar */
+.status-bar{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 18px;border-radius:16px;
+  font-size:13px;
+  margin-bottom:20px;display:none;
+}
+.status-bar.working {background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.25);color:var(--green);}
+.status-bar.error   {background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);color:#f87171;}
+
+/* Output */
+.output-container{padding:28px;margin-top:28px;display:none;}
+.output-header{
+  display:flex;justify-content:space-between;
+  margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--line-2);
+}
+.rendered-output{
+  background:rgba(255,255,255,.02);
+  border:1px solid var(--line-2);
+  border-radius:16px;
+  padding:28px;
+  line-height:1.65;
+  font-size:14px;
+  color:var(--ink-2);
+}
+.rendered-output h1,.rendered-output h2{color:var(--ink);margin-top:1rem;}
+.rendered-output h2{color:var(--indigo-soft);}
+.rendered-output strong{color:var(--amber);}
+.rendered-output ul{margin:10px 0;padding-left:22px;}
+
+/* KPI Dashboard */
+#kpi-dashboard{
+  display:none;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:16px;margin:28px 0;
+}
+#kpi-dashboard.visible{display:grid;}
+.kpi-card{
+  background:var(--glass-bg);
+  backdrop-filter:var(--glass-blur);
+  border:1px solid var(--glass-border);
+  border-radius:16px;
+  padding:20px;
+  text-align:center;
+}
+.kpi-value{
+  font-size:1.5rem;font-weight:500;
+  color:var(--indigo-soft);margin-top:8px;
+}
+
+/* SWOT Matrix */
+.swot-matrix{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:18px;margin:32px 0;
+}
+@media(max-width:768px){.swot-matrix{grid-template-columns:1fr;}}
+.swot-card{
+  background:var(--glass-bg);
+  backdrop-filter:var(--glass-blur);
+  border:1px solid var(--glass-border);
+  border-radius:22px;
+  padding:20px;
+}
+.swot-title{
+  font-size:18px;font-weight:bold;
+  margin-bottom:15px;padding-bottom:10px;
+  border-bottom:2px solid;
+}
+.swot-strengths .swot-title{color:#4ade80;border-color:#4ade80;}
+.swot-weaknesses .swot-title{color:#f87171;border-color:#f87171;}
+.swot-opportunities .swot-title{color:#22d3ee;border-color:#22d3ee;}
+.swot-threats .swot-title{color:#fbbf24;border-color:#fbbf24;}
+.swot-list{list-style:none;}
+.swot-list li{padding:8px 0 8px 20px;position:relative;}
+.swot-list li:before{content:"▸";position:absolute;left:0;}
+
+/* Journey Map */
+.journey-container{
+  display:flex;gap:14px;margin:32px 0;flex-wrap:wrap;
+}
+.journey-card{
+  flex:1;min-width:160px;
+  background:var(--glass-bg);
+  backdrop-filter:var(--glass-blur);
+  border:1px solid var(--glass-border);
+  border-radius:22px;
+  padding:20px;text-align:center;
+}
+.journey-stage{font-weight:bold;margin:10px 0 5px;}
+
+/* Footer */
+.footer{text-align:center;padding:40px;border-top:1px solid var(--line-2);margin-top:60px;color:var(--ink-4);}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:20px;right:20px;
+  background:rgba(10,14,26,.95);
+  backdrop-filter:blur(10px);
+  border:1px solid var(--glass-border);
+  border-radius:12px;
+  padding:12px 20px;
+  z-index:10000;
+  animation:slideIn .3s ease;
+}
+@keyframes slideIn{
+  from{transform:translateX(100%);opacity:0;}
+  to{transform:translateX(0);opacity:1;}
 }
 </style>
 </head>
 <body>
 
-<!-- ===== YOUR EXISTING HTML STRUCTURE ===== -->
-<!-- Keep all your beautiful HTML - just add the integration script below -->
-
 <div class="page-wrap">
-    <!-- Hero Section -->
+    <!-- Hero -->
     <div class="hero">
-        <div class="hero-inner">
-            <div class="eyebrow">
-                <span class="dt"></span>
-                AI-POWERED MARKETING INTELLIGENCE
-            </div>
-            <h1>Strategic Marketing<br>System</h1>
-            <p class="tagline">Generate complete strategic marketing plans in 60 seconds powered by GPT-OSS-120B</p>
-            <div class="hero-chips">
-                <span class="hero-chip">⚡ PESTLE Analysis</span>
-                <span class="hero-chip">🎯 Porter's Five Forces</span>
-                <span class="hero-chip">📊 SWOT + Micro-SWOT</span>
-                <span class="hero-chip">🎨 Design Generator</span>
-            </div>
+        <div class="eyebrow">
+            <span>✨</span>
+            AI-POWERED MARKETING INTELLIGENCE
+        </div>
+        <h1>Strategic Marketing<br>System</h1>
+        <p class="tagline">Generate complete strategic marketing plans in 60 seconds powered by GPT-OSS-120B</p>
+        <div class="hero-chips">
+            <span class="hero-chip">⚡ PESTLE Analysis</span>
+            <span class="hero-chip">🎯 Porter's Five Forces</span>
+            <span class="hero-chip">📊 SWOT + Micro-SWOT</span>
+            <span class="hero-chip">🎨 Design Generator</span>
         </div>
     </div>
 
@@ -61,7 +301,7 @@
         <div class="field-label">📊 CUSTOMER DATA / TARGET AUDIENCE</div>
         <textarea id="customerData" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies ($50M-$500M revenue) looking for AI analytics solutions..."></textarea>
         
-        <div class="field-label" style="margin-top: 20px;">📦 PRODUCT DESCRIPTION / SERVICE</div>
+        <div class="field-label" style="margin-top:20px;">📦 PRODUCT DESCRIPTION / SERVICE</div>
         <textarea id="productDescription" rows="5" placeholder="Example: An AI-powered marketing analytics platform that provides real-time ROI predictions and channel optimization recommendations..."></textarea>
         
         <div class="btn-group">
@@ -72,60 +312,51 @@
     </div>
 
     <!-- Status Bar -->
-    <div id="statusBar" class="status-bar working" style="display: none;">
+    <div id="statusBar" class="status-bar">
         <span>⚡</span>
-        <span id="statusMessage">System ready</span>
+        <span id="statusMessage"></span>
     </div>
 
-    <!-- Output Container -->
-    <div id="outputContainer" class="output-container glass" style="display: none;">
+    <!-- Output -->
+    <div id="outputContainer" class="output-container glass">
         <div class="output-header">
-            <h3><span class="hd"></span> Generated Marketing Strategy</h3>
+            <h3 style="display:flex;align-items:center;gap:10px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--indigo);"></span> Generated Marketing Strategy</h3>
             <div id="timestamp"></div>
         </div>
         <div id="renderedOutput" class="rendered-output">
-            <!-- Dynamic content will appear here -->
+            <p style="color:var(--ink-4);text-align:center;">✨ Your strategic marketing plan will appear here</p>
         </div>
-        <div class="btn-group" style="margin-top: 24px; justify-content: flex-end;">
+        <div class="btn-group" style="margin-top:24px;justify-content:flex-end;">
             <button id="copyBtn" class="btn btn-green">📋 Copy to Clipboard</button>
-            <button id="feedbackYesBtn" class="btn btn-primary" style="background: #4ade80;">👍 Helpful</button>
-            <button id="feedbackNoBtn" class="btn btn-indigo" style="background: rgba(248,113,113,.15);">👎 Not Helpful</button>
+            <button id="feedbackYesBtn" class="btn btn-primary" style="background:#4ade80;color:#000;">👍 Helpful</button>
+            <button id="feedbackNoBtn" class="btn btn-indigo">👎 Not Helpful</button>
         </div>
     </div>
 
     <!-- KPI Dashboard -->
-    <div id="kpiDashboardLabel" class="kpi-dashboard-label"></div>
-    <div id="kpiDashboard" class="kpi-dashboard"></div>
+    <div id="kpi-dashboard"></div>
 
     <!-- SWOT Matrix -->
-    <div class="swot-section-label">📊 SWOT ANALYSIS</div>
     <div id="swotContainer" class="swot-matrix"></div>
 
-    <!-- Customer Journey -->
-    <div class="swot-section-label">🚀 CUSTOMER JOURNEY MAP</div>
+    <!-- Journey Map -->
     <div id="journeyContainer" class="journey-container"></div>
 </div>
 
-<!-- Footer -->
-<div class="footer" style="text-align: center; padding: 40px; border-top: 1px solid var(--line-2); margin-top: 60px;">
-    <p style="color: var(--ink-4);">© 2024 Strategic Marketing System · Powered by OpenRouter GPT-OSS-120B · 13-Role Marketing Framework</p>
+<div class="footer">
+    <p>© 2024 Strategic Marketing System · Powered by OpenRouter GPT-OSS-120B · 13-Role Marketing Framework</p>
 </div>
 
 <script>
 // ============================================================
-// COMPLETE INTEGRATION SCRIPT - CONNECTS TO YOUR PYTHON BACKEND
+// COMPLETE JAVASCRIPT - CONNECTS TO YOUR HUGGING FACE BACKEND
 // ============================================================
 
-// Configuration
-const API_BASE = window.location.origin; // Uses same origin as Flask server
-// For local development: const API_BASE = 'http://localhost:7860';
+// CONFIGURATION - CHANGE THIS TO YOUR HUGGING FACE URL
+const API_BASE = 'https://Bisratprompt-marketing-system-api.hf.space'; // ← CHANGE THIS!
 
-// State management
-const state = {
-    currentPlan: null,
-    sessionId: 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-    generationHistory: []
-};
+// State
+let currentPlan = null;
 
 // DOM Elements
 const elements = {
@@ -142,22 +373,15 @@ const elements = {
     statusBar: document.getElementById('statusBar'),
     statusMessage: document.getElementById('statusMessage'),
     timestamp: document.getElementById('timestamp'),
-    kpiDashboard: document.getElementById('kpiDashboard'),
+    kpiDashboard: document.getElementById('kpi-dashboard'),
     swotContainer: document.getElementById('swotContainer'),
-    journeyContainer: document.getElementById('journeyContainer'),
-    kpiDashboardLabel: document.getElementById('kpiDashboardLabel')
+    journeyContainer: document.getElementById('journeyContainer')
 };
 
-// ============================================================
-// UTILITY FUNCTIONS
-// ============================================================
-
-function updateStatus(message, type = 'working') {
+function showStatus(message, isError = false) {
     elements.statusMessage.textContent = message;
     elements.statusBar.style.display = 'flex';
-    elements.statusBar.className = `status-bar ${type}`;
-    
-    // Auto-hide after 3 seconds for success messages
+    elements.statusBar.className = `status-bar ${isError ? 'error' : 'working'}`;
     setTimeout(() => {
         if (elements.statusBar.style.display === 'flex') {
             elements.statusBar.style.display = 'none';
@@ -170,29 +394,26 @@ function showLoader(show) {
     elements.generateBtn.disabled = show;
 }
 
+function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
 function updateTimestamp() {
     const now = new Date();
     elements.timestamp.textContent = `GENERATED: ${now.toLocaleTimeString()} · ${now.toLocaleDateString()}`;
 }
 
-function showToast(message, type = 'success') {
-    const toast = document.createElement('div');
-    toast.className = 'toast-notification';
-    toast.innerHTML = `${type === 'success' ? '✅' : '❌'} ${message}`;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
-}
-
 // ============================================================
-// BACKEND API CALL (YOUR PYTHON APP.PY)
+// CALL YOUR HUGGING FACE BACKEND
 // ============================================================
-
 async function generateMarketingPlan(customerData, productDescription) {
     const response = await fetch(`${API_BASE}/generate`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             customer_data: customerData,
             product_description: productDescription
@@ -209,220 +430,111 @@ async function generateMarketingPlan(customerData, productDescription) {
 }
 
 // ============================================================
-// PARSE AI RESPONSE INTO UI COMPONENTS
+// RENDER FUNCTIONS
 // ============================================================
-
-function parseAndRenderPlan(rawPlan) {
-    // Display the full plan first
-    let formattedHtml = formatMarkdownToHtml(rawPlan);
-    elements.renderedOutput.innerHTML = formattedHtml;
-    
-    // Extract and render KPIs if present
-    extractAndRenderKPIs(rawPlan);
-    
-    // Extract and render SWOT if present
-    extractAndRenderSWOT(rawPlan);
-    
-    // Extract and render Customer Journey if present
-    extractAndRenderJourney(rawPlan);
-    
-    updateTimestamp();
-}
-
-function formatMarkdownToHtml(text) {
-    // Simple markdown to HTML conversion
-    let html = text
-        .replace(/## (.*?)$/gm, '<h2>$1</h2>')
-        .replace(/### (.*?)$/gm, '<h3>$1</h3>')
+function renderPlan(plan) {
+    // Format markdown to HTML
+    let html = plan
+        .replace(/^# (.*?)$/gm, '<h1>$1</h1>')
+        .replace(/^## (.*?)$/gm, '<h2>$1</h2>')
+        .replace(/^### (.*?)$/gm, '<h3>$1</h3>')
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.*?)\*/g, '<em>$1</em>')
         .replace(/\n- (.*?)$/gm, '<li>$1</li>')
-        .replace(/\n\d\. (.*?)$/gm, '<li>$1</li>')
         .replace(/<li>(.*?)<\/li>/g, '<ul><li>$1</li></ul>')
         .replace(/<\/ul><ul>/g, '')
         .replace(/\n/g, '<br>');
     
-    // Fix nested lists
-    html = html.replace(/<\/ul><br><ul>/g, '');
+    elements.renderedOutput.innerHTML = html;
     
-    return html;
+    // Extract KPIs
+    extractKPIs(plan);
+    
+    // Extract SWOT
+    extractSWOT(plan);
+    
+    // Extract Journey
+    extractJourney(plan);
+    
+    updateTimestamp();
 }
 
-function extractAndRenderKPIs(plan) {
-    // Look for KPI patterns in the response
-    const kpiPatterns = [
-        { label: 'TAM', icon: '🌍', regex: /TAM[:\s]*([\d,$\s]+[BMK]?)/i },
-        { label: 'SAM', icon: '🎯', regex: /SAM[:\s]*([\d,$\s]+[BMK]?)/i },
-        { label: 'SOM', icon: '📊', regex: /SOM[:\s]*([\d,$\s]+[BMK]?)/i },
-        { label: 'Primary KPI', icon: '📈', regex: /Primary KPI[:\s]*([^\n]+)/i }
-    ];
-    
-    let foundKPIs = false;
-    let kpisHtml = '';
-    
-    for (const pattern of kpiPatterns) {
-        const match = plan.match(pattern.regex);
-        if (match) {
-            foundKPIs = true;
-            kpisHtml += `
-                <div class="kpi-card">
-                    <span class="kpi-icon">${pattern.icon}</span>
-                    <div class="kpi-label">${pattern.label}</div>
-                    <div class="kpi-value">${match[1].trim()}</div>
-                </div>
-            `;
-        }
-    }
-    
-    if (foundKPIs) {
+function extractKPIs(plan) {
+    const kpiMatches = plan.match(/(?:TAM|SAM|SOM|ROI|CAC|LTV)[:\s]*([$\d,]+(?:[BMK]?))/gi);
+    if (kpiMatches && kpiMatches.length > 0) {
+        const kpisHtml = kpiMatches.slice(0,4).map(kpi => `
+            <div class="kpi-card">
+                <div class="kpi-label">${kpi.split(':')[0]}</div>
+                <div class="kpi-value">${kpi.split(':')[1] || kpi.split(':')[0]}</div>
+            </div>
+        `).join('');
         elements.kpiDashboard.innerHTML = kpisHtml;
         elements.kpiDashboard.classList.add('visible');
-        elements.kpiDashboardLabel.classList.add('visible');
-    } else {
-        elements.kpiDashboard.classList.remove('visible');
-        elements.kpiDashboardLabel.classList.remove('visible');
     }
 }
 
-function extractAndRenderSWOT(plan) {
-    const swotSections = {
-        strengths: extractSection(plan, /STRENGTHS?:?/i, /WEAKNESSES?:?|OPPORTUNITIES?:?|THREATS?:?/i),
-        weaknesses: extractSection(plan, /WEAKNESSES?:?/i, /STRENGTHS?:?|OPPORTUNITIES?:?|THREATS?:?/i),
-        opportunities: extractSection(plan, /OPPORTUNITIES?:?/i, /STRENGTHS?:?|WEAKNESSES?:?|THREATS?:?/i),
-        threats: extractSection(plan, /THREATS?:?/i, /STRENGTHS?:?|WEAKNESSES?:?|OPPORTUNITIES?:?/i)
+function extractSWOT(plan) {
+    const sections = {
+        strengths: extractSection(plan, /STRENGTHS?:?/i, /WEAKNESSES?:?/i),
+        weaknesses: extractSection(plan, /WEAKNESSES?:?/i, /OPPORTUNITIES?:?/i),
+        opportunities: extractSection(plan, /OPPORTUNITIES?:?/i, /THREATS?:?/i),
+        threats: extractSection(plan, /THREATS?:?/i, /$/i)
     };
     
-    const hasContent = Object.values(swotSections).some(s => s && s.length > 0);
-    
-    if (hasContent) {
-        elements.swotContainer.innerHTML = `
-            <div class="swot-card swot-strengths">
-                <div class="swot-card-body">
-                    <div class="swot-header">
-                        <div class="swot-header-left">
-                            <span class="swot-main-icon">💪</span>
-                            <div class="swot-title">STRENGTHS</div>
-                        </div>
-                    </div>
-                    <ul class="swot-list">
-                        ${formatSwotItems(swotSections.strengths)}
-                    </ul>
-                </div>
-            </div>
-            <div class="swot-card swot-weaknesses">
-                <div class="swot-card-body">
-                    <div class="swot-header">
-                        <div class="swot-header-left">
-                            <span class="swot-main-icon">⚠️</span>
-                            <div class="swot-title">WEAKNESSES</div>
-                        </div>
-                    </div>
-                    <ul class="swot-list">
-                        ${formatSwotItems(swotSections.weaknesses)}
-                    </ul>
-                </div>
-            </div>
-            <div class="swot-card swot-opportunities">
-                <div class="swot-card-body">
-                    <div class="swot-header">
-                        <div class="swot-header-left">
-                            <span class="swot-main-icon">🚀</span>
-                            <div class="swot-title">OPPORTUNITIES</div>
-                        </div>
-                    </div>
-                    <ul class="swot-list">
-                        ${formatSwotItems(swotSections.opportunities)}
-                    </ul>
-                </div>
-            </div>
-            <div class="swot-card swot-threats">
-                <div class="swot-card-body">
-                    <div class="swot-header">
-                        <div class="swot-header-left">
-                            <span class="swot-main-icon">⚡</span>
-                            <div class="swot-title">THREATS</div>
-                        </div>
-                    </div>
-                    <ul class="swot-list">
-                        ${formatSwotItems(swotSections.threats)}
-                    </ul>
-                </div>
-            </div>
-        `;
-    }
+    const html = `
+        <div class="swot-card swot-strengths">
+            <div class="swot-title">💪 STRENGTHS</div>
+            <ul class="swot-list">${sections.strengths.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Analyzing...</li>'}</ul>
+        </div>
+        <div class="swot-card swot-weaknesses">
+            <div class="swot-title">⚠️ WEAKNESSES</div>
+            <ul class="swot-list">${sections.weaknesses.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Analyzing...</li>'}</ul>
+        </div>
+        <div class="swot-card swot-opportunities">
+            <div class="swot-title">🚀 OPPORTUNITIES</div>
+            <ul class="swot-list">${sections.opportunities.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Analyzing...</li>'}</ul>
+        </div>
+        <div class="swot-card swot-threats">
+            <div class="swot-title">⚡ THREATS</div>
+            <ul class="swot-list">${sections.threats.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Analyzing...</li>'}</ul>
+        </div>
+    `;
+    elements.swotContainer.innerHTML = html;
 }
 
 function extractSection(text, startPattern, endPattern) {
     const startMatch = text.match(startPattern);
     if (!startMatch) return [];
-    
-    const startIndex = startMatch.index;
-    let endIndex = text.length;
-    
-    const endMatch = text.slice(startIndex + startMatch[0].length).match(endPattern);
-    if (endMatch) {
-        endIndex = startIndex + startMatch[0].length + endMatch.index;
-    }
-    
-    const section = text.substring(startIndex, endIndex);
+    const startIdx = startMatch.index;
+    let endIdx = text.length;
+    const endMatch = text.slice(startIdx + startMatch[0].length).match(endPattern);
+    if (endMatch) endIdx = startIdx + startMatch[0].length + endMatch.index;
+    const section = text.substring(startIdx, endIdx);
     const lines = section.split('\n')
         .filter(line => line.match(/^[-•*]\s+|^\d+\.\s+/))
         .map(line => line.replace(/^[-•*]\s+|^\d+\.\s+/, '').trim())
-        .filter(line => line.length > 0);
-    
+        .filter(line => line.length > 0 && line.length < 200);
     return lines.slice(0, 5);
 }
 
-function formatSwotItems(items) {
-    if (!items || items.length === 0) {
-        return '<li><span class="swot-bullet">▸</span>No data available</li>';
-    }
-    return items.map(item => `<li><span class="swot-bullet">▸</span>${escapeHtml(item)}</li>`).join('');
-}
-
-function extractAndRenderJourney(plan) {
+function extractJourney(plan) {
     const stages = ['AWARENESS', 'CONSIDERATION', 'PURCHASE', 'RETENTION', 'ADVOCACY'];
-    let journeyHtml = '';
-    
+    let html = '';
     for (const stage of stages) {
-        const regex = new RegExp(`${stage}[\\s\\S]*?(?=${stages.join('|')}|$)`, 'i');
-        const match = plan.match(regex);
-        
-        if (match) {
-            const emotion = match[0].match(/emotion[:\s]*([^\n]+)/i)?.[1] || 'engaged';
-            journeyHtml += `
-                <div class="journey-card ${getEmotionClass(emotion)}">
-                    <div class="swot-main-icon">${getStageIcon(stage)}</div>
+        if (plan.toUpperCase().includes(stage)) {
+            html += `
+                <div class="journey-card">
+                    <div style="font-size:28px;">${getIcon(stage)}</div>
                     <div class="journey-stage">${stage}</div>
-                    <div class="journey-emotion">🎭 ${emotion}</div>
-                    <div style="font-size: 11px; margin-top: 10px; color: var(--indigo-soft);">
-                        ${match[0].substring(0, 80)}...
-                    </div>
+                    <div style="font-size:11px;color:var(--ink-3);">Customer journey stage</div>
                 </div>
             `;
         }
     }
-    
-    if (journeyHtml) {
-        elements.journeyContainer.innerHTML = journeyHtml;
-    }
+    if (html) elements.journeyContainer.innerHTML = html;
 }
 
-function getEmotionClass(emotion) {
-    const e = emotion.toLowerCase();
-    if (e.includes('delight') || e.includes('happy')) return 'delighted';
-    if (e.includes('satisfied') || e.includes('good')) return 'satisfied';
-    return '';
-}
-
-function getStageIcon(stage) {
-    const icons = {
-        'AWARENESS': '👁️',
-        'CONSIDERATION': '🤔',
-        'PURCHASE': '💰',
-        'RETENTION': '❤️',
-        'ADVOCACY': '🗣️'
-    };
+function getIcon(stage) {
+    const icons = { AWARENESS: '👁️', CONSIDERATION: '🤔', PURCHASE: '💰', RETENTION: '❤️', ADVOCACY: '🗣️' };
     return icons[stage] || '📌';
 }
 
@@ -437,69 +549,31 @@ function escapeHtml(str) {
 }
 
 // ============================================================
-// FEEDBACK SUBMISSION (YOUR /feedback ENDPOINT)
+// EVENT HANDLERS
 // ============================================================
-
-async function submitFeedback(vote, planSummary) {
-    try {
-        const response = await fetch(`${API_BASE}/feedback`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                vote: vote,
-                customer: elements.customerData.value,
-                product: elements.productDescription.value,
-                plan_summary: planSummary.substring(0, 300)
-            })
-        });
-        
-        if (response.ok) {
-            showToast(`Thank you for your ${vote === 'yes' ? 'positive' : 'helpful'} feedback!`);
-        }
-    } catch (error) {
-        console.error('Feedback submission failed:', error);
-    }
-}
-
-// ============================================================
-// MAIN GENERATION HANDLER
-// ============================================================
-
 async function handleGenerate() {
     const customerData = elements.customerData.value.trim();
     const productDescription = elements.productDescription.value.trim();
     
     if (!customerData || !productDescription) {
-        updateStatus('Please fill in both customer data and product description fields', 'error');
-        return;
-    }
-    
-    if (customerData.length < 20 || productDescription.length < 20) {
-        updateStatus('Please provide more detail (minimum 20 characters each) for accurate strategy generation', 'error');
+        showStatus('Please fill in both fields', true);
         return;
     }
     
     showLoader(true);
-    updateStatus('🧠 Running 13-role marketing framework: PESTLE → Porter → SWOT → Journey → OKRs...', 'working');
+    showStatus('🧠 Running 13-role marketing framework...');
     elements.outputContainer.style.display = 'none';
     
     try {
         const plan = await generateMarketingPlan(customerData, productDescription);
-        state.currentPlan = plan;
-        state.generationHistory.push({ timestamp: Date.now(), plan });
-        
-        parseAndRenderPlan(plan);
+        currentPlan = plan;
+        renderPlan(plan);
         elements.outputContainer.style.display = 'block';
-        updateStatus('✅ Marketing strategy generated successfully! Powered by GPT-OSS-120B.', 'working');
-        
-        // Smooth scroll to output
-        elements.outputContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        
+        showStatus('✅ Marketing strategy generated successfully!');
+        elements.outputContainer.scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
-        console.error('Generation error:', error);
-        updateStatus(`❌ Error: ${error.message}`, 'error');
+        showStatus(`❌ Error: ${error.message}`, true);
+        console.error(error);
     } finally {
         showLoader(false);
     }
@@ -512,89 +586,69 @@ function handleClear() {
     elements.kpiDashboard.classList.remove('visible');
     elements.swotContainer.innerHTML = '';
     elements.journeyContainer.innerHTML = '';
-    state.currentPlan = null;
-    updateStatus('Cleared. Ready for new marketing strategy.', 'working');
+    currentPlan = null;
 }
 
 function handleCopy() {
-    if (!state.currentPlan) {
-        updateStatus('No plan to copy. Generate a plan first.', 'error');
+    if (!currentPlan) {
+        showStatus('No plan to copy', true);
         return;
     }
-    
-    navigator.clipboard.writeText(state.currentPlan).then(() => {
-        updateStatus('Marketing plan copied to clipboard!', 'working');
-        showToast('Copied to clipboard!');
-    }).catch(() => {
-        updateStatus('Failed to copy. Please try again.', 'error');
-    });
+    navigator.clipboard.writeText(currentPlan);
+    showToast('Copied to clipboard!');
+}
+
+async function handleFeedback(vote) {
+    if (!currentPlan) {
+        showStatus('No plan to rate', true);
+        return;
+    }
+    try {
+        await fetch(`${API_BASE}/feedback`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                vote: vote,
+                customer: elements.customerData.value.slice(0, 200),
+                product: elements.productDescription.value.slice(0, 200),
+                plan_summary: currentPlan.slice(0, 300)
+            })
+        });
+        showToast(`Thank you for your ${vote === 'yes' ? 'positive' : 'helpful'} feedback!`);
+    } catch(e) {
+        console.error('Feedback failed:', e);
+    }
 }
 
 // ============================================================
-// HEALTH CHECK & INITIALIZATION
+// INITIALIZATION
 // ============================================================
+elements.generateBtn.addEventListener('click', handleGenerate);
+elements.clearBtn.addEventListener('click', handleClear);
+elements.copyBtn.addEventListener('click', handleCopy);
+elements.feedbackYesBtn.addEventListener('click', () => handleFeedback('yes'));
+elements.feedbackNoBtn.addEventListener('click', () => handleFeedback('no'));
 
-async function checkBackendHealth() {
+// Health check
+async function checkHealth() {
     try {
         const response = await fetch(`${API_BASE}/health`);
         const data = await response.json();
         if (data.status === 'ok') {
             console.log('✅ Backend connected:', data.model);
-            updateStatus(`Connected to ${data.model}`, 'working');
+            showStatus(`Connected to ${data.model}`, false);
             setTimeout(() => {
-                elements.statusBar.style.display = 'none';
+                if (elements.statusBar.style.display === 'flex') {
+                    elements.statusBar.style.display = 'none';
+                }
             }, 3000);
-            return true;
         }
-    } catch (error) {
-        console.warn('⚠️ Backend health check failed:', error);
-        updateStatus('⚠️ Backend connection issue. Make sure Flask server is running.', 'error');
-        return false;
+    } catch(e) {
+        console.warn('Backend not reachable:', e);
+        showStatus('⚠️ Backend connection issue. Check your Hugging Face URL.', true);
     }
 }
-
-// Initialize event listeners
-function init() {
-    elements.generateBtn.addEventListener('click', handleGenerate);
-    elements.clearBtn.addEventListener('click', handleClear);
-    elements.copyBtn.addEventListener('click', handleCopy);
-    
-    if (elements.feedbackYesBtn) {
-        elements.feedbackYesBtn.addEventListener('click', () => {
-            if (state.currentPlan) {
-                submitFeedback('yes', state.currentPlan);
-            } else {
-                updateStatus('No plan to rate. Generate a plan first.', 'error');
-            }
-        });
-    }
-    
-    if (elements.feedbackNoBtn) {
-        elements.feedbackNoBtn.addEventListener('click', () => {
-            if (state.currentPlan) {
-                submitFeedback('no', state.currentPlan);
-            } else {
-                updateStatus('No plan to rate. Generate a plan first.', 'error');
-            }
-        });
-    }
-    
-    // Enter key shortcut (Ctrl+Enter)
-    const textareas = [elements.customerData, elements.productDescription];
-    textareas.forEach(ta => {
-        ta?.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.key === 'Enter') {
-                handleGenerate();
-            }
-        });
-    });
-    
-    // Check backend on load
-    checkBackendHealth();
-}
-
-// Start the application
-init();
+checkHealth();
 </script>
 </body>
 </html>
