@@ -1,848 +1,600 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strategic Marketing System | AI-Powered Marketing Plan Generator</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0a0e1a;
-            color: white;
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        /* Header */
-        .header {
-            background: rgba(10, 14, 26, 0.95);
-            padding: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #6366f1, #ec4899);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .nav a {
-            color: rgba(255,255,255,0.7);
-            text-decoration: none;
-            margin-left: 30px;
-            transition: color 0.3s;
-        }
-        
-        .nav a:hover {
-            color: #6366f1;
-        }
-        
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(236,72,153,0.1));
-            border-radius: 20px;
-            margin: 30px 0;
-        }
-        
-        .hero h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-        
-        .hero p {
-            font-size: 18px;
-            color: rgba(255,255,255,0.7);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        /* Input Section */
-        .input-section {
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            padding: 30px;
-            margin: 30px 0;
-        }
-        
-        textarea {
-            width: 100%;
-            padding: 15px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            color: white;
-            font-size: 14px;
-            margin: 20px 0;
-            resize: vertical;
-            font-family: inherit;
-        }
-        
-        textarea:focus {
-            outline: none;
-            border-color: #6366f1;
-        }
-        
-        button {
-            background: linear-gradient(135deg, #6366f1, #ec4899);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: transform 0.3s;
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-        }
-        
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        /* Status Bar */
-        .status-bar {
-            background: rgba(74, 222, 128, 0.1);
-            border: 1px solid rgba(74, 222, 128, 0.3);
-            border-radius: 10px;
-            padding: 12px 20px;
-            margin: 20px 0;
-            display: none;
-        }
-        
-        .status-bar.show {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .status-bar.error {
-            background: rgba(248, 113, 113, 0.1);
-            border-color: rgba(248, 113, 113, 0.3);
-        }
-        
-        /* Loading */
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 40px;
-        }
-        
-        .loading.show {
-            display: block;
-        }
-        
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(255,255,255,0.1);
-            border-top-color: #6366f1;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        /* Output Section */
-        .output-section {
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            padding: 30px;
-            margin: 30px 0;
-            display: none;
-        }
-        
-        .output-section.show {
-            display: block;
-        }
-        
-        /* KPI Dashboard */
-        .kpi-dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        
-        .kpi-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            transition: transform 0.3s;
-        }
-        
-        .kpi-card:hover {
-            transform: translateY(-5px);
-            border-color: #6366f1;
-        }
-        
-        .kpi-icon {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-        
-        .kpi-label {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(255,255,255,0.5);
-            margin-bottom: 10px;
-        }
-        
-        .kpi-value {
-            font-size: 28px;
-            font-weight: bold;
-            color: #6366f1;
-        }
-        
-        /* SWOT Matrix */
-        .swot-matrix {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin: 30px 0;
-        }
-        
-        .swot-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 20px;
-        }
-        
-        .swot-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid;
-        }
-        
-        .swot-strengths .swot-title { color: #4ade80; border-color: #4ade80; }
-        .swot-weaknesses .swot-title { color: #f87171; border-color: #f87171; }
-        .swot-opportunities .swot-title { color: #22d3ee; border-color: #22d3ee; }
-        .swot-threats .swot-title { color: #fbbf24; border-color: #fbbf24; }
-        
-        .swot-list {
-            list-style: none;
-        }
-        
-        .swot-list li {
-            padding: 8px 0;
-            padding-left: 20px;
-            position: relative;
-        }
-        
-        .swot-list li:before {
-            content: "▸";
-            position: absolute;
-            left: 0;
-        }
-        
-        /* Customer Journey */
-        .journey-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        
-        .journey-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .journey-card:hover {
-            transform: translateY(-5px);
-            border-color: #6366f1;
-        }
-        
-        .journey-icon {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-        
-        .journey-stage {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .journey-emotion {
-            font-size: 12px;
-            color: rgba(255,255,255,0.5);
-        }
-        
-        /* Button Group */
-        .button-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-            justify-content: flex-end;
-        }
-        
-        .btn-secondary {
-            background: rgba(255,255,255,0.1);
-        }
-        
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 40px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            margin-top: 60px;
-            color: rgba(255,255,255,0.5);
-        }
-        
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 32px; }
-            .nav a { margin-left: 15px; }
-            .swot-matrix { grid-template-columns: 1fr; }
-        }
-    </style>
+<title>Strategic Marketing System | AI-Powered Marketing Plan Generator</title>
+<meta charset="UTF-8">
+<meta name="description" content="Generate complete strategic marketing plans in 60 seconds.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===== YOUR EXISTING CSS (keep all your beautiful styles) ===== */
+/* ... [PASTE YOUR ENTIRE CSS HERE - it's all perfect] ... */
+
+/* Additional integration styles */
+.toast-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--r-md);
+    padding: 12px 20px;
+    z-index: 10000;
+    animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+</style>
 </head>
 <body>
-    <div class="header">
-        <div class="header-content">
-            <div class="logo">StrategicMarketing</div>
-            <div class="nav">
-                <a href="#">Home</a>
-                <a href="#">Features</a>
-                <a href="#">Pricing</a>
+
+<!-- ===== YOUR EXISTING HTML STRUCTURE ===== -->
+<!-- Keep all your beautiful HTML - just add the integration script below -->
+
+<div class="page-wrap">
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-inner">
+            <div class="eyebrow">
+                <span class="dt"></span>
+                AI-POWERED MARKETING INTELLIGENCE
+            </div>
+            <h1>Strategic Marketing<br>System</h1>
+            <p class="tagline">Generate complete strategic marketing plans in 60 seconds powered by GPT-OSS-120B</p>
+            <div class="hero-chips">
+                <span class="hero-chip">⚡ PESTLE Analysis</span>
+                <span class="hero-chip">🎯 Porter's Five Forces</span>
+                <span class="hero-chip">📊 SWOT + Micro-SWOT</span>
+                <span class="hero-chip">🎨 Design Generator</span>
             </div>
         </div>
     </div>
-    
-    <div class="container">
-        <div class="hero">
-            <h1>AI-Powered Marketing Plan Generator</h1>
-            <p>Generate complete strategic marketing plans in 60 seconds. Just describe your business below.</p>
-        </div>
+
+    <!-- Input Area -->
+    <div class="input-area glass">
+        <div class="field-label">📊 CUSTOMER DATA / TARGET AUDIENCE</div>
+        <textarea id="customerData" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies ($50M-$500M revenue) looking for AI analytics solutions..."></textarea>
         
-        <div class="input-section">
-            <h3>Enter Your Marketing Brief</h3>
-            <textarea id="promptInput" rows="6" placeholder="Example: Generate a B2B SaaS marketing plan for an AI analytics platform targeting enterprise CTOs. Budget: $500K, Timeline: 6 months. Focus on lead generation and brand authority."></textarea>
-            <button id="generateBtn">Generate Strategic Plan →</button>
-        </div>
+        <div class="field-label" style="margin-top: 20px;">📦 PRODUCT DESCRIPTION / SERVICE</div>
+        <textarea id="productDescription" rows="5" placeholder="Example: An AI-powered marketing analytics platform that provides real-time ROI predictions and channel optimization recommendations..."></textarea>
         
-        <div id="statusBar" class="status-bar">
-            <span>⚡</span>
-            <span id="statusMessage"></span>
+        <div class="btn-group">
+            <button id="generateBtn" class="btn btn-primary">✨ Generate Strategic Marketing Plan</button>
+            <button id="clearBtn" class="btn btn-indigo">Clear All</button>
         </div>
-        
-        <div id="loading" class="loading">
-            <div class="spinner"></div>
-            <p>Analyzing market context & generating strategic plan...</p>
+        <div id="loader" class="loader"></div>
+    </div>
+
+    <!-- Status Bar -->
+    <div id="statusBar" class="status-bar working" style="display: none;">
+        <span>⚡</span>
+        <span id="statusMessage">System ready</span>
+    </div>
+
+    <!-- Output Container -->
+    <div id="outputContainer" class="output-container glass" style="display: none;">
+        <div class="output-header">
+            <h3><span class="hd"></span> Generated Marketing Strategy</h3>
+            <div id="timestamp"></div>
         </div>
-        
-        <div id="outputSection" class="output-section">
-            <h2>📊 Your Marketing Strategy</h2>
-            <div id="planContent"></div>
-            
-            <div id="kpiDashboard" class="kpi-dashboard"></div>
-            
-            <h3>📈 SWOT Analysis</h3>
-            <div id="swotMatrix" class="swot-matrix"></div>
-            
-            <h3>🚀 Customer Journey Map</h3>
-            <div id="journeyMap" class="journey-container"></div>
-            
-            <div class="button-group">
-                <button id="copyBtn" class="btn-secondary">📋 Copy to Clipboard</button>
-                <button id="exportBtn">💾 Export as JSON</button>
-            </div>
+        <div id="renderedOutput" class="rendered-output">
+            <!-- Dynamic content will appear here -->
+        </div>
+        <div class="btn-group" style="margin-top: 24px; justify-content: flex-end;">
+            <button id="copyBtn" class="btn btn-green">📋 Copy to Clipboard</button>
+            <button id="feedbackYesBtn" class="btn btn-primary" style="background: #4ade80;">👍 Helpful</button>
+            <button id="feedbackNoBtn" class="btn btn-indigo" style="background: rgba(248,113,113,.15);">👎 Not Helpful</button>
         </div>
     </div>
+
+    <!-- KPI Dashboard -->
+    <div id="kpiDashboardLabel" class="kpi-dashboard-label"></div>
+    <div id="kpiDashboard" class="kpi-dashboard"></div>
+
+    <!-- SWOT Matrix -->
+    <div class="swot-section-label">📊 SWOT ANALYSIS</div>
+    <div id="swotContainer" class="swot-matrix"></div>
+
+    <!-- Customer Journey -->
+    <div class="swot-section-label">🚀 CUSTOMER JOURNEY MAP</div>
+    <div id="journeyContainer" class="journey-container"></div>
+</div>
+
+<!-- Footer -->
+<div class="footer" style="text-align: center; padding: 40px; border-top: 1px solid var(--line-2); margin-top: 60px;">
+    <p style="color: var(--ink-4);">© 2024 Strategic Marketing System · Powered by OpenRouter GPT-OSS-120B · 13-Role Marketing Framework</p>
+</div>
+
+<script>
+// ============================================================
+// COMPLETE INTEGRATION SCRIPT - CONNECTS TO YOUR PYTHON BACKEND
+// ============================================================
+
+// Configuration
+const API_BASE = window.location.origin; // Uses same origin as Flask server
+// For local development: const API_BASE = 'http://localhost:7860';
+
+// State management
+const state = {
+    currentPlan: null,
+    sessionId: 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+    generationHistory: []
+};
+
+// DOM Elements
+const elements = {
+    customerData: document.getElementById('customerData'),
+    productDescription: document.getElementById('productDescription'),
+    generateBtn: document.getElementById('generateBtn'),
+    clearBtn: document.getElementById('clearBtn'),
+    copyBtn: document.getElementById('copyBtn'),
+    feedbackYesBtn: document.getElementById('feedbackYesBtn'),
+    feedbackNoBtn: document.getElementById('feedbackNoBtn'),
+    loader: document.getElementById('loader'),
+    outputContainer: document.getElementById('outputContainer'),
+    renderedOutput: document.getElementById('renderedOutput'),
+    statusBar: document.getElementById('statusBar'),
+    statusMessage: document.getElementById('statusMessage'),
+    timestamp: document.getElementById('timestamp'),
+    kpiDashboard: document.getElementById('kpiDashboard'),
+    swotContainer: document.getElementById('swotContainer'),
+    journeyContainer: document.getElementById('journeyContainer'),
+    kpiDashboardLabel: document.getElementById('kpiDashboardLabel')
+};
+
+// ============================================================
+// UTILITY FUNCTIONS
+// ============================================================
+
+function updateStatus(message, type = 'working') {
+    elements.statusMessage.textContent = message;
+    elements.statusBar.style.display = 'flex';
+    elements.statusBar.className = `status-bar ${type}`;
     
-    <div class="footer">
-        <p>© 2024 StrategicMarketing System. AI-powered marketing intelligence.</p>
-    </div>
+    // Auto-hide after 3 seconds for success messages
+    setTimeout(() => {
+        if (elements.statusBar.style.display === 'flex') {
+            elements.statusBar.style.display = 'none';
+        }
+    }, 4000);
+}
+
+function showLoader(show) {
+    elements.loader.style.display = show ? 'block' : 'none';
+    elements.generateBtn.disabled = show;
+}
+
+function updateTimestamp() {
+    const now = new Date();
+    elements.timestamp.textContent = `GENERATED: ${now.toLocaleTimeString()} · ${now.toLocaleDateString()}`;
+}
+
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.innerHTML = `${type === 'success' ? '✅' : '❌'} ${message}`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+// ============================================================
+// BACKEND API CALL (YOUR PYTHON APP.PY)
+// ============================================================
+
+async function generateMarketingPlan(customerData, productDescription) {
+    const response = await fetch(`${API_BASE}/generate`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            customer_data: customerData,
+            product_description: productDescription
+        })
+    });
     
-    <script>
-        // =====================================================
-        // COMPLETE JAVASCRIPT IMPLEMENTATION
-        // =====================================================
-        
-        // State Management
-        const state = {
-            currentPlan: null,
-            sessionId: 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-            generationHistory: []
-        };
-        
-        // DOM Elements
-        const elements = {
-            promptInput: document.getElementById('promptInput'),
-            generateBtn: document.getElementById('generateBtn'),
-            copyBtn: document.getElementById('copyBtn'),
-            exportBtn: document.getElementById('exportBtn'),
-            loading: document.getElementById('loading'),
-            outputSection: document.getElementById('outputSection'),
-            statusBar: document.getElementById('statusBar'),
-            statusMessage: document.getElementById('statusMessage'),
-            planContent: document.getElementById('planContent'),
-            kpiDashboard: document.getElementById('kpiDashboard'),
-            swotMatrix: document.getElementById('swotMatrix'),
-            journeyMap: document.getElementById('journeyMap')
-        };
-        
-        // Utility Functions
-        function updateStatus(message, isError = false) {
-            elements.statusMessage.textContent = message;
-            elements.statusBar.classList.add('show');
-            if (isError) {
-                elements.statusBar.classList.add('error');
-            } else {
-                elements.statusBar.classList.remove('error');
-            }
-            
-            setTimeout(() => {
-                if (elements.statusBar.classList.contains('show')) {
-                    elements.statusBar.classList.remove('show');
-                }
-            }, 3000);
-        }
-        
-        function showLoading(show) {
-            if (show) {
-                elements.loading.classList.add('show');
-                elements.outputSection.classList.remove('show');
-                elements.generateBtn.disabled = true;
-            } else {
-                elements.loading.classList.remove('show');
-                elements.generateBtn.disabled = false;
-            }
-        }
-        
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
-        }
-        
-        // AI Marketing Plan Generator
-        async function generateMarketingPlan(prompt) {
-            // Extract context from prompt
-            const industry = extractIndustry(prompt);
-            const audience = extractAudience(prompt);
-            const budget = extractBudget(prompt);
-            
-            // Simulate AI processing (replace with real API call)
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            
-            // Generate comprehensive marketing plan
-            return {
-                title: `${industry} Marketing Strategy ${new Date().getFullYear()}`,
-                overview: `Data-driven marketing plan for ${industry} targeting ${audience} with a focus on measurable ROI and sustainable growth. Budget allocation: ${budget}.`,
-                
-                kpis: {
-                    projectedROI: `${Math.floor(Math.random() * 200) + 150}%`,
-                    customerAcquisitionCost: `$${Math.floor(Math.random() * 150) + 25}`,
-                    conversionRate: `${(Math.random() * 12 + 3).toFixed(1)}%`,
-                    marketShare: `${(Math.random() * 25 + 5).toFixed(0)}%`,
-                    customerLTV: `$${Math.floor(Math.random() * 5000) + 2000}`,
-                    engagement: `${(Math.random() * 30 + 40).toFixed(0)}%`
-                },
-                
-                swot: {
-                    strengths: [
-                        "Strong brand recognition in digital channels",
-                        "Agile decision-making with AI integration",
-                        `Deep expertise in ${industry} vertical`,
-                        "High customer satisfaction scores (4.8/5)",
-                        "Robust data infrastructure"
-                    ],
-                    weaknesses: [
-                        "Limited physical presence in emerging markets",
-                        "Dependence on third-party analytics platforms",
-                        "Content production scaling challenges",
-                        "Higher than average CAC in competitive segments"
-                    ],
-                    opportunities: [
-                        `AI-driven personalization for ${audience}`,
-                        "Expansion into adjacent verticals",
-                        "Strategic partnerships with complementary brands",
-                        "Untapped mobile-first markets",
-                        "Early mover advantage in AI marketing"
-                    ],
-                    threats: [
-                        "Increasing competition from AI-native startups",
-                        "Privacy regulation changes affecting targeting",
-                        "Market saturation in core segments",
-                        "Economic uncertainty affecting marketing budgets"
-                    ]
-                },
-                
-                journey: {
-                    awareness: {
-                        emotion: "curious",
-                        channels: ["LinkedIn Ads", "Industry Publications", "Podcast Sponsorships"],
-                        metrics: { reach: "500K+", impressions: "2M+", cpm: "$8.50" }
-                    },
-                    consideration: {
-                        emotion: "engaged",
-                        channels: ["Case Studies", "Webinars", "Comparison Guides"],
-                        metrics: { ctr: "4.2%", timeOnSite: "3:45", pagesPerSession: "4.2" }
-                    },
-                    conversion: {
-                        emotion: "confident",
-                        channels: ["Free Trial", "Demo Requests", "ROI Calculator"],
-                        metrics: { conversionRate: "8.7%", cac: "$142", trialToPaid: "35%" }
-                    },
-                    loyalty: {
-                        emotion: "delighted",
-                        channels: ["Email Nurturing", "Referral Program", "Community Access"],
-                        metrics: { retention: "76%", ltv: "$2,840", nps: "+52" }
-                    }
-                },
-                
-                tacticalPlan: {
-                    content: [
-                        "Weekly thought leadership articles on industry trends",
-                        "Monthly benchmark reports with actionable insights",
-                        "Customer success story video series",
-                        "Interactive ROI calculator tool"
-                    ],
-                    paidMedia: [
-                        "Retargeting campaign with dynamic creative optimization",
-                        "LinkedIn ABM for enterprise accounts",
-                        "YouTube pre-roll for brand awareness",
-                        "Programmatic display for prospecting"
-                    ],
-                    organic: [
-                        "SEO optimization for 50+ long-tail keywords",
-                        "LinkedIn community engagement strategy",
-                        "Podcast guest appearances on industry shows",
-                        "Employee advocacy program"
-                    ],
-                    email: [
-                        "7-day educational drip campaign",
-                        "Personalized product recommendations",
-                        "Quarterly strategic roadmap updates",
-                        "Win-back campaigns for inactive users"
-                    ]
-                },
-                
-                budget: {
-                    total: budget,
-                    allocation: {
-                        "Paid Media": "35%",
-                        "Content Creation": "25%",
-                        "Technology & Tools": "20%",
-                        "Agency/Partners": "15%",
-                        "Contingency": "5%"
-                    }
-                },
-                
-                timeline: {
-                    month1: "Market research & audience segmentation",
-                    month2: "Campaign launch & initial testing",
-                    month3: "Optimization & scaling based on data",
-                    quarter2: "Channel expansion & partnerships",
-                    quarter3: "International pilot programs",
-                    quarter4: "Full rollout & AI integration"
-                },
-                
-                recommendations: [
-                    "Implement A/B testing for all major campaigns",
-                    "Set up weekly performance review meetings",
-                    "Create a feedback loop with sales team",
-                    "Invest in marketing automation tools",
-                    "Develop customer advisory board for insights"
-                ]
-            };
-        }
-        
-        function extractIndustry(prompt) {
-            const industries = ['SaaS', 'E-commerce', 'FinTech', 'HealthTech', 'EdTech', 'B2B', 'D2C'];
-            const lowerPrompt = prompt.toLowerCase();
-            for (let industry of industries) {
-                if (lowerPrompt.includes(industry.toLowerCase())) return industry;
-            }
-            return 'Digital Marketing';
-        }
-        
-        function extractAudience(prompt) {
-            const audiences = ['enterprise', 'SMB', 'consumer', 'millennial', 'Gen Z', 'executive'];
-            const lowerPrompt = prompt.toLowerCase();
-            for (let audience of audiences) {
-                if (lowerPrompt.includes(audience)) return audience + ' decision-makers';
-            }
-            return 'target demographic';
-        }
-        
-        function extractBudget(prompt) {
-            const budgetMatch = prompt.match(/\$([\d,]+K?)/i);
-            return budgetMatch ? budgetMatch[0] : '$250K';
-        }
-        
-        // Render Functions
-        function renderMarketingPlan(plan) {
-            // Main content
-            const mainHtml = `
-                <h2 style="color: #6366f1; margin-bottom: 20px;">${escapeHtml(plan.title)}</h2>
-                <p style="margin-bottom: 30px; line-height: 1.8;">${escapeHtml(plan.overview)}</p>
-                
-                <h3>🎯 Strategic Recommendations</h3>
-                <ul style="margin: 20px 0; padding-left: 20px;">
-                    ${plan.recommendations.map(rec => `<li style="margin: 10px 0;">${escapeHtml(rec)}</li>`).join('')}
-                </ul>
-                
-                <h3>📋 Tactical Execution Plan</h3>
-                <h4 style="margin-top: 20px; color: #22d3ee;">Content Marketing</h4>
-                <ul style="margin: 10px 0 20px 20px;">
-                    ${plan.tacticalPlan.content.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
-                </ul>
-                
-                <h4 style="color: #22d3ee;">Paid Media Strategy</h4>
-                <ul style="margin: 10px 0 20px 20px;">
-                    ${plan.tacticalPlan.paidMedia.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
-                </ul>
-                
-                <h4 style="color: #22d3ee;">Organic Growth</h4>
-                <ul style="margin: 10px 0 20px 20px;">
-                    ${plan.tacticalPlan.organic.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
-                </ul>
-                
-                <h3>💰 Budget Allocation</h3>
-                <p><strong>Total Budget:</strong> ${plan.budget.total}</p>
-                <ul style="margin: 15px 0 20px 20px;">
-                    ${Object.entries(plan.budget.allocation).map(([k, v]) => `<li><strong>${k}:</strong> ${v}</li>`).join('')}
-                </ul>
-                
-                <h3>⏱️ Implementation Timeline</h3>
-                <ul style="margin: 15px 0 20px 20px;">
-                    ${Object.entries(plan.timeline).map(([period, action]) => `<li><strong>${period}:</strong> ${escapeHtml(action)}</li>`).join('')}
-                </ul>
-                
-                <hr style="margin: 30px 0; border-color: rgba(255,255,255,0.1);">
-                <p style="color: rgba(255,255,255,0.5); font-size: 14px; text-align: center;">
-                🤖 AI-generated strategic marketing plan based on your input. Adjust tactics based on weekly performance data and market conditions.
-                </p>
-            `;
-            
-            elements.planContent.innerHTML = mainHtml;
-            
-            // Render KPI Dashboard
-            renderKPIs(plan.kpis);
-            
-            // Render SWOT Matrix
-            renderSWOT(plan.swot);
-            
-            // Render Customer Journey
-            renderJourney(plan.journey);
-        }
-        
-        function renderKPIs(kpis) {
-            const kpiData = [
-                { icon: "📈", label: "Projected ROI", value: kpis.projectedROI },
-                { icon: "💰", label: "Customer Acquisition", value: kpis.customerAcquisitionCost },
-                { icon: "🎯", label: "Conversion Rate", value: kpis.conversionRate },
-                { icon: "🌍", label: "Market Share", value: kpis.marketShare },
-                { icon: "💎", label: "Customer LTV", value: kpis.customerLTV },
-                { icon: "📊", label: "Engagement Rate", value: kpis.engagement }
-            ];
-            
-            elements.kpiDashboard.innerHTML = kpiData.map(kpi => `
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Generation failed');
+    }
+    
+    const data = await response.json();
+    return data.plan;
+}
+
+// ============================================================
+// PARSE AI RESPONSE INTO UI COMPONENTS
+// ============================================================
+
+function parseAndRenderPlan(rawPlan) {
+    // Display the full plan first
+    let formattedHtml = formatMarkdownToHtml(rawPlan);
+    elements.renderedOutput.innerHTML = formattedHtml;
+    
+    // Extract and render KPIs if present
+    extractAndRenderKPIs(rawPlan);
+    
+    // Extract and render SWOT if present
+    extractAndRenderSWOT(rawPlan);
+    
+    // Extract and render Customer Journey if present
+    extractAndRenderJourney(rawPlan);
+    
+    updateTimestamp();
+}
+
+function formatMarkdownToHtml(text) {
+    // Simple markdown to HTML conversion
+    let html = text
+        .replace(/## (.*?)$/gm, '<h2>$1</h2>')
+        .replace(/### (.*?)$/gm, '<h3>$1</h3>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/\n- (.*?)$/gm, '<li>$1</li>')
+        .replace(/\n\d\. (.*?)$/gm, '<li>$1</li>')
+        .replace(/<li>(.*?)<\/li>/g, '<ul><li>$1</li></ul>')
+        .replace(/<\/ul><ul>/g, '')
+        .replace(/\n/g, '<br>');
+    
+    // Fix nested lists
+    html = html.replace(/<\/ul><br><ul>/g, '');
+    
+    return html;
+}
+
+function extractAndRenderKPIs(plan) {
+    // Look for KPI patterns in the response
+    const kpiPatterns = [
+        { label: 'TAM', icon: '🌍', regex: /TAM[:\s]*([\d,$\s]+[BMK]?)/i },
+        { label: 'SAM', icon: '🎯', regex: /SAM[:\s]*([\d,$\s]+[BMK]?)/i },
+        { label: 'SOM', icon: '📊', regex: /SOM[:\s]*([\d,$\s]+[BMK]?)/i },
+        { label: 'Primary KPI', icon: '📈', regex: /Primary KPI[:\s]*([^\n]+)/i }
+    ];
+    
+    let foundKPIs = false;
+    let kpisHtml = '';
+    
+    for (const pattern of kpiPatterns) {
+        const match = plan.match(pattern.regex);
+        if (match) {
+            foundKPIs = true;
+            kpisHtml += `
                 <div class="kpi-card">
-                    <div class="kpi-icon">${kpi.icon}</div>
-                    <div class="kpi-label">${kpi.label}</div>
-                    <div class="kpi-value">${kpi.value}</div>
-                </div>
-            `).join('');
-        }
-        
-        function renderSWOT(swot) {
-            const swotHtml = `
-                <div class="swot-card swot-strengths">
-                    <div class="swot-title">💪 STRENGTHS</div>
-                    <ul class="swot-list">
-                        ${swot.strengths.map(s => `<li>${escapeHtml(s)}</li>`).join('')}
-                    </ul>
-                </div>
-                <div class="swot-card swot-weaknesses">
-                    <div class="swot-title">⚠️ WEAKNESSES</div>
-                    <ul class="swot-list">
-                        ${swot.weaknesses.map(w => `<li>${escapeHtml(w)}</li>`).join('')}
-                    </ul>
-                </div>
-                <div class="swot-card swot-opportunities">
-                    <div class="swot-title">🚀 OPPORTUNITIES</div>
-                    <ul class="swot-list">
-                        ${swot.opportunities.map(o => `<li>${escapeHtml(o)}</li>`).join('')}
-                    </ul>
-                </div>
-                <div class="swot-card swot-threats">
-                    <div class="swot-title">⚡ THREATS</div>
-                    <ul class="swot-list">
-                        ${swot.threats.map(t => `<li>${escapeHtml(t)}</li>`).join('')}
-                    </ul>
+                    <span class="kpi-icon">${pattern.icon}</span>
+                    <div class="kpi-label">${pattern.label}</div>
+                    <div class="kpi-value">${match[1].trim()}</div>
                 </div>
             `;
-            
-            elements.swotMatrix.innerHTML = swotHtml;
         }
+    }
+    
+    if (foundKPIs) {
+        elements.kpiDashboard.innerHTML = kpisHtml;
+        elements.kpiDashboard.classList.add('visible');
+        elements.kpiDashboardLabel.classList.add('visible');
+    } else {
+        elements.kpiDashboard.classList.remove('visible');
+        elements.kpiDashboardLabel.classList.remove('visible');
+    }
+}
+
+function extractAndRenderSWOT(plan) {
+    const swotSections = {
+        strengths: extractSection(plan, /STRENGTHS?:?/i, /WEAKNESSES?:?|OPPORTUNITIES?:?|THREATS?:?/i),
+        weaknesses: extractSection(plan, /WEAKNESSES?:?/i, /STRENGTHS?:?|OPPORTUNITIES?:?|THREATS?:?/i),
+        opportunities: extractSection(plan, /OPPORTUNITIES?:?/i, /STRENGTHS?:?|WEAKNESSES?:?|THREATS?:?/i),
+        threats: extractSection(plan, /THREATS?:?/i, /STRENGTHS?:?|WEAKNESSES?:?|OPPORTUNITIES?:?/i)
+    };
+    
+    const hasContent = Object.values(swotSections).some(s => s && s.length > 0);
+    
+    if (hasContent) {
+        elements.swotContainer.innerHTML = `
+            <div class="swot-card swot-strengths">
+                <div class="swot-card-body">
+                    <div class="swot-header">
+                        <div class="swot-header-left">
+                            <span class="swot-main-icon">💪</span>
+                            <div class="swot-title">STRENGTHS</div>
+                        </div>
+                    </div>
+                    <ul class="swot-list">
+                        ${formatSwotItems(swotSections.strengths)}
+                    </ul>
+                </div>
+            </div>
+            <div class="swot-card swot-weaknesses">
+                <div class="swot-card-body">
+                    <div class="swot-header">
+                        <div class="swot-header-left">
+                            <span class="swot-main-icon">⚠️</span>
+                            <div class="swot-title">WEAKNESSES</div>
+                        </div>
+                    </div>
+                    <ul class="swot-list">
+                        ${formatSwotItems(swotSections.weaknesses)}
+                    </ul>
+                </div>
+            </div>
+            <div class="swot-card swot-opportunities">
+                <div class="swot-card-body">
+                    <div class="swot-header">
+                        <div class="swot-header-left">
+                            <span class="swot-main-icon">🚀</span>
+                            <div class="swot-title">OPPORTUNITIES</div>
+                        </div>
+                    </div>
+                    <ul class="swot-list">
+                        ${formatSwotItems(swotSections.opportunities)}
+                    </ul>
+                </div>
+            </div>
+            <div class="swot-card swot-threats">
+                <div class="swot-card-body">
+                    <div class="swot-header">
+                        <div class="swot-header-left">
+                            <span class="swot-main-icon">⚡</span>
+                            <div class="swot-title">THREATS</div>
+                        </div>
+                    </div>
+                    <ul class="swot-list">
+                        ${formatSwotItems(swotSections.threats)}
+                    </ul>
+                </div>
+            </div>
+        `;
+    }
+}
+
+function extractSection(text, startPattern, endPattern) {
+    const startMatch = text.match(startPattern);
+    if (!startMatch) return [];
+    
+    const startIndex = startMatch.index;
+    let endIndex = text.length;
+    
+    const endMatch = text.slice(startIndex + startMatch[0].length).match(endPattern);
+    if (endMatch) {
+        endIndex = startIndex + startMatch[0].length + endMatch.index;
+    }
+    
+    const section = text.substring(startIndex, endIndex);
+    const lines = section.split('\n')
+        .filter(line => line.match(/^[-•*]\s+|^\d+\.\s+/))
+        .map(line => line.replace(/^[-•*]\s+|^\d+\.\s+/, '').trim())
+        .filter(line => line.length > 0);
+    
+    return lines.slice(0, 5);
+}
+
+function formatSwotItems(items) {
+    if (!items || items.length === 0) {
+        return '<li><span class="swot-bullet">▸</span>No data available</li>';
+    }
+    return items.map(item => `<li><span class="swot-bullet">▸</span>${escapeHtml(item)}</li>`).join('');
+}
+
+function extractAndRenderJourney(plan) {
+    const stages = ['AWARENESS', 'CONSIDERATION', 'PURCHASE', 'RETENTION', 'ADVOCACY'];
+    let journeyHtml = '';
+    
+    for (const stage of stages) {
+        const regex = new RegExp(`${stage}[\\s\\S]*?(?=${stages.join('|')}|$)`, 'i');
+        const match = plan.match(regex);
         
-        function renderJourney(journey) {
-            const stages = [
-                { key: 'awareness', title: 'AWARENESS', icon: '👁️', data: journey.awareness },
-                { key: 'consideration', title: 'CONSIDERATION', icon: '🤔', data: journey.consideration },
-                { key: 'conversion', title: 'CONVERSION', icon: '🎯', data: journey.conversion },
-                { key: 'loyalty', title: 'LOYALTY', icon: '❤️', data: journey.loyalty }
-            ];
-            
-            elements.journeyMap.innerHTML = stages.map(stage => `
-                <div class="journey-card">
-                    <div class="journey-icon">${stage.icon}</div>
-                    <div class="journey-stage">${stage.title}</div>
-                    <div class="journey-emotion">🎭 ${stage.data.emotion}</div>
-                    <div style="font-size: 11px; margin-top: 10px; color: #6366f1;">
-                        ${stage.data.channels.slice(0,2).join('<br>')}
+        if (match) {
+            const emotion = match[0].match(/emotion[:\s]*([^\n]+)/i)?.[1] || 'engaged';
+            journeyHtml += `
+                <div class="journey-card ${getEmotionClass(emotion)}">
+                    <div class="swot-main-icon">${getStageIcon(stage)}</div>
+                    <div class="journey-stage">${stage}</div>
+                    <div class="journey-emotion">🎭 ${emotion}</div>
+                    <div style="font-size: 11px; margin-top: 10px; color: var(--indigo-soft);">
+                        ${match[0].substring(0, 80)}...
                     </div>
                 </div>
-            `).join('');
+            `;
         }
+    }
+    
+    if (journeyHtml) {
+        elements.journeyContainer.innerHTML = journeyHtml;
+    }
+}
+
+function getEmotionClass(emotion) {
+    const e = emotion.toLowerCase();
+    if (e.includes('delight') || e.includes('happy')) return 'delighted';
+    if (e.includes('satisfied') || e.includes('good')) return 'satisfied';
+    return '';
+}
+
+function getStageIcon(stage) {
+    const icons = {
+        'AWARENESS': '👁️',
+        'CONSIDERATION': '🤔',
+        'PURCHASE': '💰',
+        'RETENTION': '❤️',
+        'ADVOCACY': '🗣️'
+    };
+    return icons[stage] || '📌';
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+
+// ============================================================
+// FEEDBACK SUBMISSION (YOUR /feedback ENDPOINT)
+// ============================================================
+
+async function submitFeedback(vote, planSummary) {
+    try {
+        const response = await fetch(`${API_BASE}/feedback`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                vote: vote,
+                customer: elements.customerData.value,
+                product: elements.productDescription.value,
+                plan_summary: planSummary.substring(0, 300)
+            })
+        });
         
-        // Event Handlers
-        async function handleGenerate() {
-            const prompt = elements.promptInput.value.trim();
-            
-            if (!prompt) {
-                updateStatus('Please enter your marketing brief first', true);
-                return;
-            }
-            
-            if (prompt.length < 20) {
-                updateStatus('Please provide more detail (minimum 20 characters) for accurate strategy generation', true);
-                return;
-            }
-            
-            showLoading(true);
-            updateStatus('Analyzing market context & generating strategic plan...');
-            
-            try {
-                const plan = await generateMarketingPlan(prompt);
-                state.currentPlan = plan;
-                state.generationHistory.push({ timestamp: Date.now(), prompt, plan });
-                
-                renderMarketingPlan(plan);
-                elements.outputSection.classList.add('show');
-                updateStatus('✓ Marketing plan generated successfully! Ready for export.');
-                
-                // Scroll to output
-                elements.outputSection.scrollIntoView({ behavior: 'smooth' });
-                
-            } catch (error) {
-                console.error('Generation error:', error);
-                updateStatus('Error generating plan. Please try again.', true);
-            } finally {
-                showLoading(false);
-            }
+        if (response.ok) {
+            showToast(`Thank you for your ${vote === 'yes' ? 'positive' : 'helpful'} feedback!`);
         }
+    } catch (error) {
+        console.error('Feedback submission failed:', error);
+    }
+}
+
+// ============================================================
+// MAIN GENERATION HANDLER
+// ============================================================
+
+async function handleGenerate() {
+    const customerData = elements.customerData.value.trim();
+    const productDescription = elements.productDescription.value.trim();
+    
+    if (!customerData || !productDescription) {
+        updateStatus('Please fill in both customer data and product description fields', 'error');
+        return;
+    }
+    
+    if (customerData.length < 20 || productDescription.length < 20) {
+        updateStatus('Please provide more detail (minimum 20 characters each) for accurate strategy generation', 'error');
+        return;
+    }
+    
+    showLoader(true);
+    updateStatus('🧠 Running 13-role marketing framework: PESTLE → Porter → SWOT → Journey → OKRs...', 'working');
+    elements.outputContainer.style.display = 'none';
+    
+    try {
+        const plan = await generateMarketingPlan(customerData, productDescription);
+        state.currentPlan = plan;
+        state.generationHistory.push({ timestamp: Date.now(), plan });
         
-        function handleCopy() {
-            if (!state.currentPlan) {
-                updateStatus('No plan to copy. Please generate a plan first.', true);
-                return;
+        parseAndRenderPlan(plan);
+        elements.outputContainer.style.display = 'block';
+        updateStatus('✅ Marketing strategy generated successfully! Powered by GPT-OSS-120B.', 'working');
+        
+        // Smooth scroll to output
+        elements.outputContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+    } catch (error) {
+        console.error('Generation error:', error);
+        updateStatus(`❌ Error: ${error.message}`, 'error');
+    } finally {
+        showLoader(false);
+    }
+}
+
+function handleClear() {
+    elements.customerData.value = '';
+    elements.productDescription.value = '';
+    elements.outputContainer.style.display = 'none';
+    elements.kpiDashboard.classList.remove('visible');
+    elements.swotContainer.innerHTML = '';
+    elements.journeyContainer.innerHTML = '';
+    state.currentPlan = null;
+    updateStatus('Cleared. Ready for new marketing strategy.', 'working');
+}
+
+function handleCopy() {
+    if (!state.currentPlan) {
+        updateStatus('No plan to copy. Generate a plan first.', 'error');
+        return;
+    }
+    
+    navigator.clipboard.writeText(state.currentPlan).then(() => {
+        updateStatus('Marketing plan copied to clipboard!', 'working');
+        showToast('Copied to clipboard!');
+    }).catch(() => {
+        updateStatus('Failed to copy. Please try again.', 'error');
+    });
+}
+
+// ============================================================
+// HEALTH CHECK & INITIALIZATION
+// ============================================================
+
+async function checkBackendHealth() {
+    try {
+        const response = await fetch(`${API_BASE}/health`);
+        const data = await response.json();
+        if (data.status === 'ok') {
+            console.log('✅ Backend connected:', data.model);
+            updateStatus(`Connected to ${data.model}`, 'working');
+            setTimeout(() => {
+                elements.statusBar.style.display = 'none';
+            }, 3000);
+            return true;
+        }
+    } catch (error) {
+        console.warn('⚠️ Backend health check failed:', error);
+        updateStatus('⚠️ Backend connection issue. Make sure Flask server is running.', 'error');
+        return false;
+    }
+}
+
+// Initialize event listeners
+function init() {
+    elements.generateBtn.addEventListener('click', handleGenerate);
+    elements.clearBtn.addEventListener('click', handleClear);
+    elements.copyBtn.addEventListener('click', handleCopy);
+    
+    if (elements.feedbackYesBtn) {
+        elements.feedbackYesBtn.addEventListener('click', () => {
+            if (state.currentPlan) {
+                submitFeedback('yes', state.currentPlan);
+            } else {
+                updateStatus('No plan to rate. Generate a plan first.', 'error');
             }
-            
-            const text = elements.planContent.innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                updateStatus('Marketing plan copied to clipboard!');
-            }).catch(() => {
-                updateStatus('Failed to copy. Please try again.', true);
-            });
-        }
-        
-        function handleExport() {
-            if (!state.currentPlan) {
-                updateStatus('No plan to export. Please generate a plan first.', true);
-                return;
+        });
+    }
+    
+    if (elements.feedbackNoBtn) {
+        elements.feedbackNoBtn.addEventListener('click', () => {
+            if (state.currentPlan) {
+                submitFeedback('no', state.currentPlan);
+            } else {
+                updateStatus('No plan to rate. Generate a plan first.', 'error');
             }
-            
-            const exportData = {
-                plan: state.currentPlan,
-                metadata: {
-                    generatedAt: new Date().toISOString(),
-                    sessionId: state.sessionId,
-                    version: '1.0'
-                }
-            };
-            
-            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `marketing_plan_${Date.now()}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            updateStatus('Plan exported successfully!');
-        }
-        
-        // Initialize Event Listeners
-        function init() {
-            elements.generateBtn.addEventListener('click', handleGenerate);
-            elements.copyBtn.addEventListener('click', handleCopy);
-            elements.exportBtn.addEventListener('click', handleExport);
-            
-            // Enter key shortcut (Ctrl+Enter)
-            elements.promptInput.addEventListener('keydown', (e) => {
-                if (e.ctrlKey && e.key === 'Enter') {
-                    handleGenerate();
-                }
-            });
-            
-            console.log('Strategic Marketing System initialized', { sessionId: state.sessionId });
-        }
-        
-        // Start the application
-        init();
-    </script>
+        });
+    }
+    
+    // Enter key shortcut (Ctrl+Enter)
+    const textareas = [elements.customerData, elements.productDescription];
+    textareas.forEach(ta => {
+        ta?.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                handleGenerate();
+            }
+        });
+    });
+    
+    // Check backend on load
+    checkBackendHealth();
+}
+
+// Start the application
+init();
+</script>
 </body>
 </html>
