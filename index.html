@@ -363,6 +363,84 @@ textarea:focus{
   border-top:1px solid var(--line-2);
 }
 
+/* History Modal Styles */
+.history-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+.history-modal.show {
+    display: flex;
+}
+.history-modal-content {
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 28px;
+}
+.history-item {
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+.history-item:hover {
+    background: rgba(99,102,241,.1);
+    border-color: var(--indigo);
+}
+.history-date {
+    font-size: 10px;
+    color: var(--ink-4);
+    margin-bottom: 6px;
+    font-family: var(--font-mono);
+}
+.history-preview {
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+.history-meta {
+    font-size: 10px;
+    color: var(--ink-4);
+    display: flex;
+    gap: 12px;
+}
+.delete-history {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(248,113,113,.15);
+    border: 1px solid rgba(248,113,113,.3);
+    color: #f87171;
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.delete-history:hover {
+    background: rgba(248,113,113,.3);
+}
+.empty-history {
+    text-align: center;
+    padding: 40px;
+    color: var(--ink-4);
+}
+
 /* Footer */
 .footer{text-align:center;padding:40px;border-top:1px solid var(--line-2);margin-top:60px;color:var(--ink-4);}
 
@@ -463,6 +541,8 @@ textarea:focus{
         </div>
         <div class="btn-group" style="margin-top:24px;justify-content:flex-end;">
             <button id="copyBtn" class="btn btn-green">📋 Copy to Clipboard</button>
+            <button id="saveHistoryBtn" class="btn btn-indigo">💾 Save to History</button>
+            <button id="viewHistoryBtn" class="btn btn-indigo">📜 History</button>
             <button id="feedbackYesBtn" class="btn btn-primary" style="background:#4ade80;color:#000;">👍 Helpful</button>
             <button id="feedbackNoBtn" class="btn btn-indigo">👎 Not Helpful</button>
         </div>
@@ -478,13 +558,22 @@ textarea:focus{
     <div id="journeyContainer" class="journey-container"></div>
 </div>
 
+<!-- History Modal -->
+<div id="historyModal" class="history-modal">
+    <div class="history-modal-content glass">
+        <h3 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">📜 Saved Marketing Plans</h3>
+        <div id="historyList"></div>
+        <button id="closeHistoryBtn" class="btn btn-indigo" style="margin-top: 20px; width: 100%;">Close</button>
+    </div>
+</div>
+
 <div class="footer">
     <p>© 2024 Strategic Marketing System · Powered by OpenRouter GPT-OSS-120B · 13-Role Marketing Framework</p>
 </div>
 
 <script>
 // ============================================================
-// COMPLETE JAVASCRIPT - ICONS REPLACE LOADER WITH ANIMATION
+// COMPLETE JAVASCRIPT - WITH SAVE TO HISTORY FEATURE
 // ============================================================
 
 // ICON URLS (from your GitHub repository)
@@ -500,6 +589,10 @@ const ICON_URLS = {
 // CONFIGURATION - Your Hugging Face backend
 const API_BASE = 'https://Bisratprompt-marketing-system-api.hf.space';
 
+// History Configuration
+const HISTORY_KEY = 'marketing_plans_history';
+const MAX_HISTORY = 15;
+
 // State
 let currentPlan = null;
 let isGenerating = false;
@@ -511,6 +604,8 @@ const elements = {
     generateBtn: document.getElementById('generateBtn'),
     clearBtn: document.getElementById('clearBtn'),
     copyBtn: document.getElementById('copyBtn'),
+    saveHistoryBtn: document.getElementById('saveHistoryBtn'),
+    viewHistoryBtn: document.getElementById('viewHistoryBtn'),
     feedbackYesBtn: document.getElementById('feedbackYesBtn'),
     feedbackNoBtn: document.getElementById('feedbackNoBtn'),
     outputContainer: document.getElementById('outputContainer'),
@@ -521,7 +616,10 @@ const elements = {
     kpiDashboard: document.getElementById('kpi-dashboard'),
     swotContainer: document.getElementById('swotContainer'),
     journeyContainer: document.getElementById('journeyContainer'),
-    dynamicTablesContainer: document.getElementById('dynamicTablesContainer')
+    dynamicTablesContainer: document.getElementById('dynamicTablesContainer'),
+    historyModal: document.getElementById('historyModal'),
+    historyList: document.getElementById('historyList'),
+    closeHistoryBtn: document.getElementById('closeHistoryBtn')
 };
 
 function showStatus(message, isError = false) {
@@ -546,6 +644,104 @@ function showToast(message) {
 function updateTimestamp() {
     const now = new Date();
     elements.timestamp.textContent = `GENERATED: ${now.toLocaleTimeString()} · ${now.toLocaleDateString()}`;
+}
+
+// ============================================================
+// HISTORY FEATURE FUNCTIONS
+// ============================================================
+function saveToHistory() {
+    if (!currentPlan) {
+        showStatus('No plan to save. Generate one first!', true);
+        return;
+    }
+    
+    const history = getHistory();
+    const newEntry = {
+        id: Date.now(),
+        timestamp: new Date().toISOString(),
+        preview: currentPlan.substring(0, 120) + '...',
+        customerData: elements.customerData.value.substring(0, 80),
+        productData: elements.productDescription.value.substring(0, 80),
+        fullPlan: currentPlan
+    };
+    
+    history.unshift(newEntry);
+    if (history.length > MAX_HISTORY) history.pop();
+    
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    showToast('✅ Plan saved to history!');
+}
+
+function getHistory() {
+    const stored = localStorage.getItem(HISTORY_KEY);
+    return stored ? JSON.parse(stored) : [];
+}
+
+function loadHistoryModal() {
+    const history = getHistory();
+    
+    if (history.length === 0) {
+        elements.historyList.innerHTML = '<div class="empty-history">📭 No saved plans yet. Generate and save one!</div>';
+        return;
+    }
+    
+    elements.historyList.innerHTML = history.map(item => `
+        <div class="history-item" data-id="${item.id}">
+            <button class="delete-history" data-id="${item.id}">✕ Delete</button>
+            <div class="history-date">📅 ${new Date(item.timestamp).toLocaleString()}</div>
+            <div class="history-preview">${escapeHtml(item.preview)}</div>
+            <div class="history-meta">
+                <span>🎯 ${escapeHtml(item.customerData || 'No customer data')}</span>
+            </div>
+        </div>
+    `).join('');
+    
+    // Add click handlers for loading plans
+    document.querySelectorAll('.history-item').forEach(el => {
+        el.addEventListener('click', (e) => {
+            if (e.target.classList.contains('delete-history')) return;
+            const id = parseInt(el.dataset.id);
+            const plan = history.find(h => h.id === id);
+            if (plan) {
+                loadPlanFromHistory(plan);
+                elements.historyModal.classList.remove('show');
+            }
+        });
+    });
+    
+    // Add delete handlers
+    document.querySelectorAll('.delete-history').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = parseInt(btn.dataset.id);
+            deleteFromHistory(id);
+            loadHistoryModal(); // Refresh
+            showToast('🗑️ Plan removed from history');
+        });
+    });
+}
+
+function deleteFromHistory(id) {
+    let history = getHistory();
+    history = history.filter(item => item.id !== id);
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+}
+
+function loadPlanFromHistory(plan) {
+    currentPlan = plan.fullPlan;
+    renderPlan(plan.fullPlan);
+    elements.outputContainer.style.display = 'block';
+    
+    // Pre-fill inputs with original data if available
+    if (plan.customerData) {
+        elements.customerData.value = plan.customerData;
+    }
+    if (plan.productData) {
+        elements.productDescription.value = plan.productData;
+    }
+    
+    showToast('📂 Loaded saved plan');
+    elements.outputContainer.scrollIntoView({ behavior: 'smooth' });
 }
 
 // ============================================================
@@ -597,7 +793,6 @@ function startIconAnimation() {
     const cards = document.querySelectorAll('.kpi-card');
     cards.forEach(card => {
         card.classList.add('generating');
-        // Update text to show "Generating..."
         const valueDiv = card.querySelector('.kpi-value');
         const sourceDiv = card.querySelector('.kpi-source');
         if (valueDiv) valueDiv.textContent = 'Generating...';
@@ -705,7 +900,7 @@ function parsePorterTable(plan) {
             <table class="marketing-table">
                 <thead><tr><th>Force</th><th>Rating</th><th>Rationale</th></tr></thead>
                 <tbody>
-                    ${rows.map(row => `<td>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}
+                    ${rows.map(row => `<tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}
                 </tbody>
             </table>
         </div>
@@ -947,7 +1142,6 @@ async function handleGenerate() {
     elements.swotContainer.classList.remove('visible');
     elements.journeyContainer.classList.remove('visible');
     
-    // Animate the icons instead of showing loader
     startIconAnimation();
     showStatus('🧠 Running 13-role marketing framework...');
     
@@ -980,7 +1174,6 @@ function handleClear() {
     elements.journeyContainer.innerHTML = '';
     elements.renderedOutput.innerHTML = '<p style="color:var(--ink-4);text-align:center;">✨ Your strategic marketing plan will appear here after generation</p>';
     
-    // Reset KPI cards to initial state
     initializeKPIDashboard();
     
     currentPlan = null;
@@ -1028,9 +1221,23 @@ async function handleFeedback(vote) {
 // ============================================================
 initializeKPIDashboard();
 
+// Event Listeners
 elements.generateBtn.addEventListener('click', handleGenerate);
 elements.clearBtn.addEventListener('click', handleClear);
 elements.copyBtn.addEventListener('click', handleCopy);
+elements.saveHistoryBtn.addEventListener('click', saveToHistory);
+elements.viewHistoryBtn.addEventListener('click', () => {
+    loadHistoryModal();
+    elements.historyModal.classList.add('show');
+});
+elements.closeHistoryBtn.addEventListener('click', () => {
+    elements.historyModal.classList.remove('show');
+});
+elements.historyModal.addEventListener('click', (e) => {
+    if (e.target === elements.historyModal) {
+        elements.historyModal.classList.remove('show');
+    }
+});
 elements.feedbackYesBtn.addEventListener('click', () => handleFeedback('yes'));
 elements.feedbackNoBtn.addEventListener('click', () => handleFeedback('no'));
 
