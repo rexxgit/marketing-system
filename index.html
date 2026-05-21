@@ -191,7 +191,7 @@ textarea:focus{
 .rendered-output strong{color:var(--amber);}
 .rendered-output ul{margin:10px 0;padding-left:22px;}
 
-/* KPI Dashboard - VISIBLE ON LOAD WITH ANIMATION */
+/* KPI Dashboard */
 #kpi-dashboard{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -205,8 +205,34 @@ textarea:focus{
   padding:22px 16px;
   text-align:center;
   transition:transform 0.3s ease;
+  position:relative;
+  cursor:pointer;
 }
 .kpi-card:hover{transform:translateY(-5px);}
+/* Icon Tooltip */
+.kpi-card::after{
+  content:attr(data-tooltip);
+  position:absolute;
+  bottom:100%;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(10,14,26,.95);
+  backdrop-filter:blur(10px);
+  border:1px solid var(--glass-border);
+  border-radius:12px;
+  padding:8px 12px;
+  font-size:11px;
+  color:var(--ink-2);
+  white-space:nowrap;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.2s;
+  z-index:100;
+  margin-bottom:8px;
+}
+.kpi-card:hover::after{
+  opacity:1;
+}
 .kpi-icon-img{
   width:48px;
   height:48px;
@@ -215,7 +241,6 @@ textarea:focus{
   object-fit:contain;
   transition:all 0.3s ease;
 }
-/* Loading animation for icons */
 .kpi-card.generating .kpi-icon-img{
   animation:pulse 1s ease-in-out infinite;
   filter:brightness(1.2) drop-shadow(0 0 8px var(--indigo));
@@ -244,7 +269,7 @@ textarea:focus{
   color:var(--ink-4);
 }
 
-/* SWOT Matrix - HIDDEN INITIALLY */
+/* SWOT Matrix */
 .swot-matrix{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -275,7 +300,7 @@ textarea:focus{
 .swot-list li{padding:8px 0 8px 20px;position:relative;}
 .swot-list li:before{content:"▸";position:absolute;left:0;}
 
-/* Dynamic Tables (PESTLE, Porter) */
+/* Dynamic Tables */
 .dynamic-table-wrapper{
   margin:32px 0;
   overflow-x:auto;
@@ -306,7 +331,7 @@ textarea:focus{
 }
 .marketing-table tr:last-child td{border-bottom:none;}
 
-/* Journey Map - HIDDEN INITIALLY */
+/* Journey Map */
 .journey-container{
   display:flex;
   gap:16px;
@@ -363,7 +388,7 @@ textarea:focus{
   border-top:1px solid var(--line-2);
 }
 
-/* History Modal Styles */
+/* History Modal */
 .history-modal {
     display: none;
     position: fixed;
@@ -439,6 +464,75 @@ textarea:focus{
     text-align: center;
     padding: 40px;
     color: var(--ink-4);
+}
+
+/* ===== SOCIAL PROOF WIDGET (NEW) ===== */
+.social-proof-widget {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    z-index: 1000;
+    max-width: 360px;
+}
+.social-proof-card {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: slideUp 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes slideUp {
+    from { transform: translateY(100px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+.social-proof-card:hover {
+    transform: translateX(5px);
+    border-color: var(--indigo);
+}
+.social-proof-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(99,102,241,.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+.social-proof-content {
+    flex: 1;
+}
+.social-proof-message {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-2);
+    margin-bottom: 4px;
+}
+.social-proof-time {
+    font-size: 10px;
+    color: var(--ink-4);
+}
+.social-proof-close {
+    background: none;
+    border: none;
+    color: var(--ink-4);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px 8px;
+    border-radius: 20px;
+    transition: all 0.2s;
+}
+.social-proof-close:hover {
+    background: rgba(255,255,255,.1);
+    color: var(--ink-2);
 }
 
 /* Footer */
@@ -527,7 +621,7 @@ textarea:focus{
         <span id="statusMessage"></span>
     </div>
 
-    <!-- KPI Dashboard - ALWAYS VISIBLE, ICONS ANIMATE DURING GENERATION -->
+    <!-- KPI Dashboard -->
     <div id="kpi-dashboard"></div>
 
     <!-- Output -->
@@ -548,13 +642,13 @@ textarea:focus{
         </div>
     </div>
 
-    <!-- Dynamic Tables Container (PESTLE, Porter) -->
+    <!-- Dynamic Tables Container -->
     <div id="dynamicTablesContainer"></div>
 
-    <!-- SWOT Matrix - HIDDEN INITIALLY -->
+    <!-- SWOT Matrix -->
     <div id="swotContainer" class="swot-matrix"></div>
 
-    <!-- Journey Map - HIDDEN INITIALLY -->
+    <!-- Journey Map -->
     <div id="journeyContainer" class="journey-container"></div>
 </div>
 
@@ -567,13 +661,16 @@ textarea:focus{
     </div>
 </div>
 
+<!-- Social Proof Widget -->
+<div id="socialProofWidget" class="social-proof-widget"></div>
+
 <div class="footer">
     <p>© 2024 Strategic Marketing System · Powered by OpenRouter GPT-OSS-120B · 13-Role Marketing Framework</p>
 </div>
 
 <script>
 // ============================================================
-// COMPLETE JAVASCRIPT - WITH SAVE TO HISTORY FEATURE
+// COMPLETE JAVASCRIPT - WITH SOCIAL PROOF WIDGET
 // ============================================================
 
 // ICON URLS (from your GitHub repository)
@@ -586,16 +683,17 @@ const ICON_URLS = {
     barChart: 'https://raw.githubusercontent.com/rexxgit/marketing-system/main/icons/Bar%20chart.svg'
 };
 
-// CONFIGURATION - Your Hugging Face backend
+// CONFIGURATION
 const API_BASE = 'https://Bisratprompt-marketing-system-api.hf.space';
-
-// History Configuration
 const HISTORY_KEY = 'marketing_plans_history';
+const SOCIAL_KEY = 'social_proof_activity';
 const MAX_HISTORY = 15;
 
 // State
 let currentPlan = null;
 let isGenerating = false;
+let notificationQueue = [];
+let isShowingNotification = false;
 
 // DOM Elements
 const elements = {
@@ -622,130 +720,119 @@ const elements = {
     closeHistoryBtn: document.getElementById('closeHistoryBtn')
 };
 
-function showStatus(message, isError = false) {
-    elements.statusMessage.textContent = message;
-    elements.statusBar.style.display = 'flex';
-    elements.statusBar.className = `status-bar ${isError ? 'error' : 'working'}`;
-    setTimeout(() => {
-        if (elements.statusBar.style.display === 'flex') {
-            elements.statusBar.style.display = 'none';
-        }
-    }, 4000);
-}
-
-function showToast(message) {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
-}
-
-function updateTimestamp() {
-    const now = new Date();
-    elements.timestamp.textContent = `GENERATED: ${now.toLocaleTimeString()} · ${now.toLocaleDateString()}`;
-}
-
 // ============================================================
-// HISTORY FEATURE FUNCTIONS
+// SOCIAL PROOF WIDGET FUNCTIONS
 // ============================================================
-function saveToHistory() {
-    if (!currentPlan) {
-        showStatus('No plan to save. Generate one first!', true);
-        return;
-    }
-    
-    const history = getHistory();
-    const newEntry = {
-        id: Date.now(),
-        timestamp: new Date().toISOString(),
-        preview: currentPlan.substring(0, 120) + '...',
-        customerData: elements.customerData.value.substring(0, 80),
-        productData: elements.productDescription.value.substring(0, 80),
-        fullPlan: currentPlan
+
+const activityMessages = [
+    { icon: '🎯', message: 'just generated a marketing strategy' },
+    { icon: '📊', message: 'analyzed their market with PESTLE' },
+    { icon: '🚀', message: 'created a customer journey map' },
+    { icon: '💪', message: 'completed a SWOT analysis' },
+    { icon: '🎨', message: 'got AI design recommendations' },
+    { icon: '📈', message: 'calculated TAM/SAM/SOM' },
+    { icon: '🏢', message: 'profiled their competitors' },
+    { icon: '💰', message: 'set up KPI tracking' },
+    { icon: '🔥', message: 'identified growth opportunities' },
+    { icon: '⭐', message: 'optimized their marketing mix' }
+];
+
+function generateRandomActivity() {
+    const randomIndex = Math.floor(Math.random() * activityMessages.length);
+    const activity = activityMessages[randomIndex];
+    return {
+        id: Date.now() + Math.random(),
+        icon: activity.icon,
+        message: activity.message,
+        timestamp: new Date()
     };
-    
-    history.unshift(newEntry);
-    if (history.length > MAX_HISTORY) history.pop();
-    
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-    showToast('✅ Plan saved to history!');
 }
 
-function getHistory() {
-    const stored = localStorage.getItem(HISTORY_KEY);
-    return stored ? JSON.parse(stored) : [];
-}
-
-function loadHistoryModal() {
-    const history = getHistory();
+function showNotification(activity) {
+    const widget = document.getElementById('socialProofWidget');
+    if (!widget) return;
     
-    if (history.length === 0) {
-        elements.historyList.innerHTML = '<div class="empty-history">📭 No saved plans yet. Generate and save one!</div>';
-        return;
-    }
-    
-    elements.historyList.innerHTML = history.map(item => `
-        <div class="history-item" data-id="${item.id}">
-            <button class="delete-history" data-id="${item.id}">✕ Delete</button>
-            <div class="history-date">📅 ${new Date(item.timestamp).toLocaleString()}</div>
-            <div class="history-preview">${escapeHtml(item.preview)}</div>
-            <div class="history-meta">
-                <span>🎯 ${escapeHtml(item.customerData || 'No customer data')}</span>
-            </div>
+    const notification = document.createElement('div');
+    notification.className = 'social-proof-card';
+    notification.innerHTML = `
+        <div class="social-proof-icon">${activity.icon}</div>
+        <div class="social-proof-content">
+            <div class="social-proof-message">✨ Someone ${activity.message}</div>
+            <div class="social-proof-time">just now</div>
         </div>
-    `).join('');
+        <button class="social-proof-close" onclick="this.parentElement.remove()">✕</button>
+    `;
     
-    // Add click handlers for loading plans
-    document.querySelectorAll('.history-item').forEach(el => {
-        el.addEventListener('click', (e) => {
-            if (e.target.classList.contains('delete-history')) return;
-            const id = parseInt(el.dataset.id);
-            const plan = history.find(h => h.id === id);
-            if (plan) {
-                loadPlanFromHistory(plan);
-                elements.historyModal.classList.remove('show');
-            }
-        });
-    });
+    widget.appendChild(notification);
     
-    // Add delete handlers
-    document.querySelectorAll('.delete-history').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const id = parseInt(btn.dataset.id);
-            deleteFromHistory(id);
-            loadHistoryModal(); // Refresh
-            showToast('🗑️ Plan removed from history');
-        });
-    });
+    // Auto-remove after 6 seconds
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateX(50px)';
+            setTimeout(() => notification.remove(), 300);
+        }
+    }, 6000);
 }
 
-function deleteFromHistory(id) {
-    let history = getHistory();
-    history = history.filter(item => item.id !== id);
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+function processQueue() {
+    if (isShowingNotification || notificationQueue.length === 0) return;
+    
+    isShowingNotification = true;
+    const next = notificationQueue.shift();
+    showNotification(next);
+    
+    setTimeout(() => {
+        isShowingNotification = false;
+        processQueue();
+    }, 5000);
 }
 
-function loadPlanFromHistory(plan) {
-    currentPlan = plan.fullPlan;
-    renderPlan(plan.fullPlan);
-    elements.outputContainer.style.display = 'block';
+function addToQueue(activity) {
+    notificationQueue.push(activity);
+    processQueue();
+}
+
+function startSocialProofSimulation() {
+    const interval = Math.random() * 35000 + 15000;
     
-    // Pre-fill inputs with original data if available
-    if (plan.customerData) {
-        elements.customerData.value = plan.customerData;
+    setTimeout(() => {
+        const activity = generateRandomActivity();
+        addToQueue(activity);
+        startSocialProofSimulation();
+    }, interval);
+}
+
+function recordUserActivity() {
+    const history = JSON.parse(localStorage.getItem(SOCIAL_KEY) || '[]');
+    history.push({
+        timestamp: Date.now(),
+        sessionId: localStorage.getItem('sessionId') || Date.now().toString()
+    });
+    while (history.length > 50) history.shift();
+    localStorage.setItem(SOCIAL_KEY, JSON.stringify(history));
+}
+
+function getActiveUsersCount() {
+    const history = JSON.parse(localStorage.getItem(SOCIAL_KEY) || '[]');
+    const last5Minutes = history.filter(h => h.timestamp > Date.now() - 5 * 60 * 1000);
+    return Math.max(1, last5Minutes.length + Math.floor(Math.random() * 8));
+}
+
+function showActiveUsersBanner() {
+    const count = getActiveUsersCount();
+    if (count > 1 && Math.random() > 0.6) {
+        addToQueue({
+            icon: '👥',
+            message: `${count} marketers are viewing strategies right now`,
+            timestamp: new Date()
+        });
     }
-    if (plan.productData) {
-        elements.productDescription.value = plan.productData;
-    }
-    
-    showToast('📂 Loaded saved plan');
-    elements.outputContainer.scrollIntoView({ behavior: 'smooth' });
+    setTimeout(showActiveUsersBanner, 60000);
 }
 
 // ============================================================
-// INITIAL KPI DASHBOARD - ALWAYS VISIBLE
+// KPI DASHBOARD WITH TOOLTIPS
 // ============================================================
 function initializeKPIDashboard() {
     const kpiData = [
@@ -753,30 +840,34 @@ function initializeKPIDashboard() {
             icon: ICON_URLS.segmentation, 
             label: 'SEGMENTATION', 
             value: 'Ready to analyze',
-            source: 'Click generate to identify your target audience'
+            source: 'Click generate to identify your target audience',
+            tooltip: '🔍 Identifies your ideal customer segments and primary target audience'
         },
         { 
             icon: ICON_URLS.marketShare, 
             label: 'MARKET SIZE', 
             value: 'Awaiting analysis',
-            source: 'TAM · SAM · SOM calculations'
+            source: 'TAM · SAM · SOM calculations',
+            tooltip: '📊 Calculates Total Addressable Market (TAM), Serviceable Available Market (SAM), and Serviceable Obtainable Market (SOM)'
         },
         { 
             icon: ICON_URLS.efficiency, 
             label: 'KEY METRICS', 
             value: 'Not yet calculated',
-            source: 'Primary KPIs will appear here'
+            source: 'Primary KPIs will appear here',
+            tooltip: '🎯 Tracks your most important performance indicators including ROI, CAC, and conversion rates'
         },
         { 
             icon: ICON_URLS.competitors, 
             label: 'COMPETITION', 
             value: 'Ready for analysis',
-            source: 'Competitor profiling'
+            source: 'Competitor profiling',
+            tooltip: '🏆 Analyzes direct, indirect, and substitute competitors with threat level assessment'
         }
     ];
     
     elements.kpiDashboard.innerHTML = kpiData.map(kpi => `
-        <div class="kpi-card" data-metric="${kpi.label}">
+        <div class="kpi-card" data-metric="${kpi.label}" data-tooltip="${kpi.tooltip}">
             <img src="${kpi.icon}" alt="${kpi.label}" class="kpi-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
             <span style="display:none; font-size:28px;">${kpi.label === 'SEGMENTATION' ? '👥' : kpi.label === 'MARKET SIZE' ? '📊' : kpi.label === 'KEY METRICS' ? '🎯' : '🏢'}</span>
             <div class="kpi-label">${kpi.label}</div>
@@ -841,7 +932,7 @@ function removeDesignOutput(plan) {
 }
 
 // ============================================================
-// DYNAMIC TABLE PARSING (PESTLE, PORTER)
+// DYNAMIC TABLE PARSING
 // ============================================================
 function parsePestleTable(plan) {
     const pestleMatch = plan.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
@@ -908,7 +999,7 @@ function parsePorterTable(plan) {
 }
 
 // ============================================================
-// UPDATE KPI CARDS WITH GENERATED DATA
+// UPDATE KPI CARDS
 // ============================================================
 function updateKPICards(plan) {
     const primarySegment = extractPrimarySegment(plan);
@@ -973,7 +1064,7 @@ function extractTopCompetitor(plan) {
 }
 
 // ============================================================
-// SWOT MATRIX - RENDERED AFTER GENERATION
+// SWOT MATRIX
 // ============================================================
 function renderSWOT(plan) {
     const sections = {
@@ -1022,7 +1113,7 @@ function extractSection(text, startPattern, endPattern) {
 }
 
 // ============================================================
-// JOURNEY MAP - RENDERED AFTER GENERATION
+// JOURNEY MAP
 // ============================================================
 function renderJourney(plan) {
     const journeyMatch = plan.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
@@ -1077,6 +1168,101 @@ function getStageIcon(stage) {
 }
 
 // ============================================================
+// HISTORY FUNCTIONS
+// ============================================================
+function saveToHistory() {
+    if (!currentPlan) {
+        showStatus('No plan to save. Generate one first!', true);
+        return;
+    }
+    
+    const history = getHistory();
+    const newEntry = {
+        id: Date.now(),
+        timestamp: new Date().toISOString(),
+        preview: currentPlan.substring(0, 120) + '...',
+        customerData: elements.customerData.value.substring(0, 80),
+        productData: elements.productDescription.value.substring(0, 80),
+        fullPlan: currentPlan
+    };
+    
+    history.unshift(newEntry);
+    if (history.length > MAX_HISTORY) history.pop();
+    
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    showToast('✅ Plan saved to history!');
+}
+
+function getHistory() {
+    const stored = localStorage.getItem(HISTORY_KEY);
+    return stored ? JSON.parse(stored) : [];
+}
+
+function loadHistoryModal() {
+    const history = getHistory();
+    
+    if (history.length === 0) {
+        elements.historyList.innerHTML = '<div class="empty-history">📭 No saved plans yet. Generate and save one!</div>';
+        return;
+    }
+    
+    elements.historyList.innerHTML = history.map(item => `
+        <div class="history-item" data-id="${item.id}">
+            <button class="delete-history" data-id="${item.id}">✕ Delete</button>
+            <div class="history-date">📅 ${new Date(item.timestamp).toLocaleString()}</div>
+            <div class="history-preview">${escapeHtml(item.preview)}</div>
+            <div class="history-meta">
+                <span>🎯 ${escapeHtml(item.customerData || 'No customer data')}</span>
+            </div>
+        </div>
+    `).join('');
+    
+    document.querySelectorAll('.history-item').forEach(el => {
+        el.addEventListener('click', (e) => {
+            if (e.target.classList.contains('delete-history')) return;
+            const id = parseInt(el.dataset.id);
+            const plan = history.find(h => h.id === id);
+            if (plan) {
+                loadPlanFromHistory(plan);
+                elements.historyModal.classList.remove('show');
+            }
+        });
+    });
+    
+    document.querySelectorAll('.delete-history').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = parseInt(btn.dataset.id);
+            deleteFromHistory(id);
+            loadHistoryModal();
+            showToast('🗑️ Plan removed from history');
+        });
+    });
+}
+
+function deleteFromHistory(id) {
+    let history = getHistory();
+    history = history.filter(item => item.id !== id);
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+}
+
+function loadPlanFromHistory(plan) {
+    currentPlan = plan.fullPlan;
+    renderPlan(plan.fullPlan);
+    elements.outputContainer.style.display = 'block';
+    
+    if (plan.customerData) {
+        elements.customerData.value = plan.customerData;
+    }
+    if (plan.productData) {
+        elements.productDescription.value = plan.productData;
+    }
+    
+    showToast('📂 Loaded saved plan');
+    elements.outputContainer.scrollIntoView({ behavior: 'smooth' });
+}
+
+// ============================================================
 // MAIN RENDER FUNCTION
 // ============================================================
 function renderPlan(plan) {
@@ -1119,6 +1305,30 @@ function escapeHtml(str) {
     });
 }
 
+function showStatus(message, isError = false) {
+    elements.statusMessage.textContent = message;
+    elements.statusBar.style.display = 'flex';
+    elements.statusBar.className = `status-bar ${isError ? 'error' : 'working'}`;
+    setTimeout(() => {
+        if (elements.statusBar.style.display === 'flex') {
+            elements.statusBar.style.display = 'none';
+        }
+    }, 4000);
+}
+
+function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+function updateTimestamp() {
+    const now = new Date();
+    elements.timestamp.textContent = `GENERATED: ${now.toLocaleTimeString()} · ${now.toLocaleDateString()}`;
+}
+
 // ============================================================
 // EVENT HANDLERS
 // ============================================================
@@ -1151,6 +1361,15 @@ async function handleGenerate() {
         renderPlan(plan);
         elements.outputContainer.style.display = 'block';
         showStatus('✅ Marketing strategy generated successfully!');
+        
+        // Record activity for social proof
+        recordUserActivity();
+        addToQueue({
+            icon: '✨',
+            message: 'just generated a complete marketing strategy',
+            timestamp: new Date()
+        });
+        
         elements.outputContainer.scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
         showStatus(`❌ Error: ${error.message}`, true);
@@ -1240,6 +1459,10 @@ elements.historyModal.addEventListener('click', (e) => {
 });
 elements.feedbackYesBtn.addEventListener('click', () => handleFeedback('yes'));
 elements.feedbackNoBtn.addEventListener('click', () => handleFeedback('no'));
+
+// Start Social Proof Widget
+startSocialProofSimulation();
+showActiveUsersBanner();
 
 async function checkHealth() {
     try {
