@@ -466,7 +466,7 @@ textarea:focus{
     color: var(--ink-4);
 }
 
-/* ===== SOCIAL PROOF WIDGET (NEW) ===== */
+/* Social Proof Widget */
 .social-proof-widget {
     position: fixed;
     bottom: 24px;
@@ -533,6 +533,94 @@ textarea:focus{
 .social-proof-close:hover {
     background: rgba(255,255,255,.1);
     color: var(--ink-2);
+}
+
+/* ===== LEAD CAPTURE MODAL (NEW) ===== */
+.lead-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(12px);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+.lead-modal.show {
+    display: flex;
+}
+.lead-modal-content {
+    max-width: 450px;
+    width: 90%;
+    padding: 32px;
+    text-align: center;
+}
+.lead-modal h3 {
+    font-size: 24px;
+    margin-bottom: 8px;
+    background: var(--grad-a);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.lead-modal p {
+    color: var(--ink-2);
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+.lead-input-group {
+    margin-bottom: 16px;
+}
+.lead-input {
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    color: var(--ink);
+    font-size: 14px;
+    transition: all 0.3s;
+}
+.lead-input:focus {
+    outline: none;
+    border-color: var(--indigo);
+    background: rgba(99,102,241,.1);
+}
+.lead-input.error {
+    border-color: #f87171;
+    box-shadow: 0 0 0 2px rgba(248,113,113,.2);
+}
+.lead-error {
+    color: #f87171;
+    font-size: 11px;
+    margin-top: 6px;
+    text-align: left;
+    display: none;
+}
+.lead-success {
+    color: #4ade80;
+    font-size: 14px;
+    margin: 16px 0;
+    display: none;
+}
+.lead-skip {
+    background: none;
+    border: none;
+    color: var(--ink-4);
+    font-size: 12px;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: all 0.2s;
+}
+.lead-skip:hover {
+    color: var(--ink-2);
+}
+/* Honeypot - hidden from real users */
+.honeypot {
+    display: none;
 }
 
 /* Footer */
@@ -664,13 +752,42 @@ textarea:focus{
 <!-- Social Proof Widget -->
 <div id="socialProofWidget" class="social-proof-widget"></div>
 
+<!-- Lead Capture Modal -->
+<div id="leadModal" class="lead-modal">
+    <div class="lead-modal-content glass">
+        <div style="font-size: 48px; margin-bottom: 16px;">🎯</div>
+        <h3>Want More Marketing Insights?</h3>
+        <p>Get weekly strategy tips and exclusive templates delivered to your inbox.</p>
+        
+        <!-- Honeypot field for spam protection -->
+        <div class="honeypot">
+            <input type="text" id="websiteField" name="website" tabindex="-1" autocomplete="off">
+        </div>
+        
+        <div class="lead-input-group">
+            <input type="email" id="leadEmail" class="lead-input" placeholder="Your email address" required>
+            <div id="emailError" class="lead-error">Please enter a valid email address</div>
+        </div>
+        
+        <div class="lead-input-group">
+            <input type="text" id="leadName" class="lead-input" placeholder="Your name (optional)">
+        </div>
+        
+        <div id="leadSuccess" class="lead-success">✅ Thanks! You're now subscribed.</div>
+        
+        <button id="submitLeadBtn" class="btn btn-primary" style="width: 100%;">💌 Subscribe for Free</button>
+        
+        <button id="closeLeadBtn" class="lead-skip">No thanks, just the plan</button>
+    </div>
+</div>
+
 <div class="footer">
     <p>© 2024 Strategic Marketing System · Powered by OpenRouter GPT-OSS-120B · 13-Role Marketing Framework</p>
 </div>
 
 <script>
 // ============================================================
-// COMPLETE JAVASCRIPT - WITH SOCIAL PROOF WIDGET
+// COMPLETE JAVASCRIPT - WITH SOCIAL PROOF & LEAD CAPTURE
 // ============================================================
 
 // ICON URLS (from your GitHub repository)
@@ -687,6 +804,7 @@ const ICON_URLS = {
 const API_BASE = 'https://Bisratprompt-marketing-system-api.hf.space';
 const HISTORY_KEY = 'marketing_plans_history';
 const SOCIAL_KEY = 'social_proof_activity';
+const LEAD_STORAGE_KEY = 'marketing_leads';
 const MAX_HISTORY = 15;
 
 // State
@@ -694,6 +812,7 @@ let currentPlan = null;
 let isGenerating = false;
 let notificationQueue = [];
 let isShowingNotification = false;
+let leadModalShown = false;
 
 // DOM Elements
 const elements = {
@@ -719,6 +838,165 @@ const elements = {
     historyList: document.getElementById('historyList'),
     closeHistoryBtn: document.getElementById('closeHistoryBtn')
 };
+
+// ============================================================
+// LEAD CAPTURE FUNCTIONS
+// ============================================================
+
+function validateEmail(email) {
+    const re = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+    return re.test(email);
+}
+
+function saveLead(name, email) {
+    const leads = JSON.parse(localStorage.getItem(LEAD_STORAGE_KEY) || '[]');
+    const existing = leads.find(l => l.email === email);
+    
+    if (!existing) {
+        leads.push({
+            name: name || 'Anonymous',
+            email: email,
+            timestamp: new Date().toISOString(),
+            source: 'marketing_plan_generator'
+        });
+        localStorage.setItem(LEAD_STORAGE_KEY, JSON.stringify(leads));
+        console.log('📧 Lead saved:', email);
+    }
+    
+    // Track in session so we don't ask again
+    sessionStorage.setItem('lead_captured', 'true');
+}
+
+function hasLeadBeenCaptured() {
+    return sessionStorage.getItem('lead_captured') === 'true';
+}
+
+function showLeadModal() {
+    if (leadModalShown) return;
+    if (hasLeadBeenCaptured()) return;
+    
+    const modal = document.getElementById('leadModal');
+    if (modal) {
+        modal.classList.add('show');
+        leadModalShown = true;
+    }
+}
+
+function hideLeadModal() {
+    const modal = document.getElementById('leadModal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
+function setupLeadModal() {
+    const modal = document.getElementById('leadModal');
+    const submitBtn = document.getElementById('submitLeadBtn');
+    const closeBtn = document.getElementById('closeLeadBtn');
+    const emailInput = document.getElementById('leadEmail');
+    const nameInput = document.getElementById('leadName');
+    const emailError = document.getElementById('emailError');
+    const successMsg = document.getElementById('leadSuccess');
+    const honeypot = document.getElementById('websiteField');
+    
+    if (!submitBtn) return;
+    
+    // Reset function
+    function resetForm() {
+        if (emailInput) emailInput.classList.remove('error');
+        if (emailError) emailError.style.display = 'none';
+        if (successMsg) successMsg.style.display = 'none';
+        if (submitBtn) submitBtn.disabled = false;
+        submitBtn.textContent = '💌 Subscribe for Free';
+    }
+    
+    // Submit handler
+    submitBtn.addEventListener('click', () => {
+        resetForm();
+        
+        // Honeypot check (spam detection)
+        if (honeypot && honeypot.value !== '') {
+            // Bot detected - silently ignore
+            hideLeadModal();
+            return;
+        }
+        
+        const email = emailInput?.value.trim();
+        const name = nameInput?.value.trim();
+        
+        if (!email || !validateEmail(email)) {
+            if (emailInput) emailInput.classList.add('error');
+            if (emailError) emailError.style.display = 'block';
+            return;
+        }
+        
+        // Valid email - save lead
+        saveLead(name, email);
+        
+        // Show success message
+        if (successMsg) successMsg.style.display = 'block';
+        if (submitBtn) submitBtn.disabled = true;
+        submitBtn.textContent = '✅ Subscribed!';
+        
+        // Optional: Send to backend
+        /*
+        fetch(`${API_BASE}/capture-lead`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name, email: email, source: 'marketing_plan' })
+        }).catch(console.error);
+        */
+        
+        // Close modal after delay
+        setTimeout(() => {
+            hideLeadModal();
+            resetForm();
+        }, 2000);
+    });
+    
+    // Close button
+    if (closeBtn) {
+        closeBtn.addEventListener('click', hideLeadModal);
+    }
+    
+    // Close on outside click
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) hideLeadModal();
+        });
+    }
+    
+    // Real-time validation
+    if (emailInput) {
+        emailInput.addEventListener('input', () => {
+            emailInput.classList.remove('error');
+            if (emailError) emailError.style.display = 'none';
+        });
+    }
+}
+
+// Export leads function (can be called from console or add admin button)
+function exportLeads() {
+    const leads = JSON.parse(localStorage.getItem(LEAD_STORAGE_KEY) || '[]');
+    if (leads.length === 0) {
+        showToast('No leads captured yet');
+        return;
+    }
+    
+    const csv = [
+        ['Name', 'Email', 'Date', 'Source'],
+        ...leads.map(l => [l.name, l.email, l.timestamp, l.source])
+    ].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `leads_${new Date().toISOString().slice(0,19)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast(`Exported ${leads.length} leads`);
+}
 
 // ============================================================
 // SOCIAL PROOF WIDGET FUNCTIONS
@@ -765,7 +1043,6 @@ function showNotification(activity) {
     
     widget.appendChild(notification);
     
-    // Auto-remove after 6 seconds
     setTimeout(() => {
         if (notification.parentElement) {
             notification.style.opacity = '0';
@@ -1370,6 +1647,9 @@ async function handleGenerate() {
             timestamp: new Date()
         });
         
+        // Show lead capture modal after successful generation
+        setTimeout(() => showLeadModal(), 1500);
+        
         elements.outputContainer.scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
         showStatus(`❌ Error: ${error.message}`, true);
@@ -1439,6 +1719,7 @@ async function handleFeedback(vote) {
 // INITIALIZATION
 // ============================================================
 initializeKPIDashboard();
+setupLeadModal();
 
 // Event Listeners
 elements.generateBtn.addEventListener('click', handleGenerate);
@@ -1463,6 +1744,9 @@ elements.feedbackNoBtn.addEventListener('click', () => handleFeedback('no'));
 // Start Social Proof Widget
 startSocialProofSimulation();
 showActiveUsersBanner();
+
+// Expose exportLeads to console for admin use (optional)
+window.exportLeads = exportLeads;
 
 async function checkHealth() {
     try {
