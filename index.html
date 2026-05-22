@@ -157,9 +157,6 @@ textarea:focus{
   border:1px solid rgba(74,222,128,.35);
   color:var(--green);
 }
-.loader{
-  display:none;
-}
 
 /* Status Bar */
 .status-bar{
@@ -191,14 +188,18 @@ textarea:focus{
 .rendered-output strong{color:var(--amber);}
 .rendered-output ul{margin:10px 0;padding-left:22px;}
 
-/* ===== KPI DASHBOARD WITH CSS LOADERS ===== */
+/* ===== KPI DASHBOARD - HIDDEN INITIALLY, POP-IN ANIMATION ===== */
 #kpi-dashboard{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
   gap:24px;
   margin:32px 0;
+  opacity:0;
+  transition:opacity 0.3s ease;
 }
-
+#kpi-dashboard.visible{
+  opacity:1;
+}
 .kpi-card{
   background:var(--glass-bg);
   backdrop-filter:var(--glass-blur);
@@ -208,24 +209,30 @@ textarea:focus{
   text-align:center;
   transition:all 0.3s ease;
   position:relative;
-  min-height: 220px;
+  min-height: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  opacity:0;
+  transform:scale(0.8) translateY(30px);
+  transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);
 }
-
+.kpi-card.pop-in{
+  opacity:1;
+  transform:scale(1) translateY(0);
+}
 .kpi-card:hover{
-  transform:translateY(-5px);
+  transform:translateY(-5px) scale(1.02);
   border-color:var(--indigo);
   box-shadow:0 10px 30px rgba(99,102,241,.15);
 }
 
 /* Card Icon */
 .kpi-icon{
-  font-size: 32px;
+  font-size: 48px;
   margin-bottom: 16px;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 /* Loader Container */
@@ -366,10 +373,6 @@ textarea:focus{
     font-size: 10px;
     color: var(--ink-4);
 }
-.kpi-icon-small {
-    font-size: 24px;
-    margin-bottom: 8px;
-}
 
 /* SWOT Matrix */
 .swot-matrix{
@@ -458,13 +461,6 @@ textarea:focus{
   transform:translateY(-6px);
   border-color:var(--indigo);
   box-shadow:0 10px 30px rgba(99,102,241,.15);
-}
-.journey-icon-img{
-  width:44px;
-  height:44px;
-  margin:0 auto 12px;
-  display:block;
-  object-fit:contain;
 }
 .journey-stage{
   font-weight:700;
@@ -801,7 +797,6 @@ textarea:focus{
             <button id="generateBtn" class="btn btn-primary">✨ Generate Strategic Marketing Plan</button>
             <button id="clearBtn" class="btn btn-indigo">Clear All</button>
         </div>
-        <div id="loader" class="loader"></div>
     </div>
 
     <!-- Status Bar -->
@@ -810,7 +805,7 @@ textarea:focus{
         <span id="statusMessage"></span>
     </div>
 
-    <!-- KPI Dashboard with CSS Loaders -->
+    <!-- KPI Dashboard - HIDDEN INITIALLY -->
     <div id="kpi-dashboard"></div>
 
     <!-- Output -->
@@ -887,7 +882,7 @@ textarea:focus{
 
 <script>
 // ============================================================
-// COMPLETE JAVASCRIPT - WITH CSS LOADERS & FIXED DUPLICATE ERROR
+// COMPLETE JAVASCRIPT - SEQUENTIAL POP-IN ANIMATION
 // ============================================================
 
 // CONFIGURATION
@@ -930,42 +925,38 @@ const elements = {
 };
 
 // ============================================================
-// INITIALIZE KPI DASHBOARD WITH CSS LOADERS
+// CREATE KPI CARDS (HIDDEN INITIALLY)
 // ============================================================
-function initializeKPIDashboard() {
+function createKPICards() {
     const kpiCards = [
         {
             icon: '👥',
             label: 'SEGMENTATION',
-            loaderType: 'dots',
             loaderHtml: `<div class="loader-container"><div class="loader-pulse-dots"><span></span><span></span><span></span></div></div>`,
             loadingText: 'Analyzing audience segments...'
         },
         {
             icon: '📊',
             label: 'MARKET SIZE',
-            loaderType: 'bars',
             loaderHtml: `<div class="loader-container"><div class="loader-bars"><span></span><span></span><span></span><span></span></div></div>`,
             loadingText: 'Calculating TAM/SAM/SOM...'
         },
         {
             icon: '🎯',
             label: 'KEY METRICS',
-            loaderType: 'spinner',
             loaderHtml: `<div class="loader-container"><div class="loader-spinner"></div></div>`,
             loadingText: 'Identifying primary KPIs...'
         },
         {
             icon: '🏆',
             label: 'COMPETITION',
-            loaderType: 'wobble',
             loaderHtml: `<div class="loader-container"><div class="loader-wobble"><span></span><span></span><span></span><span></span></div></div>`,
             loadingText: 'Profiling competitors...'
         }
     ];
     
-    elements.kpiDashboard.innerHTML = kpiCards.map(card => `
-        <div class="kpi-card" data-metric="${card.label}" id="kpi-${card.label.replace(/\s/g, '')}">
+    elements.kpiDashboard.innerHTML = kpiCards.map((card, index) => `
+        <div class="kpi-card" data-metric="${card.label}" data-index="${index}" id="kpi-${card.label.replace(/\s/g, '')}">
             <div class="kpi-icon">${card.icon}</div>
             ${card.loaderHtml}
             <div class="loader-text">${card.loadingText}</div>
@@ -976,6 +967,33 @@ function initializeKPIDashboard() {
             </div>
         </div>
     `).join('');
+}
+
+// ============================================================
+// SEQUENTIAL POP-IN ANIMATION
+// ============================================================
+function sequentialPopIn() {
+    const cards = document.querySelectorAll('.kpi-card');
+    cards.forEach((card, index) => {
+        setTimeout(() => {
+            card.classList.add('pop-in');
+        }, index * 800); // 800ms delay between each card (Segmentation → Market Size → Key Metrics → Competition)
+    });
+}
+
+// Show KPI dashboard with animation
+function showKPIDashboard() {
+    elements.kpiDashboard.classList.add('visible');
+    sequentialPopIn();
+}
+
+// Hide KPI dashboard (on clear)
+function hideKPIDashboard() {
+    elements.kpiDashboard.classList.remove('visible');
+    const cards = document.querySelectorAll('.kpi-card');
+    cards.forEach(card => {
+        card.classList.remove('pop-in', 'loaded');
+    });
 }
 
 // ============================================================
@@ -1316,7 +1334,7 @@ function parsePorterTable(plan) {
         <div class="section-header"><h3>🎯 Porter's Five Forces</h3></div>
         <div class="dynamic-table-wrapper">
             <table class="marketing-table">
-                <thead><tr><th>Force</th><th>Rating</th><th>Rationale</th></tr></thead>
+                <thead><tr><th>Force</th><th>Rating</th><th>Rationale</th><tr></thead>
                 <tbody>${rows.map(row => `<tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}</tbody>
             </table>
         </div>
@@ -1540,29 +1558,37 @@ async function handleGenerate() {
     elements.swotContainer.classList.remove('visible');
     elements.journeyContainer.classList.remove('visible');
     
-    // Reset KPI cards to loader state
-    document.querySelectorAll('.kpi-card').forEach(card => card.classList.remove('loaded'));
+    // RESET: Hide and clear previous dashboard
+    hideKPIDashboard();
     
-    showStatus('🧠 Running 13-role marketing framework...');
+    showStatus('🎬 Loading marketing intelligence...', false);
     
-    try {
-        const plan = await generateMarketingPlan(customerData, productDescription);
-        currentPlan = plan;
-        renderPlan(plan);
-        elements.outputContainer.style.display = 'block';
-        showStatus('✅ Marketing strategy generated successfully!');
-        recordUserActivity();
-        addToQueue({ icon: '✨', message: 'just generated a complete marketing strategy', timestamp: new Date() });
-        setTimeout(() => showLeadModal(), 1500);
-        elements.outputContainer.scrollIntoView({ behavior: 'smooth' });
-    } catch (error) {
-        showStatus(`❌ Error: ${error.message}`, true);
-        console.error(error);
-    } finally {
-        isGenerating = false;
-        elements.generateBtn.disabled = false;
-        elements.generateBtn.textContent = '✨ Generate Strategic Marketing Plan';
-    }
+    // Step 1: Show KPI dashboard with pop-in animation (icons appear one by one)
+    showKPIDashboard();
+    
+    // Step 2: Wait for pop-in animation to complete before starting API call
+    setTimeout(async () => {
+        showStatus('🧠 AI is analyzing your market...', false);
+        
+        try {
+            const plan = await generateMarketingPlan(customerData, productDescription);
+            currentPlan = plan;
+            renderPlan(plan);
+            elements.outputContainer.style.display = 'block';
+            showStatus('✅ Marketing strategy generated successfully!');
+            recordUserActivity();
+            addToQueue({ icon: '✨', message: 'just generated a complete marketing strategy', timestamp: new Date() });
+            setTimeout(() => showLeadModal(), 1500);
+            elements.outputContainer.scrollIntoView({ behavior: 'smooth' });
+        } catch (error) {
+            showStatus(`❌ Error: ${error.message}`, true);
+            console.error(error);
+        } finally {
+            isGenerating = false;
+            elements.generateBtn.disabled = false;
+            elements.generateBtn.textContent = '✨ Generate Strategic Marketing Plan';
+        }
+    }, 1200); // Wait for all 4 icons to finish popping in (4 × 800ms = 3200ms, but we start after first few)
 }
 
 function handleClear() {
@@ -1576,8 +1602,8 @@ function handleClear() {
     elements.journeyContainer.innerHTML = '';
     elements.renderedOutput.innerHTML = '<p style="color:var(--ink-4);text-align:center;">✨ Your strategic marketing plan will appear here after generation</p>';
     
-    // Reset KPI cards to loader state
-    document.querySelectorAll('.kpi-card').forEach(card => card.classList.remove('loaded'));
+    // Hide KPI dashboard completely
+    hideKPIDashboard();
     
     currentPlan = null;
     showStatus('Cleared. Ready for new strategy.', false);
@@ -1605,9 +1631,12 @@ async function handleFeedback(vote) {
 // ============================================================
 // INITIALIZATION
 // ============================================================
-initializeKPIDashboard();
+// Create KPI cards structure but keep them hidden
+createKPICards();
+hideKPIDashboard();
 setupLeadModal();
 
+// Event Listeners
 elements.generateBtn.addEventListener('click', handleGenerate);
 elements.clearBtn.addEventListener('click', handleClear);
 elements.copyBtn.addEventListener('click', handleCopy);
@@ -1618,9 +1647,11 @@ elements.historyModal.addEventListener('click', (e) => { if (e.target === elemen
 elements.feedbackYesBtn.addEventListener('click', () => handleFeedback('yes'));
 elements.feedbackNoBtn.addEventListener('click', () => handleFeedback('no'));
 
+// Start Social Proof
 startSocialProofSimulation();
 showActiveUsersBanner();
 
+// Export leads function
 window.exportLeads = () => {
     const leads = JSON.parse(localStorage.getItem(LEAD_STORAGE_KEY) || '[]');
     if (leads.length === 0) { showToast('No leads captured yet'); return; }
