@@ -340,6 +340,9 @@ textarea:focus{
 .kpi-card.loaded .loader-container {
     display: none;
 }
+.kpi-card.loaded .loader-text {
+    display: none;
+}
 .kpi-card.loaded .kpi-content {
     display: block;
 }
@@ -455,6 +458,13 @@ textarea:focus{
   transform:translateY(-6px);
   border-color:var(--indigo);
   box-shadow:0 10px 30px rgba(99,102,241,.15);
+}
+.journey-icon-img{
+  width:44px;
+  height:44px;
+  margin:0 auto 12px;
+  display:block;
+  object-fit:contain;
 }
 .journey-stage{
   font-weight:700;
@@ -877,7 +887,7 @@ textarea:focus{
 
 <script>
 // ============================================================
-// COMPLETE JAVASCRIPT - WITH CSS LOADERS
+// COMPLETE JAVASCRIPT - WITH CSS LOADERS & FIXED DUPLICATE ERROR
 // ============================================================
 
 // CONFIGURATION
@@ -969,7 +979,7 @@ function initializeKPIDashboard() {
 }
 
 // ============================================================
-// UPDATE KPI CARDS WITH GENERATED DATA
+// UPDATE KPI CARDS WITH GENERATED DATA (DYNAMIC)
 // ============================================================
 function updateKPICards(plan) {
     const primarySegment = extractPrimarySegment(plan);
@@ -1027,6 +1037,7 @@ function updateKPICards(plan) {
     });
 }
 
+// Dynamic extraction functions
 function extractPrimarySegment(plan) {
     const match = plan.match(/Primary Target[:\s]*([^\n]+)/i);
     return match ? match[1].substring(0, 45) : null;
@@ -1197,9 +1208,6 @@ function showNotification(activity) {
         }
     }, 6000);
 }
-
-let notificationQueue = [];
-let isShowingNotification = false;
 
 function processQueue() {
     if (isShowingNotification || notificationQueue.length === 0) return;
