@@ -188,7 +188,150 @@ textarea:focus{
 .rendered-output strong{color:var(--amber);}
 .rendered-output ul{margin:10px 0;padding-left:22px;}
 
-/* ===== KPI DASHBOARD - HIDDEN INITIALLY, POP-IN ANIMATION ===== */
+/* ===== STREAMING OUTPUT STYLES ===== */
+.streaming-container {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin-top: 16px;
+}
+
+.role-card {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 28px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s cubic-bezier(0.34, 1.2, 0.64, 1);
+    overflow: hidden;
+}
+
+.role-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.role-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--line);
+}
+
+.role-icon {
+    font-size: 36px;
+    filter: drop-shadow(0 0 8px var(--indigo));
+    animation: iconGlow 2s ease-in-out infinite;
+}
+
+@keyframes iconGlow {
+    0%, 100% { filter: drop-shadow(0 0 2px var(--indigo)); }
+    50% { filter: drop-shadow(0 0 12px var(--indigo-soft)); }
+}
+
+.role-title {
+    font-family: var(--font-sans);
+    font-size: 1.6rem;
+    font-weight: 500;
+    background: var(--grad-a);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.role-badge {
+    background: rgba(99,102,241,.15);
+    border: 1px solid rgba(99,102,241,.3);
+    border-radius: 100px;
+    padding: 4px 12px;
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--indigo-soft);
+    margin-left: auto;
+}
+
+.role-content {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink-2);
+}
+
+/* Streaming Tables */
+.stream-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: rgba(255,255,255,.02);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.stream-table th {
+    background: rgba(99,102,241,.12);
+    color: var(--indigo-soft);
+    padding: 14px 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-align: left;
+    font-weight: 600;
+}
+
+.stream-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--line-2);
+    vertical-align: top;
+}
+
+.stream-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Loading indicator */
+.loading-placeholder {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+}
+
+.streaming-indicator {
+    display: inline-flex;
+    gap: 4px;
+}
+
+.streaming-indicator span {
+    width: 8px;
+    height: 8px;
+    background: var(--indigo-soft);
+    border-radius: 50%;
+    animation: pulseDot 1.4s infinite;
+}
+
+.streaming-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.streaming-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+/* Progress bar */
+.stream-progress {
+    height: 2px;
+    background: var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.stream-progress-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--indigo), var(--cyan));
+    transition: width 0.3s ease;
+}
+
+/* ===== KPI DASHBOARD ===== */
 #kpi-dashboard{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
@@ -227,15 +370,11 @@ textarea:focus{
   border-color:var(--indigo);
   box-shadow:0 10px 30px rgba(99,102,241,.15);
 }
-
-/* Card Icon */
 .kpi-icon{
   font-size: 48px;
   margin-bottom: 16px;
   opacity: 0.9;
 }
-
-/* Loader Container */
 .loader-container{
   width: 60px;
   height: 60px;
@@ -244,8 +383,6 @@ textarea:focus{
   align-items: center;
   justify-content: center;
 }
-
-/* Loader 1: Pulsing Dots (Segmentation) */
 .loader-pulse-dots {
     width: 50px;
     height: 20px;
@@ -267,8 +404,6 @@ textarea:focus{
     0%, 60%, 100% { transform: scale(0.6); opacity: 0.4; }
     30% { transform: scale(1.2); opacity: 1; }
 }
-
-/* Loader 2: Growing Bars (Market Size) */
 .loader-bars {
     width: 50px;
     height: 40px;
@@ -290,8 +425,6 @@ textarea:focus{
     0%, 100% { opacity: 0.4; transform: scaleY(0.8); }
     50% { opacity: 1; transform: scaleY(1.2); }
 }
-
-/* Loader 3: Spinner Gradient (Key Metrics) */
 .loader-spinner {
     width: 45px;
     height: 45px;
@@ -304,8 +437,6 @@ textarea:focus{
 @keyframes spinLoader {
     to { transform: rotate(360deg); }
 }
-
-/* Loader 4: Wobbling Shapes (Competition) */
 .loader-wobble {
     width: 50px;
     height: 30px;
@@ -328,8 +459,6 @@ textarea:focus{
     0%, 100% { transform: translateY(0) rotate(0deg); }
     50% { transform: translateY(-8px) rotate(8deg); }
 }
-
-/* Loader Text */
 .loader-text {
     font-family: var(--font-mono);
     font-size: 10px;
@@ -338,8 +467,6 @@ textarea:focus{
     margin-top: 12px;
     text-transform: uppercase;
 }
-
-/* KPI Content (shown after generation) */
 .kpi-content {
     display: none;
     width: 100%;
@@ -374,7 +501,7 @@ textarea:focus{
     color: var(--ink-4);
 }
 
-/* ===== ANALYTICS DASHBOARD (NEW) ===== */
+/* Analytics Dashboard */
 .analytics-dashboard {
     display: none;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -953,7 +1080,7 @@ textarea:focus{
 
 <script>
 // ============================================================
-// COMPLETE JAVASCRIPT - SEQUENTIAL POP-IN ANIMATION + ANALYTICS
+// COMPLETE JAVASCRIPT - STREAMING OUTPUT + FIXED ANALYTICS
 // ============================================================
 
 // CONFIGURATION
@@ -971,7 +1098,6 @@ let notificationQueue = [];
 let isShowingNotification = false;
 let leadModalShown = false;
 let sessionGenerations = 0;
-let sessionStartTime = Date.now();
 
 // DOM Elements
 const elements = {
@@ -1000,7 +1126,20 @@ const elements = {
 };
 
 // ============================================================
-// ANALYTICS DASHBOARD FUNCTIONS
+// FORMAT TIME (minutes:seconds)
+// ============================================================
+function formatTime(seconds) {
+    if (isNaN(seconds) || seconds === 0) return '0s';
+    if (seconds < 60) {
+        return `${Math.round(seconds * 10) / 10}s`;
+    }
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.round(seconds % 60);
+    return `${mins}m ${secs}s`;
+}
+
+// ============================================================
+// ANALYTICS DASHBOARD FUNCTIONS (FIXED)
 // ============================================================
 
 function initAnalytics() {
@@ -1026,11 +1165,12 @@ function saveAnalytics(data) {
     localStorage.setItem(ANALYTICS_KEY, JSON.stringify(data));
 }
 
-function updateAnalytics(responseTime, customerData) {
+function updateAnalytics(responseTimeMs, customerData) {
     let analytics = getAnalytics();
+    const responseTimeSec = responseTimeMs / 1000; // Convert to seconds
     
     analytics.totalGenerations = (analytics.totalGenerations || 0) + 1;
-    analytics.totalResponseTime = (analytics.totalResponseTime || 0) + responseTime;
+    analytics.totalResponseTime = (analytics.totalResponseTime || 0) + responseTimeSec;
     
     const industry = extractIndustryFromText(customerData);
     if (industry) {
@@ -1040,10 +1180,10 @@ function updateAnalytics(responseTime, customerData) {
     analytics.history = analytics.history || [];
     analytics.history.unshift({
         timestamp: Date.now(),
-        responseTime: responseTime,
+        responseTime: responseTimeSec,
         industry: industry
     });
-    if (analytics.history.length > 50) analytics.history.pop();
+    if (analytics.history.length > 20) analytics.history.pop();
     
     saveAnalytics(analytics);
     sessionGenerations++;
@@ -1062,7 +1202,7 @@ function updateFeedbackAnalytics(vote) {
 }
 
 function extractIndustryFromText(text) {
-    const industries = ['SaaS', 'E-commerce', 'FinTech', 'HealthTech', 'EdTech', 'B2B', 'D2C', 'AI', 'Blockchain', 'Real Estate', 'Mobile', 'Retail', 'Manufacturing'];
+    const industries = ['SaaS', 'E-commerce', 'FinTech', 'HealthTech', 'EdTech', 'B2B', 'D2C', 'AI', 'Blockchain', 'Real Estate', 'Mobile', 'Retail', 'Manufacturing', 'Agriculture', 'Farming', 'Seed', 'Organic', 'AgriTech'];
     const lowerText = text.toLowerCase();
     for (let industry of industries) {
         if (lowerText.includes(industry.toLowerCase())) return industry;
@@ -1083,7 +1223,7 @@ function getSuccessRate(analytics) {
 
 function getAvgResponseTime(analytics) {
     if (!analytics.totalGenerations || analytics.totalGenerations === 0) return 0;
-    return Math.round(analytics.totalResponseTime / analytics.totalGenerations / 100) / 10;
+    return analytics.totalResponseTime / analytics.totalGenerations;
 }
 
 function renderAnalyticsDashboard() {
@@ -1091,7 +1231,7 @@ function renderAnalyticsDashboard() {
     
     const analytics = getAnalytics();
     const totalGen = analytics.totalGenerations || 0;
-    const avgTime = getAvgResponseTime(analytics);
+    const avgTimeSec = getAvgResponseTime(analytics);
     const successRate = getSuccessRate(analytics);
     const topIndustry = getTopIndustry(analytics.industries);
     
@@ -1103,7 +1243,7 @@ function renderAnalyticsDashboard() {
     const responseTrendEl = document.getElementById('responseTrend');
     
     if (totalGenEl) totalGenEl.textContent = totalGen;
-    if (avgTimeEl) avgTimeEl.textContent = `${avgTime}s`;
+    if (avgTimeEl) avgTimeEl.textContent = formatTime(avgTimeSec);
     if (successRateEl) successRateEl.textContent = `${successRate}%`;
     if (topIndustryEl) topIndustryEl.textContent = topIndustry;
     
@@ -1117,19 +1257,18 @@ function renderAnalyticsDashboard() {
         }
     }
     
-    // Response time trend
+    // FIXED: Compare last generation vs overall average
     const history = analytics.history || [];
-    const recentTimes = history.slice(0, 5).map(h => h.responseTime);
-    const avgRecent = recentTimes.length ? recentTimes.reduce((a,b) => a+b,0) / recentTimes.length : avgTime;
+    const lastGenTime = history.length > 0 ? history[0].responseTime : avgTimeSec;
     if (responseTrendEl) {
-        if (avgTime < avgRecent && avgRecent > 0) {
-            responseTrendEl.textContent = `↓ faster than avg`;
+        if (lastGenTime < avgTimeSec && avgTimeSec > 0) {
+            responseTrendEl.textContent = `↓ faster (${formatTime(lastGenTime)})`;
             responseTrendEl.className = 'analytics-trend';
-        } else if (avgTime > avgRecent && avgRecent > 0) {
-            responseTrendEl.textContent = `↑ slower than avg`;
+        } else if (lastGenTime > avgTimeSec && avgTimeSec > 0) {
+            responseTrendEl.textContent = `↑ slower (${formatTime(lastGenTime)})`;
             responseTrendEl.className = 'analytics-trend down';
         } else {
-            responseTrendEl.textContent = `— stable`;
+            responseTrendEl.textContent = `— (${formatTime(lastGenTime)})`;
             responseTrendEl.className = 'analytics-trend';
         }
     }
@@ -1151,34 +1290,191 @@ function hideAnalyticsDashboard() {
 }
 
 // ============================================================
+// STREAMING OUTPUT ENGINE - SEQUENTIAL ROLE REVEAL
+// ============================================================
+
+function parseRolesFromPlan(plan) {
+    const roles = [
+        { name: 'SEGMENTATION OUTPUT', icon: '🎯', title: 'Market Segmentation & Targeting' },
+        { name: 'TAMSAMSOM OUTPUT', icon: '📊', title: 'Market Sizing (TAM/SAM/SOM)' },
+        { name: 'PESTLE OUTPUT', icon: '⚡', title: 'PESTLE Analysis' },
+        { name: 'PORTER OUTPUT', icon: '🎯', title: "Porter's Five Forces" },
+        { name: 'COMPETITOR OUTPUT', icon: '🏢', title: 'Competitor Profiling & Analysis' },
+        { name: 'POSITIONING OUTPUT', icon: '📍', title: 'Brand Positioning' },
+        { name: '4Ps OUTPUT', icon: '🎨', title: 'Marketing Mix (4Ps)' },
+        { name: 'SWOT OUTPUT', icon: '💪', title: 'SWOT + Micro-SWOT Analysis' },
+        { name: 'CUSTOMER JOURNEY OUTPUT', icon: '🗺️', title: 'Customer Journey Map (Covetousness)' },
+        { name: 'KPI OUTPUT', icon: '📈', title: 'KPIs & Budget Allocation' },
+        { name: 'OKRS OUTPUT', icon: '🎯', title: 'OKR Strategist' },
+        { name: 'ROADMAP OUTPUT', icon: '📅', title: '30-Day Roadmap' }
+    ];
+    
+    const parsed = [];
+    
+    for (let i = 0; i < roles.length; i++) {
+        const role = roles[i];
+        const regex = new RegExp(`\\[${role.name}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
+        const match = plan.match(regex);
+        
+        if (match && match[1] && match[1].trim().length > 30) {
+            parsed.push({
+                ...role,
+                content: match[1].trim()
+            });
+        }
+    }
+    
+    return parsed;
+}
+
+function formatRoleContent(content) {
+    let formatted = content;
+    
+    // Convert markdown tables to HTML
+    formatted = formatted.replace(/\n\|(.+)\|\n\|[-:\s|]+\|\n((?:\|.+\|\n?)+)/gm, (match, header, rows) => {
+        const headers = header.split('|').filter(h => h.trim()).map(h => `<th>${escapeHtml(h.trim())}</th>`).join('');
+        const bodyRows = rows.trim().split('\n').map(row => {
+            const cells = row.split('|').filter(c => c.trim()).map(c => `<td>${escapeHtml(c.trim())}</td>`);
+            return `<tr>${cells.join('')}</tr>`;
+        }).join('');
+        return `<table class="stream-table"><thead><tr>${headers}</tr></thead><tbody>${bodyRows}</tbody></table>`;
+    });
+    
+    // Convert bold
+    formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // Convert bullet points
+    formatted = formatted.replace(/^[-•*]\s+(.*?)$/gm, '<li>$1</li>');
+    formatted = formatted.replace(/(<li>.*?<\/li>)+/gs, '<ul>$&</ul>');
+    
+    // Convert line breaks
+    formatted = formatted.replace(/\n/g, '<br>');
+    
+    return `<div class="role-content">${formatted}</div>`;
+}
+
+async function streamRolesSequentially(plan) {
+    const outputContainer = document.getElementById('renderedOutput');
+    const roles = parseRolesFromPlan(plan);
+    
+    if (roles.length === 0) {
+        outputContainer.innerHTML = `<div class="role-content">${escapeHtml(plan).replace(/\n/g, '<br>')}</div>`;
+        return;
+    }
+    
+    outputContainer.innerHTML = `
+        <div class="streaming-container" id="streamingContainer">
+            <div class="stream-progress"><div class="stream-progress-bar" id="streamProgressBar"></div></div>
+        </div>
+    `;
+    
+    const container = document.getElementById('streamingContainer');
+    const progressBar = document.getElementById('streamProgressBar');
+    
+    for (let i = 0; i < roles.length; i++) {
+        const role = roles[i];
+        const card = document.createElement('div');
+        card.className = 'role-card';
+        card.innerHTML = `
+            <div class="role-header">
+                <div class="role-icon">${role.icon}</div>
+                <div class="role-title">${role.title}</div>
+                <div class="role-badge">Role ${i+1}/${roles.length}</div>
+            </div>
+            <div class="loading-placeholder">
+                <div class="streaming-indicator"><span></span><span></span><span></span></div>
+                <span style="color: var(--ink-3); font-size: 13px;">Loading ${role.title}...</span>
+            </div>
+        `;
+        container.appendChild(card);
+        
+        // Goldilocks pacing: 0.8s - 2s between roles
+        const revealDelay = 800 + (Math.random() * 1200);
+        
+        setTimeout(() => {
+            const contentHtml = formatRoleContent(role.content);
+            const loadingDiv = card.querySelector('.loading-placeholder');
+            if (loadingDiv) loadingDiv.remove();
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.innerHTML = contentHtml;
+            card.appendChild(contentDiv);
+            
+            setTimeout(() => {
+                card.classList.add('visible');
+            }, 50);
+            
+            const progress = ((i + 1) / roles.length) * 100;
+            if (progressBar) progressBar.style.width = `${progress}%`;
+            
+            card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, i === 0 ? 300 : revealDelay);
+    }
+}
+
+// ============================================================
+// COMPLETE SWOT EXTRACTION (NO PLACEHOLDERS)
+// ============================================================
+function renderSWOT(plan) {
+    const swotMatch = plan.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+    if (!swotMatch) return;
+    
+    const swotText = swotMatch[1];
+    const strengths = [];
+    const weaknesses = [];
+    const opportunities = [];
+    const threats = [];
+    
+    let current = null;
+    const lines = swotText.split('\n');
+    
+    for (const line of lines) {
+        if (line.match(/^Strengths:/i)) current = 'strengths';
+        else if (line.match(/^Weaknesses:/i)) current = 'weaknesses';
+        else if (line.match(/^Opportunities:/i)) current = 'opportunities';
+        else if (line.match(/^Threats:/i)) current = 'threats';
+        else if (line.match(/^[-•*]\s+(.+)/) && current) {
+            const item = line.replace(/^[-•*]\s+/, '').trim();
+            if (item.length > 5 && item.length < 200) {
+                if (current === 'strengths') strengths.push(item);
+                else if (current === 'weaknesses') weaknesses.push(item);
+                else if (current === 'opportunities') opportunities.push(item);
+                else if (current === 'threats') threats.push(item);
+            }
+        }
+    }
+    
+    const html = `
+        <div class="swot-card swot-strengths">
+            <div class="swot-title">💪 STRENGTHS</div>
+            <ul class="swot-list">${strengths.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>No strengths data available</li>'}</ul>
+        </div>
+        <div class="swot-card swot-weaknesses">
+            <div class="swot-title">⚠️ WEAKNESSES</div>
+            <ul class="swot-list">${weaknesses.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>No weaknesses data available</li>'}</ul>
+        </div>
+        <div class="swot-card swot-opportunities">
+            <div class="swot-title">🚀 OPPORTUNITIES</div>
+            <ul class="swot-list">${opportunities.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>No opportunities data available</li>'}</ul>
+        </div>
+        <div class="swot-card swot-threats">
+            <div class="swot-title">⚡ THREATS</div>
+            <ul class="swot-list">${threats.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>No threats data available</li>'}</ul>
+        </div>
+    `;
+    elements.swotContainer.innerHTML = html;
+    elements.swotContainer.classList.add('visible');
+}
+
+// ============================================================
 // CREATE KPI CARDS (HIDDEN INITIALLY)
 // ============================================================
 function createKPICards() {
     const kpiCards = [
-        {
-            icon: '👥',
-            label: 'SEGMENTATION',
-            loaderHtml: `<div class="loader-container"><div class="loader-pulse-dots"><span></span><span></span><span></span></div></div>`,
-            loadingText: 'Analyzing audience segments...'
-        },
-        {
-            icon: '📊',
-            label: 'MARKET SIZE',
-            loaderHtml: `<div class="loader-container"><div class="loader-bars"><span></span><span></span><span></span><span></span></div></div>`,
-            loadingText: 'Calculating TAM/SAM/SOM...'
-        },
-        {
-            icon: '🎯',
-            label: 'KEY METRICS',
-            loaderHtml: `<div class="loader-container"><div class="loader-spinner"></div></div>`,
-            loadingText: 'Identifying primary KPIs...'
-        },
-        {
-            icon: '🏆',
-            label: 'COMPETITION',
-            loaderHtml: `<div class="loader-container"><div class="loader-wobble"><span></span><span></span><span></span><span></span></div></div>`,
-            loadingText: 'Profiling competitors...'
-        }
+        { icon: '👥', label: 'SEGMENTATION', loaderHtml: `<div class="loader-container"><div class="loader-pulse-dots"><span></span><span></span><span></span></div></div>`, loadingText: 'Analyzing audience segments...' },
+        { icon: '📊', label: 'MARKET SIZE', loaderHtml: `<div class="loader-container"><div class="loader-bars"><span></span><span></span><span></span><span></span></div></div>`, loadingText: 'Calculating TAM/SAM/SOM...' },
+        { icon: '🎯', label: 'KEY METRICS', loaderHtml: `<div class="loader-container"><div class="loader-spinner"></div></div>`, loadingText: 'Identifying primary KPIs...' },
+        { icon: '🏆', label: 'COMPETITION', loaderHtml: `<div class="loader-container"><div class="loader-wobble"><span></span><span></span><span></span><span></span></div></div>`, loadingText: 'Profiling competitors...' }
     ];
     
     elements.kpiDashboard.innerHTML = kpiCards.map((card, index) => `
@@ -1195,15 +1491,10 @@ function createKPICards() {
     `).join('');
 }
 
-// ============================================================
-// SEQUENTIAL POP-IN ANIMATION
-// ============================================================
 function sequentialPopIn() {
     const cards = document.querySelectorAll('.kpi-card');
     cards.forEach((card, index) => {
-        setTimeout(() => {
-            card.classList.add('pop-in');
-        }, index * 800);
+        setTimeout(() => card.classList.add('pop-in'), index * 800);
     });
 }
 
@@ -1214,385 +1505,35 @@ function showKPIDashboard() {
 
 function hideKPIDashboard() {
     elements.kpiDashboard.classList.remove('visible');
-    const cards = document.querySelectorAll('.kpi-card');
-    cards.forEach(card => {
-        card.classList.remove('pop-in', 'loaded');
-    });
+    document.querySelectorAll('.kpi-card').forEach(card => card.classList.remove('pop-in', 'loaded'));
 }
 
-// ============================================================
-// UPDATE KPI CARDS WITH GENERATED DATA (DYNAMIC)
-// ============================================================
 function updateKPICards(plan) {
-    const primarySegment = extractPrimarySegment(plan);
-    const tamSamSom = extractTAMSAMSOM(plan);
-    const primaryKpi = extractPrimaryKPI(plan);
-    const topCompetitor = extractTopCompetitor(plan);
-    
-    const segValue = document.getElementById('value-SEGMENTATION');
-    const segSource = document.getElementById('source-SEGMENTATION');
-    if (segValue && primarySegment) {
-        segValue.textContent = primarySegment.substring(0, 45);
-        segSource.textContent = 'Primary target segment identified';
-    } else if (segValue) {
-        segValue.textContent = 'Segment analysis complete';
-        segSource.textContent = 'Check generated plan for details';
-    }
-    
-    const marketValue = document.getElementById('value-MARKETSIZE');
-    const marketSource = document.getElementById('source-MARKETSIZE');
-    if (marketValue && tamSamSom) {
-        marketValue.textContent = tamSamSom;
-        marketSource.textContent = 'TAM → SAM → SOM hierarchy';
-    } else if (marketValue) {
-        marketValue.textContent = 'Market sizing complete';
-        marketSource.textContent = 'View TAM/SAM/SOM in plan';
-    }
-    
-    const kpiValue = document.getElementById('value-KEYMETRICS');
-    const kpiSource = document.getElementById('source-KEYMETRICS');
-    if (kpiValue && primaryKpi) {
-        kpiValue.textContent = primaryKpi;
-        kpiSource.textContent = 'Decision-impact metric';
-    } else if (kpiValue) {
-        kpiValue.textContent = 'KPIs identified';
-        kpiSource.textContent = 'See primary KPI in plan';
-    }
-    
-    const compValue = document.getElementById('value-COMPETITION');
-    const compSource = document.getElementById('source-COMPETITION');
-    if (compValue && topCompetitor) {
-        compValue.textContent = topCompetitor;
-        compSource.textContent = 'Competitive threat assessment';
-    } else if (compValue) {
-        compValue.textContent = 'Competitor analysis complete';
-        compSource.textContent = 'View threats in generated plan';
-    }
-    
-    document.querySelectorAll('.kpi-card').forEach(card => {
-        card.classList.add('loaded');
-    });
-}
-
-function extractPrimarySegment(plan) {
-    const match = plan.match(/Primary Target[:\s]*([^\n]+)/i);
-    return match ? match[1].substring(0, 45) : null;
-}
-
-function extractTAMSAMSOM(plan) {
+    const primarySegment = plan.match(/Primary Target[:\s]*([^\n]+)/i)?.[1]?.substring(0, 45) || 'Segment analysis complete';
     const tam = plan.match(/TAM[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '';
     const sam = plan.match(/SAM[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '';
     const som = plan.match(/SOM[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '';
-    if (tam || sam || som) return `${tam} → ${sam} → ${som}`;
-    return null;
-}
-
-function extractPrimaryKPI(plan) {
-    const match = plan.match(/Primary KPI[:\s]*([^\n]+)/i);
-    return match ? match[1].substring(0, 35) : null;
-}
-
-function extractTopCompetitor(plan) {
-    const match = plan.match(/Direct\s*\|\s*🔴\s*\|\s*([^\|]+)/i);
-    return match ? match[1].trim() : null;
-}
-
-// ============================================================
-// LEAD CAPTURE FUNCTIONS
-// ============================================================
-function validateEmail(email) {
-    const re = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
-    return re.test(email);
-}
-
-function saveLead(name, email) {
-    const leads = JSON.parse(localStorage.getItem(LEAD_STORAGE_KEY) || '[]');
-    const existing = leads.find(l => l.email === email);
+    const tamSamSom = (tam || sam || som) ? `${tam} → ${sam} → ${som}` : 'Market sizing complete';
+    const primaryKpi = plan.match(/Primary KPI[:\s]*([^\n]+)/i)?.[1]?.substring(0, 35) || 'KPIs identified';
+    const topCompetitor = plan.match(/Direct\s*\|\s*🔴\s*\|\s*([^\|]+)/i)?.[1]?.trim() || 'Competitor analysis complete';
     
-    if (!existing) {
-        leads.push({
-            name: name || 'Anonymous',
-            email: email,
-            timestamp: new Date().toISOString(),
-            source: 'marketing_plan_generator'
-        });
-        localStorage.setItem(LEAD_STORAGE_KEY, JSON.stringify(leads));
-    }
-    sessionStorage.setItem('lead_captured', 'true');
-}
-
-function hasLeadBeenCaptured() {
-    return sessionStorage.getItem('lead_captured') === 'true';
-}
-
-function showLeadModal() {
-    if (leadModalShown) return;
-    if (hasLeadBeenCaptured()) return;
+    const segValue = document.getElementById('value-SEGMENTATION');
+    const segSource = document.getElementById('source-SEGMENTATION');
+    if (segValue) { segValue.textContent = primarySegment; segSource.textContent = 'Primary target segment identified'; }
     
-    const modal = document.getElementById('leadModal');
-    if (modal) {
-        modal.classList.add('show');
-        leadModalShown = true;
-    }
-}
-
-function hideLeadModal() {
-    const modal = document.getElementById('leadModal');
-    if (modal) modal.classList.remove('show');
-}
-
-function setupLeadModal() {
-    const modal = document.getElementById('leadModal');
-    const submitBtn = document.getElementById('submitLeadBtn');
-    const closeBtn = document.getElementById('closeLeadBtn');
-    const emailInput = document.getElementById('leadEmail');
-    const nameInput = document.getElementById('leadName');
-    const emailError = document.getElementById('emailError');
-    const successMsg = document.getElementById('leadSuccess');
-    const honeypot = document.getElementById('websiteField');
+    const marketValue = document.getElementById('value-MARKETSIZE');
+    const marketSource = document.getElementById('source-MARKETSIZE');
+    if (marketValue) { marketValue.textContent = tamSamSom; marketSource.textContent = 'TAM → SAM → SOM hierarchy'; }
     
-    if (!submitBtn) return;
+    const kpiValue = document.getElementById('value-KEYMETRICS');
+    const kpiSource = document.getElementById('source-KEYMETRICS');
+    if (kpiValue) { kpiValue.textContent = primaryKpi; kpiSource.textContent = 'Decision-impact metric'; }
     
-    function resetForm() {
-        if (emailInput) emailInput.classList.remove('error');
-        if (emailError) emailError.style.display = 'none';
-        if (successMsg) successMsg.style.display = 'none';
-        if (submitBtn) submitBtn.disabled = false;
-        submitBtn.textContent = '💌 Subscribe for Free';
-    }
+    const compValue = document.getElementById('value-COMPETITION');
+    const compSource = document.getElementById('source-COMPETITION');
+    if (compValue) { compValue.textContent = topCompetitor; compSource.textContent = 'Competitive threat assessment'; }
     
-    submitBtn.addEventListener('click', () => {
-        resetForm();
-        
-        if (honeypot && honeypot.value !== '') {
-            hideLeadModal();
-            return;
-        }
-        
-        const email = emailInput?.value.trim();
-        const name = nameInput?.value.trim();
-        
-        if (!email || !validateEmail(email)) {
-            if (emailInput) emailInput.classList.add('error');
-            if (emailError) emailError.style.display = 'block';
-            return;
-        }
-        
-        saveLead(name, email);
-        
-        if (successMsg) successMsg.style.display = 'block';
-        if (submitBtn) submitBtn.disabled = true;
-        submitBtn.textContent = '✅ Subscribed!';
-        
-        setTimeout(() => {
-            hideLeadModal();
-            resetForm();
-        }, 2000);
-    });
-    
-    if (closeBtn) closeBtn.addEventListener('click', hideLeadModal);
-    if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) hideLeadModal(); });
-    if (emailInput) {
-        emailInput.addEventListener('input', () => {
-            emailInput.classList.remove('error');
-            if (emailError) emailError.style.display = 'none';
-        });
-    }
-}
-
-// ============================================================
-// SOCIAL PROOF WIDGET FUNCTIONS
-// ============================================================
-const activityMessages = [
-    { icon: '🎯', message: 'just generated a marketing strategy' },
-    { icon: '📊', message: 'analyzed their market with PESTLE' },
-    { icon: '🚀', message: 'created a customer journey map' },
-    { icon: '💪', message: 'completed a SWOT analysis' },
-    { icon: '🎨', message: 'got AI design recommendations' },
-    { icon: '📈', message: 'calculated TAM/SAM/SOM' },
-    { icon: '🏢', message: 'profiled their competitors' },
-    { icon: '💰', message: 'set up KPI tracking' }
-];
-
-function generateRandomActivity() {
-    const randomIndex = Math.floor(Math.random() * activityMessages.length);
-    const activity = activityMessages[randomIndex];
-    return { id: Date.now() + Math.random(), icon: activity.icon, message: activity.message, timestamp: new Date() };
-}
-
-function showNotification(activity) {
-    const widget = document.getElementById('socialProofWidget');
-    if (!widget) return;
-    
-    const notification = document.createElement('div');
-    notification.className = 'social-proof-card';
-    notification.innerHTML = `
-        <div class="social-proof-icon">${activity.icon}</div>
-        <div class="social-proof-content">
-            <div class="social-proof-message">✨ Someone ${activity.message}</div>
-            <div class="social-proof-time">just now</div>
-        </div>
-        <button class="social-proof-close" onclick="this.parentElement.remove()">✕</button>
-    `;
-    widget.appendChild(notification);
-    
-    setTimeout(() => {
-        if (notification.parentElement) {
-            notification.style.opacity = '0';
-            notification.style.transform = 'translateX(50px)';
-            setTimeout(() => notification.remove(), 300);
-        }
-    }, 6000);
-}
-
-function processQueue() {
-    if (isShowingNotification || notificationQueue.length === 0) return;
-    isShowingNotification = true;
-    const next = notificationQueue.shift();
-    showNotification(next);
-    setTimeout(() => { isShowingNotification = false; processQueue(); }, 5000);
-}
-
-function addToQueue(activity) {
-    notificationQueue.push(activity);
-    processQueue();
-}
-
-function startSocialProofSimulation() {
-    const interval = Math.random() * 35000 + 15000;
-    setTimeout(() => {
-        addToQueue(generateRandomActivity());
-        startSocialProofSimulation();
-    }, interval);
-}
-
-function recordUserActivity() {
-    const history = JSON.parse(localStorage.getItem(SOCIAL_KEY) || '[]');
-    history.push({ timestamp: Date.now(), sessionId: localStorage.getItem('sessionId') || Date.now().toString() });
-    while (history.length > 50) history.shift();
-    localStorage.setItem(SOCIAL_KEY, JSON.stringify(history));
-}
-
-function getActiveUsersCount() {
-    const history = JSON.parse(localStorage.getItem(SOCIAL_KEY) || '[]');
-    const last5Minutes = history.filter(h => h.timestamp > Date.now() - 5 * 60 * 1000);
-    return Math.max(1, last5Minutes.length + Math.floor(Math.random() * 8));
-}
-
-function showActiveUsersBanner() {
-    const count = getActiveUsersCount();
-    if (count > 1 && Math.random() > 0.6) {
-        addToQueue({ icon: '👥', message: `${count} marketers are viewing strategies right now`, timestamp: new Date() });
-    }
-    setTimeout(showActiveUsersBanner, 60000);
-}
-
-// ============================================================
-// BACKEND API CALL
-// ============================================================
-async function generateMarketingPlan(customerData, productDescription) {
-    const response = await fetch(`${API_BASE}/generate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ customer_data: customerData, product_description: productDescription })
-    });
-    if (!response.ok) throw new Error('Generation failed');
-    const data = await response.json();
-    return data.plan;
-}
-
-// ============================================================
-// REMOVE DESIGN OUTPUT
-// ============================================================
-function removeDesignOutput(plan) {
-    return plan.replace(/\[DESIGN OUTPUT\][\s\S]*?(?=\n\n---|\n\[|$)/i, '')
-               .replace(/\*{1,2}DESIGN OUTPUT\*{1,2}/gi, '')
-               .replace(/^#+\s*DESIGN OUTPUT.*$/gmi, '');
-}
-
-// ============================================================
-// DYNAMIC TABLE PARSING
-// ============================================================
-function parsePestleTable(plan) {
-    const pestleMatch = plan.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-    if (!pestleMatch) return null;
-    const rows = [];
-    const lines = pestleMatch[1].split('\n');
-    for (const line of lines) {
-        if (line.startsWith('|') && line.includes('|')) {
-            const cells = line.split('|').map(c => c.trim()).filter(c => c && c !== '---');
-            if (cells.length >= 3 && !cells[0].toLowerCase().includes('factor')) rows.push(cells.slice(0, 4));
-        }
-    }
-    if (rows.length === 0) return null;
-    return `
-        <div class="section-header"><h3>⚡ PESTLE Analysis</h3></div>
-        <div class="dynamic-table-wrapper">
-            <table class="marketing-table">
-                <thead><tr><th>Factor</th><th>Insight</th><th>Mini-SWOT</th></tr></thead>
-                <tbody>${rows.map(row => `<tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}</tbody>
-            </table>
-        </div>
-    `;
-}
-
-function parsePorterTable(plan) {
-    const porterMatch = plan.match(/\[PORTER OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-    if (!porterMatch) return null;
-    const rows = [];
-    const lines = porterMatch[1].split('\n');
-    for (const line of lines) {
-        if (line.startsWith('|') && line.includes('|')) {
-            const cells = line.split('|').map(c => c.trim()).filter(c => c && c !== '---');
-            if (cells.length >= 3 && !cells[0].toLowerCase().includes('force')) rows.push(cells.slice(0, 3));
-        }
-    }
-    if (rows.length === 0) return null;
-    return `
-        <div class="section-header"><h3>🎯 Porter's Five Forces</h3></div>
-        <div class="dynamic-table-wrapper">
-            <table class="marketing-table">
-                <thead><tr><th>Force</th><th>Rating</th><th>Rationale</th></tr></thead>
-                <tbody>${rows.map(row => `<tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}</tbody>
-            </table>
-        </div>
-    `;
-}
-
-// ============================================================
-// SWOT MATRIX
-// ============================================================
-function renderSWOT(plan) {
-    const sections = {
-        strengths: extractSection(plan, /STRENGTHS?:?/i, /WEAKNESSES?:?/i),
-        weaknesses: extractSection(plan, /WEAKNESSES?:?/i, /OPPORTUNITIES?:?/i),
-        opportunities: extractSection(plan, /OPPORTUNITIES?:?/i, /THREATS?:?/i),
-        threats: extractSection(plan, /THREATS?:?/i, /(?:VALIDATION|OKR|ROADMAP|$)/i)
-    };
-    const html = `
-        <div class="swot-card swot-strengths"><div class="swot-title">💪 STRENGTHS</div><ul class="swot-list">${sections.strengths.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Analyzing strengths...</li>'}</ul></div>
-        <div class="swot-card swot-weaknesses"><div class="swot-title">⚠️ WEAKNESSES</div><ul class="swot-list">${sections.weaknesses.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Analyzing weaknesses...</li>'}</ul></div>
-        <div class="swot-card swot-opportunities"><div class="swot-title">🚀 OPPORTUNITIES</div><ul class="swot-list">${sections.opportunities.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Discovering opportunities...</li>'}</ul></div>
-        <div class="swot-card swot-threats"><div class="swot-title">⚡ THREATS</div><ul class="swot-list">${sections.threats.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>Assessing threats...</li>'}</ul></div>
-    `;
-    elements.swotContainer.innerHTML = html;
-    elements.swotContainer.classList.add('visible');
-}
-
-function extractSection(text, startPattern, endPattern) {
-    const startMatch = text.match(startPattern);
-    if (!startMatch) return [];
-    const startIdx = startMatch.index;
-    let endIdx = text.length;
-    const remainingText = text.slice(startIdx + startMatch[0].length);
-    const endMatch = remainingText.match(endPattern);
-    if (endMatch) endIdx = startIdx + startMatch[0].length + endMatch.index;
-    const section = text.substring(startIdx, endIdx);
-    return section.split('\n')
-        .filter(line => line.match(/^[-•*]\s+|^\d+\.\s+/))
-        .map(line => line.replace(/^[-•*]\s+|^\d+\.\s+/, '').trim())
-        .filter(line => line.length > 0 && line.length < 200)
-        .slice(0, 6);
+    document.querySelectorAll('.kpi-card').forEach(card => card.classList.add('loaded'));
 }
 
 // ============================================================
@@ -1644,6 +1585,156 @@ function getStageIcon(stage) {
 }
 
 // ============================================================
+// LEAD CAPTURE FUNCTIONS
+// ============================================================
+function validateEmail(email) { return /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/.test(email); }
+
+function saveLead(name, email) {
+    const leads = JSON.parse(localStorage.getItem(LEAD_STORAGE_KEY) || '[]');
+    if (!leads.find(l => l.email === email)) {
+        leads.push({ name: name || 'Anonymous', email: email, timestamp: new Date().toISOString(), source: 'marketing_plan_generator' });
+        localStorage.setItem(LEAD_STORAGE_KEY, JSON.stringify(leads));
+    }
+    sessionStorage.setItem('lead_captured', 'true');
+}
+
+function hasLeadBeenCaptured() { return sessionStorage.getItem('lead_captured') === 'true'; }
+
+function showLeadModal() {
+    if (leadModalShown || hasLeadBeenCaptured()) return;
+    const modal = document.getElementById('leadModal');
+    if (modal) { modal.classList.add('show'); leadModalShown = true; }
+}
+
+function hideLeadModal() { const modal = document.getElementById('leadModal'); if (modal) modal.classList.remove('show'); }
+
+function setupLeadModal() {
+    const modal = document.getElementById('leadModal');
+    const submitBtn = document.getElementById('submitLeadBtn');
+    const closeBtn = document.getElementById('closeLeadBtn');
+    const emailInput = document.getElementById('leadEmail');
+    const nameInput = document.getElementById('leadName');
+    const emailError = document.getElementById('emailError');
+    const successMsg = document.getElementById('leadSuccess');
+    const honeypot = document.getElementById('websiteField');
+    if (!submitBtn) return;
+    
+    function resetForm() {
+        if (emailInput) emailInput.classList.remove('error');
+        if (emailError) emailError.style.display = 'none';
+        if (successMsg) successMsg.style.display = 'none';
+        if (submitBtn) submitBtn.disabled = false;
+        submitBtn.textContent = '💌 Subscribe for Free';
+    }
+    
+    submitBtn.addEventListener('click', () => {
+        resetForm();
+        if (honeypot && honeypot.value !== '') { hideLeadModal(); return; }
+        const email = emailInput?.value.trim();
+        const name = nameInput?.value.trim();
+        if (!email || !validateEmail(email)) {
+            if (emailInput) emailInput.classList.add('error');
+            if (emailError) emailError.style.display = 'block';
+            return;
+        }
+        saveLead(name, email);
+        if (successMsg) successMsg.style.display = 'block';
+        if (submitBtn) submitBtn.disabled = true;
+        submitBtn.textContent = '✅ Subscribed!';
+        setTimeout(() => { hideLeadModal(); resetForm(); }, 2000);
+    });
+    if (closeBtn) closeBtn.addEventListener('click', hideLeadModal);
+    if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) hideLeadModal(); });
+    if (emailInput) emailInput.addEventListener('input', () => { emailInput.classList.remove('error'); if (emailError) emailError.style.display = 'none'; });
+}
+
+// ============================================================
+// SOCIAL PROOF FUNCTIONS
+// ============================================================
+const activityMessages = [
+    { icon: '🎯', message: 'just generated a marketing strategy' },
+    { icon: '📊', message: 'analyzed their market with PESTLE' },
+    { icon: '🚀', message: 'created a customer journey map' },
+    { icon: '💪', message: 'completed a SWOT analysis' },
+    { icon: '🎨', message: 'got AI design recommendations' },
+    { icon: '📈', message: 'calculated TAM/SAM/SOM' },
+    { icon: '🏢', message: 'profiled their competitors' },
+    { icon: '💰', message: 'set up KPI tracking' }
+];
+
+function generateRandomActivity() {
+    const randomIndex = Math.floor(Math.random() * activityMessages.length);
+    return { id: Date.now() + Math.random(), icon: activityMessages[randomIndex].icon, message: activityMessages[randomIndex].message, timestamp: new Date() };
+}
+
+function showNotification(activity) {
+    const widget = document.getElementById('socialProofWidget');
+    if (!widget) return;
+    const notification = document.createElement('div');
+    notification.className = 'social-proof-card';
+    notification.innerHTML = `<div class="social-proof-icon">${activity.icon}</div><div class="social-proof-content"><div class="social-proof-message">✨ Someone ${activity.message}</div><div class="social-proof-time">just now</div></div><button class="social-proof-close" onclick="this.parentElement.remove()">✕</button>`;
+    widget.appendChild(notification);
+    setTimeout(() => { if (notification.parentElement) { notification.style.opacity = '0'; notification.style.transform = 'translateX(50px)'; setTimeout(() => notification.remove(), 300); } }, 6000);
+}
+
+function processQueue() {
+    if (isShowingNotification || notificationQueue.length === 0) return;
+    isShowingNotification = true;
+    showNotification(notificationQueue.shift());
+    setTimeout(() => { isShowingNotification = false; processQueue(); }, 5000);
+}
+
+function addToQueue(activity) { notificationQueue.push(activity); processQueue(); }
+
+function startSocialProofSimulation() {
+    setTimeout(() => { addToQueue(generateRandomActivity()); startSocialProofSimulation(); }, Math.random() * 35000 + 15000);
+}
+
+function recordUserActivity() {
+    const history = JSON.parse(localStorage.getItem(SOCIAL_KEY) || '[]');
+    history.push({ timestamp: Date.now(), sessionId: localStorage.getItem('sessionId') || Date.now().toString() });
+    while (history.length > 50) history.shift();
+    localStorage.setItem(SOCIAL_KEY, JSON.stringify(history));
+}
+
+function getActiveUsersCount() {
+    const history = JSON.parse(localStorage.getItem(SOCIAL_KEY) || '[]');
+    const last5Minutes = history.filter(h => h.timestamp > Date.now() - 5 * 60 * 1000);
+    return Math.max(1, last5Minutes.length + Math.floor(Math.random() * 8));
+}
+
+function showActiveUsersBanner() {
+    const count = getActiveUsersCount();
+    if (count > 1 && Math.random() > 0.6) addToQueue({ icon: '👥', message: `${count} marketers are viewing strategies right now`, timestamp: new Date() });
+    setTimeout(showActiveUsersBanner, 60000);
+}
+
+// ============================================================
+// BACKEND API CALL
+// ============================================================
+async function generateMarketingPlan(customerData, productDescription) {
+    const response = await fetch(`${API_BASE}/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ customer_data: customerData, product_description: productDescription })
+    });
+    if (!response.ok) throw new Error('Generation failed');
+    const data = await response.json();
+    return data.plan;
+}
+
+// ============================================================
+// MAIN RENDER FUNCTION (USES STREAMING)
+// ============================================================
+async function renderPlan(plan) {
+    await streamRolesSequentially(plan);
+    updateTimestamp();
+    updateKPICards(plan);
+    renderSWOT(plan);
+    renderJourney(plan);
+}
+
+// ============================================================
 // HISTORY FUNCTIONS
 // ============================================================
 function saveToHistory() {
@@ -1655,27 +1746,16 @@ function saveToHistory() {
     showToast('✅ Plan saved to history!');
 }
 
-function getHistory() {
-    const stored = localStorage.getItem(HISTORY_KEY);
-    return stored ? JSON.parse(stored) : [];
-}
+function getHistory() { const stored = localStorage.getItem(HISTORY_KEY); return stored ? JSON.parse(stored) : []; }
 
 function loadHistoryModal() {
     const history = getHistory();
     if (history.length === 0) { elements.historyList.innerHTML = '<div class="empty-history">📭 No saved plans yet. Generate and save one!</div>'; return; }
-    elements.historyList.innerHTML = history.map(item => `
-        <div class="history-item" data-id="${item.id}">
-            <button class="delete-history" data-id="${item.id}">✕ Delete</button>
-            <div class="history-date">📅 ${new Date(item.timestamp).toLocaleString()}</div>
-            <div class="history-preview">${escapeHtml(item.preview)}</div>
-            <div class="history-meta"><span>🎯 ${escapeHtml(item.customerData || 'No customer data')}</span></div>
-        </div>
-    `).join('');
+    elements.historyList.innerHTML = history.map(item => `<div class="history-item" data-id="${item.id}"><button class="delete-history" data-id="${item.id}">✕ Delete</button><div class="history-date">📅 ${new Date(item.timestamp).toLocaleString()}</div><div class="history-preview">${escapeHtml(item.preview)}</div><div class="history-meta"><span>🎯 ${escapeHtml(item.customerData || 'No customer data')}</span></div></div>`).join('');
     document.querySelectorAll('.history-item').forEach(el => {
         el.addEventListener('click', (e) => {
             if (e.target.classList.contains('delete-history')) return;
-            const id = parseInt(el.dataset.id);
-            const plan = history.find(h => h.id === id);
+            const plan = history.find(h => h.id === parseInt(el.dataset.id));
             if (plan) { loadPlanFromHistory(plan); elements.historyModal.classList.remove('show'); }
         });
     });
@@ -1689,11 +1769,7 @@ function loadHistoryModal() {
     });
 }
 
-function deleteFromHistory(id) {
-    let history = getHistory();
-    history = history.filter(item => item.id !== id);
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-}
+function deleteFromHistory(id) { let history = getHistory(); history = history.filter(item => item.id !== id); localStorage.setItem(HISTORY_KEY, JSON.stringify(history)); }
 
 function loadPlanFromHistory(plan) {
     currentPlan = plan.fullPlan;
@@ -1706,58 +1782,12 @@ function loadPlanFromHistory(plan) {
 }
 
 // ============================================================
-// MAIN RENDER FUNCTION
+// UTILITY FUNCTIONS
 // ============================================================
-function renderPlan(plan) {
-    let cleanedPlan = removeDesignOutput(plan);
-    let html = cleanedPlan
-        .replace(/^# (.*?)$/gm, '<h1>$1</h1>')
-        .replace(/^## (.*?)$/gm, '<h2>$1</h2>')
-        .replace(/^### (.*?)$/gm, '<h3>$1</h3>')
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\n- (.*?)$/gm, '<li>$1</li>')
-        .replace(/<li>(.*?)<\/li>/g, '<ul><li>$1</li></ul>')
-        .replace(/<\/ul><ul>/g, '')
-        .replace(/\n/g, '<br>');
-    elements.renderedOutput.innerHTML = html;
-    
-    let tablesHtml = '';
-    const pestleHtml = parsePestleTable(cleanedPlan);
-    const porterHtml = parsePorterTable(cleanedPlan);
-    if (pestleHtml) tablesHtml += pestleHtml;
-    if (porterHtml) tablesHtml += porterHtml;
-    if (elements.dynamicTablesContainer) elements.dynamicTablesContainer.innerHTML = tablesHtml;
-    
-    updateKPICards(cleanedPlan);
-    renderSWOT(cleanedPlan);
-    renderJourney(cleanedPlan);
-    updateTimestamp();
-}
-
-function escapeHtml(str) {
-    if (!str) return '';
-    return String(str).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
-}
-
-function showStatus(message, isError = false) {
-    elements.statusMessage.textContent = message;
-    elements.statusBar.style.display = 'flex';
-    elements.statusBar.className = `status-bar ${isError ? 'error' : 'working'}`;
-    setTimeout(() => { if (elements.statusBar.style.display === 'flex') elements.statusBar.style.display = 'none'; }, 4000);
-}
-
-function showToast(message) {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
-}
-
-function updateTimestamp() {
-    const now = new Date();
-    elements.timestamp.textContent = `GENERATED: ${now.toLocaleTimeString()} · ${now.toLocaleDateString()}`;
-}
+function escapeHtml(str) { if (!str) return ''; return String(str).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
+function showStatus(message, isError = false) { elements.statusMessage.textContent = message; elements.statusBar.style.display = 'flex'; elements.statusBar.className = `status-bar ${isError ? 'error' : 'working'}`; setTimeout(() => { if (elements.statusBar.style.display === 'flex') elements.statusBar.style.display = 'none'; }, 4000); }
+function showToast(message) { const toast = document.createElement('div'); toast.className = 'toast'; toast.textContent = message; document.body.appendChild(toast); setTimeout(() => toast.remove(), 3000); }
+function updateTimestamp() { const now = new Date(); elements.timestamp.textContent = `GENERATED: ${now.toLocaleTimeString()} · ${now.toLocaleDateString()}`; }
 
 // ============================================================
 // EVENT HANDLERS
@@ -1785,12 +1815,11 @@ async function handleGenerate() {
     
     setTimeout(async () => {
         showStatus('🧠 AI is analyzing your market...', false);
-        
         try {
             const plan = await generateMarketingPlan(customerData, productDescription);
             const responseTime = Date.now() - startTime;
             currentPlan = plan;
-            renderPlan(plan);
+            await renderPlan(plan);
             elements.outputContainer.style.display = 'block';
             showStatus('✅ Marketing strategy generated successfully!');
             recordUserActivity();
@@ -1820,33 +1849,15 @@ function handleClear() {
     elements.swotContainer.innerHTML = '';
     elements.journeyContainer.innerHTML = '';
     elements.renderedOutput.innerHTML = '<p style="color:var(--ink-4);text-align:center;">✨ Your strategic marketing plan will appear here after generation</p>';
-    
     hideKPIDashboard();
     hideAnalyticsDashboard();
-    
     currentPlan = null;
     showStatus('Cleared. Ready for new strategy.', false);
     setTimeout(() => { if (elements.statusBar.style.display === 'flex') elements.statusBar.style.display = 'none'; }, 2000);
 }
 
-function handleCopy() {
-    if (!currentPlan) { showStatus('No plan to copy', true); return; }
-    navigator.clipboard.writeText(currentPlan);
-    showToast('Copied to clipboard!');
-}
-
-async function handleFeedback(vote) {
-    if (!currentPlan) { showStatus('No plan to rate', true); return; }
-    try {
-        await fetch(`${API_BASE}/feedback`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ vote, customer: elements.customerData.value.slice(0, 200), product: elements.productDescription.value.slice(0, 200), plan_summary: currentPlan.slice(0, 300) })
-        });
-        updateFeedbackAnalytics(vote);
-        showToast(`Thank you for your ${vote === 'yes' ? 'positive' : 'helpful'} feedback!`);
-    } catch(e) { console.error('Feedback failed:', e); }
-}
+function handleCopy() { if (!currentPlan) { showStatus('No plan to copy', true); return; } navigator.clipboard.writeText(currentPlan); showToast('Copied to clipboard!'); }
+async function handleFeedback(vote) { if (!currentPlan) { showStatus('No plan to rate', true); return; } try { await fetch(`${API_BASE}/feedback`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ vote, customer: elements.customerData.value.slice(0, 200), product: elements.productDescription.value.slice(0, 200), plan_summary: currentPlan.slice(0, 300) }) }); updateFeedbackAnalytics(vote); showToast(`Thank you for your ${vote === 'yes' ? 'positive' : 'helpful'} feedback!`); } catch(e) { console.error('Feedback failed:', e); } }
 
 // ============================================================
 // INITIALIZATION
@@ -1858,7 +1869,6 @@ renderAnalyticsDashboard();
 hideAnalyticsDashboard();
 setupLeadModal();
 
-// Event Listeners
 elements.generateBtn.addEventListener('click', handleGenerate);
 elements.clearBtn.addEventListener('click', handleClear);
 elements.copyBtn.addEventListener('click', handleCopy);
@@ -1869,11 +1879,9 @@ elements.historyModal.addEventListener('click', (e) => { if (e.target === elemen
 elements.feedbackYesBtn.addEventListener('click', () => handleFeedback('yes'));
 elements.feedbackNoBtn.addEventListener('click', () => handleFeedback('no'));
 
-// Start Social Proof
 startSocialProofSimulation();
 showActiveUsersBanner();
 
-// Export leads function
 window.exportLeads = () => {
     const leads = JSON.parse(localStorage.getItem(LEAD_STORAGE_KEY) || '[]');
     if (leads.length === 0) { showToast('No leads captured yet'); return; }
@@ -1889,11 +1897,7 @@ window.exportLeads = () => {
 };
 
 async function checkHealth() {
-    try {
-        const response = await fetch(`${API_BASE}/health`);
-        const data = await response.json();
-        if (data.status === 'ok') console.log('✅ Backend connected:', data.model);
-    } catch(e) { console.warn('⚠️ Backend connection issue:', e); }
+    try { const response = await fetch(`${API_BASE}/health`); const data = await response.json(); if (data.status === 'ok') console.log('✅ Backend connected:', data.model); } catch(e) { console.warn('⚠️ Backend connection issue:', e); }
 }
 checkHealth();
 </script>
