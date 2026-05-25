@@ -11,6 +11,8 @@
 <link rel="canonical" href="https://strategic-marketing-system.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- html2pdf.js library for PDF export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
 /* =====================================================
    DESIGN TOKENS
@@ -90,6 +92,47 @@
     --glass:     rgba(0,0,0,.03);
     --glass-h:   rgba(0,0,0,.05);
     --grad-text: linear-gradient(135deg, #0f1623 0%, #4f46e5 50%, #ec4899 100%);
+  }
+}
+
+/* PDF Export Print Styles */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+  .glass, .kpi-card, .swot-card, .journey-card, .role-card {
+    background: white;
+    border: 1px solid #ddd;
+    box-shadow: none;
+    page-break-inside: avoid;
+  }
+  .btn-group, .btn, .status-bar, .notif-stack, .modal-backdrop, .footer, .analytics-band,
+  .output-toolbar-right, .feedback-group, .nav-right, .hero-cta, .how-section, .example-block,
+  .gen-progress, #viewHistoryBtn, #saveBtn, #copyBtn, .feedback-btn, .theme-toggle {
+    display: none !important;
+  }
+  .page-wrap {
+    padding: 0;
+    margin: 0;
+  }
+  .output-card {
+    display: block !important;
+    padding: 20px;
+  }
+  .rendered-output, .role-content {
+    color: black;
+  }
+  .stream-table th {
+    background: #e0e0e0;
+    color: black;
+  }
+  .stream-table td {
+    border-bottom: 1px solid #ccc;
+  }
+  a, button {
+    text-decoration: none;
+    color: black;
   }
 }
 
@@ -1298,6 +1341,9 @@ details[open] .example-caret { transform: rotate(180deg); }
         <button id="viewHistoryBtn" class="btn btn-ghost" aria-label="View saved plans history">
           📜 History
         </button>
+        <button id="pdfExportBtn" class="btn btn-indigo" aria-label="Export plan as PDF">
+          📄 Export PDF
+        </button>
       </div>
     </section>
   </main>
@@ -1330,6 +1376,9 @@ details[open] .example-caret { transform: rotate(180deg); }
         </button>
         <button id="saveBtn" class="btn btn-indigo" aria-label="Save plan to history">
           💾 Save
+        </button>
+        <button id="pdfExportBtnToolbar" class="btn btn-indigo" aria-label="Export plan as PDF">
+          📄 PDF
         </button>
         <div class="feedback-group" role="group" aria-label="Was this plan helpful?">
           <button id="feedYes" class="feedback-btn" aria-label="Helpful" title="Helpful">👍</button>
@@ -1460,6 +1509,89 @@ let isGenerating    = false;
 let leadModalShown  = false;
 let sessionCount    = 0;
 let manualTheme     = null; // 'light' | 'dark' | null (auto)
+
+// =====================================================
+// PDF EXPORT FUNCTION (NEW)
+// =====================================================
+async function exportToPDF() {
+  if (!currentPlan) {
+    showToast('No plan to export. Generate a plan first!');
+    return;
+  }
+
+  setStatus('📄 Generating PDF, please wait...', 'working');
+
+  // Create a temporary container for PDF content
+  const pdfContainer = document.createElement('div');
+  pdfContainer.style.padding = '24px';
+  pdfContainer.style.fontFamily = 'Arial, sans-serif';
+  pdfContainer.style.maxWidth = '800px';
+  pdfContainer.style.margin = '0 auto';
+  pdfContainer.style.backgroundColor = '#ffffff';
+  pdfContainer.style.color = '#000000';
+  pdfContainer.style.lineHeight = '1.6';
+
+  // Get the rendered content
+  const renderedContent = document.getElementById('renderedOutput').innerHTML;
+
+  // Build PDF content
+  pdfContainer.innerHTML = `
+    <div style="text-align: center; margin-bottom: 30px;">
+      <h1 style="color: #6366f1; font-size: 28px; margin-bottom: 8px;">Strategic Marketing System</h1>
+      <h2 style="color: #333; font-size: 20px; margin-bottom: 8px;">Marketing Strategy Report</h2>
+      <p style="color: #666;">Generated: ${new Date().toLocaleString()}</p>
+      <hr style="margin: 20px 0;">
+    </div>
+
+    <div style="margin-bottom: 30px;">
+      <h3 style="color: #6366f1; margin-bottom: 12px;">📋 Customer Input Summary</h3>
+      <div style="background: #f5f5f5; padding: 16px; border-radius: 8px;">
+        <p><strong>Target Audience:</strong> ${escapeHtml(document.getElementById('customerData').value.substring(0, 300))}</p>
+        <p style="margin-top: 12px;"><strong>Product/Service:</strong> ${escapeHtml(document.getElementById('productDescription').value.substring(0, 300))}</p>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="color: #6366f1; margin-bottom: 16px;">📊 Generated Marketing Strategy</h3>
+      <div id="pdfContent">
+        ${renderedContent}
+      </div>
+    </div>
+
+    <div style="margin-top: 40px; text-align: center; font-size: 10px; color: #999; border-top: 1px solid #ddd; padding-top: 20px;">
+      <p>Generated by Strategic Marketing System · AI-Powered Marketing Intelligence</p>
+      <p>© 2025 Strategic Marketing System</p>
+    </div>
+  `;
+
+  // Clean up any problematic elements for PDF
+  const pdfContent = pdfContainer.querySelector('#pdfContent');
+  if (pdfContent) {
+    // Remove any interactive elements that might break PDF
+    const buttons = pdfContent.querySelectorAll('button');
+    buttons.forEach(btn => btn.remove());
+  }
+
+  document.body.appendChild(pdfContainer);
+
+  const opt = {
+    margin: [0.5, 0.5, 0.5, 0.5],
+    filename: `marketing_strategy_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, letterRendering: true, useCORS: true },
+    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+  };
+
+  try {
+    await html2pdf().set(opt).from(pdfContainer).save();
+    setStatus('✅ PDF exported successfully!', 'success');
+  } catch (error) {
+    console.error('PDF export failed:', error);
+    setStatus('❌ PDF export failed. Please try again.', 'error');
+  } finally {
+    document.body.removeChild(pdfContainer);
+  }
+}
 
 // =====================================================
 // PARTICLES (subtle canvas background)
@@ -2226,6 +2358,9 @@ document.getElementById('copyBtn').addEventListener('click', handleCopy);
 document.getElementById('saveBtn').addEventListener('click', saveToHistory);
 document.getElementById('feedYes').addEventListener('click', () => handleFeedback('yes'));
 document.getElementById('feedNo').addEventListener('click',  () => handleFeedback('no'));
+document.getElementById('pdfExportBtn').addEventListener('click', exportToPDF);
+const pdfToolbarBtn = document.getElementById('pdfExportBtnToolbar');
+if (pdfToolbarBtn) pdfToolbarBtn.addEventListener('click', exportToPDF);
 
 document.getElementById('viewHistoryBtn').addEventListener('click', () => { renderHistoryModal(); openModal('historyModal'); });
 document.getElementById('closeHistoryBtn').addEventListener('click', () => closeModal('historyModal'));
