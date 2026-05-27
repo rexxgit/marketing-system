@@ -744,6 +744,101 @@ textarea::placeholder, input::placeholder { color: var(--ink-4); }
 }
 
 /* =====================================================
+   A/B TEST DASHBOARD (NEW)
+===================================================== */
+.ab-dashboard {
+  display: none;
+  margin-top: 40px;
+  padding: 24px;
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+}
+.ab-dashboard.visible {
+  display: block;
+}
+.ab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.ab-header h3 {
+  font-family: var(--font-display);
+  font-size: 18px;
+}
+.ab-results-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+@media (max-width: 700px) {
+  .ab-results-grid { grid-template-columns: 1fr; }
+}
+.ab-variant-card {
+  background: rgba(255,255,255,.03);
+  border-radius: var(--r-md);
+  padding: 16px;
+  text-align: center;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.ab-variant-card.winner {
+  border-color: var(--green);
+  background: rgba(74,222,128,.05);
+}
+.ab-variant-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+.ab-variant-name {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.ab-variant-text {
+  font-size: 12px;
+  color: var(--ink-3);
+  margin-bottom: 12px;
+  font-style: italic;
+}
+.ab-variant-stats {
+  font-size: 11px;
+  color: var(--ink-4);
+  line-height: 1.5;
+}
+.ab-variant-ctr {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+.ab-interpretation {
+  padding: 12px;
+  background: rgba(99,102,241,.08);
+  border-radius: var(--r-md);
+  margin-top: 16px;
+}
+.ab-interpretation-title {
+  font-size: 12px;
+  color: var(--indigo-l);
+  margin-bottom: 6px;
+}
+.ab-interpretation-text {
+  font-size: 11px;
+  color: var(--ink-3);
+  line-height: 1.5;
+}
+.ab-note {
+  font-size: 10px;
+  color: var(--ink-4);
+  text-align: center;
+  margin-top: 16px;
+}
+
+/* =====================================================
    STREAMING ROLES
 ===================================================== */
 .streaming-container { display: flex; flex-direction: column; gap: 20px; }
@@ -1470,6 +1565,19 @@ details[open] .example-caret { transform: rotate(180deg); }
     </div>
   </div>
 
+  <!-- A/B TEST DASHBOARD (Secret: Click logo 5 times) -->
+  <div id="abDashboard" class="ab-dashboard">
+    <div class="ab-header">
+      <h3>📊 A/B Test Results</h3>
+      <button id="resetABTestsBtn" class="btn btn-ghost" style="padding: 6px 14px; font-size: 12px;">Reset All Tests</button>
+    </div>
+    <div id="abResultsContainer"></div>
+    <div class="ab-note">
+      Variants are randomly assigned per user and stick for 30 days.<br>
+      Data is stored locally in your browser.
+    </div>
+  </div>
+
 </div><!-- /page-wrap -->
 
 <!-- HISTORY MODAL -->
@@ -1548,6 +1656,222 @@ let isGenerating    = false;
 let leadModalShown  = false;
 let sessionCount    = 0;
 let manualTheme     = null;
+
+// =====================================================
+// A/B TESTING FRAMEWORK
+// =====================================================
+
+const abTests = {
+    heroCta: {
+        name: 'Hero CTA Button Text',
+        variants: [
+            { id: 'A', text: '✨ Generate Strategic Plan', color: 'btn-primary' },
+            { id: 'B', text: '🚀 Start Free Trial', color: 'btn-primary' },
+            { id: 'C', text: '🎯 Get Your Strategy', color: 'btn-primary' }
+        ],
+        startDate: new Date().toISOString()
+    }
+};
+
+// Assign user to variant (sticky for 30 days)
+function getVariant(testName) {
+    const storageKey = `ab_test_${testName}`;
+    const stored = localStorage.getItem(storageKey);
+    if (stored) return stored;
+    
+    const test = abTests[testName];
+    const randomIndex = Math.floor(Math.random() * test.variants.length);
+    const variant = test.variants[randomIndex].id;
+    localStorage.setItem(storageKey, variant);
+    // Set expiry (30 days)
+    localStorage.setItem(`${storageKey}_expiry`, Date.now() + 30 * 24 * 60 * 60 * 1000);
+    return variant;
+}
+
+// Apply variant to generate button
+function applyHeroCtaVariant() {
+    const generateBtn = document.getElementById('generateBtn');
+    if (!generateBtn) return;
+    
+    const variantId = getVariant('heroCta');
+    const variant = abTests.heroCta.variants.find(v => v.id === variantId);
+    
+    if (variant) {
+        generateBtn.textContent = variant.text;
+        generateBtn.className = `btn ${variant.color}`;
+        
+        // Track impression (only once per session)
+        if (!sessionStorage.getItem(`ab_impression_heroCta`)) {
+            sessionStorage.setItem(`ab_impression_heroCta`, 'true');
+            trackABConversion('heroCta', variantId, 'impression');
+        }
+    }
+}
+
+// Track conversion
+function trackABConversion(testName, variantId, action) {
+    const event = {
+        test: testName,
+        variant: variantId,
+        action: action,
+        timestamp: new Date().toISOString(),
+        sessionId: sessionStorage.getItem('sessionId') || Date.now().toString()
+    };
+    
+    const conversions = JSON.parse(localStorage.getItem('ab_conversions') || '[]');
+    conversions.push(event);
+    // Keep last 500 events
+    if (conversions.length > 500) conversions.shift();
+    localStorage.setItem('ab_conversions', JSON.stringify(conversions));
+}
+
+// Clean expired A/B test assignments on load
+function cleanExpiredABTests() {
+    Object.keys(abTests).forEach(testName => {
+        const expiry = localStorage.getItem(`ab_test_${testName}_expiry`);
+        if (expiry && Date.now() > parseInt(expiry)) {
+            localStorage.removeItem(`ab_test_${testName}`);
+            localStorage.removeItem(`ab_test_${testName}_expiry`);
+        }
+    });
+}
+
+// Render A/B test results dashboard
+function renderABResults() {
+    const conversions = JSON.parse(localStorage.getItem('ab_conversions') || '[]');
+    const container = document.getElementById('abResultsContainer');
+    if (!container) return;
+    
+    const results = {};
+    
+    // Initialize results for each variant
+    abTests.heroCta.variants.forEach(v => {
+        results[v.id] = { 
+            impressions: 0, 
+            clicks: 0, 
+            name: v.text,
+            ctr: 0
+        };
+    });
+    
+    // Count events
+    conversions.forEach(conv => {
+        if (conv.test === 'heroCta' && results[conv.variant]) {
+            if (conv.action === 'impression') results[conv.variant].impressions++;
+            if (conv.action === 'click_generate') results[conv.variant].clicks++;
+        }
+    });
+    
+    // Calculate CTR and find winner
+    let winnerId = null;
+    let highestCTR = 0;
+    
+    Object.keys(results).forEach(id => {
+        const data = results[id];
+        if (data.impressions > 0) {
+            data.ctr = ((data.clicks / data.impressions) * 100).toFixed(1);
+            if (parseFloat(data.ctr) > highestCTR && data.impressions >= 5) {
+                highestCTR = parseFloat(data.ctr);
+                winnerId = id;
+            }
+        } else {
+            data.ctr = '—';
+        }
+    });
+    
+    // Build HTML
+    const variantIcons = { A: '🔵', B: '🟢', C: '🟠' };
+    
+    container.innerHTML = `
+        <div class="ab-results-grid">
+            ${Object.entries(results).map(([id, data]) => `
+                <div class="ab-variant-card ${winnerId === id ? 'winner' : ''}">
+                    <div class="ab-variant-icon">${variantIcons[id]}</div>
+                    <div class="ab-variant-name">Variant ${id}</div>
+                    <div class="ab-variant-text">"${data.name}"</div>
+                    <div class="ab-variant-stats">
+                        ${data.impressions} views<br>
+                        ${data.clicks} clicks
+                    </div>
+                    <div class="ab-variant-ctr" style="color: ${winnerId === id ? 'var(--green)' : 'var(--indigo-l)'}">
+                        ${data.ctr}% CTR ${winnerId === id ? '🏆' : ''}
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+        <div class="ab-interpretation">
+            <div class="ab-interpretation-title">📈 Interpretation</div>
+            <div class="ab-interpretation-text">
+                ${winnerId ? `Variant ${winnerId} is currently leading with ${results[winnerId].ctr}% CTR. ${parseInt(results[winnerId].impressions) < 30 ? 'Collect more data for statistical significance (aim for 30+ views per variant).' : 'Monitor performance over time to confirm the winning variant.'}` : 'Not enough data yet. Generate more plans to see which variant performs best.'}
+            </div>
+        </div>
+    `;
+}
+
+// Reset A/B tests
+function resetABTests() {
+    // Clear A/B test assignments
+    Object.keys(abTests).forEach(testName => {
+        localStorage.removeItem(`ab_test_${testName}`);
+        localStorage.removeItem(`ab_test_${testName}_expiry`);
+    });
+    // Clear conversion data
+    localStorage.removeItem('ab_conversions');
+    // Reset session impression flag
+    sessionStorage.removeItem('ab_impression_heroCta');
+    // Re-apply variant to current button
+    applyHeroCtaVariant();
+    // Refresh dashboard
+    renderABResults();
+    showToast('A/B tests reset! Refresh to see new variant.');
+}
+
+// Secret admin unlock (click logo 5 times)
+let logoClickCount = 0;
+let logoClickTimer = null;
+
+function initABAdmin() {
+    const heroTitle = document.querySelector('.hero h1');
+    if (!heroTitle) return;
+    
+    heroTitle.style.cursor = 'pointer';
+    heroTitle.title = 'Click 5 times for A/B test dashboard (admin)';
+    
+    heroTitle.addEventListener('click', () => {
+        logoClickCount++;
+        
+        clearTimeout(logoClickTimer);
+        logoClickTimer = setTimeout(() => {
+            logoClickCount = 0;
+        }, 2000);
+        
+        if (logoClickCount >= 5) {
+            logoClickCount = 0;
+            const dashboard = document.getElementById('abDashboard');
+            if (dashboard) {
+                const isVisible = dashboard.classList.contains('visible');
+                if (isVisible) {
+                    dashboard.classList.remove('visible');
+                    showToast('Dashboard hidden');
+                } else {
+                    dashboard.classList.add('visible');
+                    renderABResults();
+                    showToast('Admin dashboard revealed');
+                }
+            }
+        }
+    });
+}
+
+// Initialize A/B testing
+function initABTesting() {
+    cleanExpiredABTests();
+    applyHeroCtaVariant();
+    initABAdmin();
+    
+    const resetBtn = document.getElementById('resetABTestsBtn');
+    if (resetBtn) resetBtn.addEventListener('click', resetABTests);
+}
 
 // =====================================================
 // PDF EXPORT FUNCTION (FIXED - BLACK TEXT)
@@ -2019,6 +2343,9 @@ document.addEventListener('keydown', e => {
   }
   if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
     document.getElementById('generateBtn').click();
+    // Track A/B test click
+    const variantId = getVariant('heroCta');
+    trackABConversion('heroCta', variantId, 'click_generate');
   }
 });
 
@@ -2198,7 +2525,7 @@ function fmtContent(content) {
       const cells = row.split('|').filter(x=>x.trim()).map(x=>`<td>${esc(x.trim())}</td>`).join('');
       return `<tr>${cells}</tr>`;
     }).join('');
-    return `<table class="stream-table"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table>`;
+    return `<table class="stream-table"><thead><tr>${ths}<tr></thead><tbody>${trs}</tbody></table>`;
   });
   h = h.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   h = h.replace(/^#{1,3}\s+(.+)$/gm, '<h3>$1</h3>');
@@ -2280,6 +2607,10 @@ async function handleGenerate() {
   const btn = document.getElementById('generateBtn');
   btn.disabled = true;
   btn.textContent = '⏳ Generating…';
+  
+  // Track A/B test click
+  const variantId = getVariant('heroCta');
+  trackABConversion('heroCta', variantId, 'click_generate');
 
   document.getElementById('outputCard').style.display = 'none';
   document.getElementById('swotContainer').classList.remove('visible');
@@ -2667,6 +2998,7 @@ window.exportLeads = () => {
 renderAnalytics();
 startNotifSimulation();
 loadSharedPlan();
+initABTesting();
 
 fetch(`${API_BASE}/health`).then(r=>r.json()).then(d=>{ if(d.status==='ok') console.log('✅ Backend OK:', d.model); }).catch(()=>{});
 </script>
