@@ -137,6 +137,61 @@
 }
 
 /* =====================================================
+   ACCESSIBILITY STYLES
+===================================================== */
+/* Skip to content link */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--indigo);
+    color: white;
+    padding: 8px 16px;
+    z-index: 1000;
+    text-decoration: none;
+    border-radius: 0 0 8px 0;
+    transition: top 0.2s;
+    font-size: 14px;
+}
+.skip-link:focus {
+    top: 0;
+}
+
+/* Focus indicators for keyboard navigation */
+:focus-visible {
+    outline: 2px solid var(--indigo);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+button:focus-visible,
+a:focus-visible,
+textarea:focus-visible,
+input:focus-visible {
+    outline: 2px solid var(--indigo);
+    outline-offset: 2px;
+}
+
+/* Screen reader only class */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Ensure sufficient contrast */
+.rendered-output, .role-content {
+    color: var(--ink-2);
+    forced-color-adjust: auto;
+}
+
+/* =====================================================
    RESET & BASE
 ===================================================== */
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -744,7 +799,7 @@ textarea::placeholder, input::placeholder { color: var(--ink-4); }
 }
 
 /* =====================================================
-   A/B TEST DASHBOARD (NEW)
+   A/B TEST DASHBOARD (Secret: Click logo 5 times)
 ===================================================== */
 .ab-dashboard {
   display: none;
@@ -1295,26 +1350,16 @@ details[open] .example-caret { transform: rotate(180deg); }
   .kpi-grid { grid-template-columns: 1fr; }
   .swot-matrix { grid-template-columns: 1fr; }
 }
-
-/* =====================================================
-   FOCUS / ACCESSIBILITY
-===================================================== */
-:focus-visible {
-  outline: 2px solid var(--indigo);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-.sr-only {
-  position: absolute; width: 1px; height: 1px;
-  padding: 0; margin: -1px; overflow: hidden;
-  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
-}
 </style>
 </head>
 <body>
+
+<!-- SKIP TO CONTENT LINK (ACCESSIBILITY) -->
+<a href="#main-content" class="skip-link" aria-label="Skip to main content">Skip to main content</a>
+
 <canvas id="particles" aria-hidden="true"></canvas>
 
-<div class="page-wrap">
+<div class="page-wrap" id="main-content">
 
   <!-- NAV -->
   <nav class="nav" role="navigation" aria-label="Main navigation">
@@ -1476,8 +1521,8 @@ details[open] .example-caret { transform: rotate(180deg); }
     </section>
   </main>
 
-  <!-- STATUS BAR -->
-  <div id="statusBar" class="status-bar" role="status" aria-live="polite">
+  <!-- STATUS BAR with ARIA live region -->
+  <div id="statusBar" class="status-bar" role="status" aria-live="polite" aria-label="Status updates">
     <span class="status-icon" id="statusIcon" aria-hidden="true">⟳</span>
     <span id="statusMessage"></span>
   </div>
@@ -1520,7 +1565,7 @@ details[open] .example-caret { transform: rotate(180deg); }
       </div>
     </div>
 
-    <div id="renderedOutput">
+    <div id="renderedOutput" aria-live="polite" aria-label="Generated marketing plan content">
       <div class="empty-state">
         <div class="big-icon" aria-hidden="true">📋</div>
         <h4>Your plan will appear here</h4>
@@ -1569,12 +1614,40 @@ details[open] .example-caret { transform: rotate(180deg); }
   <div id="abDashboard" class="ab-dashboard">
     <div class="ab-header">
       <h3>📊 A/B Test Results</h3>
-      <button id="resetABTestsBtn" class="btn btn-ghost" style="padding: 6px 14px; font-size: 12px;">Reset All Tests</button>
+      <button id="resetABTestsBtn" class="btn btn-ghost" style="padding: 6px 14px; font-size: 12px;" aria-label="Reset all A/B tests">Reset All Tests</button>
     </div>
     <div id="abResultsContainer"></div>
     <div class="ab-note">
       Variants are randomly assigned per user and stick for 30 days.<br>
       Data is stored locally in your browser.
+    </div>
+  </div>
+
+  <!-- KEYBOARD SHORTCUTS MODAL -->
+  <div id="keyboardModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="keyboard-title">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title" id="keyboard-title">⌨️ Keyboard Shortcuts</h2>
+        <button class="modal-close" id="closeKeyboardBtn" aria-label="Close shortcuts">✕</button>
+      </div>
+      <div style="display: grid; gap: 12px;">
+        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
+          <span><kbd style="background: rgba(255,255,255,.1); padding: 2px 8px; border-radius: 4px;">Ctrl + Enter</kbd></span>
+          <span>Generate marketing plan</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
+          <span><kbd style="background: rgba(255,255,255,.1); padding: 2px 8px; border-radius: 4px;">?</kbd></span>
+          <span>Show/hide this menu</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
+          <span><kbd style="background: rgba(255,255,255,.1); padding: 2px 8px; border-radius: 4px;">Esc</kbd></span>
+          <span>Close modals</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+          <span><kbd style="background: rgba(255,255,255,.1); padding: 2px 8px; border-radius: 4px;">Tab</kbd></span>
+          <span>Navigate through interactive elements</span>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1631,9 +1704,9 @@ details[open] .example-caret { transform: rotate(180deg); }
 <footer class="footer" role="contentinfo">
   <p>© 2025 Strategic Marketing System · Powered by GPT-OSS-120B · 13-Role Framework</p>
   <p style="margin-top:6px;">
-    <a href="#" onclick="window.exportLeads();return false;">Export leads CSV</a>
+    <a href="#" onclick="window.exportLeads();return false;" aria-label="Export leads as CSV">Export leads CSV</a>
     &nbsp;·&nbsp;
-    <a href="#main-form">Back to top ↑</a>
+    <a href="#main-content" aria-label="Back to top">Back to top ↑</a>
   </p>
 </footer>
 
@@ -1872,6 +1945,87 @@ function initABTesting() {
     const resetBtn = document.getElementById('resetABTestsBtn');
     if (resetBtn) resetBtn.addEventListener('click', resetABTests);
 }
+
+// =====================================================
+// FOCUS TRAPPING FOR MODALS (ACCESSIBILITY)
+// =====================================================
+
+function trapFocus(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal || !modal.classList.contains('show')) return;
+    
+    const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (focusableElements.length === 0) return;
+    
+    const firstFocusable = focusableElements[0];
+    const lastFocusable = focusableElements[focusableElements.length - 1];
+    
+    const handleTab = (e) => {
+        if (e.key !== 'Tab') return;
+        
+        if (e.shiftKey) {
+            if (document.activeElement === firstFocusable) {
+                e.preventDefault();
+                lastFocusable.focus();
+            }
+        } else {
+            if (document.activeElement === lastFocusable) {
+                e.preventDefault();
+                firstFocusable.focus();
+            }
+        }
+    };
+    
+    modal.addEventListener('keydown', handleTab);
+    
+    // Store the handler to remove it later
+    modal._trapFocusHandler = handleTab;
+    
+    firstFocusable.focus();
+}
+
+function removeTrapFocus(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal && modal._trapFocusHandler) {
+        modal.removeEventListener('keydown', modal._trapFocusHandler);
+        delete modal._trapFocusHandler;
+    }
+}
+
+// Override openModal and closeModal for focus trapping
+const originalOpenModal = window.openModal;
+const originalCloseModal = window.closeModal;
+
+window.openModal = function(id) {
+    const modal = document.getElementById(id);
+    if (modal) {
+        modal.classList.add('show');
+        trapFocus(id);
+    }
+};
+
+window.closeModal = function(id) {
+    const modal = document.getElementById(id);
+    if (modal) {
+        modal.classList.remove('show');
+        removeTrapFocus(id);
+    }
+};
+
+// =====================================================
+// KEYBOARD SHORTCUTS MODAL
+// =====================================================
+document.addEventListener('keydown', (e) => {
+    if (e.key === '?' && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        const modal = document.getElementById('keyboardModal');
+        if (modal) window.openModal('keyboardModal');
+    }
+});
+
+document.getElementById('closeKeyboardBtn')?.addEventListener('click', () => {
+    window.closeModal('keyboardModal');
+});
 
 // =====================================================
 // PDF EXPORT FUNCTION (FIXED - BLACK TEXT)
@@ -2338,8 +2492,9 @@ wireCharCount('productDescription', 'productCount', 2000);
 // =====================================================
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    closeModal('historyModal');
-    closeModal('leadModal');
+    window.closeModal('historyModal');
+    window.closeModal('leadModal');
+    window.closeModal('keyboardModal');
   }
   if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
     document.getElementById('generateBtn').click();
@@ -2350,7 +2505,7 @@ document.addEventListener('keydown', e => {
 });
 
 // =====================================================
-// STATUS BAR
+// STATUS BAR (with screen reader announcements)
 // =====================================================
 function setStatus(msg, type = 'working') {
   const bar  = document.getElementById('statusBar');
@@ -2360,6 +2515,15 @@ function setStatus(msg, type = 'working') {
   icon.textContent = type === 'working' ? '⟳' : type === 'success' ? '✓' : '✕';
   icon.style.animation = type === 'working' ? 'spin 1.2s linear infinite' : 'none';
   txt.textContent = msg;
+  
+  // Screen reader announcement
+  const announcement = document.createElement('div');
+  announcement.setAttribute('aria-live', 'assertive');
+  announcement.className = 'sr-only';
+  announcement.textContent = msg;
+  document.body.appendChild(announcement);
+  setTimeout(() => announcement.remove(), 1000);
+  
   if (type !== 'working') {
     setTimeout(() => { bar.className = 'status-bar'; }, 4000);
   }
@@ -2373,8 +2537,8 @@ function showToast(msg) {
   setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(8px)'; t.style.transition = 'all .3s'; setTimeout(() => t.remove(), 300); }, 2800);
 }
 
-function openModal(id)  { document.getElementById(id).classList.add('show'); }
-function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+function openModal(id)  { window.openModal(id); }
+function closeModal(id) { window.closeModal(id); }
 
 // =====================================================
 // KPI CARDS
@@ -2430,8 +2594,12 @@ function populateKPICards(plan) {
     card.querySelector('.kpi-skel-sub').style.display = 'none';
     const loaded = card.querySelector('.kpi-loaded');
     loaded.style.display = 'block';
-    document.getElementById(`${v.id}-val`).textContent = v.val;
-    document.getElementById(`${v.id}-sub`).textContent = v.sub;
+    const valEl = document.getElementById(`${v.id}-val`);
+    const subEl = document.getElementById(`${v.id}-sub`);
+    if (valEl) valEl.textContent = v.val;
+    if (subEl) subEl.textContent = v.sub;
+    // ARIA label for screen readers
+    card.setAttribute('aria-label', `${v.label}: ${v.val}`);
   });
 }
 
@@ -2525,7 +2693,7 @@ function fmtContent(content) {
       const cells = row.split('|').filter(x=>x.trim()).map(x=>`<td>${esc(x.trim())}</td>`).join('');
       return `<tr>${cells}</tr>`;
     }).join('');
-    return `<table class="stream-table"><thead><tr>${ths}<tr></thead><tbody>${trs}</tbody></table>`;
+    return `<table class="stream-table"><thead><tr>${ths}</td></thead><tbody>${trs}</tbody></tr>`;
   });
   h = h.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   h = h.replace(/^#{1,3}\s+(.+)$/gm, '<h3>$1</h3>');
@@ -2808,7 +2976,7 @@ function renderHistoryModal() {
     el.addEventListener('click', e => {
       if (e.target.classList.contains('history-del')) return;
       const plan = getHistory().find(h => h.id === parseInt(el.dataset.id));
-      if (plan) { loadFromHistory(plan); closeModal('historyModal'); }
+      if (plan) { loadFromHistory(plan); window.closeModal('historyModal'); }
     });
     el.addEventListener('keydown', e => { if (e.key === 'Enter') el.click(); });
   });
@@ -2841,13 +3009,13 @@ function loadFromHistory(plan) {
 function showLeadModal() {
   if (leadModalShown) return;
   if (sessionStorage.getItem('sms_lead_captured') === '1') return;
-  openModal('leadModal');
+  window.openModal('leadModal');
   leadModalShown = true;
 }
 
 document.getElementById('submitLeadBtn').addEventListener('click', () => {
   const hp = document.getElementById('hpField').value;
-  if (hp) { closeModal('leadModal'); return; }
+  if (hp) { window.closeModal('leadModal'); return; }
 
   const email = document.getElementById('leadEmail').value.trim();
   const name  = document.getElementById('leadName').value.trim();
@@ -2873,11 +3041,11 @@ document.getElementById('submitLeadBtn').addEventListener('click', () => {
   suc.style.display = 'block';
   btn.disabled = true;
   btn.textContent = '✅ Subscribed!';
-  setTimeout(() => closeModal('leadModal'), 1800);
+  setTimeout(() => window.closeModal('leadModal'), 1800);
 });
 
-document.getElementById('closeLeadBtn').addEventListener('click', () => closeModal('leadModal'));
-document.getElementById('leadModal').addEventListener('click', e => { if (e.target === document.getElementById('leadModal')) closeModal('leadModal'); });
+document.getElementById('closeLeadBtn').addEventListener('click', () => window.closeModal('leadModal'));
+document.getElementById('leadModal').addEventListener('click', e => { if (e.target === document.getElementById('leadModal')) window.closeModal('leadModal'); });
 
 // =====================================================
 // NOTIFICATIONS (social proof)
@@ -2974,9 +3142,9 @@ document.getElementById('shareLinkedinBtn')?.addEventListener('click', shareOnLi
 document.getElementById('shareTwitterBtn')?.addEventListener('click', shareOnTwitter);
 document.getElementById('copyShareLinkBtn')?.addEventListener('click', copyShareLink);
 
-document.getElementById('viewHistoryBtn').addEventListener('click', () => { renderHistoryModal(); openModal('historyModal'); });
-document.getElementById('closeHistoryBtn').addEventListener('click', () => closeModal('historyModal'));
-document.getElementById('historyModal').addEventListener('click', e => { if (e.target === document.getElementById('historyModal')) closeModal('historyModal'); });
+document.getElementById('viewHistoryBtn').addEventListener('click', () => { renderHistoryModal(); window.openModal('historyModal'); });
+document.getElementById('closeHistoryBtn').addEventListener('click', () => window.closeModal('historyModal'));
+document.getElementById('historyModal').addEventListener('click', e => { if (e.target === document.getElementById('historyModal')) window.closeModal('historyModal'); });
 
 // =====================================================
 // LEAD EXPORTS
