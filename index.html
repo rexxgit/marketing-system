@@ -1,3293 +1,1310 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Strategic Marketing System | AI-Powered Marketing Plan Generator</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Generate complete strategic marketing plans in 60 seconds. PESTLE, Porter's Five Forces, SWOT, and 12-role AI analysis.">
-<meta property="og:title" content="Strategic Marketing System">
-<meta property="og:description" content="Generate complete strategic marketing plans in 60 seconds.">
-<meta property="og:type" content="website">
-<link rel="canonical" href="https://strategic-marketing-system.com">
-
-<!-- ===================================================== -->
-<!-- SECURITY HEADERS & CSP -->
-<!-- ===================================================== -->
-<!-- Content Security Policy - Prevents XSS attacks -->
-<meta http-equiv="Content-Security-Policy" content="
-    default-src 'self';
-    script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://raw.githubusercontent.com;
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-    font-src 'self' https://fonts.gstatic.com;
-    connect-src 'self' https://Bisratprompt-marketing-system-api.hf.space;
-    img-src 'self' data: https://raw.githubusercontent.com;
-    frame-src 'none';
-    form-action 'self';
-">
-
-<!-- Security Headers -->
-<meta http-equiv="X-Frame-Options" content="DENY">
-<meta http-equiv="X-Content-Type-Options" content="nosniff">
-<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-<meta name="format-detection" content="telephone=no">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<!-- html2pdf.js library for PDF export -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<style>
-/* =====================================================
-   DESIGN TOKENS
-===================================================== */
-:root {
-  /* Colors */
-  --bg:          #050810;
-  --surface:     #0c1120;
-  --surface-2:   #111827;
-  --surface-3:   #1a2236;
-  --border:      rgba(255,255,255,.07);
-  --border-2:    rgba(255,255,255,.12);
-  --border-3:    rgba(255,255,255,.2);
-
-  --ink:         #f0f2f8;
-  --ink-2:       rgba(240,242,248,.72);
-  --ink-3:       rgba(240,242,248,.45);
-  --ink-4:       rgba(240,242,248,.25);
-
-  /* Brand */
-  --indigo:      #6366f1;
-  --indigo-l:    #a5b4fc;
-  --indigo-d:    #3730a3;
-  --cyan:        #22d3ee;
-  --pink:        #ec4899;
-  --green:       #4ade80;
-  --amber:       #fbbf24;
-  --red:         #f87171;
-
-  /* Gradients */
-  --grad-text:   linear-gradient(135deg, #fff 0%, #a5b4fc 45%, #ec4899 100%);
-  --grad-brand:  linear-gradient(135deg, #6366f1, #ec4899);
-  --grad-glow:   radial-gradient(ellipse at center, rgba(99,102,241,.25) 0%, transparent 70%);
-
-  /* Glass */
-  --glass:       rgba(255,255,255,.04);
-  --glass-h:     rgba(255,255,255,.07);
-  --blur:        blur(24px);
-
-  /* Typography */
-  --font-display: 'Syne', sans-serif;
-  --font-body:    'DM Sans', sans-serif;
-  --font-mono:    'JetBrains Mono', monospace;
-
-  /* Spacing */
-  --r-sm:  10px;
-  --r-md:  16px;
-  --r-lg:  24px;
-  --r-xl:  32px;
-
-  /* Z-index layers */
-  --z-base:         1;
-  --z-overlay:    100;
-  --z-modal:      200;
-  --z-toast:      300;
-  --z-notif:      400;
-
-  /* Transitions */
-  --ease-spring: cubic-bezier(.34,1.56,.64,1);
-  --ease-out:    cubic-bezier(.16,1,.3,1);
-}
-
-/* Light mode */
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg:        #f4f5fb;
-    --surface:   #ffffff;
-    --surface-2: #f0f1f9;
-    --surface-3: #e8eaf6;
-    --border:    rgba(0,0,0,.07);
-    --border-2:  rgba(0,0,0,.12);
-    --border-3:  rgba(0,0,0,.2);
-    --ink:       #0f1623;
-    --ink-2:     rgba(15,22,35,.72);
-    --ink-3:     rgba(15,22,35,.45);
-    --ink-4:     rgba(15,22,35,.25);
-    --glass:     rgba(0,0,0,.03);
-    --glass-h:   rgba(0,0,0,.05);
-    --grad-text: linear-gradient(135deg, #0f1623 0%, #4f46e5 50%, #ec4899 100%);
-  }
-}
-
-/* PDF Export Print Styles */
-@media print {
-  body {
-    background: white;
-    color: black;
-  }
-  .glass, .kpi-card, .swot-card, .journey-card, .role-card {
-    background: white;
-    border: 1px solid #ddd;
-    box-shadow: none;
-    page-break-inside: avoid;
-  }
-  .btn-group, .btn, .status-bar, .notif-stack, .modal-backdrop, .footer, .analytics-band,
-  .output-toolbar-right, .feedback-group, .nav-right, .hero-cta, .how-section, .example-block,
-  .gen-progress, #viewHistoryBtn, #saveBtn, #copyBtn, .feedback-btn, .theme-toggle {
-    display: none !important;
-  }
-  .page-wrap {
-    padding: 0;
-    margin: 0;
-  }
-  .output-card {
-    display: block !important;
-    padding: 20px;
-  }
-  .rendered-output, .role-content {
-    color: black;
-  }
-  .stream-table th {
-    background: #e0e0e0;
-    color: black;
-  }
-  .stream-table td {
-    border-bottom: 1px solid #ccc;
-  }
-  a, button {
-    text-decoration: none;
-    color: black;
-  }
-}
-
-/* =====================================================
-   ACCESSIBILITY STYLES
-===================================================== */
-/* Skip to content link */
-.skip-link {
-    position: absolute;
-    top: -40px;
-    left: 0;
-    background: var(--indigo);
-    color: white;
-    padding: 8px 16px;
-    z-index: 1000;
-    text-decoration: none;
-    border-radius: 0 0 8px 0;
-    transition: top 0.2s;
-    font-size: 14px;
-}
-.skip-link:focus {
-    top: 0;
-}
-
-/* Focus indicators for keyboard navigation */
-:focus-visible {
-    outline: 2px solid var(--indigo);
-    outline-offset: 3px;
-    border-radius: 4px;
-}
-
-button:focus-visible,
-a:focus-visible,
-textarea:focus-visible,
-input:focus-visible {
-    outline: 2px solid var(--indigo);
-    outline-offset: 2px;
-}
-
-/* Screen reader only class */
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0,0,0,0);
-    white-space: nowrap;
-    border: 0;
-}
-
-/* Ensure sufficient contrast */
-.rendered-output, .role-content {
-    color: var(--ink-2);
-    forced-color-adjust: auto;
-}
-
-/* =====================================================
-   RESET & BASE
-===================================================== */
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: var(--font-body);
-  background: var(--bg);
-  color: var(--ink);
-  min-height: 100vh;
-  line-height: 1.6;
-  overflow-x: hidden;
-}
-
-/* Ambient background */
-body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background:
-    radial-gradient(ellipse 80% 60% at 10% 10%, rgba(99,102,241,.12) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 90% 90%, rgba(236,72,153,.09) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(34,211,238,.05) 0%, transparent 60%);
-}
-
-/* Canvas particle background */
-#particles { position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5; }
-
-.page-wrap {
-  position: relative; z-index: var(--z-base);
-  max-width: 1160px; margin: 0 auto;
-  padding: 0 24px 100px;
-}
-
-/* =====================================================
-   UTILITIES
-===================================================== */
-.glass {
-  background: var(--glass);
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
-  border: 1px solid var(--border);
-  border-radius: var(--r-xl);
-}
-
-.mono { font-family: var(--font-mono); }
-.label-tiny {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-}
-.grad-text {
-  background: var(--grad-text);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-/* =====================================================
-   TOP NAV
-===================================================== */
-.nav {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 20px 0;
-  position: sticky; top: 0; z-index: var(--z-overlay);
-  background: linear-gradient(to bottom, var(--bg) 60%, transparent);
-}
-
-.nav-logo {
-  display: flex; align-items: center; gap: 10px;
-  font-family: var(--font-display);
-  font-size: 16px; font-weight: 700;
-  color: var(--ink);
-  text-decoration: none;
-}
-
-.nav-logo-icon {
-  width: 32px; height: 32px;
-  background: var(--grad-brand);
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-}
-
-.nav-right { display: flex; align-items: center; gap: 10px; }
-
-.theme-toggle {
-  background: var(--glass);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  padding: 7px 14px;
-  font-size: 13px;
-  color: var(--ink-2);
-  cursor: pointer;
-  transition: all .2s;
-  display: flex; align-items: center; gap: 6px;
-}
-.theme-toggle:hover { background: var(--glass-h); border-color: var(--border-2); }
-
-.nav-badge {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--green);
-  background: rgba(74,222,128,.1);
-  border: 1px solid rgba(74,222,128,.25);
-  border-radius: 100px;
-  padding: 4px 10px;
-}
-
-/* =====================================================
-   HERO
-===================================================== */
-.hero {
-  text-align: center;
-  padding: 64px 32px 56px;
-  margin-bottom: 40px;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero::before {
-  content: '';
-  position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse 70% 60% at 50% 0%, rgba(99,102,241,.15) 0%, transparent 70%);
-  border-radius: var(--r-xl);
-  pointer-events: none;
-}
-
-.hero-eyebrow {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(99,102,241,.1);
-  border: 1px solid rgba(99,102,241,.25);
-  border-radius: 100px;
-  padding: 6px 16px;
-  font-family: var(--font-mono);
-  font-size: 10px; letter-spacing: .15em;
-  color: var(--indigo-l);
-  margin-bottom: 28px;
-  animation: fadeSlideUp .6s var(--ease-out) both;
-}
-
-.hero-eyebrow .dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 8px var(--green);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(.85)} }
-
-.hero h1 {
-  font-family: var(--font-display);
-  font-size: clamp(40px, 6vw, 76px);
-  font-weight: 700;
-  line-height: 1.08;
-  letter-spacing: -.02em;
-  margin-bottom: 20px;
-  animation: fadeSlideUp .6s .1s var(--ease-out) both;
-}
-
-.hero-tagline {
-  font-size: clamp(15px,1.5vw,18px);
-  color: var(--ink-2);
-  max-width: 580px; margin: 0 auto 36px;
-  font-weight: 300;
-  animation: fadeSlideUp .6s .2s var(--ease-out) both;
-}
-
-.hero-chips {
-  display: flex; justify-content: center; flex-wrap: wrap; gap: 8px;
-  margin-bottom: 40px;
-  animation: fadeSlideUp .6s .3s var(--ease-out) both;
-}
-
-.hero-chip {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 10px; letter-spacing: .05em;
-  color: var(--ink-3);
-  background: var(--glass);
-  border: 1px solid var(--border);
-  padding: 6px 14px;
-  border-radius: 100px;
-  cursor: default;
-  position: relative;
-  transition: all .2s;
-}
-.hero-chip:hover { color: var(--ink-2); border-color: var(--border-2); background: var(--glass-h); }
-.hero-chip:hover .tooltip { opacity:1; transform:translateY(0); pointer-events:auto; }
-
-.tooltip {
-  position: absolute; bottom: calc(100% + 10px); left: 50%;
-  transform: translateX(-50%) translateY(6px);
-  background: var(--surface-2);
-  border: 1px solid var(--border-2);
-  border-radius: var(--r-sm);
-  padding: 8px 12px;
-  font-size: 11px; font-family: var(--font-body);
-  color: var(--ink-2);
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: all .2s var(--ease-out);
-  z-index: 50;
-  letter-spacing: 0;
-}
-.tooltip::after {
-  content:''; position:absolute; top:100%; left:50%;
-  transform:translateX(-50%);
-  border: 5px solid transparent;
-  border-top-color: var(--border-2);
-}
-
-.hero-cta {
-  animation: fadeSlideUp .6s .4s var(--ease-out) both;
-}
-
-.btn-hero {
-  display: inline-flex; align-items: center; gap: 10px;
-  background: linear-gradient(135deg, var(--indigo), var(--pink));
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: 15px; font-weight: 500;
-  padding: 14px 32px;
-  border-radius: 100px;
-  border: none;
-  cursor: pointer;
-  transition: all .3s var(--ease-out);
-  box-shadow: 0 0 40px rgba(99,102,241,.3);
-  position: relative; overflow: hidden;
-}
-.btn-hero::before {
-  content:''; position:absolute; inset:0;
-  background: linear-gradient(135deg, rgba(255,255,255,.15), transparent);
-  opacity:0; transition: opacity .2s;
-}
-.btn-hero:hover { transform: translateY(-3px); box-shadow: 0 8px 40px rgba(99,102,241,.4); }
-.btn-hero:hover::before { opacity:1; }
-.btn-hero:active { transform: translateY(-1px); }
-
-/* =====================================================
-   HOW IT WORKS
-===================================================== */
-.how-section {
-  margin-bottom: 40px;
-  animation: fadeSlideUp .6s .5s var(--ease-out) both;
-}
-
-.section-title {
-  text-align: center;
-  font-family: var(--font-display);
-  font-size: 13px; font-weight: 500;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  margin-bottom: 24px;
-}
-
-.how-steps {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
-
-@media (max-width: 640px) { .how-steps { grid-template-columns: 1fr; } }
-
-.how-step {
-  background: var(--glass);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 20px;
-  display: flex; align-items: flex-start; gap: 14px;
-  transition: all .25s;
-}
-.how-step:hover { background: var(--glass-h); border-color: var(--border-2); transform: translateY(-2px); }
-
-.step-num {
-  width: 32px; height: 32px; flex-shrink: 0;
-  background: linear-gradient(135deg, rgba(99,102,241,.2), rgba(236,72,153,.2));
-  border: 1px solid rgba(99,102,241,.3);
-  border-radius: var(--r-sm);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-mono); font-size: 12px; font-weight: 500;
-  color: var(--indigo-l);
-}
-
-.step-content h4 { font-size: 14px; font-weight: 500; margin-bottom: 4px; color: var(--ink); }
-.step-content p  { font-size: 12px; color: var(--ink-3); line-height: 1.5; }
-
-/* =====================================================
-   INPUT AREA
-===================================================== */
-.input-card { padding: 32px; margin-bottom: 24px; }
-
-.field-group { margin-bottom: 22px; }
-
-.field-label {
-  display: flex; align-items: center; gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 10px; letter-spacing: .18em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  margin-bottom: 10px;
-}
-.field-label .fl-icon { font-size: 14px; }
-
-textarea, input[type="text"], input[type="email"] {
-  width: 100%;
-  background: rgba(255,255,255,.03);
-  color: var(--ink);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 14px 18px;
-  font-family: var(--font-body);
-  font-size: 14px; line-height: 1.6;
-  resize: vertical;
-  transition: all .2s;
-  outline: none;
-}
-
-textarea:focus, input:focus {
-  border-color: rgba(99,102,241,.5);
-  background: rgba(99,102,241,.04);
-  box-shadow: 0 0 0 3px rgba(99,102,241,.1);
-}
-
-textarea::placeholder, input::placeholder { color: var(--ink-4); }
-
-.char-count {
-  text-align: right;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--ink-4);
-  margin-top: 5px;
-}
-
-.btn-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
-
-/* =====================================================
-   BUTTONS
-===================================================== */
-.btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 11px 22px;
-  border-radius: 100px;
-  font-family: var(--font-body);
-  font-size: 14px; font-weight: 500;
-  cursor: pointer;
-  transition: all .25s var(--ease-out);
-  border: none;
-  white-space: nowrap;
-  position: relative; overflow: hidden;
-}
-
-.btn-primary {
-  background: #fff;
-  color: var(--bg);
-}
-.btn-primary:hover { background: var(--indigo-l); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99,102,241,.3); }
-.btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
-
-.btn-ghost {
-  background: var(--glass);
-  border: 1px solid var(--border);
-  color: var(--ink-2);
-}
-.btn-ghost:hover { background: var(--glass-h); border-color: var(--border-2); }
-
-.btn-indigo {
-  background: rgba(99,102,241,.15);
-  border: 1px solid rgba(99,102,241,.3);
-  color: var(--indigo-l);
-}
-.btn-indigo:hover { background: rgba(99,102,241,.25); border-color: rgba(99,102,241,.5); }
-
-.btn-green {
-  background: rgba(74,222,128,.12);
-  border: 1px solid rgba(74,222,128,.3);
-  color: var(--green);
-}
-.btn-green:hover { background: rgba(74,222,128,.22); }
-
-.btn-danger {
-  background: rgba(248,113,113,.12);
-  border: 1px solid rgba(248,113,113,.3);
-  color: var(--red);
-}
-.btn-danger:hover { background: rgba(248,113,113,.22); }
-
-/* Ripple */
-.btn::after {
-  content:''; position:absolute;
-  width:200%; height:200%;
-  top:50%; left:50%;
-  transform:translate(-50%,-50%) scale(0);
-  background: rgba(255,255,255,.12);
-  border-radius:50%;
-  transition: transform .4s, opacity .4s;
-  opacity:0;
-}
-.btn:active::after { transform:translate(-50%,-50%) scale(1); opacity:1; transition:0s; }
-
-/* =====================================================
-   STATUS BAR
-===================================================== */
-.status-bar {
-  display: none;
-  align-items: center; gap: 10px;
-  padding: 12px 18px;
-  border-radius: var(--r-md);
-  font-size: 13px;
-  margin-bottom: 20px;
-}
-.status-bar.working { display:flex; background:rgba(99,102,241,.1); border:1px solid rgba(99,102,241,.25); color:var(--indigo-l); }
-.status-bar.success { display:flex; background:rgba(74,222,128,.1); border:1px solid rgba(74,222,128,.25); color:var(--green); }
-.status-bar.error   { display:flex; background:rgba(248,113,113,.1); border:1px solid rgba(248,113,113,.25); color:var(--red); }
-
-.status-icon { animation: spin 1.2s linear infinite; }
-.status-bar.success .status-icon,
-.status-bar.error .status-icon { animation: none; }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* =====================================================
-   KPI DASHBOARD
-===================================================== */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 16px;
-  margin: 28px 0;
-}
-
-.kpi-card {
-  background: var(--glass);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 22px 20px;
-  transition: all .3s var(--ease-spring);
-  opacity: 0;
-  transform: translateY(20px) scale(.97);
-  min-height: 130px;
-  display: flex; flex-direction: column; justify-content: space-between;
-}
-
-.kpi-card.pop {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-.kpi-card:hover {
-  border-color: rgba(99,102,241,.4);
-  box-shadow: 0 8px 24px rgba(99,102,241,.12);
-  transform: translateY(-3px) scale(1.01);
-}
-
-.kpi-top {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 14px;
-}
-
-.kpi-label-tag { font-family: var(--font-mono); font-size: 9px; letter-spacing: .15em; text-transform: uppercase; color: var(--ink-3); }
-
-.kpi-icon-wrap {
-  width: 36px; height: 36px;
-  border-radius: var(--r-sm);
-  background: rgba(99,102,241,.1);
-  border: 1px solid rgba(99,102,241,.2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
-}
-
-/* Skeleton */
-.skel {
-  background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 50%, var(--surface-2) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.6s infinite;
-  border-radius: 6px;
-}
-@keyframes shimmer { from{background-position:200% 0} to{background-position:-200% 0} }
-
-.kpi-skel-val  { height: 22px; width: 80%; margin-bottom: 8px; }
-.kpi-skel-sub  { height: 12px; width: 55%; }
-
-.kpi-value { font-family: var(--font-display); font-size: 15px; font-weight: 500; color: var(--indigo-l); line-height: 1.3; word-break: break-word; }
-.kpi-sub   { font-size: 11px; color: var(--ink-4); margin-top: 6px; }
-
-/* =====================================================
-   PROGRESS BAR (generation progress)
-===================================================== */
-.gen-progress {
-  display: none;
-  height: 2px;
-  background: var(--border);
-  border-radius: 2px;
-  margin: 20px 0;
-  overflow: hidden;
-}
-.gen-progress.show { display: block; }
-.gen-progress-bar {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, var(--indigo), var(--cyan), var(--pink));
-  background-size: 200% 100%;
-  animation: shimmerBar 1.5s linear infinite;
-  transition: width .4s var(--ease-out);
-  border-radius: 2px;
-}
-@keyframes shimmerBar { 0%{background-position:0% 0} 100%{background-position:-200% 0} }
-
-/* =====================================================
-   OUTPUT AREA
-===================================================== */
-.output-card {
-  display: none;
-  padding: 32px;
-  margin-top: 28px;
-}
-
-.output-toolbar {
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 12px;
-  padding-bottom: 20px;
-  margin-bottom: 24px;
-  border-bottom: 1px solid var(--border);
-}
-
-.output-toolbar-left {
-  display: flex; align-items: center; gap: 10px;
-}
-
-.output-live-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 8px var(--green);
-  animation: pulse 2s infinite;
-}
-
-.output-title {
-  font-family: var(--font-display);
-  font-size: 16px; font-weight: 500;
-}
-
-.output-timestamp {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--ink-4);
-}
-
-.output-toolbar-right { display: flex; gap: 8px; flex-wrap: wrap; }
-
-.feedback-group {
-  display: flex; gap: 6px;
-  padding: 4px 6px;
-  background: var(--glass);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-}
-
-.feedback-btn {
-  background: none; border: none;
-  font-size: 15px; cursor: pointer;
-  padding: 4px 8px; border-radius: 100px;
-  transition: all .2s;
-  opacity: .6;
-}
-.feedback-btn:hover { opacity: 1; background: var(--glass-h); }
-.feedback-btn.active { opacity: 1; background: rgba(74,222,128,.15); }
-
-/* Share buttons group */
-.share-group {
-  display: flex;
-  gap: 6px;
-  padding: 4px 6px;
-  background: var(--glass);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-}
-.share-btn {
-  background: none;
-  border: none;
-  font-size: 12px;
-  cursor: pointer;
-  padding: 4px 10px;
-  border-radius: 100px;
-  transition: all .2s;
-  color: var(--ink-2);
-  font-family: var(--font-body);
-}
-.share-btn:hover {
-  background: var(--glass-h);
-  color: var(--ink);
-}
-.share-copy-btn {
-  background: rgba(99,102,241,.1);
-  border: 1px solid rgba(99,102,241,.2);
-}
-.share-copy-btn:hover {
-  background: rgba(99,102,241,.2);
-  border-color: rgba(99,102,241,.4);
-}
-
-/* =====================================================
-   A/B TEST DASHBOARD (Secret: Click logo 5 times)
-===================================================== */
-.ab-dashboard {
-  display: none;
-  margin-top: 40px;
-  padding: 24px;
-  background: var(--glass);
-  backdrop-filter: var(--blur);
-  border-radius: var(--r-lg);
-  border: 1px solid var(--border);
-}
-.ab-dashboard.visible {
-  display: block;
-}
-.ab-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.ab-header h3 {
-  font-family: var(--font-display);
-  font-size: 18px;
-}
-.ab-results-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 16px;
-}
-@media (max-width: 700px) {
-  .ab-results-grid { grid-template-columns: 1fr; }
-}
-.ab-variant-card {
-  background: rgba(255,255,255,.03);
-  border-radius: var(--r-md);
-  padding: 16px;
-  text-align: center;
-  border: 1px solid var(--border);
-  transition: all 0.2s;
-}
-.ab-variant-card.winner {
-  border-color: var(--green);
-  background: rgba(74,222,128,.05);
-}
-.ab-variant-icon {
-  font-size: 28px;
-  margin-bottom: 8px;
-}
-.ab-variant-name {
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-.ab-variant-text {
-  font-size: 12px;
-  color: var(--ink-3);
-  margin-bottom: 12px;
-  font-style: italic;
-}
-.ab-variant-stats {
-  font-size: 11px;
-  color: var(--ink-4);
-  line-height: 1.5;
-}
-.ab-variant-ctr {
-  font-size: 18px;
-  font-weight: 700;
-  margin-top: 8px;
-}
-.ab-interpretation {
-  padding: 12px;
-  background: rgba(99,102,241,.08);
-  border-radius: var(--r-md);
-  margin-top: 16px;
-}
-.ab-interpretation-title {
-  font-size: 12px;
-  color: var(--indigo-l);
-  margin-bottom: 6px;
-}
-.ab-interpretation-text {
-  font-size: 11px;
-  color: var(--ink-3);
-  line-height: 1.5;
-}
-.ab-note {
-  font-size: 10px;
-  color: var(--ink-4);
-  text-align: center;
-  margin-top: 16px;
-}
-
-/* =====================================================
-   STREAMING ROLES
-===================================================== */
-.streaming-container { display: flex; flex-direction: column; gap: 20px; }
-
-.role-card {
-  background: rgba(255,255,255,.025);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 24px;
-  opacity: 0;
-  transform: translateY(24px);
-  transition: all .5s var(--ease-spring);
-}
-
-.role-card.visible { opacity: 1; transform: translateY(0); }
-
-.role-header {
-  display: flex; align-items: center; gap: 12px;
-  margin-bottom: 18px; padding-bottom: 14px;
-  border-bottom: 1px solid var(--border);
-}
-
-.role-icon {
-  width: 44px; height: 44px;
-  border-radius: var(--r-md);
-  background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(236,72,153,.15));
-  border: 1px solid rgba(99,102,241,.2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  flex-shrink: 0;
-}
-
-.role-title {
-  font-family: var(--font-display);
-  font-size: 16px; font-weight: 500;
-}
-
-.role-badge {
-  margin-left: auto;
-  font-family: var(--font-mono);
-  font-size: 9px; letter-spacing:.1em;
-  color: var(--indigo-l);
-  background: rgba(99,102,241,.1);
-  border: 1px solid rgba(99,102,241,.2);
-  border-radius: 100px;
-  padding: 3px 10px;
-}
-
-.role-content {
-  font-size: 14px; line-height: 1.75;
-  color: var(--ink-2);
-}
-.role-content strong { color: var(--amber); font-weight: 500; }
-.role-content h3 { color: var(--ink); margin: 14px 0 8px; font-size: 14px; font-family: var(--font-display); }
-.role-content ul { padding-left: 18px; margin: 8px 0; }
-.role-content li { padding: 3px 0; }
-
-.stream-loading {
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px 0;
-  font-size: 13px;
-  color: var(--ink-4);
-}
-
-.dots { display: inline-flex; gap: 4px; }
-.dots span {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--indigo-l);
-  animation: dot-bounce 1.4s ease-in-out infinite;
-}
-.dots span:nth-child(2) { animation-delay:.18s; }
-.dots span:nth-child(3) { animation-delay:.36s; }
-@keyframes dot-bounce { 0%,60%,100%{transform:scale(.6);opacity:.4} 30%{transform:scale(1.1);opacity:1} }
-
-/* Stream table */
-.stream-table {
-  width: 100%; border-collapse: collapse;
-  margin: 16px 0;
-  font-size: 13px;
-}
-.stream-table th {
-  background: rgba(99,102,241,.1);
-  color: var(--indigo-l);
-  padding: 10px 12px;
-  text-align: left;
-  font-family: var(--font-mono);
-  font-size: 10px; letter-spacing: .05em;
-  font-weight: 500;
-}
-.stream-table th:first-child { border-radius: var(--r-sm) 0 0 0; }
-.stream-table th:last-child  { border-radius: 0 var(--r-sm) 0 0; }
-.stream-table td {
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: top;
-  color: var(--ink-2);
-}
-.stream-table tr:last-child td { border-bottom: none; }
-
-/* =====================================================
-   SWOT MATRIX
-===================================================== */
-.swot-matrix {
-  display: none;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin: 28px 0;
-}
-.swot-matrix.visible { display: grid; }
-@media(max-width:600px) { .swot-matrix { grid-template-columns: 1fr; } }
-
-.swot-card {
-  background: var(--glass);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 20px;
-  transition: transform .3s;
-}
-.swot-card:hover { transform: translateY(-3px); }
-
-.swot-head {
-  display: flex; align-items: center; gap: 8px;
-  font-family: var(--font-display);
-  font-size: 14px; font-weight: 500;
-  margin-bottom: 14px; padding-bottom: 10px;
-  border-bottom: 2px solid;
-}
-
-.swot-s .swot-head { color: var(--green);  border-color: var(--green); }
-.swot-w .swot-head { color: var(--red);    border-color: var(--red); }
-.swot-o .swot-head { color: var(--cyan);   border-color: var(--cyan); }
-.swot-t .swot-head { color: var(--amber);  border-color: var(--amber); }
-
-.swot-list { list-style: none; }
-.swot-list li {
-  padding: 6px 0 6px 18px;
-  position: relative;
-  font-size: 13px;
-  color: var(--ink-2);
-  border-bottom: 1px solid var(--border);
-}
-.swot-list li:last-child { border-bottom: none; }
-.swot-list li::before { content: '▸'; position: absolute; left: 0; color: var(--ink-4); }
-
-/* =====================================================
-   JOURNEY MAP
-===================================================== */
-.journey-wrap {
-  display: none;
-  gap: 12px;
-  margin: 28px 0;
-  flex-wrap: wrap;
-}
-.journey-wrap.visible { display: flex; }
-
-.journey-card {
-  flex: 1; min-width: 150px;
-  background: var(--glass);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 18px 14px;
-  text-align: center;
-  cursor: default;
-  transition: all .25s;
-  position: relative;
-}
-.journey-card:not(:last-child)::after {
-  content: '→';
-  position: absolute; right: -10px; top: 50%;
-  transform: translateY(-50%);
-  color: var(--ink-4);
-  font-size: 12px;
-  z-index: 1;
-}
-.journey-card:hover { transform: translateY(-5px); border-color: var(--indigo); box-shadow: 0 8px 20px rgba(99,102,241,.12); }
-
-.journey-icon { font-size: 26px; margin-bottom: 8px; }
-.journey-stage { font-family: var(--font-display); font-size: 12px; font-weight: 500; color: var(--indigo-l); margin-bottom: 4px; letter-spacing: .05em; }
-.journey-emotion { font-size: 11px; color: var(--ink-3); margin-bottom: 6px; }
-.journey-q { font-size: 10px; color: var(--ink-4); line-height: 1.4; font-style: italic; }
-
-/* =====================================================
-   ANALYTICS DASHBOARD
-===================================================== */
-.analytics-band {
-  display: none;
-  background: var(--glass);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 20px 24px;
-  margin: 20px 0;
-}
-.analytics-band.visible { display: block; }
-
-.analytics-label-row {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 16px;
-}
-
-.analytics-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-}
-
-.analytics-item { text-align: center; }
-.analytics-val {
-  font-family: var(--font-display);
-  font-size: 28px; font-weight: 700;
-  color: var(--indigo-l);
-  line-height: 1;
-  margin-bottom: 5px;
-}
-.analytics-lbl { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 3px; }
-.analytics-trend { font-size: 10px; color: var(--green); }
-.analytics-trend.down { color: var(--red); }
-
-/* =====================================================
-   SECTION DIVIDER
-===================================================== */
-.section-divider {
-  display: flex; align-items: center; gap: 14px;
-  margin: 32px 0 18px;
-}
-.section-divider::before, .section-divider::after {
-  content: ''; flex: 1; height: 1px;
-  background: var(--border);
-}
-.section-divider span {
-  font-family: var(--font-display);
-  font-size: 13px; font-weight: 500;
-  color: var(--ink);
-  white-space: nowrap;
-}
-
-/* =====================================================
-   EMPTY STATE
-===================================================== */
-.empty-state {
-  text-align: center;
-  padding: 48px 32px;
-  color: var(--ink-4);
-}
-.empty-state .big-icon { font-size: 48px; margin-bottom: 16px; opacity: .4; }
-.empty-state h4 { font-size: 15px; color: var(--ink-3); margin-bottom: 8px; }
-.empty-state p  { font-size: 13px; line-height: 1.6; max-width: 360px; margin: 0 auto; }
-
-/* =====================================================
-   EXAMPLE PREVIEW ACCORDION
-===================================================== */
-.example-block {
-  margin: 0 0 28px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-}
-.example-toggle {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 20px;
-  cursor: pointer;
-  background: var(--glass);
-  font-size: 13px; color: var(--ink-2);
-  transition: background .2s;
-  list-style: none;
-  user-select: none;
-}
-.example-toggle:hover { background: var(--glass-h); }
-.example-toggle::marker { display: none; }
-.example-caret { transition: transform .3s; font-size: 12px; }
-details[open] .example-caret { transform: rotate(180deg); }
-.example-content {
-  padding: 16px 20px;
-  border-top: 1px solid var(--border);
-  font-size: 13px; color: var(--ink-2);
-  line-height: 1.7;
-  background: rgba(255,255,255,.015);
-}
-.example-content .ex-section { margin-bottom: 10px; }
-.example-content .ex-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: .15em; text-transform: uppercase; color: var(--indigo-l); margin-bottom: 4px; }
-
-/* =====================================================
-   MODALS (non-fixed)
-===================================================== */
-.modal-backdrop {
-  display: none;
-  position: fixed; inset: 0;
-  background: rgba(5,8,16,.88);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  z-index: var(--z-modal);
-  align-items: center; justify-content: center;
-  padding: 20px;
-}
-.modal-backdrop.show { display: flex; }
-
-.modal-box {
-  background: var(--surface);
-  border: 1px solid var(--border-2);
-  border-radius: var(--r-xl);
-  padding: 32px;
-  width: 100%; max-width: 520px;
-  max-height: 85vh; overflow-y: auto;
-  animation: modalIn .3s var(--ease-spring) both;
-}
-@keyframes modalIn { from{transform:scale(.94) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
-
-.modal-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 24px;
-}
-.modal-title { font-family: var(--font-display); font-size: 18px; font-weight: 500; }
-.modal-close {
-  background: var(--glass);
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: 16px; color: var(--ink-2);
-  transition: all .2s;
-}
-.modal-close:hover { background: var(--glass-h); border-color: var(--border-2); }
-
-/* History items */
-.history-item {
-  background: rgba(255,255,255,.03);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 14px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: all .2s;
-  position: relative;
-}
-.history-item:hover { background: rgba(99,102,241,.08); border-color: rgba(99,102,241,.3); }
-.history-date    { font-family: var(--font-mono); font-size: 10px; color: var(--ink-4); margin-bottom: 5px; }
-.history-preview { font-size: 12px; color: var(--ink-2); line-height: 1.5; margin-bottom: 6px; }
-.history-del {
-  position: absolute; top: 10px; right: 10px;
-  background: rgba(248,113,113,.1); border: 1px solid rgba(248,113,113,.25);
-  color: var(--red); border-radius: 100px;
-  padding: 3px 10px; font-size: 11px; cursor: pointer;
-  transition: all .2s;
-}
-.history-del:hover { background: rgba(248,113,113,.2); }
-
-/* Lead modal */
-.lead-modal-inner { text-align: center; }
-.lead-modal-inner .lead-icon { font-size: 48px; margin-bottom: 16px; }
-.lead-modal-inner h3 { font-family: var(--font-display); font-size: 22px; margin-bottom: 8px; }
-.lead-modal-inner p  { font-size: 14px; color: var(--ink-2); margin-bottom: 24px; }
-.lead-input-grp { margin-bottom: 14px; text-align: left; }
-.lead-err { font-size: 11px; color: var(--red); margin-top: 5px; display: none; }
-.lead-success-msg { font-size: 14px; color: var(--green); margin: 12px 0; display: none; }
-.lead-skip { background: none; border: none; color: var(--ink-4); font-size: 12px; cursor: pointer; margin-top: 12px; transition: color .2s; }
-.lead-skip:hover { color: var(--ink-2); }
-.honeypot { display: none; }
-
-/* =====================================================
-   NOTIFICATIONS (social proof) — bottom left
-===================================================== */
-.notif-stack {
-  position: fixed;
-  bottom: 24px; left: 24px;
-  z-index: var(--z-notif);
-  max-width: 340px;
-  display: flex; flex-direction: column; gap: 8px;
-}
-
-.notif-card {
-  background: var(--surface);
-  border: 1px solid var(--border-2);
-  border-radius: var(--r-md);
-  padding: 12px 14px;
-  display: flex; align-items: center; gap: 10px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.25);
-  animation: notifIn .35s var(--ease-spring) both;
-  transition: opacity .3s, transform .3s;
-}
-@keyframes notifIn { from{transform:translateX(-24px);opacity:0} to{transform:translateX(0);opacity:1} }
-.notif-card.out { opacity:0; transform: translateX(-16px); }
-
-.notif-icon {
-  width: 36px; height: 36px; flex-shrink: 0;
-  background: rgba(99,102,241,.1);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
-}
-.notif-msg  { font-size: 12px; color: var(--ink-2); line-height: 1.4; flex: 1; }
-.notif-time { font-size: 10px; color: var(--ink-4); margin-top: 2px; }
-.notif-x {
-  background: none; border: none; color: var(--ink-4);
-  cursor: pointer; font-size: 13px; padding: 2px 6px;
-  border-radius: 100px; transition: all .2s;
-}
-.notif-x:hover { background: var(--glass-h); color: var(--ink-2); }
-
-/* =====================================================
-   TOAST
-===================================================== */
-.toast {
-  position: fixed; bottom: 24px; right: 24px;
-  z-index: var(--z-toast);
-  background: var(--surface-2);
-  border: 1px solid var(--border-2);
-  border-radius: var(--r-md);
-  padding: 12px 20px;
-  font-size: 13px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.3);
-  animation: toastIn .3s var(--ease-out) both;
-  max-width: 300px;
-}
-@keyframes toastIn { from{transform:translateY(12px);opacity:0} to{transform:translateY(0);opacity:1} }
-
-/* =====================================================
-   FOOTER
-===================================================== */
-.footer {
-  text-align: center;
-  padding: 40px 20px;
-  border-top: 1px solid var(--border);
-  margin-top: 80px;
-  font-size: 12px;
-  color: var(--ink-4);
-}
-.footer a { color: var(--ink-3); text-decoration: none; }
-.footer a:hover { color: var(--ink-2); }
-
-/* =====================================================
-   ANIMATIONS
-===================================================== */
-@keyframes fadeSlideUp {
-  from { opacity:0; transform:translateY(20px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-
-/* =====================================================
-   RESPONSIVE
-===================================================== */
-@media (max-width: 768px) {
-  .page-wrap { padding: 0 16px 80px; }
-  .hero { padding: 48px 16px 40px; }
-  .input-card, .output-card { padding: 20px; }
-  .how-steps { grid-template-columns: 1fr; }
-  .kpi-grid { grid-template-columns: 1fr 1fr; }
-  .output-toolbar { flex-direction: column; align-items: flex-start; }
-  .btn-row .btn { font-size: 12px; padding: 10px 16px; }
-  .journey-card::after { display: none; }
-  .notif-stack { max-width: calc(100vw - 48px); }
-}
-
-@media (max-width: 480px) {
-  .kpi-grid { grid-template-columns: 1fr; }
-  .swot-matrix { grid-template-columns: 1fr; }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Marketing System | AI-Powered Marketing Plan Generator</title>
+    <style>
+        /* =====================================================
+           GLOBAL STYLES
+        ===================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e1a;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* =====================================================
+           NAVIGATION
+        ===================================================== */
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+            flex-wrap: wrap;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            background: rgba(10,14,26,.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .nav-links button {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,.7);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 8px 0;
+            transition: color 0.3s;
+        }
+        
+        .nav-links button:hover,
+        .nav-links button.active {
+            color: #6366f1;
+        }
+        
+        .cta-nav {
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            padding: 8px 20px;
+            border-radius: 50px;
+            color: white !important;
+        }
+        
+        .cta-nav:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* =====================================================
+           PAGES
+        ===================================================== */
+        .page {
+            display: none;
+            padding: 40px 0;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* =====================================================
+           BUTTONS
+        ===================================================== */
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(99,102,241,.5);
+        }
+        
+        /* =====================================================
+           HERO SECTION
+        ===================================================== */
+        .hero {
+            text-align: center;
+            padding: 60px 0;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, #a5b4fc, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            color: rgba(255,255,255,.7);
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+        
+        /* =====================================================
+           STEPS
+        ===================================================== */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 60px 0;
+        }
+        
+        .step-card {
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99,102,241,.3);
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-weight: bold;
+        }
+        
+        /* =====================================================
+           ROLES GRID
+        ===================================================== */
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 40px 0;
+        }
+        
+        .role-badge {
+            background: rgba(99,102,241,.1);
+            border: 1px solid rgba(99,102,241,.3);
+            border-radius: 100px;
+            padding: 8px 16px;
+            text-align: center;
+            font-size: 12px;
+            color: #a5b4fc;
+            transition: all 0.3s;
+        }
+        
+        .role-badge:hover {
+            background: rgba(99,102,241,.2);
+            transform: translateY(-2px);
+        }
+        
+        /* =====================================================
+           BLOG
+        ===================================================== */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin: 40px 0;
+        }
+        
+        .blog-card {
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99,102,241,.3);
+        }
+        
+        .blog-image {
+            height: 160px;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+        }
+        
+        .blog-image-2 {
+            background: linear-gradient(135deg, #ec4899, #fbbf24);
+        }
+        
+        .blog-image-3 {
+            background: linear-gradient(135deg, #22d3ee, #6366f1);
+        }
+        
+        .blog-content {
+            padding: 20px;
+        }
+        
+        .blog-category {
+            font-size: 11px;
+            color: #a5b4fc;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .blog-title {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+        
+        .filter-btn {
+            padding: 8px 20px;
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 100px;
+            color: rgba(255,255,255,.7);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: rgba(99,102,241,.2);
+            border-color: #6366f1;
+            color: #a5b4fc;
+        }
+        
+        /* =====================================================
+           PRICING
+        ===================================================== */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 60px 0;
+        }
+        
+        .pricing-card {
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 24px;
+            padding: 32px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .pricing-card.popular {
+            border-color: #6366f1;
+            background: rgba(99,102,241,.05);
+        }
+        
+        .price {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .price span {
+            font-size: 16px;
+            font-weight: normal;
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin: 30px 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            color: rgba(255,255,255,.7);
+        }
+        
+        /* =====================================================
+           ABOUT PAGE
+        ===================================================== */
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 40px 0;
+        }
+        
+        .principle-card {
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .principle-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99,102,241,.3);
+        }
+        
+        /* =====================================================
+           APP PAGE (YOUR WORKING INDEX.HTML CONTENT)
+        ===================================================== */
+        .app-container {
+            background: transparent;
+            border-radius: 24px;
+            overflow: visible;
+        }
+        
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 30px 0;
+        }
+        
+        .kpi-card {
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .kpi-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #a5b4fc;
+            margin: 10px 0;
+        }
+        
+        /* Input Area */
+        .input-area {
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 30px;
+        }
+        
+        textarea {
+            width: 100%;
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 16px;
+            padding: 16px;
+            color: white;
+            font-family: inherit;
+            resize: vertical;
+            margin: 15px 0;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+        
+        /* Output Area */
+        .output-area {
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 24px;
+            padding: 32px;
+            margin-top: 30px;
+            display: none;
+        }
+        
+        /* Status Bar */
+        .status-bar {
+            background: rgba(99,102,241,.1);
+            border: 1px solid rgba(99,102,241,.3);
+            border-radius: 12px;
+            padding: 12px 20px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        /* Progress */
+        .progress-bar {
+            background: rgba(255,255,255,.1);
+            border-radius: 10px;
+            height: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            transition: width 0.3s;
+        }
+        
+        /* Role Cards */
+        .role-card {
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 20px;
+            padding: 24px;
+            margin: 20px 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .role-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .role-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+        }
+        
+        .role-icon {
+            font-size: 28px;
+        }
+        
+        .role-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #a5b4fc;
+        }
+        
+        /* SWOT */
+        .swot-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 20px 0;
+        }
+        
+        .swot-card {
+            background: rgba(255,255,255,.03);
+            border-radius: 16px;
+            padding: 16px;
+        }
+        
+        .swot-s { border-left: 4px solid #4ade80; }
+        .swot-w { border-left: 4px solid #f87171; }
+        .swot-o { border-left: 4px solid #22d3ee; }
+        .swot-t { border-left: 4px solid #fbbf24; }
+        
+        /* Journey */
+        .journey-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .journey-card {
+            background: rgba(255,255,255,.03);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .steps, .pricing-grid, .principles-grid, .swot-grid, .journey-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 { font-size: 32px; }
+            .nav-links { gap: 12px; }
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid rgba(255,255,255,.1);
+            margin-top: 60px;
+            color: rgba(255,255,255,.5);
+            font-size: 12px;
+        }
+        
+        /* Loading Spinner */
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,.3);
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
 
-<!-- SKIP TO CONTENT LINK (ACCESSIBILITY) -->
-<a href="#main-content" class="skip-link" aria-label="Skip to main content">Skip to main content</a>
-
-<canvas id="particles" aria-hidden="true"></canvas>
-
-<div class="page-wrap" id="main-content">
-
-  <!-- NAV -->
-  <nav class="nav" role="navigation" aria-label="Main navigation">
-    <a href="#" class="nav-logo" aria-label="Strategic Marketing System home">
-      <div class="nav-logo-icon" aria-hidden="true">📊</div>
-      StratMark AI
-    </a>
-    <div class="nav-right">
-      <span class="nav-badge" aria-live="polite">● Live</span>
-      <button class="theme-toggle" id="themeBtn" aria-label="Toggle light/dark mode">
-        <span id="themeIcon">☀️</span> <span id="themeLabel">Light</span>
-      </button>
-    </div>
-  </nav>
-
-  <!-- HERO -->
-  <header class="hero glass" role="banner">
-    <div class="hero-eyebrow" aria-label="Status: AI-Powered, 13-role framework">
-      <span class="dot" aria-hidden="true"></span>
-      AI-POWERED · 13-ROLE FRAMEWORK
-    </div>
-    <h1 class="grad-text">Strategic Marketing<br>System</h1>
-    <p class="hero-tagline">Generate complete, investor-grade marketing plans in 60 seconds — PESTLE, SWOT, Porter's Five Forces, Journey Maps, and more.</p>
-
-    <div class="hero-chips" role="list" aria-label="Included analyses">
-      <span class="hero-chip" role="listitem">
-        ⚡ PESTLE Analysis
-        <span class="tooltip" role="tooltip">Political, Economic, Social, Tech, Legal, Environmental scan</span>
-      </span>
-      <span class="hero-chip" role="listitem">
-        🎯 Porter's Five Forces
-        <span class="tooltip" role="tooltip">Competitive intensity, supplier/buyer power, threat analysis</span>
-      </span>
-      <span class="hero-chip" role="listitem">
-        📊 SWOT + Micro-SWOT
-        <span class="tooltip" role="tooltip">Full SWOT plus granular sub-analysis per dimension</span>
-      </span>
-      <span class="hero-chip" role="listitem">
-        🗺️ Customer Journey
-        <span class="tooltip" role="tooltip">Covetousness model: 5-stage journey with emotion mapping</span>
-      </span>
-      <span class="hero-chip" role="listitem">
-        📈 TAM/SAM/SOM
-        <span class="tooltip" role="tooltip">Full market sizing hierarchy with monetisable opportunity</span>
-      </span>
-      <span class="hero-chip" role="listitem">
-        🎯 OKRs & Roadmap
-        <span class="tooltip" role="tooltip">30-day tactical roadmap with measurable objectives</span>
-      </span>
-    </div>
-
-    <div class="hero-cta">
-      <button class="btn-hero" id="heroScrollBtn" aria-label="Jump to input form and start generating">
-        ✨ Generate My Strategy
-        <span aria-hidden="true">↓</span>
-      </button>
-    </div>
-  </header>
-
-  <!-- HOW IT WORKS -->
-  <section class="how-section" aria-labelledby="how-heading">
-    <h2 class="section-title" id="how-heading">How it works</h2>
-    <div class="how-steps">
-      <div class="how-step">
-        <div class="step-num" aria-hidden="true">01</div>
-        <div class="step-content">
-          <h4>Describe your audience</h4>
-          <p>Paste in your customer segment, target persona, or ICP — even a rough description works.</p>
+<div class="container">
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="logo">StrategicMarketing</div>
+        <div class="nav-links">
+            <button onclick="showPage('home')" class="active" id="navHome">🏠 Home</button>
+            <button onclick="showPage('planner')" id="navPlanner">📋 Planner</button>
+            <button onclick="showPage('blog')" id="navBlog">📝 Blog</button>
+            <button onclick="showPage('about')" id="navAbout">💡 About</button>
+            <button onclick="showPage('pricing')" id="navPricing">💰 Pricing</button>
+            <button onclick="showPage('app')" id="navApp" class="cta-nav">✨ Launch App →</button>
         </div>
-      </div>
-      <div class="how-step">
-        <div class="step-num" aria-hidden="true">02</div>
-        <div class="step-content">
-          <h4>Describe your product</h4>
-          <p>Tell the AI what you're selling — features, pricing model, differentiators, and stage.</p>
+    </nav>
+
+    <!-- ============================================ -->
+    <!-- PAGE 1: HOMEPAGE -->
+    <!-- ============================================ -->
+    <div id="homePage" class="page active">
+        <div class="hero">
+            <h1>Stop second-guessing.<br>Start executing.</h1>
+            <p>A conscientious marketing system that delivers 13 disciplined roles—executed in precise sequence—so you get clarity, not confusion.</p>
+            <button class="btn" onclick="showPage('app')">✨ Start Your Free Plan →</button>
         </div>
-      </div>
-      <div class="how-step">
-        <div class="step-num" aria-hidden="true">03</div>
-        <div class="step-content">
-          <h4>Get your full plan</h4>
-          <p>Receive a 12-section strategic plan with SWOT, journey map, KPIs, and 30-day roadmap.</p>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- EXAMPLE OUTPUT ACCORDION -->
-  <details class="example-block" aria-label="See a sample output">
-    <summary class="example-toggle">
-      <span>👀 See a sample output before you generate</span>
-      <span class="example-caret" aria-hidden="true">▾</span>
-    </summary>
-    <div class="example-content">
-      <div class="ex-section">
-        <div class="ex-label">Market Sizing</div>
-        TAM: $4.2B global HR-tech market → SAM: $680M mid-market segment → SOM: $34M achievable year-1 target.
-      </div>
-      <div class="ex-section">
-        <div class="ex-label">Top SWOT Insight</div>
-        Strength: proprietary NLP pipeline (18-month tech lead). Threat: LinkedIn Jobs expanding into ATS territory.
-      </div>
-      <div class="ex-section">
-        <div class="ex-label">30-Day Roadmap (excerpt)</div>
-        Week 1: ICP validation calls (n=20). Week 2: Landing page A/B test. Week 3: Content SEO launch. Week 4: Paid pilot — $5k LinkedIn budget.
-      </div>
-    </div>
-  </details>
-
-  <!-- INPUT AREA -->
-  <main id="main-form">
-    <section class="input-card glass" aria-labelledby="input-heading">
-      <h2 class="sr-only" id="input-heading">Marketing plan input form</h2>
-
-      <div class="field-group">
-        <label class="field-label" for="customerData">
-          <span class="fl-icon" aria-hidden="true">👥</span>
-          Customer Data / Target Audience
-        </label>
-        <textarea
-          id="customerData"
-          rows="3"
-          maxlength="1000"
-          placeholder="Example: Enterprise CTOs at mid-sized tech companies ($50M–$500M revenue) looking for AI analytics solutions. Pain points: data silos, lack of real-time ROI visibility..."
-          aria-describedby="customerCount"
-        ></textarea>
-        <div class="char-count" id="customerCount" aria-live="polite">0 / 1000</div>
-      </div>
-
-      <div class="field-group">
-        <label class="field-label" for="productDescription">
-          <span class="fl-icon" aria-hidden="true">📦</span>
-          Product Description / Service
-        </label>
-        <textarea
-          id="productDescription"
-          rows="5"
-          maxlength="2000"
-          placeholder="Example: An AI-powered marketing analytics platform that provides real-time ROI predictions and channel optimization recommendations. SaaS, $499/mo, targeting B2B growth teams..."
-          aria-describedby="productCount"
-        ></textarea>
-        <div class="char-count" id="productCount" aria-live="polite">0 / 2000</div>
-      </div>
-
-      <div class="btn-row">
-        <button id="generateBtn" class="btn btn-primary" aria-label="Generate strategic marketing plan">
-          ✨ Generate Strategic Plan
-        </button>
-        <button id="clearBtn" class="btn btn-ghost" aria-label="Clear all input fields">
-          Clear
-        </button>
-        <button id="viewHistoryBtn" class="btn btn-ghost" aria-label="View saved plans history">
-          📜 History
-        </button>
-        <button id="pdfExportBtn" class="btn btn-indigo" aria-label="Export plan as PDF">
-          📄 Export PDF
-        </button>
-      </div>
-    </section>
-  </main>
-
-  <!-- STATUS BAR with ARIA live region -->
-  <div id="statusBar" class="status-bar" role="status" aria-live="polite" aria-label="Status updates">
-    <span class="status-icon" id="statusIcon" aria-hidden="true">⟳</span>
-    <span id="statusMessage"></span>
-  </div>
-
-  <!-- GENERATION PROGRESS BAR -->
-  <div class="gen-progress" id="genProgress" role="progressbar" aria-label="Generation progress" aria-valuemin="0" aria-valuemax="100">
-    <div class="gen-progress-bar" id="genProgressBar"></div>
-  </div>
-
-  <!-- KPI DASHBOARD -->
-  <div class="kpi-grid" id="kpiGrid" aria-label="Key performance indicators" aria-live="polite"></div>
-
-  <!-- OUTPUT CARD -->
-  <section id="outputCard" class="output-card glass" aria-labelledby="output-heading" aria-live="polite">
-    <div class="output-toolbar">
-      <div class="output-toolbar-left">
-        <span class="output-live-dot" aria-hidden="true"></span>
-        <h2 class="output-title" id="output-heading">Generated Strategy</h2>
-        <span class="output-timestamp" id="outputTimestamp" aria-live="polite"></span>
-      </div>
-      <div class="output-toolbar-right">
-        <button id="copyBtn" class="btn btn-green" aria-label="Copy plan to clipboard">
-          📋 Copy
-        </button>
-        <button id="saveBtn" class="btn btn-indigo" aria-label="Save plan to history">
-          💾 Save
-        </button>
-        <button id="pdfExportBtnToolbar" class="btn btn-indigo" aria-label="Export plan as PDF">
-          📄 PDF
-        </button>
-        <div class="share-group" role="group" aria-label="Share this plan">
-          <button id="shareLinkedinBtn" class="share-btn" aria-label="Share on LinkedIn">🔗 LinkedIn</button>
-          <button id="shareTwitterBtn" class="share-btn" aria-label="Share on Twitter">🐦 Twitter</button>
-          <button id="copyShareLinkBtn" class="share-btn share-copy-btn" aria-label="Copy shareable link">🔗 Copy Link</button>
-        </div>
-        <div class="feedback-group" role="group" aria-label="Was this plan helpful?">
-          <button id="feedYes" class="feedback-btn" aria-label="Helpful" title="Helpful">👍</button>
-          <button id="feedNo"  class="feedback-btn" aria-label="Not helpful" title="Not helpful">👎</button>
-        </div>
-      </div>
-    </div>
-
-    <div id="renderedOutput" aria-live="polite" aria-label="Generated marketing plan content">
-      <div class="empty-state">
-        <div class="big-icon" aria-hidden="true">📋</div>
-        <h4>Your plan will appear here</h4>
-        <p>Fill in the form above and hit "Generate" to produce a complete 12-section strategic marketing plan.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- SWOT MATRIX -->
-  <div id="swotContainer" class="swot-matrix" aria-label="SWOT Analysis matrix" aria-live="polite"></div>
-
-  <!-- JOURNEY MAP -->
-  <div id="journeyContainer" class="journey-wrap" aria-label="Customer journey map" aria-live="polite"></div>
-
-  <!-- ANALYTICS BAND -->
-  <div id="analyticsBand" class="analytics-band" aria-label="Session analytics">
-    <div class="analytics-label-row">
-      <span class="label-tiny">Session Analytics</span>
-      <button id="clearAnalyticsBtn" class="btn btn-ghost" style="font-size:11px;padding:5px 12px;" aria-label="Reset analytics">Reset</button>
-    </div>
-    <div class="analytics-grid">
-      <div class="analytics-item">
-        <div class="analytics-val" id="analTotal">0</div>
-        <div class="analytics-lbl">Plans Generated</div>
-        <div class="analytics-trend" id="analSession" aria-live="polite">+0 this session</div>
-      </div>
-      <div class="analytics-item">
-        <div class="analytics-val" id="analAvgTime">—</div>
-        <div class="analytics-lbl">Avg Response</div>
-        <div class="analytics-trend" id="analTimeTrend">—</div>
-      </div>
-      <div class="analytics-item">
-        <div class="analytics-val" id="analSuccess">—</div>
-        <div class="analytics-lbl">Helpful Rate</div>
-        <div class="analytics-trend">based on feedback</div>
-      </div>
-      <div class="analytics-item">
-        <div class="analytics-val" id="analTopIndustry">—</div>
-        <div class="analytics-lbl">Top Industry</div>
-        <div class="analytics-trend">most analyzed</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- A/B TEST DASHBOARD (Secret: Click logo 5 times) -->
-  <div id="abDashboard" class="ab-dashboard">
-    <div class="ab-header">
-      <h3>📊 A/B Test Results</h3>
-      <button id="resetABTestsBtn" class="btn btn-ghost" style="padding: 6px 14px; font-size: 12px;" aria-label="Reset all A/B tests">Reset All Tests</button>
-    </div>
-    <div id="abResultsContainer"></div>
-    <div class="ab-note">
-      Variants are randomly assigned per user and stick for 30 days.<br>
-      Data is stored locally in your browser.
-    </div>
-  </div>
-
-  <!-- KEYBOARD SHORTCUTS MODAL -->
-  <div id="keyboardModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="keyboard-title">
-    <div class="modal-box">
-      <div class="modal-header">
-        <h2 class="modal-title" id="keyboard-title">⌨️ Keyboard Shortcuts</h2>
-        <button class="modal-close" id="closeKeyboardBtn" aria-label="Close shortcuts">✕</button>
-      </div>
-      <div style="display: grid; gap: 12px;">
-        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
-          <span><kbd style="background: rgba(255,255,255,.1); padding: 2px 8px; border-radius: 4px;">Ctrl + Enter</kbd></span>
-          <span>Generate marketing plan</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
-          <span><kbd style="background: rgba(255,255,255,.1); padding: 2px 8px; border-radius: 4px;">?</kbd></span>
-          <span>Show/hide this menu</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
-          <span><kbd style="background: rgba(255,255,255,.1); padding: 2px 8px; border-radius: 4px;">Esc</kbd></span>
-          <span>Close modals</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; padding: 8px 0;">
-          <span><kbd style="background: rgba(255,255,255,.1); padding: 2px 8px; border-radius: 4px;">Tab</kbd></span>
-          <span>Navigate through interactive elements</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div><!-- /page-wrap -->
-
-<!-- HISTORY MODAL -->
-<div id="historyModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="history-title">
-  <div class="modal-box">
-    <div class="modal-header">
-      <h2 class="modal-title" id="history-title">Saved Plans</h2>
-      <button class="modal-close" id="closeHistoryBtn" aria-label="Close history">✕</button>
-    </div>
-    <div id="historyList"></div>
-  </div>
-</div>
-
-<!-- LEAD MODAL -->
-<div id="leadModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="lead-title">
-  <div class="modal-box">
-    <div class="lead-modal-inner">
-      <div class="lead-icon" aria-hidden="true">🎯</div>
-      <h2 id="lead-title">Want weekly strategy tips?</h2>
-      <p>Get exclusive templates and marketing frameworks delivered to your inbox.</p>
-
-      <div class="honeypot">
-        <input type="text" id="hpField" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-      </div>
-
-      <div class="lead-input-grp">
-        <label class="field-label" for="leadEmail">Email address</label>
-        <input type="email" id="leadEmail" placeholder="you@company.com" aria-describedby="emailErr">
-        <div id="emailErr" class="lead-err" role="alert">Please enter a valid email address.</div>
-      </div>
-      <div class="lead-input-grp">
-        <label class="field-label" for="leadName">Your name (optional)</label>
-        <input type="text" id="leadName" placeholder="Alex">
-      </div>
-
-      <div id="leadSuccess" class="lead-success-msg" role="status">✅ You're subscribed!</div>
-
-      <button id="submitLeadBtn" class="btn btn-primary" style="width:100%;justify-content:center;border-radius:12px;" aria-label="Subscribe for free">
-        💌 Subscribe — it's free
-      </button>
-      <br>
-      <button id="closeLeadBtn" class="lead-skip" aria-label="Skip and close">No thanks, just the plan</button>
-    </div>
-  </div>
-</div>
-
-<!-- NOTIFICATION STACK -->
-<div id="notifStack" class="notif-stack" role="log" aria-label="Activity notifications" aria-live="polite"></div>
-
-<!-- FOOTER -->
-<footer class="footer" role="contentinfo">
-  <p>© 2025 Strategic Marketing System · Powered by GPT-OSS-120B · 13-Role Framework</p>
-  <p style="margin-top:6px;">
-    <a href="#" onclick="window.exportLeads();return false;" aria-label="Export leads as CSV">Export leads CSV</a>
-    &nbsp;·&nbsp;
-    <a href="#main-content" aria-label="Back to top">Back to top ↑</a>
-  </p>
-  <div style="margin-top: 12px; font-size: 10px; color: var(--ink-4);">
-    🔒 Secure connection · All data processed locally · Rate limits enforced
-  </div>
-</footer>
-
-<!-- =====================================================
-     JAVASCRIPT
-===================================================== -->
-<script>
-// =====================================================
-// SECURITY: INPUT SANITIZATION
-// =====================================================
-
-function sanitizeInput(str) {
-    if (!str) return '';
-    // Remove dangerous HTML tags and attributes
-    return String(str)
-        .replace(/[<>]/g, '')  // Remove < and > to prevent HTML injection
-        .replace(/&/g, '&amp;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;')
-        .replace(/javascript:/gi, '')
-        .replace(/on\w+=/gi, '');
-}
-
-function sanitizeForDisplay(str) {
-    if (!str) return '';
-    return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-}
-
-// =====================================================
-// SECURITY: RATE LIMITING SIMULATION
-// =====================================================
-
-const rateLimits = {
-    generation: {
-        maxRequests: 5,
-        timeWindow: 60000, // 1 minute
-        requests: [],
-        blockUntil: null
-    }
-};
-
-function checkRateLimit(type = 'generation') {
-    const limit = rateLimits[type];
-    if (!limit) return true;
-    
-    // Check if blocked
-    if (limit.blockUntil && Date.now() < limit.blockUntil) {
-        const remainingMs = Math.ceil((limit.blockUntil - Date.now()) / 1000);
-        setStatus(`Rate limit exceeded. Please wait ${remainingMs} seconds.`, 'error');
-        return false;
-    }
-    
-    // Clean old requests
-    const now = Date.now();
-    limit.requests = limit.requests.filter(timestamp => now - timestamp < limit.timeWindow);
-    
-    // Check limit
-    if (limit.requests.length >= limit.maxRequests) {
-        limit.blockUntil = now + 30000; // Block for 30 seconds
-        setStatus(`Too many requests. Please wait 30 seconds.`, 'error');
-        return false;
-    }
-    
-    // Add current request
-    limit.requests.push(now);
-    return true;
-}
-
-// =====================================================
-// SECURITY: SESSION MANAGEMENT (CSRF Protection)
-// =====================================================
-
-function generateSessionId() {
-    return 'sid_' + Date.now() + '_' + Math.random().toString(36).substr(2, 16);
-}
-
-function getSessionId() {
-    let sessionId = sessionStorage.getItem('session_id');
-    if (!sessionId) {
-        sessionId = generateSessionId();
-        sessionStorage.setItem('session_id', sessionId);
-    }
-    return sessionId;
-}
-
-// =====================================================
-// CONSTANTS & STATE
-// =====================================================
-const API_BASE       = 'https://Bisratprompt-marketing-system-api.hf.space';
-const HISTORY_KEY    = 'sms_plans_v2';
-const ANALYTICS_KEY  = 'sms_analytics_v2';
-const LEADS_KEY      = 'sms_leads_v2';
-const SHARED_PLANS_KEY = 'shared_plans_v2';
-const MAX_HISTORY    = 15;
-
-let currentPlan     = null;
-let isGenerating    = false;
-let leadModalShown  = false;
-let sessionCount    = 0;
-let manualTheme     = null;
-
-// =====================================================
-// A/B TESTING FRAMEWORK
-// =====================================================
-
-const abTests = {
-    heroCta: {
-        name: 'Hero CTA Button Text',
-        variants: [
-            { id: 'A', text: '✨ Generate Strategic Plan', color: 'btn-primary' },
-            { id: 'B', text: '🚀 Start Free Trial', color: 'btn-primary' },
-            { id: 'C', text: '🎯 Get Your Strategy', color: 'btn-primary' }
-        ],
-        startDate: new Date().toISOString()
-    }
-};
-
-// Assign user to variant (sticky for 30 days)
-function getVariant(testName) {
-    const storageKey = `ab_test_${testName}`;
-    const stored = localStorage.getItem(storageKey);
-    if (stored) return stored;
-    
-    const test = abTests[testName];
-    const randomIndex = Math.floor(Math.random() * test.variants.length);
-    const variant = test.variants[randomIndex].id;
-    localStorage.setItem(storageKey, variant);
-    // Set expiry (30 days)
-    localStorage.setItem(`${storageKey}_expiry`, Date.now() + 30 * 24 * 60 * 60 * 1000);
-    return variant;
-}
-
-// Apply variant to generate button
-function applyHeroCtaVariant() {
-    const generateBtn = document.getElementById('generateBtn');
-    if (!generateBtn) return;
-    
-    const variantId = getVariant('heroCta');
-    const variant = abTests.heroCta.variants.find(v => v.id === variantId);
-    
-    if (variant) {
-        generateBtn.textContent = variant.text;
-        generateBtn.className = `btn ${variant.color}`;
-        
-        // Track impression (only once per session)
-        if (!sessionStorage.getItem(`ab_impression_heroCta`)) {
-            sessionStorage.setItem(`ab_impression_heroCta`, 'true');
-            trackABConversion('heroCta', variantId, 'impression');
-        }
-    }
-}
-
-// Track conversion
-function trackABConversion(testName, variantId, action) {
-    const event = {
-        test: testName,
-        variant: variantId,
-        action: action,
-        timestamp: new Date().toISOString(),
-        sessionId: getSessionId()
-    };
-    
-    const conversions = JSON.parse(localStorage.getItem('ab_conversions') || '[]');
-    conversions.push(event);
-    // Keep last 500 events
-    if (conversions.length > 500) conversions.shift();
-    localStorage.setItem('ab_conversions', JSON.stringify(conversions));
-}
-
-// Clean expired A/B test assignments on load
-function cleanExpiredABTests() {
-    Object.keys(abTests).forEach(testName => {
-        const expiry = localStorage.getItem(`ab_test_${testName}_expiry`);
-        if (expiry && Date.now() > parseInt(expiry)) {
-            localStorage.removeItem(`ab_test_${testName}`);
-            localStorage.removeItem(`ab_test_${testName}_expiry`);
-        }
-    });
-}
-
-// Render A/B test results dashboard
-function renderABResults() {
-    const conversions = JSON.parse(localStorage.getItem('ab_conversions') || '[]');
-    const container = document.getElementById('abResultsContainer');
-    if (!container) return;
-    
-    const results = {};
-    
-    // Initialize results for each variant
-    abTests.heroCta.variants.forEach(v => {
-        results[v.id] = { 
-            impressions: 0, 
-            clicks: 0, 
-            name: v.text,
-            ctr: 0
-        };
-    });
-    
-    // Count events
-    conversions.forEach(conv => {
-        if (conv.test === 'heroCta' && results[conv.variant]) {
-            if (conv.action === 'impression') results[conv.variant].impressions++;
-            if (conv.action === 'click_generate') results[conv.variant].clicks++;
-        }
-    });
-    
-    // Calculate CTR and find winner
-    let winnerId = null;
-    let highestCTR = 0;
-    
-    Object.keys(results).forEach(id => {
-        const data = results[id];
-        if (data.impressions > 0) {
-            data.ctr = ((data.clicks / data.impressions) * 100).toFixed(1);
-            if (parseFloat(data.ctr) > highestCTR && data.impressions >= 5) {
-                highestCTR = parseFloat(data.ctr);
-                winnerId = id;
-            }
-        } else {
-            data.ctr = '—';
-        }
-    });
-    
-    // Build HTML
-    const variantIcons = { A: '🔵', B: '🟢', C: '🟠' };
-    
-    container.innerHTML = `
-        <div class="ab-results-grid">
-            ${Object.entries(results).map(([id, data]) => `
-                <div class="ab-variant-card ${winnerId === id ? 'winner' : ''}">
-                    <div class="ab-variant-icon">${variantIcons[id]}</div>
-                    <div class="ab-variant-name">Variant ${id}</div>
-                    <div class="ab-variant-text">"${data.name}"</div>
-                    <div class="ab-variant-stats">
-                        ${data.impressions} views<br>
-                        ${data.clicks} clicks
-                    </div>
-                    <div class="ab-variant-ctr" style="color: ${winnerId === id ? 'var(--green)' : 'var(--indigo-l)'}">
-                        ${data.ctr}% CTR ${winnerId === id ? '🏆' : ''}
-                    </div>
-                </div>
-            `).join('')}
-        </div>
-        <div class="ab-interpretation">
-            <div class="ab-interpretation-title">📈 Interpretation</div>
-            <div class="ab-interpretation-text">
-                ${winnerId ? `Variant ${winnerId} is currently leading with ${results[winnerId].ctr}% CTR. ${parseInt(results[winnerId].impressions) < 30 ? 'Collect more data for statistical significance (aim for 30+ views per variant).' : 'Monitor performance over time to confirm the winning variant.'}` : 'Not enough data yet. Generate more plans to see which variant performs best.'}
+        <h2 style="text-align: center; margin-bottom: 40px;">How it works</h2>
+        <div class="steps">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Describe your audience</h3>
+                <p style="color: rgba(255,255,255,.6);">Tell us who you want to sell to</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Describe your product</h3>
+                <p style="color: rgba(255,255,255,.6);">Tell us what you're selling</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Get your full plan</h3>
+                <p style="color: rgba(255,255,255,.6);">Receive 13 roles of strategic analysis</p>
             </div>
         </div>
-    `;
-}
 
-// Reset A/B tests
-function resetABTests() {
-    // Clear A/B test assignments
-    Object.keys(abTests).forEach(testName => {
-        localStorage.removeItem(`ab_test_${testName}`);
-        localStorage.removeItem(`ab_test_${testName}_expiry`);
-    });
-    // Clear conversion data
-    localStorage.removeItem('ab_conversions');
-    // Reset session impression flag
-    sessionStorage.removeItem('ab_impression_heroCta');
-    // Re-apply variant to current button
-    applyHeroCtaVariant();
-    // Refresh dashboard
-    renderABResults();
-    showToast('A/B tests reset! Refresh to see new variant.');
-}
+        <h2 style="text-align: center; margin-bottom: 30px;">13 Disciplined Roles</h2>
+        <div class="roles-grid">
+            <div class="role-badge">🎯 Segmentation</div>
+            <div class="role-badge">📊 Market Sizing</div>
+            <div class="role-badge">⚡ PESTLE</div>
+            <div class="role-badge">🎯 Porter's Forces</div>
+            <div class="role-badge">🔍 Competitors</div>
+            <div class="role-badge">📍 Positioning</div>
+            <div class="role-badge">🎨 4Ps</div>
+            <div class="role-badge">💪 SWOT</div>
+            <div class="role-badge">🗺️ Journey Map</div>
+            <div class="role-badge">📈 KPIs</div>
+            <div class="role-badge">🎯 OKRs</div>
+            <div class="role-badge">📅 Roadmap</div>
+            <div class="role-badge">🎨 Design</div>
+        </div>
+    </div>
 
-// Secret admin unlock (click logo 5 times)
-let logoClickCount = 0;
-let logoClickTimer = null;
-
-function initABAdmin() {
-    const heroTitle = document.querySelector('.hero h1');
-    if (!heroTitle) return;
-    
-    heroTitle.style.cursor = 'pointer';
-    heroTitle.title = 'Click 5 times for A/B test dashboard (admin)';
-    
-    heroTitle.addEventListener('click', () => {
-        logoClickCount++;
+    <!-- ============================================ -->
+    <!-- PAGE 2: PLANNER PAGE -->
+    <!-- ============================================ -->
+    <div id="plannerPage" class="page">
+        <div class="hero" style="padding: 40px 0;">
+            <h1>Strategy Planner</h1>
+            <p>Fill in your business details and let our AI do the rest</p>
+        </div>
         
-        clearTimeout(logoClickTimer);
-        logoClickTimer = setTimeout(() => {
-            logoClickCount = 0;
-        }, 2000);
+        <div class="input-area">
+            <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);">👥 Customer Data / Target Audience</label>
+            <textarea id="plannerCustomer" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies ($50M-$500M revenue) looking for AI analytics solutions..."></textarea>
+            
+            <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);">📦 Product Description / Service</label>
+            <textarea id="plannerProduct" rows="4" placeholder="Example: An AI-powered marketing analytics platform that provides real-time ROI predictions and channel optimization recommendations..."></textarea>
+            
+            <button class="btn" onclick="goToAppWithData()">✨ Generate Strategic Plan →</button>
+        </div>
         
-        if (logoClickCount >= 5) {
-            logoClickCount = 0;
-            const dashboard = document.getElementById('abDashboard');
-            if (dashboard) {
-                const isVisible = dashboard.classList.contains('visible');
-                if (isVisible) {
-                    dashboard.classList.remove('visible');
-                    showToast('Dashboard hidden');
-                } else {
-                    dashboard.classList.add('visible');
-                    renderABResults();
-                    showToast('Admin dashboard revealed');
-                }
-            }
-        }
-    });
-}
+        <div class="steps" style="margin-top: 40px;">
+            <div class="step-card">
+                <div class="step-number">✓</div>
+                <h3>What happens next?</h3>
+                <p style="color: rgba(255,255,255,.6);">Your data will be sent to our AI engine. The 13-role framework will execute in sequence, and you'll receive a complete strategic marketing plan.</p>
+            </div>
+        </div>
+    </div>
 
-// Initialize A/B testing
-function initABTesting() {
-    cleanExpiredABTests();
-    applyHeroCtaVariant();
-    initABAdmin();
-    
-    const resetBtn = document.getElementById('resetABTestsBtn');
-    if (resetBtn) resetBtn.addEventListener('click', resetABTests);
-}
-
-// =====================================================
-// FOCUS TRAPPING FOR MODALS (ACCESSIBILITY)
-// =====================================================
-
-function trapFocus(modalId) {
-    const modal = document.getElementById(modalId);
-    if (!modal || !modal.classList.contains('show')) return;
-    
-    const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-    if (focusableElements.length === 0) return;
-    
-    const firstFocusable = focusableElements[0];
-    const lastFocusable = focusableElements[focusableElements.length - 1];
-    
-    const handleTab = (e) => {
-        if (e.key !== 'Tab') return;
+    <!-- ============================================ -->
+    <!-- PAGE 3: BLOG PAGE -->
+    <!-- ============================================ -->
+    <div id="blogPage" class="page">
+        <div class="hero" style="padding: 40px 0;">
+            <h1>Marketing Resources</h1>
+            <p>Practical frameworks, no fluff</p>
+        </div>
         
-        if (e.shiftKey) {
-            if (document.activeElement === firstFocusable) {
-                e.preventDefault();
-                lastFocusable.focus();
-            }
-        } else {
-            if (document.activeElement === lastFocusable) {
-                e.preventDefault();
-                firstFocusable.focus();
-            }
-        }
-    };
-    
-    modal.addEventListener('keydown', handleTab);
-    
-    // Store the handler to remove it later
-    modal._trapFocusHandler = handleTab;
-    
-    firstFocusable.focus();
-}
-
-function removeTrapFocus(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal && modal._trapFocusHandler) {
-        modal.removeEventListener('keydown', modal._trapFocusHandler);
-        delete modal._trapFocusHandler;
-    }
-}
-
-// Override openModal and closeModal for focus trapping
-window.openModal = function(id) {
-    const modal = document.getElementById(id);
-    if (modal) {
-        modal.classList.add('show');
-        trapFocus(id);
-    }
-};
-
-window.closeModal = function(id) {
-    const modal = document.getElementById(id);
-    if (modal) {
-        modal.classList.remove('show');
-        removeTrapFocus(id);
-    }
-};
-
-// =====================================================
-// KEYBOARD SHORTCUTS MODAL
-// =====================================================
-document.addEventListener('keydown', (e) => {
-    if (e.key === '?' && !e.ctrlKey && !e.metaKey) {
-        e.preventDefault();
-        window.openModal('keyboardModal');
-    }
-});
-
-document.getElementById('closeKeyboardBtn')?.addEventListener('click', () => {
-    window.closeModal('keyboardModal');
-});
-
-// =====================================================
-// PDF EXPORT FUNCTION (FIXED - BLACK TEXT)
-// =====================================================
-async function exportToPDF() {
-  if (!currentPlan) {
-    showToast('No plan to export. Generate a plan first!');
-    return;
-  }
-
-  setStatus('📄 Generating PDF, please wait...', 'working');
-
-  // Create a temporary container for PDF content
-  const pdfContainer = document.createElement('div');
-  pdfContainer.style.padding = '24px';
-  pdfContainer.style.fontFamily = 'Arial, sans-serif';
-  pdfContainer.style.maxWidth = '800px';
-  pdfContainer.style.margin = '0 auto';
-  pdfContainer.style.backgroundColor = '#ffffff';
-  pdfContainer.style.color = '#000000';
-  pdfContainer.style.lineHeight = '1.6';
-
-  // Get the rendered content
-  const renderedContent = document.getElementById('renderedOutput').innerHTML;
-
-  // Helper function to escape HTML
-  function safeEscape(str) {
-    if (!str) return '';
-    return String(str).replace(/[&<>]/g, function(m) {
-      if (m === '&') return '&amp;';
-      if (m === '<') return '&lt;';
-      if (m === '>') return '&gt;';
-      return m;
-    });
-  }
-
-  // Get customer and product data safely
-  const customerValue = document.getElementById('customerData').value || '';
-  const productValue = document.getElementById('productDescription').value || '';
-
-  // Build PDF content with black text
-  pdfContainer.innerHTML = `
-    <div style="text-align: center; margin-bottom: 30px;">
-      <h1 style="color: #6366f1; font-size: 28px; margin-bottom: 8px;">Strategic Marketing System</h1>
-      <h2 style="color: #333; font-size: 20px; margin-bottom: 8px;">Marketing Strategy Report</h2>
-      <p style="color: #666;">Generated: ${new Date().toLocaleString()}</p>
-      <hr style="margin: 20px 0;">
+        <div class="filter-bar">
+            <button class="filter-btn active" onclick="filterBlog('all')">All</button>
+            <button class="filter-btn" onclick="filterBlog('segmentation')">Segmentation</button>
+            <button class="filter-btn" onclick="filterBlog('swot')">SWOT</button>
+            <button class="filter-btn" onclick="filterBlog('journey')">Journey Map</button>
+            <button class="filter-btn" onclick="filterBlog('kpi')">KPIs</button>
+        </div>
+        
+        <div class="blog-grid" id="blogGrid">
+            <div class="blog-card" data-category="segmentation">
+                <div class="blog-image"></div>
+                <div class="blog-content">
+                    <div class="blog-category">SEGMENTATION</div>
+                    <h3 class="blog-title">How to Find Your Ideal Customer in 3 Steps</h3>
+                    <p style="color: rgba(255,255,255,.6);">A practical guide to identifying your primary target audience.</p>
+                    <div style="margin-top: 12px; font-size: 11px; color: rgba(255,255,255,.4);">📅 5 min read · Role 1 of 13</div>
+                </div>
+            </div>
+            <div class="blog-card" data-category="swot">
+                <div class="blog-image blog-image-2"></div>
+                <div class="blog-content">
+                    <div class="blog-category">SWOT ANALYSIS</div>
+                    <h3 class="blog-title">Turning Weaknesses into Opportunities</h3>
+                    <p style="color: rgba(255,255,255,.6);">Strategic frameworks for competitive advantage.</p>
+                    <div style="margin-top: 12px; font-size: 11px; color: rgba(255,255,255,.4);">📅 7 min read · Role 8 of 13</div>
+                </div>
+            </div>
+            <div class="blog-card" data-category="journey">
+                <div class="blog-image blog-image-3"></div>
+                <div class="blog-content">
+                    <div class="blog-category">CUSTOMER JOURNEY</div>
+                    <h3 class="blog-title">Mapping the 5 Stages of Customer Experience</h3>
+                    <p style="color: rgba(255,255,255,.6);">From awareness to advocacy — complete guide.</p>
+                    <div style="margin-top: 12px; font-size: 11px; color: rgba(255,255,255,.4);">📅 4 min read · Role 9 of 13</div>
+                </div>
+            </div>
+            <div class="blog-card" data-category="kpi">
+                <div class="blog-image" style="background: linear-gradient(135deg, #fbbf24, #ec4899);"></div>
+                <div class="blog-content">
+                    <div class="blog-category">KPIs & METRICS</div>
+                    <h3 class="blog-title">10 Marketing Metrics That Actually Matter</h3>
+                    <p style="color: rgba(255,255,255,.6);">Stop tracking vanity metrics. Focus on what drives growth.</p>
+                    <div style="margin-top: 12px; font-size: 11px; color: rgba(255,255,255,.4);">📅 6 min read · Role 10 of 13</div>
+                </div>
+            </div>
+            <div class="blog-card" data-category="segmentation">
+                <div class="blog-image" style="background: linear-gradient(135deg, #22d3ee, #ec4899);"></div>
+                <div class="blog-content">
+                    <div class="blog-category">POSITIONING</div>
+                    <h3 class="blog-title">How to Stand Out in a Crowded Market</h3>
+                    <p style="color: rgba(255,255,255,.6);">Differentiation strategies that actually work.</p>
+                    <div style="margin-top: 12px; font-size: 11px; color: rgba(255,255,255,.4);">📅 8 min read · Role 6 of 13</div>
+                </div>
+            </div>
+            <div class="blog-card" data-category="swot">
+                <div class="blog-image" style="background: linear-gradient(135deg, #6366f1, #22d3ee);"></div>
+                <div class="blog-content">
+                    <div class="blog-category">COMPETITOR ANALYSIS</div>
+                    <h3 class="blog-title">Outsmart Your Competition: A Complete Guide</h3>
+                    <p style="color: rgba(255,255,255,.6);">Learn how to profile and beat your competitors.</p>
+                    <div style="margin-top: 12px; font-size: 11px; color: rgba(255,255,255,.4);">📅 10 min read · Role 5 of 13</div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div style="margin-bottom: 30px;">
-      <h3 style="color: #6366f1; margin-bottom: 12px;">📋 Customer Input Summary</h3>
-      <div style="background: #f5f5f5; padding: 16px; border-radius: 8px; color: #000;">
-        <p style="color: #000;"><strong>Target Audience:</strong> ${safeEscape(customerValue.substring(0, 300))}</p>
-        <p style="color: #000; margin-top: 12px;"><strong>Product/Service:</strong> ${safeEscape(productValue.substring(0, 300))}</p>
-      </div>
+    <!-- ============================================ -->
+    <!-- PAGE 4: ABOUT PAGE -->
+    <!-- ============================================ -->
+    <div id="aboutPage" class="page">
+        <div class="hero" style="padding: 40px 0;">
+            <h1>Built on <span style="color: #6366f1;">Conscientiousness</span></h1>
+            <p>We believe marketing strategy should be disciplined, not chaotic. 13 roles. One clear output. Every time.</p>
+        </div>
+        
+        <div style="background: rgba(255,255,255,.05); border-radius: 24px; padding: 32px; margin: 40px 0;">
+            <h2 style="text-align: center; margin-bottom: 24px;">The 13-Role Framework</h2>
+            <div class="roles-grid">
+                <div class="role-badge">1. Segmentation</div>
+                <div class="role-badge">2. Market Sizing</div>
+                <div class="role-badge">3. PESTLE</div>
+                <div class="role-badge">4. Porter's Forces</div>
+                <div class="role-badge">5. Competitors</div>
+                <div class="role-badge">6. Positioning</div>
+                <div class="role-badge">7. 4Ps</div>
+                <div class="role-badge">8. SWOT</div>
+                <div class="role-badge">9. Journey Map</div>
+                <div class="role-badge">10. KPIs</div>
+                <div class="role-badge">11. OKRs</div>
+                <div class="role-badge">12. Roadmap</div>
+                <div class="role-badge">13. Design</div>
+            </div>
+        </div>
+        
+        <div class="principles-grid">
+            <div class="principle-card">
+                <div style="font-size: 48px; margin-bottom: 16px;">🤖</div>
+                <h3>Autonomy</h3>
+                <p style="color: rgba(255,255,255,.6);">The system works by itself. You don't have to tell it what to do next.</p>
+            </div>
+            <div class="principle-card">
+                <div style="font-size: 48px; margin-bottom: 16px;">🧠</div>
+                <h3>Intelligence</h3>
+                <p style="color: rgba(255,255,255,.6);">Smart analysis that learns and adapts to your business.</p>
+            </div>
+            <div class="principle-card">
+                <div style="font-size: 48px; margin-bottom: 16px;">💚</div>
+                <h3>Goodness</h3>
+                <p style="color: rgba(255,255,255,.6);">Ethical strategies that benefit everyone, not just the bottom line.</p>
+            </div>
+        </div>
+        
+        <div style="background: rgba(99,102,241,.08); border-radius: 24px; padding: 32px; text-align: center;">
+            <h3>Our Mission</h3>
+            <p style="color: rgba(255,255,255,.7); max-width: 600px; margin: 16px auto 0;">To democratize strategic marketing by making professional-grade planning accessible, understandable, and actionable for everyone.</p>
+        </div>
     </div>
 
-    <div>
-      <h3 style="color: #6366f1; margin-bottom: 16px;">📊 Generated Marketing Strategy</h3>
-      <div id="pdfContent" style="color: #000;">
-        ${renderedContent}
-      </div>
+    <!-- ============================================ -->
+    <!-- PAGE 5: PRICING PAGE -->
+    <!-- ============================================ -->
+    <div id="pricingPage" class="page">
+        <div class="hero" style="padding: 40px 0;">
+            <h1>Simple, Transparent Pricing</h1>
+            <p>No hidden fees. Cancel anytime.</p>
+        </div>
+        
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Free</h3>
+                <div class="price">$0<span>/month</span></div>
+                <ul class="feature-list">
+                    <li>✅ 5 plans per month</li>
+                    <li>✅ PDF export</li>
+                    <li>✅ Save to history</li>
+                    <li>✅ Copy to clipboard</li>
+                    <li>✅ Basic analytics</li>
+                </ul>
+                <button class="btn" onclick="showPage('app')">Get Started</button>
+            </div>
+            
+            <div class="pricing-card popular">
+                <h3>Pro</h3>
+                <div class="price">$29<span>/month</span></div>
+                <ul class="feature-list">
+                    <li>✅ Unlimited plans</li>
+                    <li>✅ Priority support</li>
+                    <li>✅ All export formats</li>
+                    <li>✅ Advanced analytics</li>
+                    <li>✅ Team sharing</li>
+                </ul>
+                <button class="btn" onclick="showPage('app')">Start Free Trial</button>
+                <div style="margin-top: 12px; font-size: 11px; color: #a5b4fc;">Most popular</div>
+            </div>
+            
+            <div class="pricing-card">
+                <h3>Enterprise</h3>
+                <div class="price">Custom</div>
+                <ul class="feature-list">
+                    <li>✅ Unlimited everything</li>
+                    <li>✅ API access</li>
+                    <li>✅ SSO & SAML</li>
+                    <li>✅ Dedicated support</li>
+                    <li>✅ Custom integrations</li>
+                </ul>
+                <button class="btn btn-outline" onclick="alert('Contact sales@strategicmarketing.com')">Contact Sales</button>
+            </div>
+        </div>
     </div>
 
-    <div style="margin-top: 40px; text-align: center; font-size: 10px; color: #999; border-top: 1px solid #ddd; padding-top: 20px;">
-      <p>Generated by Strategic Marketing System · AI-Powered Marketing Intelligence</p>
-      <p>© 2025 Strategic Marketing System</p>
+    <!-- ============================================ -->
+    <!-- PAGE 6: APP PAGE (YOUR WORKING AI SYSTEM) -->
+    <!-- ============================================ -->
+    <div id="appPage" class="page">
+        <div class="app-container">
+            <!-- Input Area -->
+            <div class="input-area">
+                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);">📊 Customer Data / Target Audience</label>
+                <textarea id="customerData" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies ($50M-$500M revenue) looking for AI analytics solutions..."></textarea>
+                
+                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);">📦 Product Description / Service</label>
+                <textarea id="productDescription" rows="5" placeholder="Example: An AI-powered marketing analytics platform that provides real-time ROI predictions and channel optimization recommendations..."></textarea>
+                
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <button id="generateBtn" class="btn">✨ Generate Strategic Plan</button>
+                    <button id="clearBtn" class="btn btn-outline">Clear All</button>
+                </div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="progress-bar" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <!-- Status Bar -->
+            <div class="status-bar" id="statusBar">
+                <span class="loader"></span>
+                <span id="statusMessage">Ready to generate</span>
+            </div>
+            
+            <!-- KPI Dashboard -->
+            <div class="kpi-grid" id="kpiGrid"></div>
+            
+            <!-- Output Area -->
+            <div class="output-area" id="outputArea">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+                    <h3>📊 Generated Marketing Strategy</h3>
+                    <div style="display: flex; gap: 8px;">
+                        <button id="copyOutputBtn" class="btn btn-outline" style="padding: 8px 16px;">📋 Copy</button>
+                        <button id="saveHistoryBtn" class="btn btn-outline" style="padding: 8px 16px;">💾 Save</button>
+                    </div>
+                </div>
+                <div id="renderedOutput"></div>
+            </div>
+            
+            <!-- SWOT Container -->
+            <div id="swotContainer"></div>
+            
+            <!-- Journey Container -->
+            <div id="journeyContainer"></div>
+        </div>
     </div>
-  `;
 
-  // Clean up and force black text on all elements
-  const pdfContent = pdfContainer.querySelector('#pdfContent');
-  if (pdfContent) {
-    // Remove any interactive elements
-    const buttons = pdfContent.querySelectorAll('button');
-    buttons.forEach(btn => btn.remove());
-    
-    // Force all text to black
-    const allElements = pdfContent.querySelectorAll('*');
-    allElements.forEach(el => {
-      el.style.color = '#000000';
-      el.style.backgroundColor = 'transparent';
-    });
-    
-    // Handle tables specifically
-    const tables = pdfContent.querySelectorAll('table');
-    tables.forEach(table => {
-      table.style.borderCollapse = 'collapse';
-      table.style.width = '100%';
-      table.style.margin = '16px 0';
-      
-      const cells = table.querySelectorAll('th, td');
-      cells.forEach(cell => {
-        cell.style.border = '1px solid #ddd';
-        cell.style.padding = '10px';
-        cell.style.color = '#000000';
-      });
-      
-      const headers = table.querySelectorAll('th');
-      headers.forEach(th => {
-        th.style.backgroundColor = '#f0f0f0';
-        th.style.color = '#000000';
-      });
-    });
-    
-    // Handle list items
-    const lists = pdfContent.querySelectorAll('ul, ol');
-    lists.forEach(list => {
-      list.style.color = '#000000';
-      const items = list.querySelectorAll('li');
-      items.forEach(li => {
-        li.style.color = '#000000';
-        li.style.margin = '4px 0';
-      });
-    });
-    
-    // Handle headings
-    const headings = pdfContent.querySelectorAll('h1, h2, h3, h4, h5, h6');
-    headings.forEach(h => {
-      h.style.color = '#333';
-      h.style.margin = '12px 0 8px';
-    });
-    
-    // Handle paragraphs and strong tags
-    const paragraphs = pdfContent.querySelectorAll('p, strong, span, div');
-    paragraphs.forEach(p => {
-      if (p.style.color !== '#333') {
-        p.style.color = '#000';
-      }
-    });
-  }
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2025 Strategic Marketing System · Powered by AI · 13-Role Framework · Conscientious by Design</p>
+        <p style="margin-top: 8px; font-size: 10px;">🔒 Secure · 📊 Data-driven · 🎯 Actionable</p>
+    </footer>
+</div>
 
-  document.body.appendChild(pdfContainer);
-
-  const opt = {
-    margin: [0.5, 0.5, 0.5, 0.5],
-    filename: `marketing_strategy_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, letterRendering: true, useCORS: true },
-    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-  };
-
-  try {
-    await html2pdf().set(opt).from(pdfContainer).save();
-    setStatus('✅ PDF exported successfully!', 'success');
-  } catch (error) {
-    console.error('PDF export failed:', error);
-    setStatus('❌ PDF export failed. Please try again.', 'error');
-  } finally {
-    document.body.removeChild(pdfContainer);
-  }
-}
-
-// =====================================================
-// SEO & SOCIAL SHARE META TAGS
-// =====================================================
-
-function updateMetaTags(plan, customerData, productData) {
-    // Extract key info from the plan
-    const industry = extractIndustryFromText(customerData + productData);
-    const primarySegment = extractPrimarySegment(plan) || 'your target audience';
-    
-    // Create dynamic title (max 60 chars)
-    let title = `${industry} Marketing Strategy | Strategic Marketing System`;
-    if (title.length > 60) title = title.substring(0, 57) + '...';
-    
-    // Create dynamic description (max 160 chars)
-    let description = `Complete marketing plan for ${primarySegment}. Includes PESTLE analysis, SWOT, customer journey map, KPIs, and 30-day roadmap.`;
-    if (description.length > 160) description = description.substring(0, 157) + '...';
-    
-    // Update page title
-    document.title = title;
-    
-    // Update or create meta description
-    let metaDesc = document.querySelector('meta[name="description"]');
-    if (!metaDesc) {
-        metaDesc = document.createElement('meta');
-        metaDesc.name = 'description';
-        document.head.appendChild(metaDesc);
-    }
-    metaDesc.content = description;
-    
-    // Open Graph tags (for social sharing)
-    let ogTitle = document.querySelector('meta[property="og:title"]');
-    if (!ogTitle) {
-        ogTitle = document.createElement('meta');
-        ogTitle.setAttribute('property', 'og:title');
-        document.head.appendChild(ogTitle);
-    }
-    ogTitle.content = title;
-    
-    let ogDesc = document.querySelector('meta[property="og:description"]');
-    if (!ogDesc) {
-        ogDesc = document.createElement('meta');
-        ogDesc.setAttribute('property', 'og:description');
-        document.head.appendChild(ogDesc);
-    }
-    ogDesc.content = description;
-    
-    let ogUrl = document.querySelector('meta[property="og:url"]');
-    if (!ogUrl) {
-        ogUrl = document.createElement('meta');
-        ogUrl.setAttribute('property', 'og:url');
-        document.head.appendChild(ogUrl);
-    }
-    ogUrl.content = window.location.href;
-    
-    let ogType = document.querySelector('meta[property="og:type"]');
-    if (!ogType) {
-        ogType = document.createElement('meta');
-        ogType.setAttribute('property', 'og:type');
-        document.head.appendChild(ogType);
-    }
-    ogType.content = 'article';
-    
-    // Twitter Card tags
-    let twitterCard = document.querySelector('meta[name="twitter:card"]');
-    if (!twitterCard) {
-        twitterCard = document.createElement('meta');
-        twitterCard.name = 'twitter:card';
-        twitterCard.content = 'summary_large_image';
-        document.head.appendChild(twitterCard);
-    }
-    
-    let twitterTitle = document.querySelector('meta[name="twitter:title"]');
-    if (!twitterTitle) {
-        twitterTitle = document.createElement('meta');
-        twitterTitle.name = 'twitter:title';
-        document.head.appendChild(twitterTitle);
-    }
-    twitterTitle.content = title;
-    
-    let twitterDesc = document.querySelector('meta[name="twitter:description"]');
-    if (!twitterDesc) {
-        twitterDesc = document.createElement('meta');
-        twitterDesc.name = 'twitter:description';
-        document.head.appendChild(twitterDesc);
-    }
-    twitterDesc.content = description;
-    
-    // Optional: Set a default OG image
-    let ogImage = document.querySelector('meta[property="og:image"]');
-    if (!ogImage) {
-        ogImage = document.createElement('meta');
-        ogImage.setAttribute('property', 'og:image');
-        document.head.appendChild(ogImage);
-    }
-    ogImage.content = 'https://strategic-marketing-system.com/og-image.jpg';
-}
-
-function extractIndustryFromText(text) {
-    const industries = ['SaaS', 'E-commerce', 'FinTech', 'HealthTech', 'EdTech', 'B2B', 'D2C', 'AI', 'Blockchain', 'Real Estate', 'Mobile', 'Retail', 'Manufacturing', 'Agriculture', 'Farming', 'Seed', 'Organic', 'AgriTech'];
-    const lowerText = text.toLowerCase();
-    for (let industry of industries) {
-        if (lowerText.includes(industry.toLowerCase())) return industry;
-    }
-    return 'Marketing';
-}
-
-function extractPrimarySegment(plan) {
-    const match = plan.match(/Primary Target[:\s]*([^\n]+)/i);
-    return match ? match[1].substring(0, 45) : null;
-}
-
-// =====================================================
-// SOCIAL SHARING FUNCTIONS
-// =====================================================
-
-function getShareText() {
-    const industry = extractIndustryFromText(document.getElementById('customerData').value);
-    return `I just generated a complete ${industry} marketing strategy with AI! Check it out:`;
-}
-
-function shareOnLinkedIn() {
-    if (!currentPlan) {
-        showToast('Generate a plan first before sharing!');
-        return;
-    }
-    const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent(getShareText());
-    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}&summary=${text}`, '_blank', 'width=600,height=500');
-}
-
-function shareOnTwitter() {
-    if (!currentPlan) {
-        showToast('Generate a plan first before sharing!');
-        return;
-    }
-    const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent(getShareText());
-    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'width=600,height=400');
-}
-
-// =====================================================
-// COPY SHARE LINK
-// =====================================================
-
-function copyShareLink() {
-    if (!currentPlan) {
-        showToast('Generate a plan first before sharing!');
-        return;
-    }
-    
-    // Save current plan to localStorage for sharing
-    const shareId = Date.now().toString();
-    const shareData = {
-        id: shareId,
-        plan: currentPlan,
-        customerData: document.getElementById('customerData').value,
-        productData: document.getElementById('productDescription').value,
-        timestamp: new Date().toISOString()
-    };
-    
-    // Store for retrieval (expires in 7 days)
-    const sharedPlans = JSON.parse(localStorage.getItem(SHARED_PLANS_KEY) || '{}');
-    sharedPlans[shareId] = shareData;
-    localStorage.setItem(SHARED_PLANS_KEY, JSON.stringify(sharedPlans));
-    
-    // Create shareable URL with hash
-    const shareUrl = `${window.location.origin}${window.location.pathname}#share=${shareId}`;
-    navigator.clipboard.writeText(shareUrl);
-    showToast('✅ Shareable link copied to clipboard!');
-}
-
-function loadSharedPlan() {
-    const hash = window.location.hash;
-    if (hash && hash.startsWith('#share=')) {
-        const shareId = hash.substring(7);
-        const sharedPlans = JSON.parse(localStorage.getItem(SHARED_PLANS_KEY) || '{}');
-        const shared = sharedPlans[shareId];
-        if (shared && shared.plan) {
-            // Load the shared plan
-            document.getElementById('customerData').value = shared.customerData || '';
-            document.getElementById('productDescription').value = shared.productData || '';
-            currentPlan = shared.plan;
-            renderPlan(shared.plan);
-            document.getElementById('outputCard').style.display = 'block';
-            showToast('📂 Loaded shared plan!');
-            // Remove hash from URL without reloading
-            history.pushState('', document.title, window.location.pathname);
+<script>
+    // =====================================================
+    // PAGE NAVIGATION
+    // =====================================================
+    function showPage(pageName) {
+        // Hide all pages
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
+        });
+        
+        // Show selected page
+        document.getElementById(pageName + 'Page').classList.add('active');
+        
+        // Update active nav button
+        document.querySelectorAll('.nav-links button').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        const navMap = {
+            'home': 'navHome',
+            'planner': 'navPlanner',
+            'blog': 'navBlog',
+            'about': 'navAbout',
+            'pricing': 'navPricing',
+            'app': 'navApp'
+        };
+        
+        const activeBtn = document.getElementById(navMap[pageName]);
+        if (activeBtn) activeBtn.classList.add('active');
+        
+        // If switching to app page, re-initialize
+        if (pageName === 'app') {
+            initApp();
         }
     }
-}
-
-// =====================================================
-// PARTICLES (subtle canvas background)
-// =====================================================
-(function initParticles() {
-  const canvas = document.getElementById('particles');
-  const ctx    = canvas.getContext('2d');
-  let W, H, particles;
-
-  function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
-
-  function makeParticle() {
-    return {
-      x: Math.random() * W,
-      y: Math.random() * H,
-      r: Math.random() * 1.5 + .3,
-      vx: (Math.random() - .5) * .2,
-      vy: (Math.random() - .5) * .2,
-      opacity: Math.random() * .4 + .1
+    
+    // =====================================================
+    // PLANNER TO APP DATA TRANSFER
+    // =====================================================
+    function goToAppWithData() {
+        const customerData = document.getElementById('plannerCustomer').value;
+        const productData = document.getElementById('plannerProduct').value;
+        
+        if (customerData) {
+            sessionStorage.setItem('prefillCustomer', customerData);
+        }
+        if (productData) {
+            sessionStorage.setItem('prefillProduct', productData);
+        }
+        
+        showPage('app');
+    }
+    
+    // =====================================================
+    // BLOG FILTER
+    // =====================================================
+    function filterBlog(category) {
+        const cards = document.querySelectorAll('.blog-card');
+        const buttons = document.querySelectorAll('.filter-btn');
+        
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        cards.forEach(card => {
+            if (category === 'all' || card.dataset.category === category) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+    
+    // =====================================================
+    // APP FUNCTIONALITY (WORKING AI SYSTEM)
+    // =====================================================
+    const API_BASE = 'https://Bisratprompt-marketing-system-api.hf.space';
+    
+    let currentPlan = null;
+    let isGenerating = false;
+    
+    // DOM Elements
+    const elements = {
+        customerData: document.getElementById('customerData'),
+        productDescription: document.getElementById('productDescription'),
+        generateBtn: document.getElementById('generateBtn'),
+        clearBtn: document.getElementById('clearBtn'),
+        copyOutputBtn: document.getElementById('copyOutputBtn'),
+        saveHistoryBtn: document.getElementById('saveHistoryBtn'),
+        statusBar: document.getElementById('statusBar'),
+        statusMessage: document.getElementById('statusMessage'),
+        progressFill: document.getElementById('progressFill'),
+        outputArea: document.getElementById('outputArea'),
+        renderedOutput: document.getElementById('renderedOutput'),
+        kpiGrid: document.getElementById('kpiGrid'),
+        swotContainer: document.getElementById('swotContainer'),
+        journeyContainer: document.getElementById('journeyContainer')
     };
-  }
-
-  function init() {
-    resize();
-    particles = Array.from({ length: 80 }, makeParticle);
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-    particles.forEach(p => {
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = isDark
-        ? `rgba(165,180,252,${p.opacity})`
-        : `rgba(99,102,241,${p.opacity * .5})`;
-      ctx.fill();
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
-      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
-    });
-    requestAnimationFrame(draw);
-  }
-
-  window.addEventListener('resize', resize);
-  init();
-  draw();
-})();
-
-// =====================================================
-// THEME TOGGLE
-// =====================================================
-const themeBtn   = document.getElementById('themeBtn');
-const themeIcon  = document.getElementById('themeIcon');
-const themeLabel = document.getElementById('themeLabel');
-
-function applyTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme);
-  themeIcon.textContent  = theme === 'light' ? '🌙' : '☀️';
-  themeLabel.textContent = theme === 'light' ? 'Dark' : 'Light';
-  if (theme === 'light') {
-    document.documentElement.style.setProperty('--bg',       '#f4f5fb');
-    document.documentElement.style.setProperty('--surface',  '#ffffff');
-    document.documentElement.style.setProperty('--surface-2','#f0f1f9');
-    document.documentElement.style.setProperty('--surface-3','#e8eaf6');
-    document.documentElement.style.setProperty('--border',   'rgba(0,0,0,.07)');
-    document.documentElement.style.setProperty('--border-2', 'rgba(0,0,0,.12)');
-    document.documentElement.style.setProperty('--glass',    'rgba(0,0,0,.03)');
-    document.documentElement.style.setProperty('--glass-h',  'rgba(0,0,0,.05)');
-    document.documentElement.style.setProperty('--ink',      '#0f1623');
-    document.documentElement.style.setProperty('--ink-2',    'rgba(15,22,35,.72)');
-    document.documentElement.style.setProperty('--ink-3',    'rgba(15,22,35,.45)');
-    document.documentElement.style.setProperty('--ink-4',    'rgba(15,22,35,.25)');
-    document.documentElement.style.setProperty('--grad-text','linear-gradient(135deg,#0f1623 0%,#4f46e5 50%,#ec4899 100%)');
-  } else {
-    document.documentElement.style.setProperty('--bg',       '#050810');
-    document.documentElement.style.setProperty('--surface',  '#0c1120');
-    document.documentElement.style.setProperty('--surface-2','#111827');
-    document.documentElement.style.setProperty('--surface-3','#1a2236');
-    document.documentElement.style.setProperty('--border',   'rgba(255,255,255,.07)');
-    document.documentElement.style.setProperty('--border-2', 'rgba(255,255,255,.12)');
-    document.documentElement.style.setProperty('--glass',    'rgba(255,255,255,.04)');
-    document.documentElement.style.setProperty('--glass-h',  'rgba(255,255,255,.07)');
-    document.documentElement.style.setProperty('--ink',      '#f0f2f8');
-    document.documentElement.style.setProperty('--ink-2',    'rgba(240,242,248,.72)');
-    document.documentElement.style.setProperty('--ink-3',    'rgba(240,242,248,.45)');
-    document.documentElement.style.setProperty('--ink-4',    'rgba(240,242,248,.25)');
-    document.documentElement.style.setProperty('--grad-text','linear-gradient(135deg,#fff 0%,#a5b4fc 45%,#ec4899 100%)');
-  }
-}
-
-themeBtn.addEventListener('click', () => {
-  const current = document.documentElement.getAttribute('data-theme') || 'dark';
-  const next = current === 'dark' ? 'light' : 'dark';
-  manualTheme = next;
-  applyTheme(next);
-});
-
-applyTheme('dark');
-
-// =====================================================
-// CHARACTER COUNTS
-// =====================================================
-function wireCharCount(textareaId, countId, max) {
-  const el = document.getElementById(textareaId);
-  const ct = document.getElementById(countId);
-  el.addEventListener('input', () => {
-    const len = el.value.length;
-    ct.textContent = `${len} / ${max}`;
-    ct.style.color = len > max * .9 ? 'var(--amber)' : 'var(--ink-4)';
-  });
-}
-wireCharCount('customerData', 'customerCount', 1000);
-wireCharCount('productDescription', 'productCount', 2000);
-
-// =====================================================
-// KEYBOARD NAVIGATION
-// =====================================================
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    window.closeModal('historyModal');
-    window.closeModal('leadModal');
-    window.closeModal('keyboardModal');
-  }
-  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-    document.getElementById('generateBtn').click();
-    // Track A/B test click
-    const variantId = getVariant('heroCta');
-    trackABConversion('heroCta', variantId, 'click_generate');
-  }
-});
-
-// =====================================================
-// STATUS BAR (with screen reader announcements)
-// =====================================================
-function setStatus(msg, type = 'working') {
-  const bar  = document.getElementById('statusBar');
-  const icon = document.getElementById('statusIcon');
-  const txt  = document.getElementById('statusMessage');
-  bar.className = `status-bar ${type}`;
-  icon.textContent = type === 'working' ? '⟳' : type === 'success' ? '✓' : '✕';
-  icon.style.animation = type === 'working' ? 'spin 1.2s linear infinite' : 'none';
-  txt.textContent = msg;
-  
-  // Screen reader announcement
-  const announcement = document.createElement('div');
-  announcement.setAttribute('aria-live', 'assertive');
-  announcement.className = 'sr-only';
-  announcement.textContent = msg;
-  document.body.appendChild(announcement);
-  setTimeout(() => announcement.remove(), 1000);
-  
-  if (type !== 'working') {
-    setTimeout(() => { bar.className = 'status-bar'; }, 4000);
-  }
-}
-
-function showToast(msg) {
-  const t = document.createElement('div');
-  t.className = 'toast';
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(8px)'; t.style.transition = 'all .3s'; setTimeout(() => t.remove(), 300); }, 2800);
-}
-
-function openModal(id)  { window.openModal(id); }
-function closeModal(id) { window.closeModal(id); }
-
-// =====================================================
-// KPI CARDS
-// =====================================================
-const KPI_DEFS = [
-  { id:'kpi-seg',   icon:'👥', label:'Segmentation'   },
-  { id:'kpi-tam',   icon:'📊', label:'Market Size'    },
-  { id:'kpi-metric',icon:'🎯', label:'Key Metrics'    },
-  { id:'kpi-comp',  icon:'🏆', label:'Competition'    }
-];
-
-function buildKPICards() {
-  const grid = document.getElementById('kpiGrid');
-  grid.innerHTML = KPI_DEFS.map(k => `
-    <div class="kpi-card" id="${k.id}" role="article" aria-label="${k.label} KPI card">
-      <div class="kpi-top">
-        <span class="kpi-label-tag">${k.label}</span>
-        <div class="kpi-icon-wrap" aria-hidden="true">${k.icon}</div>
-      </div>
-      <div class="kpi-skel skel kpi-skel-val" aria-hidden="true"></div>
-      <div class="kpi-skel skel kpi-skel-sub" aria-hidden="true"></div>
-      <div class="kpi-loaded" style="display:none">
-        <div class="kpi-value" id="${k.id}-val">—</div>
-        <div class="kpi-sub"  id="${k.id}-sub"></div>
-      </div>
-    </div>
-  `).join('');
-
-  KPI_DEFS.forEach((k, i) => {
-    setTimeout(() => document.getElementById(k.id).classList.add('pop'), i * 120);
-  });
-}
-
-function populateKPICards(plan) {
-  const seg   = plan.match(/Primary Target[:\s]*([^\n]+)/i)?.[1]?.trim().substring(0,50) || 'Analysis complete';
-  const tam   = plan.match(/TAM[:\s]*([$\d,.]+\s*[BMKbmk]?)/i)?.[1] || '';
-  const sam   = plan.match(/SAM[:\s]*([$\d,.]+\s*[BMKbmk]?)/i)?.[1] || '';
-  const tamStr= (tam && sam) ? `${tam} → ${sam}` : (tam || 'Market sized');
-  const kpi   = plan.match(/Primary KPI[:\s]*([^\n]+)/i)?.[1]?.trim().substring(0,40) || 'KPIs defined';
-  const comp  = plan.match(/Direct\s*\|\s*🔴\s*\|\s*([^\|]+)/i)?.[1]?.trim() || 'Analysis complete';
-
-  const vals = [
-    { id:'kpi-seg',    val: seg,    sub: 'Primary segment identified' },
-    { id:'kpi-tam',    val: tamStr, sub: 'TAM → SAM hierarchy'       },
-    { id:'kpi-metric', val: kpi,    sub: 'Decision-impact KPI'        },
-    { id:'kpi-comp',   val: comp,   sub: 'Top competitive threat'     }
-  ];
-
-  vals.forEach(v => {
-    const card = document.getElementById(v.id);
-    if (!card) return;
-    card.querySelector('.kpi-skel-val').style.display = 'none';
-    card.querySelector('.kpi-skel-sub').style.display = 'none';
-    const loaded = card.querySelector('.kpi-loaded');
-    loaded.style.display = 'block';
-    const valEl = document.getElementById(`${v.id}-val`);
-    const subEl = document.getElementById(`${v.id}-sub`);
-    if (valEl) valEl.textContent = v.val;
-    if (subEl) subEl.textContent = v.sub;
-    // ARIA label for screen readers
-    card.setAttribute('aria-label', `${v.label}: ${v.val}`);
-  });
-}
-
-// =====================================================
-// SWOT
-// =====================================================
-function renderSWOT(plan) {
-  const match = plan.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-  if (!match) return;
-
-  const text = match[1];
-  const extract = (label) => {
-    const re = new RegExp(`${label}:[\\s\\S]*?(?=\\n(?:Strengths|Weaknesses|Opportunities|Threats):|$)`, 'i');
-    const block = text.match(re)?.[0] || '';
-    return block.split('\n').filter(l => /^[-•*]\s+/.test(l.trim())).map(l => l.replace(/^[-•*]\s+/,'').trim()).filter(s => s.length > 4 && s.length < 200);
-  };
-
-  const S = extract('Strengths');
-  const W = extract('Weaknesses');
-  const O = extract('Opportunities');
-  const T = extract('Threats');
-
-  const li = (items) => items.length ? items.map(i => `<li>${esc(i)}</li>`).join('') : '<li>No data extracted</li>';
-
-  const container = document.getElementById('swotContainer');
-  container.innerHTML = `
-    <div class="swot-card swot-s"><div class="swot-head">💪 Strengths</div><ul class="swot-list">${li(S)}</ul></div>
-    <div class="swot-card swot-w"><div class="swot-head">⚠️ Weaknesses</div><ul class="swot-list">${li(W)}</ul></div>
-    <div class="swot-card swot-o"><div class="swot-head">🚀 Opportunities</div><ul class="swot-list">${li(O)}</ul></div>
-    <div class="swot-card swot-t"><div class="swot-head">⚡ Threats</div><ul class="swot-list">${li(T)}</ul></div>
-  `;
-  container.classList.add('visible');
-}
-
-// =====================================================
-// JOURNEY MAP
-// =====================================================
-const DEFAULT_JOURNEY = [
-  { icon:'👁️', stage:'Awareness',     emotion:'Curiosity',    q:'"What solutions exist?"' },
-  { icon:'🤔', stage:'Consideration', emotion:'Evaluation',   q:'"Which option fits best?"' },
-  { icon:'💰', stage:'Purchase',      emotion:'Confidence',   q:'"Is this worth it?"' },
-  { icon:'❤️', stage:'Retention',     emotion:'Satisfaction', q:'"Am I getting value?"' },
-  { icon:'🗣️', stage:'Advocacy',      emotion:'Loyalty',      q:'"Should I recommend this?"' }
-];
-
-function renderJourney(plan) {
-  const container = document.getElementById('journeyContainer');
-  container.innerHTML = DEFAULT_JOURNEY.map(s => `
-    <div class="journey-card" role="article" aria-label="${s.stage} stage">
-      <div class="journey-icon" aria-hidden="true">${s.icon}</div>
-      <div class="journey-stage">${s.stage}</div>
-      <div class="journey-emotion">${esc(s.emotion)}</div>
-      <div class="journey-q">${esc(s.q)}</div>
-    </div>
-  `).join('');
-  container.classList.add('visible');
-}
-
-// =====================================================
-// STREAMING ROLE REVEAL
-// =====================================================
-const ROLES = [
-  { tag:'SEGMENTATION OUTPUT',    icon:'🎯', title:'Market Segmentation & Targeting' },
-  { tag:'TAMSAMSOM OUTPUT',       icon:'📊', title:'Market Sizing (TAM/SAM/SOM)'     },
-  { tag:'PESTLE OUTPUT',          icon:'⚡', title:'PESTLE Analysis'                 },
-  { tag:'PORTER OUTPUT',          icon:'🏢', title:"Porter's Five Forces"            },
-  { tag:'COMPETITOR OUTPUT',      icon:'🔍', title:'Competitor Profiling'            },
-  { tag:'POSITIONING OUTPUT',     icon:'📍', title:'Brand Positioning'               },
-  { tag:'4Ps OUTPUT',             icon:'🎨', title:'Marketing Mix (4Ps)'             },
-  { tag:'SWOT OUTPUT',            icon:'💪', title:'SWOT + Micro-SWOT'               },
-  { tag:'CUSTOMER JOURNEY OUTPUT',icon:'🗺️', title:'Customer Journey Map'            },
-  { tag:'KPI OUTPUT',             icon:'📈', title:'KPIs & Budget Allocation'        },
-  { tag:'OKRS OUTPUT',            icon:'🎯', title:'OKR Strategist'                  },
-  { tag:'ROADMAP OUTPUT',         icon:'📅', title:'30-Day Roadmap'                  }
-];
-
-function parseRoles(plan) {
-  return ROLES.map(r => {
-    const re = new RegExp(`\\[${r.tag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
-    const m = plan.match(re);
-    if (m && m[1] && m[1].trim().length > 30) return { ...r, content: m[1].trim() };
-    return null;
-  }).filter(Boolean);
-}
-
-function fmtContent(content) {
-  let h = content;
-  h = h.replace(/\n\|(.+)\|\n\|[-:\s|]+\|\n((?:\|.+\|\n?)+)/gm, (_, header, rows) => {
-    const ths = header.split('|').filter(x=>x.trim()).map(x=>`<th>${esc(x.trim())}</th>`).join('');
-    const trs = rows.trim().split('\n').map(row=>{
-      const cells = row.split('|').filter(x=>x.trim()).map(x=>`<td>${esc(x.trim())}</td>`).join('');
-      return `<tr>${cells}</tr>`;
-    }).join('');
-    return `<table class="stream-table"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table>`;
-  });
-  h = h.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  h = h.replace(/^#{1,3}\s+(.+)$/gm, '<h3>$1</h3>');
-  h = h.replace(/^[-•*]\s+(.*?)$/gm, '<li>$1</li>');
-  h = h.replace(/(<li>.*?<\/li>)+/gs, '<ul>$&</ul>');
-  h = h.replace(/\n/g, '<br>');
-  return h;
-}
-
-async function streamRoles(plan) {
-  const output = document.getElementById('renderedOutput');
-  const roles  = parseRoles(plan);
-
-  if (!roles.length) {
-    output.innerHTML = `<div class="role-content">${esc(plan).replace(/\n/g,'<br>')}</div>`;
-    return;
-  }
-
-  output.innerHTML = `<div class="streaming-container" id="streamCont"></div>`;
-  const cont = document.getElementById('streamCont');
-  const prog = document.getElementById('genProgressBar');
-
-  for (let i = 0; i < roles.length; i++) {
-    const r = roles[i];
-    const card = document.createElement('div');
-    card.className = 'role-card';
-    card.innerHTML = `
-      <div class="role-header">
-        <div class="role-icon" aria-hidden="true">${r.icon}</div>
-        <div class="role-title">${r.title}</div>
-        <div class="role-badge">Role ${i+1}/${roles.length}</div>
-      </div>
-      <div class="stream-loading" aria-label="Loading ${r.title}">
-        <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
-        <span>Loading ${r.title}…</span>
-      </div>
-    `;
-    cont.appendChild(card);
-
-    await new Promise(resolve => setTimeout(resolve, i === 0 ? 300 : 700 + Math.random()*800));
-
-    const loading = card.querySelector('.stream-loading');
-    if (loading) loading.remove();
-    const div = document.createElement('div');
-    div.className = 'role-content';
-    div.innerHTML = fmtContent(r.content);
-    card.appendChild(div);
-    setTimeout(() => card.classList.add('visible'), 30);
-
-    if (prog) prog.style.width = `${Math.round((i+1)/roles.length*100)}%`;
-    card.scrollIntoView({ behavior:'smooth', block:'nearest' });
-  }
-}
-
-async function renderPlan(plan) {
-  await streamRoles(plan);
-  document.getElementById('outputTimestamp').textContent =
-    `Generated ${new Date().toLocaleTimeString()} · ${new Date().toLocaleDateString()}`;
-  populateKPICards(plan);
-  renderSWOT(plan);
-  renderJourney(plan);
-}
-
-// =====================================================
-// GENERATE (with security sanitization & rate limiting)
-// =====================================================
-async function handleGenerate() {
-  if (isGenerating) return;
-
-  // Rate limiting check
-  if (!checkRateLimit('generation')) return;
-
-  // Sanitize user inputs
-  let cd = document.getElementById('customerData').value.trim();
-  let pd = document.getElementById('productDescription').value.trim();
-  
-  cd = sanitizeInput(cd);
-  pd = sanitizeInput(pd);
-
-  if (!cd || !pd) {
-    setStatus('Please fill in both the customer and product fields.', 'error');
-    return;
-  }
-
-  isGenerating = true;
-  const btn = document.getElementById('generateBtn');
-  btn.disabled = true;
-  btn.textContent = '⏳ Generating…';
-  
-  // Track A/B test click
-  const variantId = getVariant('heroCta');
-  trackABConversion('heroCta', variantId, 'click_generate');
-
-  document.getElementById('outputCard').style.display = 'none';
-  document.getElementById('swotContainer').classList.remove('visible');
-  document.getElementById('journeyContainer').classList.remove('visible');
-  document.getElementById('swotContainer').innerHTML = '';
-  document.getElementById('journeyContainer').innerHTML = '';
-  document.getElementById('genProgressBar').style.width = '0%';
-  document.getElementById('genProgress').classList.add('show');
-
-  buildKPICards();
-  setStatus('🧠 AI is analyzing your market…', 'working');
-
-  const startMs = Date.now();
-  const sessionId = getSessionId();
-
-  try {
-    const res = await fetch(`${API_BASE}/generate`, {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'X-Session-Id': sessionId
-      },
-      body: JSON.stringify({ 
-        customer_data: cd, 
-        product_description: pd,
-        session_id: sessionId
-      })
-    });
-    if (!res.ok) throw new Error(`Server error ${res.status}`);
-    const data = await res.json();
-    const plan = data.plan;
-
-    currentPlan = plan;
-    const elapsed = Date.now() - startMs;
-
-    document.getElementById('outputCard').style.display = 'block';
-    await renderPlan(plan);
-    updateMetaTags(plan, cd, pd);
-
-    setStatus('✅ Strategy generated successfully!', 'success');
-    recordAnalytics(elapsed, cd);
-    sessionCount++;
-    renderAnalytics();
-    document.getElementById('analyticsBand').classList.add('visible');
-
-    addNotif({ icon:'✨', msg:'just generated a complete marketing strategy' });
-
-    document.getElementById('outputCard').scrollIntoView({ behavior:'smooth' });
-    setTimeout(() => showLeadModal(), 2500);
-
-  } catch (err) {
-    setStatus(`Error: ${err.message}`, 'error');
-    console.error(err);
-  } finally {
-    isGenerating = false;
-    btn.disabled = false;
-    btn.textContent = '✨ Generate Strategic Plan';
-    document.getElementById('genProgress').classList.remove('show');
-  }
-}
-
-function handleClear() {
-  document.getElementById('customerData').value = '';
-  document.getElementById('productDescription').value = '';
-  document.getElementById('customerCount').textContent = '0 / 1000';
-  document.getElementById('productCount').textContent = '0 / 2000';
-  document.getElementById('outputCard').style.display = 'none';
-  document.getElementById('swotContainer').classList.remove('visible');
-  document.getElementById('journeyContainer').classList.remove('visible');
-  document.getElementById('swotContainer').innerHTML = '';
-  document.getElementById('journeyContainer').innerHTML = '';
-  document.getElementById('kpiGrid').innerHTML = '';
-  document.getElementById('renderedOutput').innerHTML = `
-    <div class="empty-state">
-      <div class="big-icon" aria-hidden="true">📋</div>
-      <h4>Your plan will appear here</h4>
-      <p>Fill in the form above and hit "Generate" to produce a complete 12-section strategic marketing plan.</p>
-    </div>`;
-  currentPlan = null;
-  showToast('Cleared — ready for a new strategy.');
-}
-
-function handleCopy() {
-  if (!currentPlan) { showToast('No plan to copy yet.'); return; }
-  navigator.clipboard.writeText(currentPlan).then(() => showToast('✅ Copied to clipboard!'));
-}
-
-function handleFeedback(vote) {
-  if (!currentPlan) return;
-  const yesBtn = document.getElementById('feedYes');
-  const noBtn  = document.getElementById('feedNo');
-  yesBtn.classList.remove('active'); noBtn.classList.remove('active');
-  if (vote === 'yes') yesBtn.classList.add('active');
-  else noBtn.classList.add('active');
-
-  const analytics = getAnalytics();
-  if (vote === 'yes') analytics.helpful = (analytics.helpful || 0) + 1;
-  else analytics.unhelpful = (analytics.unhelpful || 0) + 1;
-  saveAnalytics(analytics);
-  renderAnalytics();
-  showToast(vote === 'yes' ? '👍 Thanks for the feedback!' : '👎 Noted — we\'ll improve!');
-
-  fetch(`${API_BASE}/feedback`, {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ vote, customer: document.getElementById('customerData').value.slice(0,200), product: document.getElementById('productDescription').value.slice(0,200) })
-  }).catch(() => {});
-}
-
-// =====================================================
-// ANALYTICS
-// =====================================================
-function getAnalytics() {
-  try { return JSON.parse(localStorage.getItem(ANALYTICS_KEY) || '{}'); } catch { return {}; }
-}
-function saveAnalytics(data) {
-  try { localStorage.setItem(ANALYTICS_KEY, JSON.stringify(data)); } catch {}
-}
-function recordAnalytics(elapsedMs, customerText) {
-  const a = getAnalytics();
-  a.total = (a.total || 0) + 1;
-  a.totalTime = (a.totalTime || 0) + elapsedMs / 1000;
-  a.history = a.history || [];
-  a.history.unshift({ ts: Date.now(), sec: elapsedMs/1000 });
-  if (a.history.length > 20) a.history.pop();
-  const industries = ['SaaS','E-commerce','FinTech','HealthTech','EdTech','B2B','D2C','AI','Retail','AgriTech','Real Estate'];
-  const low = customerText.toLowerCase();
-  const found = industries.find(i => low.includes(i.toLowerCase())) || 'Other';
-  a.industries = a.industries || {};
-  a.industries[found] = (a.industries[found] || 0) + 1;
-  saveAnalytics(a);
-}
-function renderAnalytics() {
-  const a = getAnalytics();
-  const total = a.total || 0;
-  const avgSec = total ? (a.totalTime || 0) / total : 0;
-  const topInd = a.industries ? Object.entries(a.industries).sort((x,y)=>y[1]-x[1])[0]?.[0] || '—' : '—';
-  const tot  = a.helpful || 0; const untot = a.unhelpful || 0;
-  const rate = (tot+untot) > 0 ? Math.round(tot/(tot+untot)*100) + '%' : '—';
-
-  document.getElementById('analTotal').textContent   = total;
-  document.getElementById('analAvgTime').textContent = avgSec ? `${avgSec.toFixed(1)}s` : '—';
-  document.getElementById('analSuccess').textContent = rate;
-  document.getElementById('analTopIndustry').textContent = topInd;
-  document.getElementById('analSession').textContent = `+${sessionCount} this session`;
-
-  const hist = a.history || [];
-  if (hist.length > 1) {
-    const trend = document.getElementById('analTimeTrend');
-    const last = hist[0].sec;
-    const avg  = avgSec;
-    if (last < avg) { trend.textContent = `↓ faster (${last.toFixed(1)}s)`; trend.className = 'analytics-trend'; }
-    else            { trend.textContent = `↑ slower (${last.toFixed(1)}s)`; trend.className = 'analytics-trend down'; }
-  }
-}
-
-document.getElementById('clearAnalyticsBtn').addEventListener('click', () => {
-  localStorage.removeItem(ANALYTICS_KEY);
-  sessionCount = 0;
-  renderAnalytics();
-  showToast('Analytics reset.');
-});
-
-// =====================================================
-// HISTORY
-// =====================================================
-function getHistory() {
-  try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch { return []; }
-}
-
-function saveToHistory() {
-  if (!currentPlan) { showToast('Generate a plan first!'); return; }
-  const history = getHistory();
-  history.unshift({
-    id: Date.now(),
-    timestamp: new Date().toISOString(),
-    preview: currentPlan.substring(0, 130) + '…',
-    cd: document.getElementById('customerData').value.substring(0, 80),
-    pd: document.getElementById('productDescription').value.substring(0, 80),
-    fullPlan: currentPlan
-  });
-  if (history.length > MAX_HISTORY) history.pop();
-  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(history)); } catch {}
-  showToast('✅ Saved to history!');
-}
-
-function renderHistoryModal() {
-  const history = getHistory();
-  const list = document.getElementById('historyList');
-  if (!history.length) {
-    list.innerHTML = '<div class="empty-state" style="padding:32px"><div class="big-icon" aria-hidden="true">📭</div><h4>No saved plans yet</h4><p>Generate and save a plan to see it here.</p></div>';
-    return;
-  }
-  list.innerHTML = history.map(item => `
-    <div class="history-item" data-id="${item.id}" tabindex="0" role="button" aria-label="Load plan from ${new Date(item.timestamp).toLocaleString()}">
-      <button class="history-del" data-id="${item.id}" aria-label="Delete this saved plan">✕</button>
-      <div class="history-date">📅 ${new Date(item.timestamp).toLocaleString()}</div>
-      <div class="history-preview">${esc(item.preview)}</div>
-      <div style="font-size:11px;color:var(--ink-4);">🎯 ${esc(item.cd || 'No customer data')}</div>
-    </div>
-  `).join('');
-
-  list.querySelectorAll('.history-item').forEach(el => {
-    el.addEventListener('click', e => {
-      if (e.target.classList.contains('history-del')) return;
-      const plan = getHistory().find(h => h.id === parseInt(el.dataset.id));
-      if (plan) { loadFromHistory(plan); window.closeModal('historyModal'); }
-    });
-    el.addEventListener('keydown', e => { if (e.key === 'Enter') el.click(); });
-  });
-
-  list.querySelectorAll('.history-del').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      let h = getHistory().filter(x => x.id !== parseInt(btn.dataset.id));
-      try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch {}
-      renderHistoryModal();
-      showToast('Deleted.');
-    });
-  });
-}
-
-function loadFromHistory(plan) {
-  currentPlan = plan.fullPlan;
-  document.getElementById('customerData').value = plan.cd || '';
-  document.getElementById('productDescription').value = plan.pd || '';
-  buildKPICards();
-  document.getElementById('outputCard').style.display = 'block';
-  renderPlan(plan.fullPlan);
-  showToast('📂 Loaded saved plan.');
-  document.getElementById('outputCard').scrollIntoView({ behavior:'smooth' });
-}
-
-// =====================================================
-// LEAD CAPTURE
-// =====================================================
-function showLeadModal() {
-  if (leadModalShown) return;
-  if (sessionStorage.getItem('sms_lead_captured') === '1') return;
-  window.openModal('leadModal');
-  leadModalShown = true;
-}
-
-document.getElementById('submitLeadBtn').addEventListener('click', () => {
-  const hp = document.getElementById('hpField').value;
-  if (hp) { window.closeModal('leadModal'); return; }
-
-  const email = document.getElementById('leadEmail').value.trim();
-  const name  = document.getElementById('leadName').value.trim();
-  const err   = document.getElementById('emailErr');
-  const suc   = document.getElementById('leadSuccess');
-  const btn   = document.getElementById('submitLeadBtn');
-
-  err.style.display = 'none';
-  document.getElementById('leadEmail').classList.remove('error');
-
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    err.style.display = 'block';
-    document.getElementById('leadEmail').classList.add('error');
-    return;
-  }
-
-  const leads = JSON.parse(localStorage.getItem(LEADS_KEY) || '[]');
-  if (!leads.find(l => l.email === email)) {
-    leads.push({ name: name || 'Anonymous', email, ts: new Date().toISOString() });
-    try { localStorage.setItem(LEADS_KEY, JSON.stringify(leads)); } catch {}
-  }
-  sessionStorage.setItem('sms_lead_captured', '1');
-  suc.style.display = 'block';
-  btn.disabled = true;
-  btn.textContent = '✅ Subscribed!';
-  setTimeout(() => window.closeModal('leadModal'), 1800);
-});
-
-document.getElementById('closeLeadBtn').addEventListener('click', () => window.closeModal('leadModal'));
-document.getElementById('leadModal').addEventListener('click', e => { if (e.target === document.getElementById('leadModal')) window.closeModal('leadModal'); });
-
-// =====================================================
-// NOTIFICATIONS (social proof)
-// =====================================================
-const NOTIF_MESSAGES = [
-  { icon:'🎯', msg:'just generated a marketing strategy' },
-  { icon:'📊', msg:'ran a PESTLE analysis'              },
-  { icon:'🚀', msg:'mapped their customer journey'      },
-  { icon:'💪', msg:'completed a SWOT analysis'          },
-  { icon:'📈', msg:'calculated their TAM/SAM/SOM'       },
-  { icon:'🏢', msg:'profiled their competitors'         },
-  { icon:'💰', msg:'set up KPI tracking'                }
-];
-
-let notifQueue = [];
-let notifRunning = false;
-
-function addNotif(n) {
-  notifQueue.push(n);
-  if (!notifRunning) processNotifQueue();
-}
-
-function processNotifQueue() {
-  if (!notifQueue.length) { notifRunning = false; return; }
-  notifRunning = true;
-  const n = notifQueue.shift();
-  showNotifCard(n);
-  setTimeout(processNotifQueue, 5500);
-}
-
-function showNotifCard(n) {
-  const stack = document.getElementById('notifStack');
-  const card  = document.createElement('div');
-  card.className = 'notif-card';
-  card.setAttribute('role', 'status');
-  card.innerHTML = `
-    <div class="notif-icon" aria-hidden="true">${n.icon}</div>
-    <div>
-      <div class="notif-msg">Someone ${esc(n.msg)}</div>
-      <div class="notif-time">just now</div>
-    </div>
-    <button class="notif-x" aria-label="Dismiss notification">✕</button>
-  `;
-  card.querySelector('.notif-x').addEventListener('click', () => dismissNotif(card));
-  stack.appendChild(card);
-  setTimeout(() => dismissNotif(card), 5000);
-}
-
-function dismissNotif(card) {
-  card.classList.add('out');
-  setTimeout(() => card.remove(), 300);
-}
-
-function startNotifSimulation() {
-  const delay = 18000 + Math.random() * 20000;
-  setTimeout(() => {
-    const pick = NOTIF_MESSAGES[Math.floor(Math.random()*NOTIF_MESSAGES.length)];
-    addNotif(pick);
-    startNotifSimulation();
-  }, delay);
-}
-
-// =====================================================
-// UTILITY
-// =====================================================
-function esc(str) {
-  if (!str) return '';
-  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-}
-
-// =====================================================
-// SCROLL CTA
-// =====================================================
-document.getElementById('heroScrollBtn').addEventListener('click', () => {
-  document.getElementById('main-form').scrollIntoView({ behavior:'smooth' });
-  setTimeout(() => document.getElementById('customerData').focus(), 500);
-});
-
-// =====================================================
-// WIRE UP BUTTONS
-// =====================================================
-document.getElementById('generateBtn').addEventListener('click', handleGenerate);
-document.getElementById('clearBtn').addEventListener('click', handleClear);
-document.getElementById('copyBtn').addEventListener('click', handleCopy);
-document.getElementById('saveBtn').addEventListener('click', saveToHistory);
-document.getElementById('feedYes').addEventListener('click', () => handleFeedback('yes'));
-document.getElementById('feedNo').addEventListener('click',  () => handleFeedback('no'));
-document.getElementById('pdfExportBtn').addEventListener('click', exportToPDF);
-const pdfToolbarBtn = document.getElementById('pdfExportBtnToolbar');
-if (pdfToolbarBtn) pdfToolbarBtn.addEventListener('click', exportToPDF);
-
-// Share buttons
-document.getElementById('shareLinkedinBtn')?.addEventListener('click', shareOnLinkedIn);
-document.getElementById('shareTwitterBtn')?.addEventListener('click', shareOnTwitter);
-document.getElementById('copyShareLinkBtn')?.addEventListener('click', copyShareLink);
-
-document.getElementById('viewHistoryBtn').addEventListener('click', () => { renderHistoryModal(); window.openModal('historyModal'); });
-document.getElementById('closeHistoryBtn').addEventListener('click', () => window.closeModal('historyModal'));
-document.getElementById('historyModal').addEventListener('click', e => { if (e.target === document.getElementById('historyModal')) window.closeModal('historyModal'); });
-
-// =====================================================
-// LEAD EXPORTS
-// =====================================================
-window.exportLeads = () => {
-  const leads = JSON.parse(localStorage.getItem(LEADS_KEY) || '[]');
-  if (!leads.length) { showToast('No leads yet.'); return; }
-  const csv = [['Name','Email','Date'], ...leads.map(l=>[l.name,l.email,l.ts])].map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
-  a.download = `leads_${Date.now()}.csv`;
-  a.click();
-  showToast(`Exported ${leads.length} leads.`);
-};
-
-// =====================================================
-// INIT
-// =====================================================
-renderAnalytics();
-startNotifSimulation();
-loadSharedPlan();
-initABTesting();
-
-fetch(`${API_BASE}/health`).then(r=>r.json()).then(d=>{ if(d.status==='ok') console.log('✅ Backend OK:', d.model); }).catch(()=>{});
+    
+    // Pre-fill from planner if available
+    if (sessionStorage.getItem('prefillCustomer')) {
+        elements.customerData.value = sessionStorage.getItem('prefillCustomer');
+        sessionStorage.removeItem('prefillCustomer');
+    }
+    if (sessionStorage.getItem('prefillProduct')) {
+        elements.productDescription.value = sessionStorage.getItem('prefillProduct');
+        sessionStorage.removeItem('prefillProduct');
+    }
+    
+    function setStatus(message, isLoading = true) {
+        elements.statusMessage.textContent = message;
+        elements.statusBar.style.display = 'flex';
+        if (!isLoading) {
+            setTimeout(() => {
+                elements.statusBar.style.display = 'none';
+            }, 3000);
+        }
+    }
+    
+    function updateProgress(percent) {
+        elements.progressFill.style.width = percent + '%';
+    }
+    
+    function showLoader(show) {
+        elements.generateBtn.disabled = show;
+        if (show) {
+            setStatus('🧠 AI is analyzing your market...', true);
+            updateProgress(0);
+        }
+    }
+    
+    // KPI Cards
+    function initKPICards() {
+        const kpis = [
+            { icon: '👥', label: 'SEGMENTATION', value: 'Ready', source: 'Click generate to start' },
+            { icon: '📊', label: 'MARKET SIZE', value: 'Ready', source: 'TAM · SAM · SOM' },
+            { icon: '🎯', label: 'KEY METRICS', value: 'Ready', source: 'Primary KPIs' },
+            { icon: '🏆', label: 'COMPETITION', value: 'Ready', source: 'Competitor analysis' }
+        ];
+        
+        elements.kpiGrid.innerHTML = kpis.map(kpi => `
+            <div class="kpi-card">
+                <div style="font-size: 32px;">${kpi.icon}</div>
+                <div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);">${kpi.label}</div>
+                <div class="kpi-value">${kpi.value}</div>
+                <div style="font-size: 10px; color: rgba(255,255,255,.4);">${kpi.source}</div>
+            </div>
+        `).join('');
+    }
+    
+    function updateKPICards(plan) {
+        const primarySegment = plan.match(/Primary Target[:\s]*([^\n]+)/i)?.[1]?.substring(0, 40) || 'Analysis complete';
+        const tam = plan.match(/TAM[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '';
+        const sam = plan.match(/SAM[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '';
+        const kpi = plan.match(/Primary KPI[:\s]*([^\n]+)/i)?.[1]?.substring(0, 35) || 'KPIs defined';
+        const comp = plan.match(/Direct\s*\|\s*🔴\s*\|\s*([^\|]+)/i)?.[1]?.trim() || 'Analysis complete';
+        
+        const cards = document.querySelectorAll('.kpi-card');
+        if (cards.length >= 4) {
+            if (cards[0]) cards[0].querySelector('.kpi-value').textContent = primarySegment;
+            if (cards[1]) cards[1].querySelector('.kpi-value').textContent = tam && sam ? `${tam} → ${sam}` : (tam || 'Market sized');
+            if (cards[2]) cards[2].querySelector('.kpi-value').textContent = kpi;
+            if (cards[3]) cards[3].querySelector('.kpi-value').textContent = comp;
+        }
+    }
+    
+    // Render SWOT
+    function renderSWOT(plan) {
+        const swotMatch = plan.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!swotMatch) return;
+        
+        const swotText = swotMatch[1];
+        const extract = (label) => {
+            const re = new RegExp(`${label}:[\\s\\S]*?(?=\\n(?:Strengths|Weaknesses|Opportunities|Threats):|$)`, 'i');
+            const block = swotText.match(re)?.[0] || '';
+            return block.split('\n').filter(l => /^[-•*]\s+/.test(l.trim())).map(l => l.replace(/^[-•*]\s+/, '').trim()).slice(0, 4);
+        };
+        
+        const S = extract('Strengths');
+        const W = extract('Weaknesses');
+        const O = extract('Opportunities');
+        const T = extract('Threats');
+        
+        elements.swotContainer.innerHTML = `
+            <h3 style="margin: 30px 0 15px;">📊 SWOT Analysis</h3>
+            <div class="swot-grid">
+                <div class="swot-card swot-s"><strong style="color: #4ade80;">💪 STRENGTHS</strong><ul style="margin-top: 12px; list-style: none;">${S.map(s => `<li style="padding: 4px 0;">✓ ${escapeHtml(s)}</li>`).join('') || '<li>No data extracted</li>'}</ul></div>
+                <div class="swot-card swot-w"><strong style="color: #f87171;">⚠️ WEAKNESSES</strong><ul style="margin-top: 12px; list-style: none;">${W.map(w => `<li style="padding: 4px 0;">✓ ${escapeHtml(w)}</li>`).join('') || '<li>No data extracted</li>'}</ul></div>
+                <div class="swot-card swot-o"><strong style="color: #22d3ee;">🚀 OPPORTUNITIES</strong><ul style="margin-top: 12px; list-style: none;">${O.map(o => `<li style="padding: 4px 0;">✓ ${escapeHtml(o)}</li>`).join('') || '<li>No data extracted</li>'}</ul></div>
+                <div class="swot-card swot-t"><strong style="color: #fbbf24;">⚡ THREATS</strong><ul style="margin-top: 12px; list-style: none;">${T.map(t => `<li style="padding: 4px 0;">✓ ${escapeHtml(t)}</li>`).join('') || '<li>No data extracted</li>'}</ul></div>
+            </div>
+        `;
+    }
+    
+    // Render Journey
+    function renderJourney() {
+        const stages = ['AWARENESS', 'CONSIDERATION', 'PURCHASE', 'RETENTION', 'ADVOCACY'];
+        const icons = ['👁️', '🤔', '💰', '❤️', '🗣️'];
+        
+        elements.journeyContainer.innerHTML = `
+            <h3 style="margin: 30px 0 15px;">🗺️ Customer Journey Map</h3>
+            <div class="journey-grid">
+                ${stages.map((stage, i) => `
+                    <div class="journey-card">
+                        <div style="font-size: 28px;">${icons[i]}</div>
+                        <div style="font-weight: bold; margin: 8px 0;">${stage}</div>
+                        <div style="font-size: 11px; color: rgba(255,255,255,.5);">Customer journey stage</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+    
+    // Stream Roles
+    async function streamRoles(plan) {
+        const roles = [
+            { tag: 'SEGMENTATION OUTPUT', icon: '🎯', title: 'Market Segmentation' },
+            { tag: 'TAMSAMSOM OUTPUT', icon: '📊', title: 'Market Sizing (TAM/SAM/SOM)' },
+            { tag: 'PESTLE OUTPUT', icon: '⚡', title: 'PESTLE Analysis' },
+            { tag: 'PORTER OUTPUT', icon: '🏢', title: "Porter's Five Forces" },
+            { tag: 'COMPETITOR OUTPUT', icon: '🔍', title: 'Competitor Profiling' },
+            { tag: 'POSITIONING OUTPUT', icon: '📍', title: 'Brand Positioning' },
+            { tag: '4Ps OUTPUT', icon: '🎨', title: 'Marketing Mix (4Ps)' },
+            { tag: 'SWOT OUTPUT', icon: '💪', title: 'SWOT Analysis' },
+            { tag: 'CUSTOMER JOURNEY OUTPUT', icon: '🗺️', title: 'Customer Journey Map' },
+            { tag: 'KPI OUTPUT', icon: '📈', title: 'KPIs & Budget' },
+            { tag: 'OKRS OUTPUT', icon: '🎯', title: 'OKR Strategist' },
+            { tag: 'ROADMAP OUTPUT', icon: '📅', title: '30-Day Roadmap' }
+        ];
+        
+        const output = [];
+        
+        for (const role of roles) {
+            const regex = new RegExp(`\\[${role.tag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
+            const match = plan.match(regex);
+            if (match && match[1] && match[1].trim().length > 30) {
+                output.push({ ...role, content: match[1].trim() });
+            }
+        }
+        
+        if (output.length === 0) {
+            elements.renderedOutput.innerHTML = `<div style="line-height: 1.8;">${escapeHtml(plan).replace(/\n/g, '<br>')}</div>`;
+            return;
+        }
+        
+        elements.renderedOutput.innerHTML = '';
+        
+        for (let i = 0; i < output.length; i++) {
+            const role = output[i];
+            const card = document.createElement('div');
+            card.className = 'role-card';
+            card.innerHTML = `
+                <div class="role-header">
+                    <div class="role-icon">${role.icon}</div>
+                    <div class="role-title">${role.title}</div>
+                    <div style="margin-left: auto; font-size: 11px; color: rgba(255,255,255,.4);">Role ${i+1}/${output.length}</div>
+                </div>
+                <div class="stream-loading" style="display: flex; gap: 8px; align-items: center;">
+                    <span class="loader"></span>
+                    <span style="color: rgba(255,255,255,.5);">Loading...</span>
+                </div>
+            `;
+            elements.renderedOutput.appendChild(card);
+            
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            const loading = card.querySelector('.stream-loading');
+            if (loading) loading.remove();
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.style.lineHeight = '1.8';
+            contentDiv.innerHTML = formatRoleContent(role.content);
+            card.appendChild(contentDiv);
+            
+            setTimeout(() => card.classList.add('visible'), 50);
+            updateProgress(Math.round(((i + 1) / output.length) * 100));
+        }
+    }
+    
+    function formatRoleContent(content) {
+        let html = content;
+        html = html.replace(/\n\|(.+)\|\n\|[-:\s|]+\|\n((?:\|.+\|\n?)+)/gm, (match, header, rows) => {
+            const headers = header.split('|').filter(h => h.trim()).map(h => `<th style="padding: 8px; text-align: left; background: rgba(99,102,241,.1);">${escapeHtml(h.trim())}</th>`).join('');
+            const bodyRows = rows.trim().split('\n').map(row => {
+                const cells = row.split('|').filter(c => c.trim()).map(c => `<td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,.1);">${escapeHtml(c.trim())}</td>`).join('');
+                return `<tr>${cells}</tr>`;
+            }).join('');
+            return `<table style="width: 100%; border-collapse: collapse; margin: 16px 0;">${headers ? `<thead><tr>${headers}</tr></thead>` : ''}<tbody>${bodyRows}</tbody></table>`;
+        });
+        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/^[-•*]\s+(.*?)$/gm, '<li>$1</li>');
+        html = html.replace(/(<li>.*?<\/li>)+/gs, '<ul style="margin: 8px 0; padding-left: 20px;">$&</ul>');
+        html = html.replace(/\n/g, '<br>');
+        return html;
+    }
+    
+    async function generateMarketingPlan(customerData, productDescription) {
+        const response = await fetch(`${API_BASE}/generate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ customer_data: customerData, product_description: productDescription })
+        });
+        if (!response.ok) throw new Error('Generation failed');
+        const data = await response.json();
+        return data.plan;
+    }
+    
+    async function handleGenerate() {
+        if (isGenerating) return;
+        
+        const cd = elements.customerData.value.trim();
+        const pd = elements.productDescription.value.trim();
+        
+        if (!cd || !pd) {
+            setStatus('Please fill in both fields', false);
+            return;
+        }
+        
+        isGenerating = true;
+        elements.generateBtn.disabled = true;
+        elements.generateBtn.textContent = '⏳ Generating...';
+        elements.outputArea.style.display = 'none';
+        elements.swotContainer.innerHTML = '';
+        elements.journeyContainer.innerHTML = '';
+        
+        initKPICards();
+        setStatus('🧠 AI is analyzing your market...', true);
+        updateProgress(5);
+        
+        try {
+            const plan = await generateMarketingPlan(cd, pd);
+            currentPlan = plan;
+            
+            elements.outputArea.style.display = 'block';
+            await streamRoles(plan);
+            updateKPICards(plan);
+            renderSWOT(plan);
+            renderJourney();
+            
+            setStatus('✅ Strategy generated successfully!', false);
+            updateProgress(100);
+            setTimeout(() => updateProgress(0), 2000);
+            
+            elements.outputArea.scrollIntoView({ behavior: 'smooth' });
+        } catch (error) {
+            setStatus(`❌ Error: ${error.message}`, false);
+            console.error(error);
+        } finally {
+            isGenerating = false;
+            elements.generateBtn.disabled = false;
+            elements.generateBtn.textContent = '✨ Generate Strategic Plan';
+        }
+    }
+    
+    function handleClear() {
+        elements.customerData.value = '';
+        elements.productDescription.value = '';
+        elements.outputArea.style.display = 'none';
+        elements.swotContainer.innerHTML = '';
+        elements.journeyContainer.innerHTML = '';
+        elements.renderedOutput.innerHTML = '';
+        currentPlan = null;
+        initKPICards();
+        setStatus('Cleared. Ready for new strategy.', false);
+    }
+    
+    function handleCopy() {
+        if (!currentPlan) {
+            setStatus('No plan to copy', false);
+            return;
+        }
+        navigator.clipboard.writeText(currentPlan);
+        setStatus('✅ Copied to clipboard!', false);
+    }
+    
+    function saveToHistory() {
+        if (!currentPlan) {
+            setStatus('No plan to save', false);
+            return;
+        }
+        const history = {
+            id: Date.now(),
+            timestamp: new Date().toISOString(),
+            plan: currentPlan,
+            customerData: elements.customerData.value,
+            productData: elements.productDescription.value
+        };
+        
+        let saved = JSON.parse(localStorage.getItem('marketing_history') || '[]');
+        saved.unshift(history);
+        if (saved.length > 10) saved.pop();
+        localStorage.setItem('marketing_history', JSON.stringify(saved));
+        setStatus('✅ Saved to history!', false);
+    }
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+    }
+    
+    function initApp() {
+        initKPICards();
+        elements.generateBtn.addEventListener('click', handleGenerate);
+        elements.clearBtn.addEventListener('click', handleClear);
+        if (elements.copyOutputBtn) elements.copyOutputBtn.addEventListener('click', handleCopy);
+        if (elements.saveHistoryBtn) elements.saveHistoryBtn.addEventListener('click', saveToHistory);
+    }
+    
+    // Initialize app when page loads
+    initApp();
 </script>
 </body>
 </html>
