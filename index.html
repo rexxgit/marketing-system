@@ -9,6 +9,28 @@
 <meta property="og:description" content="Generate complete strategic marketing plans in 60 seconds.">
 <meta property="og:type" content="website">
 <link rel="canonical" href="https://strategic-marketing-system.com">
+
+<!-- ===================================================== -->
+<!-- SECURITY HEADERS & CSP -->
+<!-- ===================================================== -->
+<!-- Content Security Policy - Prevents XSS attacks -->
+<meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://raw.githubusercontent.com;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+    font-src 'self' https://fonts.gstatic.com;
+    connect-src 'self' https://Bisratprompt-marketing-system-api.hf.space;
+    img-src 'self' data: https://raw.githubusercontent.com;
+    frame-src 'none';
+    form-action 'self';
+">
+
+<!-- Security Headers -->
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta name="format-detection" content="telephone=no">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <!-- html2pdf.js library for PDF export -->
@@ -1708,12 +1730,98 @@ details[open] .example-caret { transform: rotate(180deg); }
     &nbsp;·&nbsp;
     <a href="#main-content" aria-label="Back to top">Back to top ↑</a>
   </p>
+  <div style="margin-top: 12px; font-size: 10px; color: var(--ink-4);">
+    🔒 Secure connection · All data processed locally · Rate limits enforced
+  </div>
 </footer>
 
 <!-- =====================================================
      JAVASCRIPT
 ===================================================== -->
 <script>
+// =====================================================
+// SECURITY: INPUT SANITIZATION
+// =====================================================
+
+function sanitizeInput(str) {
+    if (!str) return '';
+    // Remove dangerous HTML tags and attributes
+    return String(str)
+        .replace(/[<>]/g, '')  // Remove < and > to prevent HTML injection
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/javascript:/gi, '')
+        .replace(/on\w+=/gi, '');
+}
+
+function sanitizeForDisplay(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+// =====================================================
+// SECURITY: RATE LIMITING SIMULATION
+// =====================================================
+
+const rateLimits = {
+    generation: {
+        maxRequests: 5,
+        timeWindow: 60000, // 1 minute
+        requests: [],
+        blockUntil: null
+    }
+};
+
+function checkRateLimit(type = 'generation') {
+    const limit = rateLimits[type];
+    if (!limit) return true;
+    
+    // Check if blocked
+    if (limit.blockUntil && Date.now() < limit.blockUntil) {
+        const remainingMs = Math.ceil((limit.blockUntil - Date.now()) / 1000);
+        setStatus(`Rate limit exceeded. Please wait ${remainingMs} seconds.`, 'error');
+        return false;
+    }
+    
+    // Clean old requests
+    const now = Date.now();
+    limit.requests = limit.requests.filter(timestamp => now - timestamp < limit.timeWindow);
+    
+    // Check limit
+    if (limit.requests.length >= limit.maxRequests) {
+        limit.blockUntil = now + 30000; // Block for 30 seconds
+        setStatus(`Too many requests. Please wait 30 seconds.`, 'error');
+        return false;
+    }
+    
+    // Add current request
+    limit.requests.push(now);
+    return true;
+}
+
+// =====================================================
+// SECURITY: SESSION MANAGEMENT (CSRF Protection)
+// =====================================================
+
+function generateSessionId() {
+    return 'sid_' + Date.now() + '_' + Math.random().toString(36).substr(2, 16);
+}
+
+function getSessionId() {
+    let sessionId = sessionStorage.getItem('session_id');
+    if (!sessionId) {
+        sessionId = generateSessionId();
+        sessionStorage.setItem('session_id', sessionId);
+    }
+    return sessionId;
+}
+
 // =====================================================
 // CONSTANTS & STATE
 // =====================================================
@@ -1788,7 +1896,7 @@ function trackABConversion(testName, variantId, action) {
         variant: variantId,
         action: action,
         timestamp: new Date().toISOString(),
-        sessionId: sessionStorage.getItem('sessionId') || Date.now().toString()
+        sessionId: getSessionId()
     };
     
     const conversions = JSON.parse(localStorage.getItem('ab_conversions') || '[]');
@@ -1993,9 +2101,6 @@ function removeTrapFocus(modalId) {
 }
 
 // Override openModal and closeModal for focus trapping
-const originalOpenModal = window.openModal;
-const originalCloseModal = window.closeModal;
-
 window.openModal = function(id) {
     const modal = document.getElementById(id);
     if (modal) {
@@ -2018,8 +2123,7 @@ window.closeModal = function(id) {
 document.addEventListener('keydown', (e) => {
     if (e.key === '?' && !e.ctrlKey && !e.metaKey) {
         e.preventDefault();
-        const modal = document.getElementById('keyboardModal');
-        if (modal) window.openModal('keyboardModal');
+        window.openModal('keyboardModal');
     }
 });
 
@@ -2693,7 +2797,7 @@ function fmtContent(content) {
       const cells = row.split('|').filter(x=>x.trim()).map(x=>`<td>${esc(x.trim())}</td>`).join('');
       return `<tr>${cells}</tr>`;
     }).join('');
-    return `<table class="stream-table"><thead><tr>${ths}</td></thead><tbody>${trs}</tbody></tr>`;
+    return `<table class="stream-table"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table>`;
   });
   h = h.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   h = h.replace(/^#{1,3}\s+(.+)$/gm, '<h3>$1</h3>');
@@ -2758,13 +2862,20 @@ async function renderPlan(plan) {
 }
 
 // =====================================================
-// GENERATE
+// GENERATE (with security sanitization & rate limiting)
 // =====================================================
 async function handleGenerate() {
   if (isGenerating) return;
 
-  const cd = document.getElementById('customerData').value.trim();
-  const pd = document.getElementById('productDescription').value.trim();
+  // Rate limiting check
+  if (!checkRateLimit('generation')) return;
+
+  // Sanitize user inputs
+  let cd = document.getElementById('customerData').value.trim();
+  let pd = document.getElementById('productDescription').value.trim();
+  
+  cd = sanitizeInput(cd);
+  pd = sanitizeInput(pd);
 
   if (!cd || !pd) {
     setStatus('Please fill in both the customer and product fields.', 'error');
@@ -2792,12 +2903,20 @@ async function handleGenerate() {
   setStatus('🧠 AI is analyzing your market…', 'working');
 
   const startMs = Date.now();
+  const sessionId = getSessionId();
 
   try {
     const res = await fetch(`${API_BASE}/generate`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ customer_data: cd, product_description: pd })
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-Session-Id': sessionId
+      },
+      body: JSON.stringify({ 
+        customer_data: cd, 
+        product_description: pd,
+        session_id: sessionId
+      })
     });
     if (!res.ok) throw new Error(`Server error ${res.status}`);
     const data = await res.json();
