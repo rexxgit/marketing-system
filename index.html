@@ -5,34 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strategic Marketing System | AI-Powered Marketing Plan Generator</title>
     
-    <!-- ===================================================== -->
-    <!-- POST-LAUNCH MONITORING & ANALYTICS -->
-    <!-- ===================================================== -->
-    
     <!-- Simple Analytics (privacy-friendly, no cookies) -->
     <script defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
     <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt=""></noscript>
-    
-    <!-- Error Tracking (Sentry) - Get free DSN from sentry.io -->
-    <script src="https://browser.sentry-cdn.com/8.20.0/bundle.min.js" crossorigin="anonymous"></script>
-    <script>
-        // Sentry error tracking - replace with your own DSN from sentry.io
-        // Sign up at https://sentry.io/signup (free tier available)
-        if (typeof Sentry !== 'undefined') {
-            Sentry.init({
-                dsn: '', // Add your Sentry DSN here: 'https://your-dsn@sentry.io/project-id'
-                environment: 'production',
-                tracesSampleRate: 0.1,
-                beforeSend(event) {
-                    // Don't send non-critical errors
-                    if (event.exception?.values?.[0]?.value?.includes('ResizeObserver')) {
-                        return null;
-                    }
-                    return event;
-                }
-            });
-        }
-    </script>
     
     <style>
         /* =====================================================
@@ -118,6 +93,98 @@
             transform: translateY(-2px);
         }
         
+        /* Language Selector */
+        .lang-selector {
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 50px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+        
+        .lang-selector:hover {
+            background: rgba(99,102,241,.2);
+            border-color: rgba(99,102,241,.5);
+        }
+        
+        /* Welcome Modal */
+        .welcome-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,.95);
+            backdrop-filter: blur(12px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .welcome-modal.hidden {
+            display: none;
+        }
+        
+        .welcome-content {
+            background: linear-gradient(135deg, #0c1120, #1a1a2e);
+            border: 1px solid rgba(99,102,241,.3);
+            border-radius: 32px;
+            padding: 48px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            animation: slideUp 0.4s ease;
+        }
+        
+        .welcome-content h2 {
+            font-size: 28px;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .welcome-content p {
+            color: rgba(255,255,255,.7);
+            margin-bottom: 32px;
+        }
+        
+        .lang-options {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .lang-option {
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 60px;
+            padding: 14px 32px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .lang-option:hover {
+            background: rgba(99,102,241,.2);
+            border-color: rgba(99,102,241,.5);
+            transform: scale(1.05);
+        }
+        
+        .lang-option.english {
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            border: none;
+        }
+        
         /* =====================================================
            PAGES
         ===================================================== */
@@ -133,6 +200,11 @@
         
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
@@ -321,7 +393,7 @@
         }
         
         /* =====================================================
-           APP PAGE (YOUR WORKING INDEX.HTML CONTENT)
+           APP PAGE
         ===================================================== */
         .app-container {
             background: transparent;
@@ -329,7 +401,6 @@
             overflow: visible;
         }
         
-        /* KPI Cards */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -352,7 +423,6 @@
             margin: 10px 0;
         }
         
-        /* Input Area */
         .input-area {
             background: rgba(255,255,255,.05);
             border: 1px solid rgba(255,255,255,.1);
@@ -378,7 +448,6 @@
             border-color: #6366f1;
         }
         
-        /* Output Area */
         .output-area {
             background: rgba(255,255,255,.05);
             border: 1px solid rgba(255,255,255,.1);
@@ -388,7 +457,6 @@
             display: none;
         }
         
-        /* Status Bar */
         .status-bar {
             background: rgba(99,102,241,.1);
             border: 1px solid rgba(99,102,241,.3);
@@ -398,7 +466,6 @@
             display: none;
         }
         
-        /* Progress */
         .progress-bar {
             background: rgba(255,255,255,.1);
             border-radius: 10px;
@@ -414,7 +481,6 @@
             transition: width 0.3s;
         }
         
-        /* Role Cards */
         .role-card {
             background: rgba(255,255,255,.03);
             border: 1px solid rgba(255,255,255,.08);
@@ -450,7 +516,6 @@
             color: #a5b4fc;
         }
         
-        /* SWOT */
         .swot-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -469,7 +534,6 @@
         .swot-o { border-left: 4px solid #22d3ee; }
         .swot-t { border-left: 4px solid #fbbf24; }
         
-        /* Journey */
         .journey-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -484,15 +548,13 @@
             text-align: center;
         }
         
-        /* =====================================================
-           FEEDBACK WIDGET & CHANGELOG
-        ===================================================== */
         .feedback-widget {
             position: fixed;
             bottom: 24px;
             right: 24px;
             z-index: 1000;
         }
+        
         .feedback-btn {
             background: linear-gradient(135deg, #6366f1, #ec4899);
             border: none;
@@ -504,9 +566,11 @@
             box-shadow: 0 4px 15px rgba(0,0,0,.3);
             transition: transform 0.3s;
         }
+        
         .feedback-btn:hover {
             transform: scale(1.05);
         }
+        
         .feedback-modal {
             display: none;
             position: fixed;
@@ -520,14 +584,12 @@
             z-index: 1001;
             box-shadow: 0 10px 40px rgba(0,0,0,.3);
         }
+        
         .feedback-modal.show {
             display: block;
             animation: slideUp 0.3s ease;
         }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        
         .feedback-modal textarea {
             background: rgba(255,255,255,.05);
             border: 1px solid rgba(255,255,255,.1);
@@ -544,13 +606,16 @@
             background: rgba(255,255,255,.03);
             border-radius: 16px;
         }
+        
         .changelog-section details {
             cursor: pointer;
         }
+        
         .changelog-section summary {
             color: #a5b4fc;
             margin-bottom: 8px;
         }
+        
         .changelog-section p {
             font-size: 12px;
             color: rgba(255,255,255,.6);
@@ -565,7 +630,6 @@
             .nav-links { gap: 12px; }
         }
         
-        /* Footer */
         .footer {
             text-align: center;
             padding: 40px;
@@ -575,7 +639,6 @@
             font-size: 12px;
         }
         
-        /* Loading Spinner */
         .loader {
             display: inline-block;
             width: 20px;
@@ -594,16 +657,34 @@
 </head>
 <body>
 
+<!-- Welcome Language Modal -->
+<div id="welcomeModal" class="welcome-modal">
+    <div class="welcome-content">
+        <h2>🌍 እንኳን ደህና መጡ / Welcome</h2>
+        <p>Please select your preferred language / ቋንቋዎን ይምረጡ</p>
+        <div class="lang-options">
+            <div class="lang-option english" onclick="setLanguage('en')">🇬🇧 English</div>
+            <div class="lang-option" onclick="setLanguage('am')">🇪🇹 አማርኛ</div>
+        </div>
+    </div>
+</div>
+
 <div class="container">
     <!-- Navigation -->
     <nav class="nav">
-        <div class="logo">StrategicMarketing</div>
-        <div class="nav-links">
-            <button onclick="showPage('home')" class="active" id="navHome">🏠 Home</button>
-            <button onclick="showPage('planner')" id="navPlanner">📋 Planner</button>
-            <button onclick="showPage('about')" id="navAbout">💡 About</button>
-            <button onclick="showPage('pricing')" id="navPricing">💰 Pricing</button>
-            <button onclick="showPage('app')" id="navApp" class="cta-nav">✨ Launch App →</button>
+        <div class="logo" data-en="StrategicMarketing" data-am="ስትራቴጂክማርኬቲንግ">StrategicMarketing</div>
+        <div style="display: flex; gap: 16px; align-items: center;">
+            <div class="lang-selector" id="langSelector" onclick="toggleLanguage()">
+                <span>🌐</span>
+                <span id="langSelectorText">English</span>
+            </div>
+            <div class="nav-links">
+                <button onclick="showPage('home')" class="active" id="navHome" data-en="🏠 Home" data-am="🏠 መነሻ">🏠 Home</button>
+                <button onclick="showPage('planner')" id="navPlanner" data-en="📋 Planner" data-am="📋 እቅድ አውጪ">📋 Planner</button>
+                <button onclick="showPage('about')" id="navAbout" data-en="💡 About" data-am="💡 ስለእኛ">💡 About</button>
+                <button onclick="showPage('pricing')" id="navPricing" data-en="💰 Pricing" data-am="💰 ዋጋ">💰 Pricing</button>
+                <button onclick="showPage('app')" id="navApp" class="cta-nav" data-en="✨ Launch App →" data-am="✨ መተግበሪያ ጀምር →">✨ Launch App →</button>
+            </div>
         </div>
     </nav>
 
@@ -612,58 +693,57 @@
     <!-- ============================================ -->
     <div id="homePage" class="page active">
         <div class="hero">
-            <h1>Stop second-guessing.<br>Start executing.</h1>
-            <p>A conscientious marketing system that delivers 13 disciplined roles—executed in precise sequence—so you get clarity, not confusion.</p>
-            <button class="btn" onclick="showPage('app')">✨ Start Your Free Plan →</button>
+            <h1 data-en="Stop second-guessing. Start executing." data-am="መጠራጠር ቆም በል። መፈጸም ጀምር።">Stop second-guessing.<br>Start executing.</h1>
+            <p data-en="A conscientious marketing system that delivers 13 disciplined roles—executed in precise sequence—so you get clarity, not confusion." data-am="13 ተግሣጻዊ ሚናዎችን በቅደም ተከተል የሚያቀርብ ታማኝ የግብይት ሥርዓት — ግልጽነትን እንጂ ግራ መጋባትን አያመጣም።">A conscientious marketing system that delivers 13 disciplined roles—executed in precise sequence—so you get clarity, not confusion.</p>
+            <button class="btn" onclick="showPage('app')" data-en="✨ Start Your Free Plan →" data-am="✨ ነጻ እቅድ ጀምር →">✨ Start Your Free Plan →</button>
         </div>
 
-        <h2 style="text-align: center; margin-bottom: 40px;">How it works</h2>
+        <h2 style="text-align: center; margin-bottom: 40px;" data-en="How it works" data-am="እንዴት እንደሚሰራ">How it works</h2>
         <div class="steps">
             <div class="step-card">
                 <div class="step-number">1</div>
-                <h3>Describe your audience</h3>
-                <p style="color: rgba(255,255,255,.6);">Tell us who you want to sell to</p>
+                <h3 data-en="Describe your audience" data-am="ታዳሚዎችዎን ይግለጹ">Describe your audience</h3>
+                <p style="color: rgba(255,255,255,.6);" data-en="Tell us who you want to sell to" data-am="ለማን መሸጥ እንደሚፈልጉ ንገሩን">Tell us who you want to sell to</p>
             </div>
             <div class="step-card">
                 <div class="step-number">2</div>
-                <h3>Describe your product</h3>
-                <p style="color: rgba(255,255,255,.6);">Tell us what you're selling</p>
+                <h3 data-en="Describe your product" data-am="ምርትዎን ይግለጹ">Describe your product</h3>
+                <p style="color: rgba(255,255,255,.6);" data-en="Tell us what you're selling" data-am="ምን እንደሚሸጡ ንገሩን">Tell us what you're selling</p>
             </div>
             <div class="step-card">
                 <div class="step-number">3</div>
-                <h3>Get your full plan</h3>
-                <p style="color: rgba(255,255,255,.6);">Receive 13 roles of strategic analysis</p>
+                <h3 data-en="Get your full plan" data-am="ሙሉ እቅድዎን ያግኙ">Get your full plan</h3>
+                <p style="color: rgba(255,255,255,.6);" data-en="Receive 13 roles of strategic analysis" data-am="13 የስትራቴጂክ ትንተና ሚናዎችን ይቀበሉ">Receive 13 roles of strategic analysis</p>
             </div>
         </div>
 
-        <h2 style="text-align: center; margin-bottom: 30px;">13 Disciplined Roles</h2>
+        <h2 style="text-align: center; margin-bottom: 30px;" data-en="13 Disciplined Roles" data-am="13 ተግሣጻዊ ሚናዎች">13 Disciplined Roles</h2>
         <div class="roles-grid">
-            <div class="role-badge">🎯 Segmentation</div>
-            <div class="role-badge">📊 Market Sizing</div>
-            <div class="role-badge">⚡ PESTLE</div>
-            <div class="role-badge">🎯 Porter's Forces</div>
-            <div class="role-badge">🔍 Competitors</div>
-            <div class="role-badge">📍 Positioning</div>
-            <div class="role-badge">🎨 4Ps</div>
-            <div class="role-badge">💪 SWOT</div>
-            <div class="role-badge">🗺️ Journey Map</div>
-            <div class="role-badge">📈 KPIs</div>
-            <div class="role-badge">🎯 OKRs</div>
-            <div class="role-badge">📅 Roadmap</div>
-            <div class="role-badge">🎨 Design</div>
+            <div class="role-badge" data-en="🎯 Segmentation" data-am="🎯 ክፍፍል">🎯 Segmentation</div>
+            <div class="role-badge" data-en="📊 Market Sizing" data-am="📊 የገበያ መጠን">📊 Market Sizing</div>
+            <div class="role-badge" data-en="⚡ PESTLE" data-am="⚡ PESTLE">⚡ PESTLE</div>
+            <div class="role-badge" data-en="🎯 Porter's Forces" data-am="🎯 የፖርተር ኃይሎች">🎯 Porter's Forces</div>
+            <div class="role-badge" data-en="🔍 Competitors" data-am="🔍 ተፎካካሪዎች">🔍 Competitors</div>
+            <div class="role-badge" data-en="📍 Positioning" data-am="📍 አቀማመጥ">📍 Positioning</div>
+            <div class="role-badge" data-en="🎨 4Ps" data-am="🎨 4Ps">🎨 4Ps</div>
+            <div class="role-badge" data-en="💪 SWOT" data-am="💪 SWOT">💪 SWOT</div>
+            <div class="role-badge" data-en="🗺️ Journey Map" data-am="🗺️ የጉዞ ካርታ">🗺️ Journey Map</div>
+            <div class="role-badge" data-en="📈 KPIs" data-am="📈 KPIs">📈 KPIs</div>
+            <div class="role-badge" data-en="🎯 OKRs" data-am="🎯 OKRs">🎯 OKRs</div>
+            <div class="role-badge" data-en="📅 Roadmap" data-am="📅 የመንገድ ካርታ">📅 Roadmap</div>
+            <div class="role-badge" data-en="🎨 Design" data-am="🎨 ዲዛይን">🎨 Design</div>
         </div>
         
-        <!-- Changelog Section -->
         <div class="changelog-section">
             <details>
-                <summary>📋 What's New (v1.0.0)</summary>
+                <summary data-en="📋 What's New (v1.0.0)" data-am="📋 አዲስ ነገር (v1.0.0)">📋 What's New (v1.0.0)</summary>
                 <div>
-                    <p>✅ <strong>May 30, 2025</strong> - Initial launch</p>
-                    <p style="margin-left: 16px;">• 13-role AI marketing framework</p>
-                    <p style="margin-left: 16px;">• Real-time streaming output</p>
-                    <p style="margin-left: 16px;">• PDF export & save to history</p>
-                    <p style="margin-left: 16px;">• A/B testing framework</p>
-                    <p style="margin-left: 16px;">• Full accessibility support</p>
+                    <p>✅ <strong data-en="May 30, 2025 - Initial launch" data-am="ሜይ 30, 2025 - የመጀመሪያ ልቀት">May 30, 2025 - Initial launch</strong></p>
+                    <p style="margin-left: 16px;" data-en="• 13-role AI marketing framework" data-am="• 13-ሚና AI የግብይት ማዕቀፍ">• 13-role AI marketing framework</p>
+                    <p style="margin-left: 16px;" data-en="• Real-time streaming output" data-am="• የቀጥታ ስርጭት ውጤት">• Real-time streaming output</p>
+                    <p style="margin-left: 16px;" data-en="• PDF export & save to history" data-am="• PDF ማውጣት እና በታሪክ ማስቀመጥ">• PDF export & save to history</p>
+                    <p style="margin-left: 16px;" data-en="• A/B testing framework" data-am="• A/B የሙከራ ማዕቀፍ">• A/B testing framework</p>
+                    <p style="margin-left: 16px;" data-en="• Full accessibility support" data-am="• ሙሉ ተደራሽነት ድጋፍ">• Full accessibility support</p>
                 </div>
             </details>
         </div>
@@ -674,25 +754,25 @@
     <!-- ============================================ -->
     <div id="plannerPage" class="page">
         <div class="hero" style="padding: 40px 0;">
-            <h1>Strategy Planner</h1>
-            <p>Fill in your business details and let our AI do the rest</p>
+            <h1 data-en="Strategy Planner" data-am="የስትራቴጂ እቅድ አውጪ">Strategy Planner</h1>
+            <p data-en="Fill in your business details and let our AI do the rest" data-am="የንግድ ዝርዝሮችዎን ይሙሉ እና የእኛ AI ቀሪውን እንዲሰራ ይፍቀዱ">Fill in your business details and let our AI do the rest</p>
         </div>
         
         <div class="input-area">
-            <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);">👥 Customer Data / Target Audience</label>
+            <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);" data-en="👥 Customer Data / Target Audience" data-am="👥 የደንበኛ መረጃ / ዒላማ ታዳሚ">👥 Customer Data / Target Audience</label>
             <textarea id="plannerCustomer" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies ($50M-$500M revenue) looking for AI analytics solutions..."></textarea>
             
-            <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);">📦 Product Description / Service</label>
+            <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);" data-en="📦 Product Description / Service" data-am="📦 የምርት መግለጫ / አገልግሎት">📦 Product Description / Service</label>
             <textarea id="plannerProduct" rows="4" placeholder="Example: An AI-powered marketing analytics platform that provides real-time ROI predictions and channel optimization recommendations..."></textarea>
             
-            <button class="btn" onclick="goToAppWithData()">✨ Generate Strategic Plan →</button>
+            <button class="btn" onclick="goToAppWithData()" data-en="✨ Generate Strategic Plan →" data-am="✨ ስትራቴጂክ እቅድ ፍጠር →">✨ Generate Strategic Plan →</button>
         </div>
         
         <div class="steps" style="margin-top: 40px;">
             <div class="step-card">
                 <div class="step-number">✓</div>
-                <h3>What happens next?</h3>
-                <p style="color: rgba(255,255,255,.6);">Your data will be sent to our AI engine. The 13-role framework will execute in sequence, and you'll receive a complete strategic marketing plan.</p>
+                <h3 data-en="What happens next?" data-am="ቀጥሎ ምን ይሆናል?">What happens next?</h3>
+                <p style="color: rgba(255,255,255,.6);" data-en="Your data will be sent to our AI engine. The 13-role framework will execute in sequence, and you'll receive a complete strategic marketing plan." data-am="የእርስዎ መረጃ ወደ AI ሞተራችን ይላካል። ባለ 13-ሚና ማዕቀፉ በቅደም ተከተል ይሰራል፣ እና ሙሉ የስትራቴጂክ ግብይት እቅድ ይቀበላሉ።">Your data will be sent to our AI engine. The 13-role framework will execute in sequence, and you'll receive a complete strategic marketing plan.</p>
             </div>
         </div>
     </div>
@@ -702,12 +782,12 @@
     <!-- ============================================ -->
     <div id="aboutPage" class="page">
         <div class="hero" style="padding: 40px 0;">
-            <h1>Built on <span style="color: #6366f1;">Conscientiousness</span></h1>
-            <p>We believe marketing strategy should be disciplined, not chaotic. 13 roles. One clear output. Every time.</p>
+            <h1 data-en="Built on " data-am="የተገነባው በ ">Built on <span style="color: #6366f1;" data-en="Conscientiousness" data-am="ህሊና">Conscientiousness</span></h1>
+            <p data-en="We believe marketing strategy should be disciplined, not chaotic. 13 roles. One clear output. Every time." data-am="የግብይት ስትራቴጂ የተገራ እንጂ የተዝረከረከ መሆን አለበት ብለን እናምናለን። 13 ሚናዎች። አንድ ግልጽ ውጤት። በየጊዜው።">We believe marketing strategy should be disciplined, not chaotic. 13 roles. One clear output. Every time.</p>
         </div>
         
         <div style="background: rgba(255,255,255,.05); border-radius: 24px; padding: 32px; margin: 40px 0;">
-            <h2 style="text-align: center; margin-bottom: 24px;">The 13-Role Framework</h2>
+            <h2 style="text-align: center; margin-bottom: 24px;" data-en="The 13-Role Framework" data-am="ባለ 13-ሚና ማዕቀፍ">The 13-Role Framework</h2>
             <div class="roles-grid">
                 <div class="role-badge">1. Segmentation</div>
                 <div class="role-badge">2. Market Sizing</div>
@@ -728,136 +808,128 @@
         <div class="principles-grid">
             <div class="principle-card">
                 <div style="font-size: 48px; margin-bottom: 16px;">🤖</div>
-                <h3>Autonomy</h3>
-                <p style="color: rgba(255,255,255,.6);">The system works by itself. You don't have to tell it what to do next.</p>
+                <h3 data-en="Autonomy" data-am="ራስ ገዝነት">Autonomy</h3>
+                <p style="color: rgba(255,255,255,.6);" data-en="The system works by itself. You don't have to tell it what to do next." data-am="ስርዓቱ በራሱ ይሰራል። ቀጥሎ ምን ማድረግ እንዳለበት መንገር አይጠበቅብዎትም።">The system works by itself. You don't have to tell it what to do next.</p>
             </div>
             <div class="principle-card">
                 <div style="font-size: 48px; margin-bottom: 16px;">🧠</div>
-                <h3>Intelligence</h3>
-                <p style="color: rgba(255,255,255,.6);">Smart analysis that learns and adapts to your business.</p>
+                <h3 data-en="Intelligence" data-am="እውቀት">Intelligence</h3>
+                <p style="color: rgba(255,255,255,.6);" data-en="Smart analysis that learns and adapts to your business." data-am="ከንግድዎ ጋር የሚማርና የሚላመድ ብልጥ ትንተና።">Smart analysis that learns and adapts to your business.</p>
             </div>
             <div class="principle-card">
                 <div style="font-size: 48px; margin-bottom: 16px;">💚</div>
-                <h3>Goodness</h3>
-                <p style="color: rgba(255,255,255,.6);">Ethical strategies that benefit everyone, not just the bottom line.</p>
+                <h3 data-en="Goodness" data-am="በጎነት">Goodness</h3>
+                <p style="color: rgba(255,255,255,.6);" data-en="Ethical strategies that benefit everyone, not just the bottom line." data-am="ለሁሉም የሚጠቅሙ ሥነ-ምግባራዊ ስልቶች፣ ከትርፍ በላይ።">Ethical strategies that benefit everyone, not just the bottom line.</p>
             </div>
         </div>
         
         <div style="background: rgba(99,102,241,.08); border-radius: 24px; padding: 32px; text-align: center;">
-            <h3>Our Mission</h3>
-            <p style="color: rgba(255,255,255,.7); max-width: 600px; margin: 16px auto 0;">To democratize strategic marketing by making professional-grade planning accessible, understandable, and actionable for everyone.</p>
+            <h3 data-en="Our Mission" data-am="ተልእኳችን">Our Mission</h3>
+            <p style="color: rgba(255,255,255,.7); max-width: 600px; margin: 16px auto 0;" data-en="To democratize strategic marketing by making professional-grade planning accessible, understandable, and actionable for everyone." data-am="ሙያዊ-ደረጃ እቅድ ለሁሉም ተደራሽ፣ ለመረዳት የሚቻል እና ተግባራዊ በማድረግ ስትራቴጂክ ግብይትን ዴሞክራሲያዊ ለማድረግ።">To democratize strategic marketing by making professional-grade planning accessible, understandable, and actionable for everyone.</p>
+            </div>
         </div>
-    </div>
 
     <!-- ============================================ -->
     <!-- PAGE 4: PRICING PAGE -->
     <!-- ============================================ -->
     <div id="pricingPage" class="page">
         <div class="hero" style="padding: 40px 0;">
-            <h1>Simple, Transparent Pricing</h1>
-            <p>No hidden fees. Cancel anytime.</p>
+            <h1 data-en="Simple, Transparent Pricing" data-am="ቀላል፣ ግልጽ ዋጋ">Simple, Transparent Pricing</h1>
+            <p data-en="No hidden fees. Cancel anytime." data-am="የተደበቀ ክፍያ የለም። በማንኛውም ጊዜ ይሰርዙ።">No hidden fees. Cancel anytime.</p>
         </div>
         
         <div class="pricing-grid">
             <div class="pricing-card">
-                <h3>Free</h3>
+                <h3 data-en="Free" data-am="ነጻ">Free</h3>
                 <div class="price">$0<span>/month</span></div>
                 <ul class="feature-list">
-                    <li>✅ 5 plans per month</li>
-                    <li>✅ PDF export</li>
-                    <li>✅ Save to history</li>
-                    <li>✅ Copy to clipboard</li>
-                    <li>✅ Basic analytics</li>
+                    <li data-en="✅ 5 plans per month" data-am="✅ በወር 5 እቅዶች">✅ 5 plans per month</li>
+                    <li data-en="✅ PDF export" data-am="✅ PDF ማውጣት">✅ PDF export</li>
+                    <li data-en="✅ Save to history" data-am="✅ በታሪክ ማስቀመጥ">✅ Save to history</li>
+                    <li data-en="✅ Copy to clipboard" data-am="✅ ወደ ቅንጥብ ሰሌዳ መቅዳት">✅ Copy to clipboard</li>
+                    <li data-en="✅ Basic analytics" data-am="✅ መሰረታዊ ትንታኔ">✅ Basic analytics</li>
                 </ul>
-                <button class="btn" onclick="showPage('app')">Get Started</button>
+                <button class="btn" onclick="showPage('app')" data-en="Get Started" data-am="ጀምር">Get Started</button>
             </div>
             
             <div class="pricing-card popular">
-                <h3>Pro</h3>
+                <h3 data-en="Pro" data-am="ፕሮ">Pro</h3>
                 <div class="price">$29<span>/month</span></div>
                 <ul class="feature-list">
-                    <li>✅ Unlimited plans</li>
-                    <li>✅ Priority support</li>
-                    <li>✅ All export formats</li>
-                    <li>✅ Advanced analytics</li>
-                    <li>✅ Team sharing</li>
+                    <li data-en="✅ Unlimited plans" data-am="✅ ያልተገደበ እቅድ">✅ Unlimited plans</li>
+                    <li data-en="✅ Priority support" data-am="✅ ቅድሚያ ድጋፍ">✅ Priority support</li>
+                    <li data-en="✅ All export formats" data-am="✅ ሁሉም የማውጫ ቅርጸቶች">✅ All export formats</li>
+                    <li data-en="✅ Advanced analytics" data-am="✅ የላቀ ትንታኔ">✅ Advanced analytics</li>
+                    <li data-en="✅ Team sharing" data-am="✅ የቡድን መጋራት">✅ Team sharing</li>
                 </ul>
-                <button class="btn" onclick="showPage('app')">Start Free Trial</button>
-                <div style="margin-top: 12px; font-size: 11px; color: #a5b4fc;">Most popular</div>
+                <button class="btn" onclick="showPage('app')" data-en="Start Free Trial" data-am="ነጻ ሙከራ ጀምር">Start Free Trial</button>
+                <div style="margin-top: 12px; font-size: 11px; color: #a5b4fc;" data-en="Most popular" data-am="በጣም ተወዳጅ">Most popular</div>
             </div>
             
             <div class="pricing-card">
-                <h3>Enterprise</h3>
-                <div class="price">Custom</div>
+                <h3 data-en="Enterprise" data-am="ድርጅታዊ">Enterprise</h3>
+                <div class="price" data-en="Custom" data-am="ብጁ">Custom</div>
                 <ul class="feature-list">
-                    <li>✅ Unlimited everything</li>
-                    <li>✅ API access</li>
-                    <li>✅ SSO & SAML</li>
-                    <li>✅ Dedicated support</li>
-                    <li>✅ Custom integrations</li>
+                    <li data-en="✅ Unlimited everything" data-am="✅ ያልተገደበ ሁሉም ነገር">✅ Unlimited everything</li>
+                    <li data-en="✅ API access" data-am="✅ API መዳረሻ">✅ API access</li>
+                    <li data-en="✅ SSO & SAML" data-am="✅ SSO & SAML">✅ SSO & SAML</li>
+                    <li data-en="✅ Dedicated support" data-am="✅ የተወሰነ ድጋፍ">✅ Dedicated support</li>
+                    <li data-en="✅ Custom integrations" data-am="✅ ብጁ ውህደቶች">✅ Custom integrations</li>
                 </ul>
-                <button class="btn btn-outline" onclick="alert('Contact sales@strategicmarketing.com')">Contact Sales</button>
+                <button class="btn btn-outline" onclick="alert('Contact sales@strategicmarketing.com')" data-en="Contact Sales" data-am="ሽያጭ አግኙ">Contact Sales</button>
             </div>
         </div>
     </div>
 
     <!-- ============================================ -->
-    <!-- PAGE 5: APP PAGE (YOUR WORKING AI SYSTEM) -->
+    <!-- PAGE 5: APP PAGE -->
     <!-- ============================================ -->
     <div id="appPage" class="page">
         <div class="app-container">
-            <!-- Input Area -->
             <div class="input-area">
-                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);">📊 Customer Data / Target Audience</label>
+                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);" data-en="📊 Customer Data / Target Audience" data-am="📊 የደንበኛ መረጃ / ዒላማ ታዳሚ">📊 Customer Data / Target Audience</label>
                 <textarea id="customerData" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies ($50M-$500M revenue) looking for AI analytics solutions..."></textarea>
                 
-                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);">📦 Product Description / Service</label>
+                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);" data-en="📦 Product Description / Service" data-am="📦 የምርት መግለጫ / አገልግሎት">📦 Product Description / Service</label>
                 <textarea id="productDescription" rows="5" placeholder="Example: An AI-powered marketing analytics platform that provides real-time ROI predictions and channel optimization recommendations..."></textarea>
                 
                 <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                    <button id="generateBtn" class="btn">✨ Generate Strategic Plan</button>
-                    <button id="clearBtn" class="btn btn-outline">Clear All</button>
+                    <button id="generateBtn" class="btn" data-en="✨ Generate Strategic Plan" data-am="✨ ስትራቴጂክ እቅድ ፍጠር">✨ Generate Strategic Plan</button>
+                    <button id="clearBtn" class="btn btn-outline" data-en="Clear All" data-am="ሁሉንም አጽዳ">Clear All</button>
                 </div>
             </div>
             
-            <!-- Progress Bar -->
             <div class="progress-bar" id="progressBar">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
             
-            <!-- Status Bar -->
             <div class="status-bar" id="statusBar">
                 <span class="loader"></span>
-                <span id="statusMessage">Ready to generate</span>
+                <span id="statusMessage" data-en="Ready to generate" data-am="ለማመንጨት ዝግጁ">Ready to generate</span>
             </div>
             
-            <!-- KPI Dashboard -->
             <div class="kpi-grid" id="kpiGrid"></div>
             
-            <!-- Output Area -->
             <div class="output-area" id="outputArea">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
-                    <h3>📊 Generated Marketing Strategy</h3>
+                    <h3 data-en="📊 Generated Marketing Strategy" data-am="📊 የተፈጠረ የግብይት ስትራቴጂ">📊 Generated Marketing Strategy</h3>
                     <div style="display: flex; gap: 8px;">
-                        <button id="copyOutputBtn" class="btn btn-outline" style="padding: 8px 16px;">📋 Copy</button>
-                        <button id="saveHistoryBtn" class="btn btn-outline" style="padding: 8px 16px;">💾 Save</button>
+                        <button id="copyOutputBtn" class="btn btn-outline" style="padding: 8px 16px;" data-en="📋 Copy" data-am="📋 ቅዳ">📋 Copy</button>
+                        <button id="saveHistoryBtn" class="btn btn-outline" style="padding: 8px 16px;" data-en="💾 Save" data-am="💾 አስቀምጥ">💾 Save</button>
                     </div>
                 </div>
                 <div id="renderedOutput"></div>
             </div>
             
-            <!-- SWOT Container -->
             <div id="swotContainer"></div>
-            
-            <!-- Journey Container -->
             <div id="journeyContainer"></div>
         </div>
     </div>
 
     <!-- Footer -->
     <footer class="footer">
-        <p>© 2025 Strategic Marketing System · Powered by AI · 13-Role Framework · Conscientious by Design</p>
-        <p style="margin-top: 8px; font-size: 10px;">🔒 Secure · 📊 Data-driven · 🎯 Actionable</p>
+        <p data-en="© 2025 Strategic Marketing System · Powered by AI · 13-Role Framework · Conscientious by Design" data-am="© 2025 ስትራቴጂክ ማርኬቲንግ ሲስተም · በAI የተጎላበተ · ባለ 13-ሚና ማዕቀፍ · በህሊና የተነደፈ">© 2025 Strategic Marketing System · Powered by AI · 13-Role Framework · Conscientious by Design</p>
+        <p style="margin-top: 8px; font-size: 10px;" data-en="🔒 Secure · 📊 Data-driven · 🎯 Actionable" data-am="🔒 ደህንነቱ የተጠበቀ · 📊 በውሂብ የሚመራ · 🎯 ተግባራዊ ሊሆን የሚችል">🔒 Secure · 📊 Data-driven · 🎯 Actionable</p>
         <p style="margin-top: 8px;">
             <a href="https://vercel.com" target="_blank" style="text-decoration: none;">
                 <img src="https://img.shields.io/badge/deployed%20on-vercel-black?style=flat&logo=vercel" alt="Deployed on Vercel">
@@ -868,31 +940,79 @@
 
 <!-- FEEDBACK WIDGET -->
 <div class="feedback-widget">
-    <button class="feedback-btn" id="feedbackBtn">💬 Feedback</button>
+    <button class="feedback-btn" id="feedbackBtn" data-en="💬 Feedback" data-am="💬 አስተያየት">💬 Feedback</button>
     <div class="feedback-modal" id="feedbackModal">
-        <h4 style="margin-bottom: 12px;">Share your thoughts</h4>
+        <h4 style="margin-bottom: 12px;" data-en="Share your thoughts" data-am="ሀሳብዎን ያካፍሉ">Share your thoughts</h4>
         <textarea id="feedbackText" rows="3" placeholder="What could be better?..." style="width: 100%; padding: 10px; border-radius: 12px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); color: white; margin-bottom: 12px; resize: vertical;"></textarea>
         <div style="display: flex; gap: 8px;">
-            <button id="submitFeedbackBtn" class="btn" style="padding: 8px 16px;">Send</button>
-            <button id="closeFeedbackBtn" class="btn btn-outline" style="padding: 8px 16px;">Close</button>
+            <button id="submitFeedbackBtn" class="btn" style="padding: 8px 16px;" data-en="Send" data-am="ላክ">Send</button>
+            <button id="closeFeedbackBtn" class="btn btn-outline" style="padding: 8px 16px;" data-en="Close" data-am="ዝጋ">Close</button>
         </div>
     </div>
 </div>
 
 <script>
     // =====================================================
+    // LANGUAGE MANAGEMENT (ENGLISH/AMHARIC)
+    // =====================================================
+    let currentLanguage = localStorage.getItem('language') || 'en';
+    
+    function setLanguage(lang) {
+        currentLanguage = lang;
+        localStorage.setItem('language', lang);
+        document.getElementById('welcomeModal').classList.add('hidden');
+        document.getElementById('langSelectorText').innerText = lang === 'en' ? 'English' : 'አማርኛ';
+        translatePage();
+    }
+    
+    function translatePage() {
+        const elementsWithDataLang = document.querySelectorAll('[data-en][data-am]');
+        elementsWithDataLang.forEach(el => {
+            const text = currentLanguage === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-am');
+            if (text) {
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = text;
+                } else {
+                    el.innerText = text;
+                }
+            }
+        });
+        
+        // Update status message if visible
+        const statusMsg = document.getElementById('statusMessage');
+        if (statusMsg && statusMsg.getAttribute('data-en')) {
+            statusMsg.innerText = currentLanguage === 'en' ? statusMsg.getAttribute('data-en') : statusMsg.getAttribute('data-am');
+        }
+        
+        // Update KPI cards if they have been populated
+        updateKPICardLanguage();
+    }
+    
+    function updateKPICardLanguage() {
+        const kpiCards = document.querySelectorAll('.kpi-card');
+        kpiCards.forEach(card => {
+            const labelEl = card.querySelector('.kpi-label');
+            if (labelEl && labelEl.getAttribute('data-en')) {
+                labelEl.innerText = currentLanguage === 'en' ? labelEl.getAttribute('data-en') : labelEl.getAttribute('data-am');
+            }
+        });
+    }
+    
+    function toggleLanguage() {
+        const newLang = currentLanguage === 'en' ? 'am' : 'en';
+        setLanguage(newLang);
+    }
+    
+    // =====================================================
     // PAGE NAVIGATION
     // =====================================================
     function showPage(pageName) {
-        // Hide all pages
         document.querySelectorAll('.page').forEach(page => {
             page.classList.remove('active');
         });
         
-        // Show selected page
         document.getElementById(pageName + 'Page').classList.add('active');
         
-        // Update active nav button
         document.querySelectorAll('.nav-links button').forEach(btn => {
             btn.classList.remove('active');
         });
@@ -908,7 +1028,6 @@
         const activeBtn = document.getElementById(navMap[pageName]);
         if (activeBtn) activeBtn.classList.add('active');
         
-        // If switching to app page, re-initialize
         if (pageName === 'app') {
             initApp();
         }
@@ -951,35 +1070,32 @@
     submitFeedbackBtn?.addEventListener('click', () => {
         const text = feedbackText?.value.trim();
         if (text) {
-            // Save to localStorage
             const feedbacks = JSON.parse(localStorage.getItem('user_feedback') || '[]');
-            feedbacks.push({ text, timestamp: new Date().toISOString(), url: window.location.href });
+            feedbacks.push({ text, timestamp: new Date().toISOString(), url: window.location.href, language: currentLanguage });
             localStorage.setItem('user_feedback', JSON.stringify(feedbacks));
             
-            // Optional: send to your backend
             fetch('https://Bisratprompt-marketing-system-api.hf.space/feedback', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'user_feedback', message: text })
+                body: JSON.stringify({ type: 'user_feedback', message: text, language: currentLanguage })
             }).catch(() => {});
             
-            alert('Thank you for your feedback!');
+            alert(currentLanguage === 'en' ? 'Thank you for your feedback!' : 'አስተያየትዎ እናመሰግናለን!');
             feedbackModal?.classList.remove('show');
             feedbackText.value = '';
         } else {
-            alert('Please enter your feedback');
+            alert(currentLanguage === 'en' ? 'Please enter your feedback' : 'እባክዎ አስተያየትዎን ያስገቡ');
         }
     });
     
     // =====================================================
-    // APP FUNCTIONALITY (WORKING AI SYSTEM)
+    // APP FUNCTIONALITY
     // =====================================================
     const API_BASE = 'https://Bisratprompt-marketing-system-api.hf.space';
     
     let currentPlan = null;
     let isGenerating = false;
     
-    // DOM Elements
     const elements = {
         customerData: document.getElementById('customerData'),
         productDescription: document.getElementById('productDescription'),
@@ -997,7 +1113,6 @@
         journeyContainer: document.getElementById('journeyContainer')
     };
     
-    // Pre-fill from planner if available
     if (sessionStorage.getItem('prefillCustomer')) {
         elements.customerData.value = sessionStorage.getItem('prefillCustomer');
         sessionStorage.removeItem('prefillCustomer');
@@ -1008,7 +1123,7 @@
     }
     
     function setStatus(message, isLoading = true) {
-        elements.statusMessage.textContent = message;
+        elements.statusMessage.innerText = message;
         elements.statusBar.style.display = 'flex';
         if (!isLoading) {
             setTimeout(() => {
@@ -1021,27 +1136,18 @@
         elements.progressFill.style.width = percent + '%';
     }
     
-    function showLoader(show) {
-        elements.generateBtn.disabled = show;
-        if (show) {
-            setStatus('🧠 AI is analyzing your market...', true);
-            updateProgress(0);
-        }
-    }
-    
-    // KPI Cards
     function initKPICards() {
         const kpis = [
-            { icon: '👥', label: 'SEGMENTATION', value: 'Ready', source: 'Click generate to start' },
-            { icon: '📊', label: 'MARKET SIZE', value: 'Ready', source: 'TAM · SAM · SOM' },
-            { icon: '🎯', label: 'KEY METRICS', value: 'Ready', source: 'Primary KPIs' },
-            { icon: '🏆', label: 'COMPETITION', value: 'Ready', source: 'Competitor analysis' }
+            { icon: '👥', labelEn: 'SEGMENTATION', labelAm: 'ክፍፍል', value: 'Ready', source: 'Click generate to start' },
+            { icon: '📊', labelEn: 'MARKET SIZE', labelAm: 'የገበያ መጠን', value: 'Ready', source: 'TAM · SAM · SOM' },
+            { icon: '🎯', labelEn: 'KEY METRICS', labelAm: 'ቁልፍ መለኪያዎች', value: 'Ready', source: 'Primary KPIs' },
+            { icon: '🏆', labelEn: 'COMPETITION', labelAm: 'ውድድር', value: 'Ready', source: 'Competitor analysis' }
         ];
         
         elements.kpiGrid.innerHTML = kpis.map(kpi => `
             <div class="kpi-card">
                 <div style="font-size: 32px;">${kpi.icon}</div>
-                <div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);">${kpi.label}</div>
+                <div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);" data-en="${kpi.labelEn}" data-am="${kpi.labelAm}">${currentLanguage === 'en' ? kpi.labelEn : kpi.labelAm}</div>
                 <div class="kpi-value">${kpi.value}</div>
                 <div style="font-size: 10px; color: rgba(255,255,255,.4);">${kpi.source}</div>
             </div>
@@ -1064,7 +1170,6 @@
         }
     }
     
-    // Render SWOT
     function renderSWOT(plan) {
         const swotMatch = plan.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
         if (!swotMatch) return;
@@ -1081,51 +1186,55 @@
         const O = extract('Opportunities');
         const T = extract('Threats');
         
+        const strengthLabel = currentLanguage === 'en' ? '💪 STRENGTHS' : '💪 ጥንካሬዎች';
+        const weaknessLabel = currentLanguage === 'en' ? '⚠️ WEAKNESSES' : '⚠️ ድክመቶች';
+        const oppLabel = currentLanguage === 'en' ? '🚀 OPPORTUNITIES' : '🚀 እድሎች';
+        const threatLabel = currentLanguage === 'en' ? '⚡ THREATS' : '⚡ ስጋቶች';
+        
         elements.swotContainer.innerHTML = `
-            <h3 style="margin: 30px 0 15px;">📊 SWOT Analysis</h3>
+            <h3 style="margin: 30px 0 15px;" data-en="📊 SWOT Analysis" data-am="📊 SWOT ትንተና">📊 SWOT Analysis</h3>
             <div class="swot-grid">
-                <div class="swot-card swot-s"><strong style="color: #4ade80;">💪 STRENGTHS</strong><ul style="margin-top: 12px; list-style: none;">${S.map(s => `<li style="padding: 4px 0;">✓ ${escapeHtml(s)}</li>`).join('') || '<li>No data extracted</li>'}</ul></div>
-                <div class="swot-card swot-w"><strong style="color: #f87171;">⚠️ WEAKNESSES</strong><ul style="margin-top: 12px; list-style: none;">${W.map(w => `<li style="padding: 4px 0;">✓ ${escapeHtml(w)}</li>`).join('') || '<li>No data extracted</li>'}</ul></div>
-                <div class="swot-card swot-o"><strong style="color: #22d3ee;">🚀 OPPORTUNITIES</strong><ul style="margin-top: 12px; list-style: none;">${O.map(o => `<li style="padding: 4px 0;">✓ ${escapeHtml(o)}</li>`).join('') || '<li>No data extracted</li>'}</ul></div>
-                <div class="swot-card swot-t"><strong style="color: #fbbf24;">⚡ THREATS</strong><ul style="margin-top: 12px; list-style: none;">${T.map(t => `<li style="padding: 4px 0;">✓ ${escapeHtml(t)}</li>`).join('') || '<li>No data extracted</li>'}</ul></div>
+                <div class="swot-card swot-s"><strong style="color: #4ade80;">${strengthLabel}</strong><ul style="margin-top: 12px; list-style: none;">${S.map(s => `<li style="padding: 4px 0;">✓ ${escapeHtml(s)}</li>`).join('') || '<li>No data extracted</li>'}</ul></div>
+                <div class="swot-card swot-w"><strong style="color: #f87171;">${weaknessLabel}</strong><ul style="margin-top: 12px; list-style: none;">${W.map(w => `<li style="padding: 4px 0;">✓ ${escapeHtml(w)}</li>`).join('') || '<li>No data extracted</li>'}</ul></div>
+                <div class="swot-card swot-o"><strong style="color: #22d3ee;">${oppLabel}</strong><ul style="margin-top: 12px; list-style: none;">${O.map(o => `<li style="padding: 4px 0;">✓ ${escapeHtml(o)}</li>`).join('') || '<li>No data extracted</li>'}</ul></div>
+                <div class="swot-card swot-t"><strong style="color: #fbbf24;">${threatLabel}</strong><ul style="margin-top: 12px; list-style: none;">${T.map(t => `<li style="padding: 4px 0;">✓ ${escapeHtml(t)}</li>`).join('') || '<li>No data extracted</li>'}</ul></div>
             </div>
         `;
     }
     
-    // Render Journey
     function renderJourney() {
         const stages = ['AWARENESS', 'CONSIDERATION', 'PURCHASE', 'RETENTION', 'ADVOCACY'];
         const icons = ['👁️', '🤔', '💰', '❤️', '🗣️'];
+        const stageLabels = currentLanguage === 'en' ? stages : ['ግንዛቤ', 'ማሰብ', 'ግዢ', 'ማቆየት', 'መደገፍ'];
         
         elements.journeyContainer.innerHTML = `
-            <h3 style="margin: 30px 0 15px;">🗺️ Customer Journey Map</h3>
+            <h3 style="margin: 30px 0 15px;" data-en="🗺️ Customer Journey Map" data-am="🗺️ የደንበኛ ጉዞ ካርታ">🗺️ Customer Journey Map</h3>
             <div class="journey-grid">
                 ${stages.map((stage, i) => `
                     <div class="journey-card">
                         <div style="font-size: 28px;">${icons[i]}</div>
-                        <div style="font-weight: bold; margin: 8px 0;">${stage}</div>
-                        <div style="font-size: 11px; color: rgba(255,255,255,.5);">Customer journey stage</div>
+                        <div style="font-weight: bold; margin: 8px 0;">${stageLabels[i]}</div>
+                        <div style="font-size: 11px; color: rgba(255,255,255,.5);">${currentLanguage === 'en' ? 'Customer journey stage' : 'የደንበኛ ጉዞ ደረጃ'}</div>
                     </div>
                 `).join('')}
             </div>
         `;
     }
     
-    // Stream Roles
     async function streamRoles(plan) {
         const roles = [
-            { tag: 'SEGMENTATION OUTPUT', icon: '🎯', title: 'Market Segmentation' },
-            { tag: 'TAMSAMSOM OUTPUT', icon: '📊', title: 'Market Sizing (TAM/SAM/SOM)' },
-            { tag: 'PESTLE OUTPUT', icon: '⚡', title: 'PESTLE Analysis' },
-            { tag: 'PORTER OUTPUT', icon: '🏢', title: "Porter's Five Forces" },
-            { tag: 'COMPETITOR OUTPUT', icon: '🔍', title: 'Competitor Profiling' },
-            { tag: 'POSITIONING OUTPUT', icon: '📍', title: 'Brand Positioning' },
-            { tag: '4Ps OUTPUT', icon: '🎨', title: 'Marketing Mix (4Ps)' },
-            { tag: 'SWOT OUTPUT', icon: '💪', title: 'SWOT Analysis' },
-            { tag: 'CUSTOMER JOURNEY OUTPUT', icon: '🗺️', title: 'Customer Journey Map' },
-            { tag: 'KPI OUTPUT', icon: '📈', title: 'KPIs & Budget' },
-            { tag: 'OKRS OUTPUT', icon: '🎯', title: 'OKR Strategist' },
-            { tag: 'ROADMAP OUTPUT', icon: '📅', title: '30-Day Roadmap' }
+            { tag: 'SEGMENTATION OUTPUT', icon: '🎯', titleEn: 'Market Segmentation', titleAm: 'የገበያ ክፍፍል' },
+            { tag: 'TAMSAMSOM OUTPUT', icon: '📊', titleEn: 'Market Sizing (TAM/SAM/SOM)', titleAm: 'የገበያ መጠን (TAM/SAM/SOM)' },
+            { tag: 'PESTLE OUTPUT', icon: '⚡', titleEn: 'PESTLE Analysis', titleAm: 'PESTLE ትንተና' },
+            { tag: 'PORTER OUTPUT', icon: '🏢', titleEn: "Porter's Five Forces", titleAm: "የፖርተር አምስት ኃይሎች" },
+            { tag: 'COMPETITOR OUTPUT', icon: '🔍', titleEn: 'Competitor Profiling', titleAm: 'ተፎካካሪ መገለጫ' },
+            { tag: 'POSITIONING OUTPUT', icon: '📍', titleEn: 'Brand Positioning', titleAm: 'የምርት ስም አቀማመጥ' },
+            { tag: '4Ps OUTPUT', icon: '🎨', titleEn: 'Marketing Mix (4Ps)', titleAm: 'የግብይት ድብልቅ (4Ps)' },
+            { tag: 'SWOT OUTPUT', icon: '💪', titleEn: 'SWOT Analysis', titleAm: 'SWOT ትንተና' },
+            { tag: 'CUSTOMER JOURNEY OUTPUT', icon: '🗺️', titleEn: 'Customer Journey Map', titleAm: 'የደንበኛ ጉዞ ካርታ' },
+            { tag: 'KPI OUTPUT', icon: '📈', titleEn: 'KPIs & Budget', titleAm: 'KPIs እና በጀት' },
+            { tag: 'OKRS OUTPUT', icon: '🎯', titleEn: 'OKR Strategist', titleAm: 'OKR ስትራቴጂስት' },
+            { tag: 'ROADMAP OUTPUT', icon: '📅', titleEn: '30-Day Roadmap', titleAm: 'የ30-ቀን የመንገድ ካርታ' }
         ];
         
         const output = [];
@@ -1152,12 +1261,12 @@
             card.innerHTML = `
                 <div class="role-header">
                     <div class="role-icon">${role.icon}</div>
-                    <div class="role-title">${role.title}</div>
-                    <div style="margin-left: auto; font-size: 11px; color: rgba(255,255,255,.4);">Role ${i+1}/${output.length}</div>
+                    <div class="role-title">${currentLanguage === 'en' ? role.titleEn : role.titleAm}</div>
+                    <div style="margin-left: auto; font-size: 11px; color: rgba(255,255,255,.4);">${currentLanguage === 'en' ? `Role ${i+1}/${output.length}` : `ሚና ${i+1}/${output.length}`}</div>
                 </div>
                 <div class="stream-loading" style="display: flex; gap: 8px; align-items: center;">
                     <span class="loader"></span>
-                    <span style="color: rgba(255,255,255,.5);">Loading...</span>
+                    <span style="color: rgba(255,255,255,.5);">${currentLanguage === 'en' ? 'Loading...' : 'በመጫን ላይ...'}</span>
                 </div>
             `;
             elements.renderedOutput.appendChild(card);
@@ -1182,7 +1291,7 @@
         html = html.replace(/\n\|(.+)\|\n\|[-:\s|]+\|\n((?:\|.+\|\n?)+)/gm, (match, header, rows) => {
             const headers = header.split('|').filter(h => h.trim()).map(h => `<th style="padding: 8px; text-align: left; background: rgba(99,102,241,.1);">${escapeHtml(h.trim())}</th>`).join('');
             const bodyRows = rows.trim().split('\n').map(row => {
-                const cells = row.split('|').filter(c => c.trim()).map(c => `<td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,.1);">${escapeHtml(c.trim())}<table>`).join('');
+                const cells = row.split('|').filter(c => c.trim()).map(c => `<td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,.1);">${escapeHtml(c.trim())}</td>`).join('');
                 return `<tr>${cells}</tr>`;
             }).join('');
             return `<table style="width: 100%; border-collapse: collapse; margin: 16px 0;">${headers ? `<thead><tr>${headers}</tr></thead>` : ''}<tbody>${bodyRows}</tbody></table>`;
@@ -1212,19 +1321,19 @@
         const pd = elements.productDescription.value.trim();
         
         if (!cd || !pd) {
-            setStatus('Please fill in both fields', false);
+            setStatus(currentLanguage === 'en' ? 'Please fill in both fields' : 'እባክዎ ሁለቱንም መስኮች ይሙሉ', false);
             return;
         }
         
         isGenerating = true;
         elements.generateBtn.disabled = true;
-        elements.generateBtn.textContent = '⏳ Generating...';
+        elements.generateBtn.textContent = currentLanguage === 'en' ? '⏳ Generating...' : '⏳ በማመንጨት ላይ...';
         elements.outputArea.style.display = 'none';
         elements.swotContainer.innerHTML = '';
         elements.journeyContainer.innerHTML = '';
         
         initKPICards();
-        setStatus('🧠 AI is analyzing your market...', true);
+        setStatus(currentLanguage === 'en' ? '🧠 AI is analyzing your market...' : '🧠 AI የእርስዎን ገበያ በመተንተን ላይ...', true);
         updateProgress(5);
         
         try {
@@ -1237,18 +1346,18 @@
             renderSWOT(plan);
             renderJourney();
             
-            setStatus('✅ Strategy generated successfully!', false);
+            setStatus(currentLanguage === 'en' ? '✅ Strategy generated successfully!' : '✅ ስትራቴጂ በተሳካ ሁኔታ ተፈጥሯል!', false);
             updateProgress(100);
             setTimeout(() => updateProgress(0), 2000);
             
             elements.outputArea.scrollIntoView({ behavior: 'smooth' });
         } catch (error) {
-            setStatus(`❌ Error: ${error.message}`, false);
+            setStatus(`${currentLanguage === 'en' ? '❌ Error: ' : '❌ ስህተት: '}${error.message}`, false);
             console.error(error);
         } finally {
             isGenerating = false;
             elements.generateBtn.disabled = false;
-            elements.generateBtn.textContent = '✨ Generate Strategic Plan';
+            elements.generateBtn.textContent = currentLanguage === 'en' ? '✨ Generate Strategic Plan' : '✨ ስትራቴጂክ እቅድ ፍጠር';
         }
     }
     
@@ -1261,21 +1370,21 @@
         elements.renderedOutput.innerHTML = '';
         currentPlan = null;
         initKPICards();
-        setStatus('Cleared. Ready for new strategy.', false);
+        setStatus(currentLanguage === 'en' ? 'Cleared. Ready for new strategy.' : 'ጸዳ። ለአዲስ ስትራቴጂ ዝግጁ።', false);
     }
     
     function handleCopy() {
         if (!currentPlan) {
-            setStatus('No plan to copy', false);
+            setStatus(currentLanguage === 'en' ? 'No plan to copy' : 'የሚቀዳ እቅድ የለም', false);
             return;
         }
         navigator.clipboard.writeText(currentPlan);
-        setStatus('✅ Copied to clipboard!', false);
+        setStatus(currentLanguage === 'en' ? '✅ Copied to clipboard!' : '✅ ወደ ቅንጥብ ሰሌዳ ተቀድቷል!', false);
     }
     
     function saveToHistory() {
         if (!currentPlan) {
-            setStatus('No plan to save', false);
+            setStatus(currentLanguage === 'en' ? 'No plan to save' : 'የሚቀመጥ እቅድ የለም', false);
             return;
         }
         const history = {
@@ -1290,7 +1399,7 @@
         saved.unshift(history);
         if (saved.length > 10) saved.pop();
         localStorage.setItem('marketing_history', JSON.stringify(saved));
-        setStatus('✅ Saved to history!', false);
+        setStatus(currentLanguage === 'en' ? '✅ Saved to history!' : '✅ በታሪክ ውስጥ ተቀምጧል!', false);
     }
     
     function escapeHtml(str) {
@@ -1306,7 +1415,12 @@
         if (elements.saveHistoryBtn) elements.saveHistoryBtn.addEventListener('click', saveToHistory);
     }
     
-    // Initialize app when page loads
+    // Check if language was already selected
+    if (localStorage.getItem('language')) {
+        document.getElementById('welcomeModal').classList.add('hidden');
+        setLanguage(localStorage.getItem('language'));
+    }
+    
     initApp();
 </script>
 </body>
