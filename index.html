@@ -4,6 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strategic Marketing System | AI-Powered Marketing Plan Generator</title>
+    
+    <!-- ===================================================== -->
+    <!-- POST-LAUNCH MONITORING & ANALYTICS -->
+    <!-- ===================================================== -->
+    
+    <!-- Simple Analytics (privacy-friendly, no cookies) -->
+    <script defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+    <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt=""></noscript>
+    
+    <!-- Error Tracking (Sentry) - Get free DSN from sentry.io -->
+    <script src="https://browser.sentry-cdn.com/8.20.0/bundle.min.js" crossorigin="anonymous"></script>
+    <script>
+        // Sentry error tracking - replace with your own DSN from sentry.io
+        // Sign up at https://sentry.io/signup (free tier available)
+        if (typeof Sentry !== 'undefined') {
+            Sentry.init({
+                dsn: '', // Add your Sentry DSN here: 'https://your-dsn@sentry.io/project-id'
+                environment: 'production',
+                tracesSampleRate: 0.1,
+                beforeSend(event) {
+                    // Don't send non-critical errors
+                    if (event.exception?.values?.[0]?.value?.includes('ResizeObserver')) {
+                        return null;
+                    }
+                    return event;
+                }
+            });
+        }
+    </script>
+    
     <style>
         /* =====================================================
            GLOBAL STYLES
@@ -531,6 +561,79 @@
             text-align: center;
         }
         
+        /* =====================================================
+           FEEDBACK WIDGET & CHANGELOG
+        ===================================================== */
+        .feedback-widget {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+        }
+        .feedback-btn {
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 20px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,.3);
+            transition: transform 0.3s;
+        }
+        .feedback-btn:hover {
+            transform: scale(1.05);
+        }
+        .feedback-modal {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            right: 24px;
+            width: 320px;
+            background: #0c1120;
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 20px;
+            padding: 20px;
+            z-index: 1001;
+            box-shadow: 0 10px 40px rgba(0,0,0,.3);
+        }
+        .feedback-modal.show {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .feedback-modal textarea {
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 12px;
+            padding: 10px;
+            width: 100%;
+            color: white;
+            margin-bottom: 12px;
+        }
+        
+        .changelog-section {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(255,255,255,.03);
+            border-radius: 16px;
+        }
+        .changelog-section details {
+            cursor: pointer;
+        }
+        .changelog-section summary {
+            color: #a5b4fc;
+            margin-bottom: 8px;
+        }
+        .changelog-section p {
+            font-size: 12px;
+            color: rgba(255,255,255,.6);
+            margin: 4px 0;
+        }
+        
         @media (max-width: 768px) {
             .steps, .pricing-grid, .principles-grid, .swot-grid, .journey-grid {
                 grid-template-columns: 1fr;
@@ -626,6 +729,21 @@
             <div class="role-badge">🎯 OKRs</div>
             <div class="role-badge">📅 Roadmap</div>
             <div class="role-badge">🎨 Design</div>
+        </div>
+        
+        <!-- Changelog Section -->
+        <div class="changelog-section">
+            <details>
+                <summary>📋 What's New (v1.0.0)</summary>
+                <div>
+                    <p>✅ <strong>May 30, 2025</strong> - Initial launch</p>
+                    <p style="margin-left: 16px;">• 13-role AI marketing framework</p>
+                    <p style="margin-left: 16px;">• Real-time streaming output</p>
+                    <p style="margin-left: 16px;">• PDF export & save to history</p>
+                    <p style="margin-left: 16px;">• A/B testing framework</p>
+                    <p style="margin-left: 16px;">• Full accessibility support</p>
+                </div>
+            </details>
         </div>
     </div>
 
@@ -893,7 +1011,25 @@
     <footer class="footer">
         <p>© 2025 Strategic Marketing System · Powered by AI · 13-Role Framework · Conscientious by Design</p>
         <p style="margin-top: 8px; font-size: 10px;">🔒 Secure · 📊 Data-driven · 🎯 Actionable</p>
+        <p style="margin-top: 8px;">
+            <a href="https://vercel.com" target="_blank" style="text-decoration: none;">
+                <img src="https://img.shields.io/badge/deployed%20on-vercel-black?style=flat&logo=vercel" alt="Deployed on Vercel">
+            </a>
+        </p>
     </footer>
+</div>
+
+<!-- FEEDBACK WIDGET -->
+<div class="feedback-widget">
+    <button class="feedback-btn" id="feedbackBtn">💬 Feedback</button>
+    <div class="feedback-modal" id="feedbackModal">
+        <h4 style="margin-bottom: 12px;">Share your thoughts</h4>
+        <textarea id="feedbackText" rows="3" placeholder="What could be better?..." style="width: 100%; padding: 10px; border-radius: 12px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); color: white; margin-bottom: 12px; resize: vertical;"></textarea>
+        <div style="display: flex; gap: 8px;">
+            <button id="submitFeedbackBtn" class="btn" style="padding: 8px 16px;">Send</button>
+            <button id="closeFeedbackBtn" class="btn btn-outline" style="padding: 8px 16px;">Close</button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -967,6 +1103,46 @@
             }
         });
     }
+    
+    // =====================================================
+    // FEEDBACK WIDGET
+    // =====================================================
+    const feedbackBtn = document.getElementById('feedbackBtn');
+    const feedbackModal = document.getElementById('feedbackModal');
+    const closeFeedbackBtn = document.getElementById('closeFeedbackBtn');
+    const submitFeedbackBtn = document.getElementById('submitFeedbackBtn');
+    const feedbackText = document.getElementById('feedbackText');
+
+    feedbackBtn?.addEventListener('click', () => {
+        feedbackModal?.classList.toggle('show');
+    });
+
+    closeFeedbackBtn?.addEventListener('click', () => {
+        feedbackModal?.classList.remove('show');
+    });
+
+    submitFeedbackBtn?.addEventListener('click', () => {
+        const text = feedbackText?.value.trim();
+        if (text) {
+            // Save to localStorage
+            const feedbacks = JSON.parse(localStorage.getItem('user_feedback') || '[]');
+            feedbacks.push({ text, timestamp: new Date().toISOString(), url: window.location.href });
+            localStorage.setItem('user_feedback', JSON.stringify(feedbacks));
+            
+            // Optional: send to your backend
+            fetch('https://Bisratprompt-marketing-system-api.hf.space/feedback', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'user_feedback', message: text })
+            }).catch(() => {});
+            
+            alert('Thank you for your feedback!');
+            feedbackModal?.classList.remove('show');
+            feedbackText.value = '';
+        } else {
+            alert('Please enter your feedback');
+        }
+    });
     
     // =====================================================
     // APP FUNCTIONALITY (WORKING AI SYSTEM)
