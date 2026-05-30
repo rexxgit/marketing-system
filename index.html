@@ -1,1427 +1,1830 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strategic Marketing System | AI-Powered Marketing Plan Generator</title>
-    
-    <!-- Simple Analytics (privacy-friendly, no cookies) -->
-    <script defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
-    <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt=""></noscript>
-    
-    <style>
-        /* =====================================================
-           GLOBAL STYLES
-        ===================================================== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0a0e1a;
-            color: #ffffff;
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-        
-        /* =====================================================
-           NAVIGATION
-        ===================================================== */
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            border-bottom: 1px solid rgba(255,255,255,.1);
-            flex-wrap: wrap;
-            gap: 16px;
-            position: sticky;
-            top: 0;
-            background: rgba(10,14,26,.95);
-            backdrop-filter: blur(10px);
-            z-index: 100;
-        }
-        
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #6366f1, #ec4899);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 24px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        
-        .nav-links button {
-            background: none;
-            border: none;
-            color: rgba(255,255,255,.7);
-            cursor: pointer;
-            font-size: 14px;
-            padding: 8px 0;
-            transition: color 0.3s;
-        }
-        
-        .nav-links button:hover,
-        .nav-links button.active {
-            color: #6366f1;
-        }
-        
-        .cta-nav {
-            background: linear-gradient(135deg, #6366f1, #ec4899);
-            padding: 8px 20px;
-            border-radius: 50px;
-            color: white !important;
-        }
-        
-        .cta-nav:hover {
-            transform: translateY(-2px);
-        }
-        
-        /* Language Selector */
-        .lang-selector {
-            background: rgba(255,255,255,.05);
-            border: 1px solid rgba(255,255,255,.1);
-            border-radius: 50px;
-            padding: 6px 12px;
-            cursor: pointer;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.3s;
-        }
-        
-        .lang-selector:hover {
-            background: rgba(99,102,241,.2);
-            border-color: rgba(99,102,241,.5);
-        }
-        
-        /* Welcome Modal */
-        .welcome-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,.95);
-            backdrop-filter: blur(12px);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .welcome-modal.hidden {
-            display: none;
-        }
-        
-        .welcome-content {
-            background: linear-gradient(135deg, #0c1120, #1a1a2e);
-            border: 1px solid rgba(99,102,241,.3);
-            border-radius: 32px;
-            padding: 48px;
-            text-align: center;
-            max-width: 500px;
-            width: 90%;
-            animation: slideUp 0.4s ease;
-        }
-        
-        .welcome-content h2 {
-            font-size: 28px;
-            margin-bottom: 12px;
-            background: linear-gradient(135deg, #fff, #a5b4fc);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .welcome-content p {
-            color: rgba(255,255,255,.7);
-            margin-bottom: 32px;
-        }
-        
-        .lang-options {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-        }
-        
-        .lang-option {
-            background: rgba(255,255,255,.05);
-            border: 1px solid rgba(255,255,255,.1);
-            border-radius: 60px;
-            padding: 14px 32px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        
-        .lang-option:hover {
-            background: rgba(99,102,241,.2);
-            border-color: rgba(99,102,241,.5);
-            transform: scale(1.05);
-        }
-        
-        .lang-option.english {
-            background: linear-gradient(135deg, #6366f1, #ec4899);
-            border: none;
-        }
-        
-        /* =====================================================
-           PAGES
-        ===================================================== */
-        .page {
-            display: none;
-            padding: 40px 0;
-            animation: fadeIn 0.4s ease;
-        }
-        
-        .page.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* =====================================================
-           BUTTONS
-        ===================================================== */
-        .btn {
-            display: inline-block;
-            padding: 14px 32px;
-            background: linear-gradient(135deg, #6366f1, #ec4899);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-            transition: transform 0.3s;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        .btn-outline {
-            background: transparent;
-            border: 1px solid rgba(99,102,241,.5);
-        }
-        
-        /* =====================================================
-           HERO SECTION
-        ===================================================== */
-        .hero {
-            text-align: center;
-            padding: 60px 0;
-        }
-        
-        .hero h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #fff, #a5b4fc, #ec4899);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .hero p {
-            font-size: 18px;
-            color: rgba(255,255,255,.7);
-            max-width: 600px;
-            margin: 0 auto 30px;
-        }
-        
-        /* =====================================================
-           STEPS
-        ===================================================== */
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-            margin: 60px 0;
-        }
-        
-        .step-card {
-            background: rgba(255,255,255,.05);
-            border: 1px solid rgba(255,255,255,.1);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            transition: transform 0.3s;
-        }
-        
-        .step-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(99,102,241,.3);
-        }
-        
-        .step-number {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #6366f1, #ec4899);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-weight: bold;
-        }
-        
-        /* =====================================================
-           ROLES GRID
-        ===================================================== */
-        .roles-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-            margin: 40px 0;
-        }
-        
-        .role-badge {
-            background: rgba(99,102,241,.1);
-            border: 1px solid rgba(99,102,241,.3);
-            border-radius: 100px;
-            padding: 8px 16px;
-            text-align: center;
-            font-size: 12px;
-            color: #a5b4fc;
-            transition: all 0.3s;
-        }
-        
-        .role-badge:hover {
-            background: rgba(99,102,241,.2);
-            transform: translateY(-2px);
-        }
-        
-        /* =====================================================
-           PRICING
-        ===================================================== */
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-            margin: 60px 0;
-        }
-        
-        .pricing-card {
-            background: rgba(255,255,255,.05);
-            border: 1px solid rgba(255,255,255,.1);
-            border-radius: 24px;
-            padding: 32px;
-            text-align: center;
-            transition: transform 0.3s;
-        }
-        
-        .pricing-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .pricing-card.popular {
-            border-color: #6366f1;
-            background: rgba(99,102,241,.05);
-        }
-        
-        .price {
-            font-size: 48px;
-            font-weight: bold;
-            margin: 20px 0;
-        }
-        
-        .price span {
-            font-size: 16px;
-            font-weight: normal;
-        }
-        
-        .feature-list {
-            list-style: none;
-            margin: 30px 0;
-        }
-        
-        .feature-list li {
-            padding: 8px 0;
-            color: rgba(255,255,255,.7);
-        }
-        
-        /* =====================================================
-           ABOUT PAGE
-        ===================================================== */
-        .principles-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-            margin: 40px 0;
-        }
-        
-        .principle-card {
-            background: rgba(255,255,255,.03);
-            border: 1px solid rgba(255,255,255,.1);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            transition: transform 0.3s;
-        }
-        
-        .principle-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(99,102,241,.3);
-        }
-        
-        /* =====================================================
-           APP PAGE
-        ===================================================== */
-        .app-container {
-            background: transparent;
-            border-radius: 24px;
-            overflow: visible;
-        }
-        
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin: 30px 0;
-        }
-        
-        .kpi-card {
-            background: rgba(255,255,255,.05);
-            border: 1px solid rgba(255,255,255,.1);
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .kpi-value {
-            font-size: 28px;
-            font-weight: bold;
-            color: #a5b4fc;
-            margin: 10px 0;
-        }
-        
-        .input-area {
-            background: rgba(255,255,255,.05);
-            border: 1px solid rgba(255,255,255,.1);
-            border-radius: 24px;
-            padding: 32px;
-            margin-bottom: 30px;
-        }
-        
-        textarea {
-            width: 100%;
-            background: rgba(255,255,255,.03);
-            border: 1px solid rgba(255,255,255,.1);
-            border-radius: 16px;
-            padding: 16px;
-            color: white;
-            font-family: inherit;
-            resize: vertical;
-            margin: 15px 0;
-        }
-        
-        textarea:focus {
-            outline: none;
-            border-color: #6366f1;
-        }
-        
-        .output-area {
-            background: rgba(255,255,255,.05);
-            border: 1px solid rgba(255,255,255,.1);
-            border-radius: 24px;
-            padding: 32px;
-            margin-top: 30px;
-            display: none;
-        }
-        
-        .status-bar {
-            background: rgba(99,102,241,.1);
-            border: 1px solid rgba(99,102,241,.3);
-            border-radius: 12px;
-            padding: 12px 20px;
-            margin: 20px 0;
-            display: none;
-        }
-        
-        .progress-bar {
-            background: rgba(255,255,255,.1);
-            border-radius: 10px;
-            height: 4px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #6366f1, #ec4899);
-            transition: width 0.3s;
-        }
-        
-        .role-card {
-            background: rgba(255,255,255,.03);
-            border: 1px solid rgba(255,255,255,.08);
-            border-radius: 20px;
-            padding: 24px;
-            margin: 20px 0;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
-        }
-        
-        .role-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .role-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255,255,255,.1);
-        }
-        
-        .role-icon {
-            font-size: 28px;
-        }
-        
-        .role-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #a5b4fc;
-        }
-        
-        .swot-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin: 20px 0;
-        }
-        
-        .swot-card {
-            background: rgba(255,255,255,.03);
-            border-radius: 16px;
-            padding: 16px;
-        }
-        
-        .swot-s { border-left: 4px solid #4ade80; }
-        .swot-w { border-left: 4px solid #f87171; }
-        .swot-o { border-left: 4px solid #22d3ee; }
-        .swot-t { border-left: 4px solid #fbbf24; }
-        
-        .journey-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
-            margin: 20px 0;
-        }
-        
-        .journey-card {
-            background: rgba(255,255,255,.03);
-            border-radius: 16px;
-            padding: 16px;
-            text-align: center;
-        }
-        
-        .feedback-widget {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 1000;
-        }
-        
-        .feedback-btn {
-            background: linear-gradient(135deg, #6366f1, #ec4899);
-            border: none;
-            border-radius: 50px;
-            padding: 12px 20px;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,.3);
-            transition: transform 0.3s;
-        }
-        
-        .feedback-btn:hover {
-            transform: scale(1.05);
-        }
-        
-        .feedback-modal {
-            display: none;
-            position: fixed;
-            bottom: 100px;
-            right: 24px;
-            width: 320px;
-            background: #0c1120;
-            border: 1px solid rgba(255,255,255,.1);
-            border-radius: 20px;
-            padding: 20px;
-            z-index: 1001;
-            box-shadow: 0 10px 40px rgba(0,0,0,.3);
-        }
-        
-        .feedback-modal.show {
-            display: block;
-            animation: slideUp 0.3s ease;
-        }
-        
-        .feedback-modal textarea {
-            background: rgba(255,255,255,.05);
-            border: 1px solid rgba(255,255,255,.1);
-            border-radius: 12px;
-            padding: 10px;
-            width: 100%;
-            color: white;
-            margin-bottom: 12px;
-        }
-        
-        .changelog-section {
-            margin-top: 20px;
-            padding: 16px;
-            background: rgba(255,255,255,.03);
-            border-radius: 16px;
-        }
-        
-        .changelog-section details {
-            cursor: pointer;
-        }
-        
-        .changelog-section summary {
-            color: #a5b4fc;
-            margin-bottom: 8px;
-        }
-        
-        .changelog-section p {
-            font-size: 12px;
-            color: rgba(255,255,255,.6);
-            margin: 4px 0;
-        }
-        
-        @media (max-width: 768px) {
-            .steps, .pricing-grid, .principles-grid, .swot-grid, .journey-grid {
-                grid-template-columns: 1fr;
-            }
-            .hero h1 { font-size: 32px; }
-            .nav-links { gap: 12px; }
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 40px;
-            border-top: 1px solid rgba(255,255,255,.1);
-            margin-top: 60px;
-            color: rgba(255,255,255,.5);
-            font-size: 12px;
-        }
-        
-        .loader {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255,255,255,.3);
-            border-top-color: #6366f1;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-right: 8px;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strategic Marketing System | AI-Powered Marketing Plan Generator</title>
+
+  <!-- SEO & Social Meta -->
+  <meta name="description" content="Generate complete, professional marketing strategies in minutes. 13 disciplined AI roles—segmentation, SWOT, OKRs, roadmap and more—executed in precise sequence.">
+  <meta name="theme-color" content="#0a0e1a">
+  <meta property="og:title" content="Strategic Marketing System">
+  <meta property="og:description" content="AI-powered marketing plan generator. 13 roles. One clear output. Every time.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://strategicmarketing.vercel.app/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Strategic Marketing System">
+  <meta name="twitter:description" content="AI-powered marketing plan generator. 13 roles. One clear output.">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%236366f1'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-size='18' fill='white'>S</text></svg>">
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://scripts.simpleanalyticscdn.com">
+
+  <!-- Simple Analytics (privacy-friendly, no cookies) -->
+  <script defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt=""></noscript>
+
+  <style>
+    /* =====================================================
+       CSS CUSTOM PROPERTIES
+    ===================================================== */
+    :root {
+      --color-bg:           #0a0e1a;
+      --color-surface:      rgba(255,255,255,.05);
+      --color-surface-2:    rgba(255,255,255,.03);
+      --color-border:       rgba(255,255,255,.1);
+      --color-border-accent:rgba(99,102,241,.3);
+      --color-text:         #ffffff;
+      --color-text-muted:   rgba(255,255,255,.6);
+      --color-text-faint:   rgba(255,255,255,.4);
+      --color-text-label:   rgba(255,255,255,.5);
+      --color-accent:       #6366f1;
+      --color-accent-2:     #ec4899;
+      --color-accent-light: #a5b4fc;
+      --gradient-accent:    linear-gradient(135deg, #6366f1, #ec4899);
+      --gradient-text:      linear-gradient(135deg, #fff, #a5b4fc, #ec4899);
+      --radius-sm:  12px;
+      --radius-md:  16px;
+      --radius-lg:  20px;
+      --radius-xl:  24px;
+      --radius-pill:50px;
+      --transition: 0.3s ease;
+    }
+
+    /* =====================================================
+       RESET & BASE
+    ===================================================== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* =====================================================
+       LAYOUT
+    ===================================================== */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* =====================================================
+       NAVIGATION
+    ===================================================== */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--color-border);
+      flex-wrap: wrap;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      background: rgba(10,14,26,.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .nav-links button {
+      background: none;
+      border: none;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 8px 0;
+      transition: color var(--transition);
+      font-family: inherit;
+    }
+
+    .nav-links button:hover,
+    .nav-links button.active {
+      color: var(--color-accent);
+    }
+
+    .nav-links button:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    .cta-nav {
+      background: var(--gradient-accent) !important;
+      padding: 8px 20px !important;
+      border-radius: var(--radius-pill) !important;
+      color: white !important;
+    }
+
+    .cta-nav:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Language Selector */
+    .lang-selector {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-pill);
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all var(--transition);
+      color: var(--color-text);
+      font-family: inherit;
+    }
+
+    .lang-selector:hover {
+      background: rgba(99,102,241,.2);
+      border-color: rgba(99,102,241,.5);
+    }
+
+    .lang-selector:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    /* =====================================================
+       WELCOME MODAL
+    ===================================================== */
+    .welcome-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .welcome-modal.hidden {
+      display: none;
+    }
+
+    .welcome-content {
+      background: linear-gradient(135deg, #0c1120, #1a1a2e);
+      border: 1px solid var(--color-border-accent);
+      border-radius: 32px;
+      padding: 48px;
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+      animation: slideUp 0.4s ease;
+    }
+
+    .welcome-content h2 {
+      font-size: 28px;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #fff, #a5b4fc);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .welcome-content p {
+      color: var(--color-text-muted);
+      margin-bottom: 32px;
+    }
+
+    .lang-options {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .lang-option {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 60px;
+      padding: 14px 32px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+      transition: all var(--transition);
+      color: var(--color-text);
+      font-family: inherit;
+    }
+
+    .lang-option:hover {
+      background: rgba(99,102,241,.2);
+      border-color: rgba(99,102,241,.5);
+      transform: scale(1.05);
+    }
+
+    .lang-option:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    .lang-option.english {
+      background: var(--gradient-accent);
+      border: none;
+    }
+
+    /* =====================================================
+       PAGES
+    ===================================================== */
+    .page {
+      display: none;
+      padding: 40px 0;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* =====================================================
+       BUTTONS
+    ===================================================== */
+    .btn {
+      display: inline-block;
+      padding: 14px 32px;
+      background: var(--gradient-accent);
+      color: white;
+      border: none;
+      border-radius: var(--radius-pill);
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform var(--transition);
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    .btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--color-border-accent);
+      color: var(--color-text);
+    }
+
+    .btn-sm {
+      padding: 8px 16px;
+    }
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+    .hero {
+      text-align: center;
+      padding: 60px 0;
+    }
+
+    .hero--compact {
+      padding: 40px 0;
+    }
+
+    .hero h1 {
+      font-size: 48px;
+      margin-bottom: 20px;
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: var(--color-text-muted);
+      max-width: 600px;
+      margin: 0 auto 30px;
+    }
+
+    /* =====================================================
+       STEPS
+    ===================================================== */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin: 60px 0;
+    }
+
+    .step-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      text-align: center;
+      transition: transform var(--transition);
+    }
+
+    .step-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--color-border-accent);
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      background: var(--gradient-accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-weight: bold;
+    }
+
+    /* =====================================================
+       ROLES GRID
+    ===================================================== */
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin: 40px 0;
+    }
+
+    .role-badge {
+      background: rgba(99,102,241,.1);
+      border: 1px solid var(--color-border-accent);
+      border-radius: 100px;
+      padding: 8px 16px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--color-accent-light);
+      transition: all var(--transition);
+    }
+
+    .role-badge:hover {
+      background: rgba(99,102,241,.2);
+      transform: translateY(-2px);
+    }
+
+    /* =====================================================
+       PRICING
+    ===================================================== */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin: 60px 0;
+    }
+
+    .pricing-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      text-align: center;
+      transition: transform var(--transition);
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .pricing-card.popular {
+      border-color: var(--color-accent);
+      background: rgba(99,102,241,.05);
+    }
+
+    .price {
+      font-size: 48px;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    .price-period {
+      font-size: 16px;
+      font-weight: normal;
+    }
+
+    .feature-list {
+      list-style: none;
+      margin: 30px 0;
+    }
+
+    .feature-list li {
+      padding: 8px 0;
+      color: var(--color-text-muted);
+    }
+
+    .popular-badge {
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--color-accent-light);
+    }
+
+    /* =====================================================
+       ABOUT PAGE
+    ===================================================== */
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin: 40px 0;
+    }
+
+    .principle-card {
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      text-align: center;
+      transition: transform var(--transition);
+    }
+
+    .principle-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--color-border-accent);
+    }
+
+    .principle-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .framework-box {
+      background: var(--color-surface);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      margin: 40px 0;
+    }
+
+    .mission-box {
+      background: rgba(99,102,241,.08);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      text-align: center;
+    }
+
+    .mission-box p {
+      color: var(--color-text-muted);
+      max-width: 600px;
+      margin: 16px auto 0;
+    }
+
+    /* =====================================================
+       APP PAGE
+    ===================================================== */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 30px 0;
+    }
+
+    .kpi-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .kpi-icon {
+      font-size: 32px;
+    }
+
+    .kpi-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: var(--color-text-label);
+    }
+
+    .kpi-value {
+      font-size: 28px;
+      font-weight: bold;
+      color: var(--color-accent-light);
+      margin: 10px 0;
+    }
+
+    .kpi-source {
+      font-size: 10px;
+      color: var(--color-text-faint);
+    }
+
+    .input-area {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      margin-bottom: 30px;
+    }
+
+    .input-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--color-text-label);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    textarea {
+      width: 100%;
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      color: white;
+      font-family: inherit;
+      font-size: 16px; /* prevents iOS auto-zoom */
+      resize: vertical;
+      margin: 15px 0;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .output-area {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      margin-top: 30px;
+      display: none;
+    }
+
+    .output-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .output-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .status-bar {
+      background: rgba(99,102,241,.1);
+      border: 1px solid var(--color-border-accent);
+      border-radius: var(--radius-sm);
+      padding: 12px 20px;
+      margin: 20px 0;
+      display: none;
+      align-items: center;
+    }
+
+    .progress-bar {
+      background: rgba(255,255,255,.1);
+      border-radius: 10px;
+      height: 4px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-accent), var(--color-accent-2));
+      transition: width var(--transition);
+    }
+
+    /* Role cards */
+    .role-card {
+      background: var(--color-surface-2);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin: 20px 0;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease;
+    }
+
+    .role-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .role-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .role-icon {
+      font-size: 28px;
+    }
+
+    .role-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--color-accent-light);
+    }
+
+    .role-counter {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--color-text-faint);
+    }
+
+    /* SWOT */
+    .swot-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .swot-card {
+      background: var(--color-surface-2);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+
+    .swot-s { border-left: 4px solid #4ade80; }
+    .swot-w { border-left: 4px solid #f87171; }
+    .swot-o { border-left: 4px solid #22d3ee; }
+    .swot-t { border-left: 4px solid #fbbf24; }
+
+    .swot-list {
+      margin-top: 12px;
+      list-style: none;
+    }
+
+    .swot-list li {
+      padding: 4px 0;
+    }
+
+    /* Customer journey */
+    .journey-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .journey-card {
+      background: var(--color-surface-2);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      text-align: center;
+    }
+
+    .journey-icon {
+      font-size: 28px;
+    }
+
+    .journey-label {
+      font-weight: bold;
+      margin: 8px 0;
+    }
+
+    .journey-sub {
+      font-size: 11px;
+      color: var(--color-text-faint);
+    }
+
+    /* =====================================================
+       PLANNER PAGE
+    ===================================================== */
+    .planner-tip {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      text-align: center;
+    }
+
+    .planner-tip .step-number {
+      background: var(--gradient-accent);
+    }
+
+    .planner-tip p {
+      color: var(--color-text-muted);
+    }
+
+    /* =====================================================
+       FEEDBACK WIDGET
+    ===================================================== */
+    .feedback-widget {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+    }
+
+    .feedback-btn {
+      background: var(--gradient-accent);
+      border: none;
+      border-radius: var(--radius-pill);
+      padding: 12px 20px;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      font-family: inherit;
+      box-shadow: 0 4px 15px rgba(0,0,0,.3);
+      transition: transform var(--transition);
+    }
+
+    .feedback-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .feedback-btn:focus-visible {
+      outline: 2px solid white;
+      outline-offset: 2px;
+    }
+
+    .feedback-modal {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 24px;
+      width: 320px;
+      background: #0c1120;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      z-index: 1001;
+      box-shadow: 0 10px 40px rgba(0,0,0,.3);
+    }
+
+    .feedback-modal.show {
+      display: block;
+      animation: slideUp 0.3s ease;
+    }
+
+    .feedback-modal h4 {
+      margin-bottom: 12px;
+    }
+
+    .feedback-modal-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* =====================================================
+       CHANGELOG
+    ===================================================== */
+    .changelog-section {
+      margin-top: 20px;
+      padding: 16px;
+      background: var(--color-surface-2);
+      border-radius: var(--radius-md);
+    }
+
+    .changelog-section details {
+      cursor: pointer;
+    }
+
+    .changelog-section summary {
+      color: var(--color-accent-light);
+      margin-bottom: 8px;
+    }
+
+    .changelog-entry {
+      font-size: 12px;
+      color: rgba(255,255,255,.6);
+      margin: 4px 0;
+    }
+
+    .changelog-entry-indent {
+      font-size: 12px;
+      color: rgba(255,255,255,.6);
+      margin: 4px 0 4px 16px;
+    }
+
+    /* =====================================================
+       LOADER
+    ===================================================== */
+    .loader {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: var(--color-accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+    .footer {
+      text-align: center;
+      padding: 40px;
+      border-top: 1px solid var(--color-border);
+      margin-top: 60px;
+      color: var(--color-text-faint);
+      font-size: 12px;
+    }
+
+    .footer-line {
+      margin-top: 8px;
+      font-size: 10px;
+    }
+
+    .footer-vercel {
+      margin-top: 8px;
+    }
+
+    /* =====================================================
+       UTILITY / SECTION HEADINGS
+    ===================================================== */
+    .section-heading {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-heading--sm {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .about-accent {
+      color: var(--color-accent);
+    }
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+    @media (max-width: 900px) {
+      .pricing-grid {
+        grid-template-columns: 1fr;
+        max-width: 420px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .steps,
+      .principles-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .swot-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .journey-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .hero h1 {
+        font-size: 32px;
+      }
+
+      .nav-links {
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .journey-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .lang-options {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
 </head>
 <body>
 
 <!-- Welcome Language Modal -->
-<div id="welcomeModal" class="welcome-modal">
-    <div class="welcome-content">
-        <h2>🌍 እንኳን ደህና መጡ / Welcome</h2>
-        <p>Please select your preferred language / ቋንቋዎን ይምረጡ</p>
-        <div class="lang-options">
-            <div class="lang-option english" onclick="setLanguage('en')">🇬🇧 English</div>
-            <div class="lang-option" onclick="setLanguage('am')">🇪🇹 አማርኛ</div>
-        </div>
+<div id="welcomeModal"
+     class="welcome-modal"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="welcomeTitle"
+     aria-describedby="welcomeDesc">
+  <div class="welcome-content">
+    <h2 id="welcomeTitle">🌍 እንኳን ደህና መጡ / Welcome</h2>
+    <p id="welcomeDesc">Please select your preferred language / ቋንቋዎን ይምረጡ</p>
+    <div class="lang-options">
+      <button class="lang-option english" onclick="setLanguage('en')" lang="en">🇬🇧 English</button>
+      <button class="lang-option" onclick="setLanguage('am')" lang="am">🇪🇹 አማርኛ</button>
     </div>
+  </div>
 </div>
 
 <div class="container">
-    <!-- Navigation -->
-    <nav class="nav">
-        <div class="logo" data-en="StrategicMarketing" data-am="ስትራቴጂክማርኬቲንግ">StrategicMarketing</div>
-        <div style="display: flex; gap: 16px; align-items: center;">
-            <div class="lang-selector" id="langSelector" onclick="toggleLanguage()">
-                <span>🌐</span>
-                <span id="langSelectorText">English</span>
-            </div>
-            <div class="nav-links">
-                <button onclick="showPage('home')" class="active" id="navHome" data-en="🏠 Home" data-am="🏠 መነሻ">🏠 Home</button>
-                <button onclick="showPage('planner')" id="navPlanner" data-en="📋 Planner" data-am="📋 እቅድ አውጪ">📋 Planner</button>
-                <button onclick="showPage('about')" id="navAbout" data-en="💡 About" data-am="💡 ስለእኛ">💡 About</button>
-                <button onclick="showPage('pricing')" id="navPricing" data-en="💰 Pricing" data-am="💰 ዋጋ">💰 Pricing</button>
-                <button onclick="showPage('app')" id="navApp" class="cta-nav" data-en="✨ Launch App →" data-am="✨ መተግበሪያ ጀምር →">✨ Launch App →</button>
-            </div>
-        </div>
-    </nav>
+  <!-- Navigation -->
+  <nav class="nav" aria-label="Main navigation">
+    <div class="logo" aria-label="Strategic Marketing home">
+      <span data-en="StrategicMarketing" data-am="ስትራቴጂክማርኬቲንግ">StrategicMarketing</span>
+    </div>
+    <div class="nav-right">
+      <button class="lang-selector"
+              id="langSelector"
+              onclick="toggleLanguage()"
+              aria-label="Switch language">
+        <span aria-hidden="true">🌐</span>
+        <span id="langSelectorText">English</span>
+      </button>
+      <div class="nav-links" role="list">
+        <button role="listitem"
+                onclick="showPage('home')"
+                class="active"
+                id="navHome"
+                aria-label="Go to Home page"
+                data-en="🏠 Home"
+                data-am="🏠 መነሻ">🏠 Home</button>
+        <button role="listitem"
+                onclick="showPage('planner')"
+                id="navPlanner"
+                aria-label="Go to Planner page"
+                data-en="📋 Planner"
+                data-am="📋 እቅድ አውጪ">📋 Planner</button>
+        <button role="listitem"
+                onclick="showPage('about')"
+                id="navAbout"
+                aria-label="Go to About page"
+                data-en="💡 About"
+                data-am="💡 ስለእኛ">💡 About</button>
+        <button role="listitem"
+                onclick="showPage('pricing')"
+                id="navPricing"
+                aria-label="Go to Pricing page"
+                data-en="💰 Pricing"
+                data-am="💰 ዋጋ">💰 Pricing</button>
+        <button role="listitem"
+                onclick="showPage('app')"
+                id="navApp"
+                class="cta-nav"
+                aria-label="Launch the app"
+                data-en="✨ Launch App →"
+                data-am="✨ መተግበሪያ ጀምር →">✨ Launch App →</button>
+      </div>
+    </div>
+  </nav>
 
-    <!-- ============================================ -->
-    <!-- PAGE 1: HOMEPAGE -->
-    <!-- ============================================ -->
-    <div id="homePage" class="page active">
-        <div class="hero">
-            <h1 data-en="Stop second-guessing. Start executing." data-am="መጠራጠር ቆም በል። መፈጸም ጀምር።">Stop second-guessing.<br>Start executing.</h1>
-            <p data-en="A conscientious marketing system that delivers 13 disciplined roles—executed in precise sequence—so you get clarity, not confusion." data-am="13 ተግሣጻዊ ሚናዎችን በቅደም ተከተል የሚያቀርብ ታማኝ የግብይት ሥርዓት — ግልጽነትን እንጂ ግራ መጋባትን አያመጣም።">A conscientious marketing system that delivers 13 disciplined roles—executed in precise sequence—so you get clarity, not confusion.</p>
-            <button class="btn" onclick="showPage('app')" data-en="✨ Start Your Free Plan →" data-am="✨ ነጻ እቅድ ጀምር →">✨ Start Your Free Plan →</button>
-        </div>
+  <!-- ============================================ -->
+  <!-- PAGE 1: HOMEPAGE                            -->
+  <!-- ============================================ -->
+  <main>
+    <div id="homePage" class="page active" role="region" aria-label="Home">
+      <div class="hero">
+        <h1 data-en="Stop second-guessing. Start executing."
+            data-am="መጠራጠር ቆም በል። መፈጸም ጀምር።">Stop second-guessing.<br>Start executing.</h1>
+        <p data-en="A conscientious marketing system that delivers 13 disciplined roles—executed in precise sequence—so you get clarity, not confusion."
+           data-am="13 ተግሣጻዊ ሚናዎችን በቅደም ተከተል የሚያቀርብ ታማኝ የግብይት ሥርዓት — ግልጽነትን እንጂ ግራ መጋባትን አያመጣም።">A conscientious marketing system that delivers 13 disciplined roles—executed in precise sequence—so you get clarity, not confusion.</p>
+        <button class="btn"
+                onclick="showPage('app')"
+                data-en="✨ Start Your Free Plan →"
+                data-am="✨ ነጻ እቅድ ጀምር →">✨ Start Your Free Plan →</button>
+      </div>
 
-        <h2 style="text-align: center; margin-bottom: 40px;" data-en="How it works" data-am="እንዴት እንደሚሰራ">How it works</h2>
-        <div class="steps">
-            <div class="step-card">
-                <div class="step-number">1</div>
-                <h3 data-en="Describe your audience" data-am="ታዳሚዎችዎን ይግለጹ">Describe your audience</h3>
-                <p style="color: rgba(255,255,255,.6);" data-en="Tell us who you want to sell to" data-am="ለማን መሸጥ እንደሚፈልጉ ንገሩን">Tell us who you want to sell to</p>
-            </div>
-            <div class="step-card">
-                <div class="step-number">2</div>
-                <h3 data-en="Describe your product" data-am="ምርትዎን ይግለጹ">Describe your product</h3>
-                <p style="color: rgba(255,255,255,.6);" data-en="Tell us what you're selling" data-am="ምን እንደሚሸጡ ንገሩን">Tell us what you're selling</p>
-            </div>
-            <div class="step-card">
-                <div class="step-number">3</div>
-                <h3 data-en="Get your full plan" data-am="ሙሉ እቅድዎን ያግኙ">Get your full plan</h3>
-                <p style="color: rgba(255,255,255,.6);" data-en="Receive 13 roles of strategic analysis" data-am="13 የስትራቴጂክ ትንተና ሚናዎችን ይቀበሉ">Receive 13 roles of strategic analysis</p>
-            </div>
-        </div>
+      <h2 class="section-heading"
+          data-en="How it works"
+          data-am="እንዴት እንደሚሰራ">How it works</h2>
 
-        <h2 style="text-align: center; margin-bottom: 30px;" data-en="13 Disciplined Roles" data-am="13 ተግሣጻዊ ሚናዎች">13 Disciplined Roles</h2>
-        <div class="roles-grid">
-            <div class="role-badge" data-en="🎯 Segmentation" data-am="🎯 ክፍፍል">🎯 Segmentation</div>
-            <div class="role-badge" data-en="📊 Market Sizing" data-am="📊 የገበያ መጠን">📊 Market Sizing</div>
-            <div class="role-badge" data-en="⚡ PESTLE" data-am="⚡ PESTLE">⚡ PESTLE</div>
-            <div class="role-badge" data-en="🎯 Porter's Forces" data-am="🎯 የፖርተር ኃይሎች">🎯 Porter's Forces</div>
-            <div class="role-badge" data-en="🔍 Competitors" data-am="🔍 ተፎካካሪዎች">🔍 Competitors</div>
-            <div class="role-badge" data-en="📍 Positioning" data-am="📍 አቀማመጥ">📍 Positioning</div>
-            <div class="role-badge" data-en="🎨 4Ps" data-am="🎨 4Ps">🎨 4Ps</div>
-            <div class="role-badge" data-en="💪 SWOT" data-am="💪 SWOT">💪 SWOT</div>
-            <div class="role-badge" data-en="🗺️ Journey Map" data-am="🗺️ የጉዞ ካርታ">🗺️ Journey Map</div>
-            <div class="role-badge" data-en="📈 KPIs" data-am="📈 KPIs">📈 KPIs</div>
-            <div class="role-badge" data-en="🎯 OKRs" data-am="🎯 OKRs">🎯 OKRs</div>
-            <div class="role-badge" data-en="📅 Roadmap" data-am="📅 የመንገድ ካርታ">📅 Roadmap</div>
-            <div class="role-badge" data-en="🎨 Design" data-am="🎨 ዲዛይን">🎨 Design</div>
+      <div class="steps">
+        <div class="step-card">
+          <div class="step-number" aria-hidden="true">1</div>
+          <h3 data-en="Describe your audience" data-am="ታዳሚዎችዎን ይግለጹ">Describe your audience</h3>
+          <p style="color:var(--color-text-muted)"
+             data-en="Tell us who you want to sell to"
+             data-am="ለማን መሸጥ እንደሚፈልጉ ንገሩን">Tell us who you want to sell to</p>
         </div>
-        
-        <div class="changelog-section">
-            <details>
-                <summary data-en="📋 What's New (v1.0.0)" data-am="📋 አዲስ ነገር (v1.0.0)">📋 What's New (v1.0.0)</summary>
-                <div>
-                    <p>✅ <strong data-en="May 30, 2025 - Initial launch" data-am="ሜይ 30, 2025 - የመጀመሪያ ልቀት">May 30, 2025 - Initial launch</strong></p>
-                    <p style="margin-left: 16px;" data-en="• 13-role AI marketing framework" data-am="• 13-ሚና AI የግብይት ማዕቀፍ">• 13-role AI marketing framework</p>
-                    <p style="margin-left: 16px;" data-en="• Real-time streaming output" data-am="• የቀጥታ ስርጭት ውጤት">• Real-time streaming output</p>
-                    <p style="margin-left: 16px;" data-en="• PDF export & save to history" data-am="• PDF ማውጣት እና በታሪክ ማስቀመጥ">• PDF export & save to history</p>
-                    <p style="margin-left: 16px;" data-en="• A/B testing framework" data-am="• A/B የሙከራ ማዕቀፍ">• A/B testing framework</p>
-                    <p style="margin-left: 16px;" data-en="• Full accessibility support" data-am="• ሙሉ ተደራሽነት ድጋፍ">• Full accessibility support</p>
-                </div>
-            </details>
+        <div class="step-card">
+          <div class="step-number" aria-hidden="true">2</div>
+          <h3 data-en="Describe your product" data-am="ምርትዎን ይግለጹ">Describe your product</h3>
+          <p style="color:var(--color-text-muted)"
+             data-en="Tell us what you're selling"
+             data-am="ምን እንደሚሸጡ ንገሩን">Tell us what you're selling</p>
         </div>
+        <div class="step-card">
+          <div class="step-number" aria-hidden="true">3</div>
+          <h3 data-en="Get your full plan" data-am="ሙሉ እቅድዎን ያግኙ">Get your full plan</h3>
+          <p style="color:var(--color-text-muted)"
+             data-en="Receive 13 roles of strategic analysis"
+             data-am="13 የስትራቴጂክ ትንተና ሚናዎችን ይቀበሉ">Receive 13 roles of strategic analysis</p>
+        </div>
+      </div>
+
+      <h2 class="section-heading--sm"
+          data-en="13 Disciplined Roles"
+          data-am="13 ተግሣጻዊ ሚናዎች">13 Disciplined Roles</h2>
+
+      <div class="roles-grid" role="list" aria-label="List of marketing roles">
+        <div class="role-badge" role="listitem" data-en="🎯 Segmentation"      data-am="🎯 ክፍፍል">🎯 Segmentation</div>
+        <div class="role-badge" role="listitem" data-en="📊 Market Sizing"     data-am="📊 የገበያ መጠን">📊 Market Sizing</div>
+        <div class="role-badge" role="listitem" data-en="⚡ PESTLE"            data-am="⚡ PESTLE">⚡ PESTLE</div>
+        <div class="role-badge" role="listitem" data-en="🎯 Porter's Forces"   data-am="🎯 የፖርተር ኃይሎች">🎯 Porter's Forces</div>
+        <div class="role-badge" role="listitem" data-en="🔍 Competitors"       data-am="🔍 ተፎካካሪዎች">🔍 Competitors</div>
+        <div class="role-badge" role="listitem" data-en="📍 Positioning"       data-am="📍 አቀማመጥ">📍 Positioning</div>
+        <div class="role-badge" role="listitem" data-en="🎨 4Ps"               data-am="🎨 4Ps">🎨 4Ps</div>
+        <div class="role-badge" role="listitem" data-en="💪 SWOT"              data-am="💪 SWOT">💪 SWOT</div>
+        <div class="role-badge" role="listitem" data-en="🗺️ Journey Map"       data-am="🗺️ የጉዞ ካርታ">🗺️ Journey Map</div>
+        <div class="role-badge" role="listitem" data-en="📈 KPIs"              data-am="📈 KPIs">📈 KPIs</div>
+        <div class="role-badge" role="listitem" data-en="🎯 OKRs"              data-am="🎯 OKRs">🎯 OKRs</div>
+        <div class="role-badge" role="listitem" data-en="📅 Roadmap"           data-am="📅 የመንገድ ካርታ">📅 Roadmap</div>
+        <div class="role-badge" role="listitem" data-en="🎨 Design"            data-am="🎨 ዲዛይን">🎨 Design</div>
+      </div>
+
+      <div class="changelog-section">
+        <details>
+          <summary data-en="📋 What's New (v1.0.0)" data-am="📋 አዲስ ነገር (v1.0.0)">📋 What's New (v1.0.0)</summary>
+          <div>
+            <p class="changelog-entry"><strong data-en="May 30, 2025 - Initial launch" data-am="ሜይ 30, 2025 - የመጀመሪያ ልቀት">May 30, 2025 - Initial launch</strong></p>
+            <p class="changelog-entry-indent" data-en="• 13-role AI marketing framework"  data-am="• 13-ሚና AI የግብይት ማዕቀፍ">• 13-role AI marketing framework</p>
+            <p class="changelog-entry-indent" data-en="• Real-time streaming output"       data-am="• የቀጥታ ስርጭት ውጤት">• Real-time streaming output</p>
+            <p class="changelog-entry-indent" data-en="• PDF export & save to history"     data-am="• PDF ማውጣት እና በታሪክ ማስቀመጥ">• PDF export &amp; save to history</p>
+            <p class="changelog-entry-indent" data-en="• A/B testing framework"            data-am="• A/B የሙከራ ማዕቀፍ">• A/B testing framework</p>
+            <p class="changelog-entry-indent" data-en="• Full accessibility support"       data-am="• ሙሉ ተደራሽነት ድጋፍ">• Full accessibility support</p>
+          </div>
+        </details>
+      </div>
     </div>
 
     <!-- ============================================ -->
-    <!-- PAGE 2: PLANNER PAGE -->
+    <!-- PAGE 2: PLANNER PAGE                        -->
     <!-- ============================================ -->
-    <div id="plannerPage" class="page">
-        <div class="hero" style="padding: 40px 0;">
-            <h1 data-en="Strategy Planner" data-am="የስትራቴጂ እቅድ አውጪ">Strategy Planner</h1>
-            <p data-en="Fill in your business details and let our AI do the rest" data-am="የንግድ ዝርዝሮችዎን ይሙሉ እና የእኛ AI ቀሪውን እንዲሰራ ይፍቀዱ">Fill in your business details and let our AI do the rest</p>
+    <div id="plannerPage" class="page" role="region" aria-label="Strategy Planner">
+      <div class="hero hero--compact">
+        <h1 data-en="Strategy Planner" data-am="የስትራቴጂ እቅድ አውጪ">Strategy Planner</h1>
+        <p data-en="Fill in your business details and let our AI do the rest"
+           data-am="የንግድ ዝርዝሮችዎን ይሙሉ እና የእኛ AI ቀሪውን እንዲሰራ ይፍቀዱ">Fill in your business details and let our AI do the rest</p>
+      </div>
+
+      <div class="input-area">
+        <label class="input-label"
+               for="plannerCustomer"
+               data-en="👥 Customer Data / Target Audience"
+               data-am="👥 የደንበኛ መረጃ / ዒላማ ታዳሚ">👥 Customer Data / Target Audience</label>
+        <textarea id="plannerCustomer"
+                  rows="3"
+                  aria-label="Customer data or target audience description"
+                  placeholder="Example: Enterprise CTOs at mid-sized tech companies ($50M-$500M revenue) looking for AI analytics solutions..."></textarea>
+
+        <label class="input-label"
+               for="plannerProduct"
+               data-en="📦 Product Description / Service"
+               data-am="📦 የምርት መግለጫ / አገልግሎት">📦 Product Description / Service</label>
+        <textarea id="plannerProduct"
+                  rows="4"
+                  aria-label="Product or service description"
+                  placeholder="Example: An AI-powered marketing analytics platform that provides real-time ROI predictions and channel optimization recommendations..."></textarea>
+
+        <button class="btn"
+                onclick="goToAppWithData()"
+                data-en="✨ Generate Strategic Plan →"
+                data-am="✨ ስትራቴጂክ እቅድ ፍጠር →">✨ Generate Strategic Plan →</button>
+      </div>
+
+      <div class="steps" style="margin-top:40px">
+        <div class="planner-tip">
+          <div class="step-number" aria-hidden="true">✓</div>
+          <h3 data-en="What happens next?" data-am="ቀጥሎ ምን ይሆናል?">What happens next?</h3>
+          <p data-en="Your data will be sent to our AI engine. The 13-role framework will execute in sequence, and you'll receive a complete strategic marketing plan."
+             data-am="የእርስዎ መረጃ ወደ AI ሞተራችን ይላካል። ባለ 13-ሚና ማዕቀፉ በቅደም ተከተል ይሰራል፣ እና ሙሉ የስትራቴጂክ ግብይት እቅድ ይቀበላሉ።">Your data will be sent to our AI engine. The 13-role framework will execute in sequence, and you'll receive a complete strategic marketing plan.</p>
         </div>
-        
-        <div class="input-area">
-            <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);" data-en="👥 Customer Data / Target Audience" data-am="👥 የደንበኛ መረጃ / ዒላማ ታዳሚ">👥 Customer Data / Target Audience</label>
-            <textarea id="plannerCustomer" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies ($50M-$500M revenue) looking for AI analytics solutions..."></textarea>
-            
-            <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);" data-en="📦 Product Description / Service" data-am="📦 የምርት መግለጫ / አገልግሎት">📦 Product Description / Service</label>
-            <textarea id="plannerProduct" rows="4" placeholder="Example: An AI-powered marketing analytics platform that provides real-time ROI predictions and channel optimization recommendations..."></textarea>
-            
-            <button class="btn" onclick="goToAppWithData()" data-en="✨ Generate Strategic Plan →" data-am="✨ ስትራቴጂክ እቅድ ፍጠር →">✨ Generate Strategic Plan →</button>
-        </div>
-        
-        <div class="steps" style="margin-top: 40px;">
-            <div class="step-card">
-                <div class="step-number">✓</div>
-                <h3 data-en="What happens next?" data-am="ቀጥሎ ምን ይሆናል?">What happens next?</h3>
-                <p style="color: rgba(255,255,255,.6);" data-en="Your data will be sent to our AI engine. The 13-role framework will execute in sequence, and you'll receive a complete strategic marketing plan." data-am="የእርስዎ መረጃ ወደ AI ሞተራችን ይላካል። ባለ 13-ሚና ማዕቀፉ በቅደም ተከተል ይሰራል፣ እና ሙሉ የስትራቴጂክ ግብይት እቅድ ይቀበላሉ።">Your data will be sent to our AI engine. The 13-role framework will execute in sequence, and you'll receive a complete strategic marketing plan.</p>
-            </div>
-        </div>
+      </div>
     </div>
 
     <!-- ============================================ -->
-    <!-- PAGE 3: ABOUT PAGE -->
+    <!-- PAGE 3: ABOUT PAGE                          -->
     <!-- ============================================ -->
-    <div id="aboutPage" class="page">
-        <div class="hero" style="padding: 40px 0;">
-            <h1 data-en="Built on " data-am="የተገነባው በ ">Built on <span style="color: #6366f1;" data-en="Conscientiousness" data-am="ህሊና">Conscientiousness</span></h1>
-            <p data-en="We believe marketing strategy should be disciplined, not chaotic. 13 roles. One clear output. Every time." data-am="የግብይት ስትራቴጂ የተገራ እንጂ የተዝረከረከ መሆን አለበት ብለን እናምናለን። 13 ሚናዎች። አንድ ግልጽ ውጤት። በየጊዜው።">We believe marketing strategy should be disciplined, not chaotic. 13 roles. One clear output. Every time.</p>
-        </div>
-        
-        <div style="background: rgba(255,255,255,.05); border-radius: 24px; padding: 32px; margin: 40px 0;">
-            <h2 style="text-align: center; margin-bottom: 24px;" data-en="The 13-Role Framework" data-am="ባለ 13-ሚና ማዕቀፍ">The 13-Role Framework</h2>
-            <div class="roles-grid">
-                <div class="role-badge">1. Segmentation</div>
-                <div class="role-badge">2. Market Sizing</div>
-                <div class="role-badge">3. PESTLE</div>
-                <div class="role-badge">4. Porter's Forces</div>
-                <div class="role-badge">5. Competitors</div>
-                <div class="role-badge">6. Positioning</div>
-                <div class="role-badge">7. 4Ps</div>
-                <div class="role-badge">8. SWOT</div>
-                <div class="role-badge">9. Journey Map</div>
-                <div class="role-badge">10. KPIs</div>
-                <div class="role-badge">11. OKRs</div>
-                <div class="role-badge">12. Roadmap</div>
-                <div class="role-badge">13. Design</div>
-            </div>
-        </div>
-        
-        <div class="principles-grid">
-            <div class="principle-card">
-                <div style="font-size: 48px; margin-bottom: 16px;">🤖</div>
-                <h3 data-en="Autonomy" data-am="ራስ ገዝነት">Autonomy</h3>
-                <p style="color: rgba(255,255,255,.6);" data-en="The system works by itself. You don't have to tell it what to do next." data-am="ስርዓቱ በራሱ ይሰራል። ቀጥሎ ምን ማድረግ እንዳለበት መንገር አይጠበቅብዎትም።">The system works by itself. You don't have to tell it what to do next.</p>
-            </div>
-            <div class="principle-card">
-                <div style="font-size: 48px; margin-bottom: 16px;">🧠</div>
-                <h3 data-en="Intelligence" data-am="እውቀት">Intelligence</h3>
-                <p style="color: rgba(255,255,255,.6);" data-en="Smart analysis that learns and adapts to your business." data-am="ከንግድዎ ጋር የሚማርና የሚላመድ ብልጥ ትንተና።">Smart analysis that learns and adapts to your business.</p>
-            </div>
-            <div class="principle-card">
-                <div style="font-size: 48px; margin-bottom: 16px;">💚</div>
-                <h3 data-en="Goodness" data-am="በጎነት">Goodness</h3>
-                <p style="color: rgba(255,255,255,.6);" data-en="Ethical strategies that benefit everyone, not just the bottom line." data-am="ለሁሉም የሚጠቅሙ ሥነ-ምግባራዊ ስልቶች፣ ከትርፍ በላይ።">Ethical strategies that benefit everyone, not just the bottom line.</p>
-            </div>
-        </div>
-        
-        <div style="background: rgba(99,102,241,.08); border-radius: 24px; padding: 32px; text-align: center;">
-            <h3 data-en="Our Mission" data-am="ተልእኳችን">Our Mission</h3>
-            <p style="color: rgba(255,255,255,.7); max-width: 600px; margin: 16px auto 0;" data-en="To democratize strategic marketing by making professional-grade planning accessible, understandable, and actionable for everyone." data-am="ሙያዊ-ደረጃ እቅድ ለሁሉም ተደራሽ፣ ለመረዳት የሚቻል እና ተግባራዊ በማድረግ ስትራቴጂክ ግብይትን ዴሞክራሲያዊ ለማድረግ።">To democratize strategic marketing by making professional-grade planning accessible, understandable, and actionable for everyone.</p>
-            </div>
-        </div>
+    <div id="aboutPage" class="page" role="region" aria-label="About">
+      <div class="hero hero--compact">
+        <h1 data-en="Built on Conscientiousness" data-am="የተገነባው በህሊና">
+          Built on <span class="about-accent" data-en="Conscientiousness" data-am="ህሊና">Conscientiousness</span>
+        </h1>
+        <p data-en="We believe marketing strategy should be disciplined, not chaotic. 13 roles. One clear output. Every time."
+           data-am="የግብይት ስትራቴጂ የተገራ እንጂ የተዝረከረከ መሆን አለበት ብለን እናምናለን። 13 ሚናዎች። አንድ ግልጽ ውጤት። በየጊዜው።">We believe marketing strategy should be disciplined, not chaotic. 13 roles. One clear output. Every time.</p>
+      </div>
 
-    <!-- ============================================ -->
-    <!-- PAGE 4: PRICING PAGE -->
-    <!-- ============================================ -->
-    <div id="pricingPage" class="page">
-        <div class="hero" style="padding: 40px 0;">
-            <h1 data-en="Simple, Transparent Pricing" data-am="ቀላል፣ ግልጽ ዋጋ">Simple, Transparent Pricing</h1>
-            <p data-en="No hidden fees. Cancel anytime." data-am="የተደበቀ ክፍያ የለም። በማንኛውም ጊዜ ይሰርዙ።">No hidden fees. Cancel anytime.</p>
+      <div class="framework-box">
+        <h2 class="section-heading--sm"
+            data-en="The 13-Role Framework"
+            data-am="ባለ 13-ሚና ማዕቀፍ">The 13-Role Framework</h2>
+        <div class="roles-grid" role="list" aria-label="Framework roles">
+          <div class="role-badge" role="listitem">1. Segmentation</div>
+          <div class="role-badge" role="listitem">2. Market Sizing</div>
+          <div class="role-badge" role="listitem">3. PESTLE</div>
+          <div class="role-badge" role="listitem">4. Porter's Forces</div>
+          <div class="role-badge" role="listitem">5. Competitors</div>
+          <div class="role-badge" role="listitem">6. Positioning</div>
+          <div class="role-badge" role="listitem">7. 4Ps</div>
+          <div class="role-badge" role="listitem">8. SWOT</div>
+          <div class="role-badge" role="listitem">9. Journey Map</div>
+          <div class="role-badge" role="listitem">10. KPIs</div>
+          <div class="role-badge" role="listitem">11. OKRs</div>
+          <div class="role-badge" role="listitem">12. Roadmap</div>
+          <div class="role-badge" role="listitem">13. Design</div>
         </div>
-        
-        <div class="pricing-grid">
-            <div class="pricing-card">
-                <h3 data-en="Free" data-am="ነጻ">Free</h3>
-                <div class="price">$0<span>/month</span></div>
-                <ul class="feature-list">
-                    <li data-en="✅ 5 plans per month" data-am="✅ በወር 5 እቅዶች">✅ 5 plans per month</li>
-                    <li data-en="✅ PDF export" data-am="✅ PDF ማውጣት">✅ PDF export</li>
-                    <li data-en="✅ Save to history" data-am="✅ በታሪክ ማስቀመጥ">✅ Save to history</li>
-                    <li data-en="✅ Copy to clipboard" data-am="✅ ወደ ቅንጥብ ሰሌዳ መቅዳት">✅ Copy to clipboard</li>
-                    <li data-en="✅ Basic analytics" data-am="✅ መሰረታዊ ትንታኔ">✅ Basic analytics</li>
-                </ul>
-                <button class="btn" onclick="showPage('app')" data-en="Get Started" data-am="ጀምር">Get Started</button>
-            </div>
-            
-            <div class="pricing-card popular">
-                <h3 data-en="Pro" data-am="ፕሮ">Pro</h3>
-                <div class="price">$29<span>/month</span></div>
-                <ul class="feature-list">
-                    <li data-en="✅ Unlimited plans" data-am="✅ ያልተገደበ እቅድ">✅ Unlimited plans</li>
-                    <li data-en="✅ Priority support" data-am="✅ ቅድሚያ ድጋፍ">✅ Priority support</li>
-                    <li data-en="✅ All export formats" data-am="✅ ሁሉም የማውጫ ቅርጸቶች">✅ All export formats</li>
-                    <li data-en="✅ Advanced analytics" data-am="✅ የላቀ ትንታኔ">✅ Advanced analytics</li>
-                    <li data-en="✅ Team sharing" data-am="✅ የቡድን መጋራት">✅ Team sharing</li>
-                </ul>
-                <button class="btn" onclick="showPage('app')" data-en="Start Free Trial" data-am="ነጻ ሙከራ ጀምር">Start Free Trial</button>
-                <div style="margin-top: 12px; font-size: 11px; color: #a5b4fc;" data-en="Most popular" data-am="በጣም ተወዳጅ">Most popular</div>
-            </div>
-            
-            <div class="pricing-card">
-                <h3 data-en="Enterprise" data-am="ድርጅታዊ">Enterprise</h3>
-                <div class="price" data-en="Custom" data-am="ብጁ">Custom</div>
-                <ul class="feature-list">
-                    <li data-en="✅ Unlimited everything" data-am="✅ ያልተገደበ ሁሉም ነገር">✅ Unlimited everything</li>
-                    <li data-en="✅ API access" data-am="✅ API መዳረሻ">✅ API access</li>
-                    <li data-en="✅ SSO & SAML" data-am="✅ SSO & SAML">✅ SSO & SAML</li>
-                    <li data-en="✅ Dedicated support" data-am="✅ የተወሰነ ድጋፍ">✅ Dedicated support</li>
-                    <li data-en="✅ Custom integrations" data-am="✅ ብጁ ውህደቶች">✅ Custom integrations</li>
-                </ul>
-                <button class="btn btn-outline" onclick="alert('Contact sales@strategicmarketing.com')" data-en="Contact Sales" data-am="ሽያጭ አግኙ">Contact Sales</button>
-            </div>
+      </div>
+
+      <div class="principles-grid">
+        <div class="principle-card">
+          <div class="principle-icon" aria-hidden="true">🤖</div>
+          <h3 data-en="Autonomy" data-am="ራስ ገዝነት">Autonomy</h3>
+          <p style="color:var(--color-text-muted)"
+             data-en="The system works by itself. You don't have to tell it what to do next."
+             data-am="ስርዓቱ በራሱ ይሰራል። ቀጥሎ ምን ማድረግ እንዳለበት መንገር አይጠበቅብዎትም።">The system works by itself. You don't have to tell it what to do next.</p>
         </div>
+        <div class="principle-card">
+          <div class="principle-icon" aria-hidden="true">🧠</div>
+          <h3 data-en="Intelligence" data-am="እውቀት">Intelligence</h3>
+          <p style="color:var(--color-text-muted)"
+             data-en="Smart analysis that learns and adapts to your business."
+             data-am="ከንግድዎ ጋር የሚማርና የሚላመድ ብልጥ ትንተና።">Smart analysis that learns and adapts to your business.</p>
+        </div>
+        <div class="principle-card">
+          <div class="principle-icon" aria-hidden="true">💚</div>
+          <h3 data-en="Goodness" data-am="በጎነት">Goodness</h3>
+          <p style="color:var(--color-text-muted)"
+             data-en="Ethical strategies that benefit everyone, not just the bottom line."
+             data-am="ለሁሉም የሚጠቅሙ ሥነ-ምግባራዊ ስልቶች፣ ከትርፍ በላይ።">Ethical strategies that benefit everyone, not just the bottom line.</p>
+        </div>
+      </div>
+
+      <div class="mission-box">
+        <h3 data-en="Our Mission" data-am="ተልእኳችን">Our Mission</h3>
+        <p data-en="To democratize strategic marketing by making professional-grade planning accessible, understandable, and actionable for everyone."
+           data-am="ሙያዊ-ደረጃ እቅድ ለሁሉም ተደራሽ፣ ለመረዳት የሚቻል እና ተግባራዊ በማድረግ ስትራቴጂክ ግብይትን ዴሞክራሲያዊ ለማድረግ።">To democratize strategic marketing by making professional-grade planning accessible, understandable, and actionable for everyone.</p>
+      </div>
     </div>
 
     <!-- ============================================ -->
-    <!-- PAGE 5: APP PAGE -->
+    <!-- PAGE 4: PRICING PAGE                        -->
     <!-- ============================================ -->
-    <div id="appPage" class="page">
-        <div class="app-container">
-            <div class="input-area">
-                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);" data-en="📊 Customer Data / Target Audience" data-am="📊 የደንበኛ መረጃ / ዒላማ ታዳሚ">📊 Customer Data / Target Audience</label>
-                <textarea id="customerData" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies ($50M-$500M revenue) looking for AI analytics solutions..."></textarea>
-                
-                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);" data-en="📦 Product Description / Service" data-am="📦 የምርት መግለጫ / አገልግሎት">📦 Product Description / Service</label>
-                <textarea id="productDescription" rows="5" placeholder="Example: An AI-powered marketing analytics platform that provides real-time ROI predictions and channel optimization recommendations..."></textarea>
-                
-                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                    <button id="generateBtn" class="btn" data-en="✨ Generate Strategic Plan" data-am="✨ ስትራቴጂክ እቅድ ፍጠር">✨ Generate Strategic Plan</button>
-                    <button id="clearBtn" class="btn btn-outline" data-en="Clear All" data-am="ሁሉንም አጽዳ">Clear All</button>
-                </div>
-            </div>
-            
-            <div class="progress-bar" id="progressBar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            
-            <div class="status-bar" id="statusBar">
-                <span class="loader"></span>
-                <span id="statusMessage" data-en="Ready to generate" data-am="ለማመንጨት ዝግጁ">Ready to generate</span>
-            </div>
-            
-            <div class="kpi-grid" id="kpiGrid"></div>
-            
-            <div class="output-area" id="outputArea">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
-                    <h3 data-en="📊 Generated Marketing Strategy" data-am="📊 የተፈጠረ የግብይት ስትራቴጂ">📊 Generated Marketing Strategy</h3>
-                    <div style="display: flex; gap: 8px;">
-                        <button id="copyOutputBtn" class="btn btn-outline" style="padding: 8px 16px;" data-en="📋 Copy" data-am="📋 ቅዳ">📋 Copy</button>
-                        <button id="saveHistoryBtn" class="btn btn-outline" style="padding: 8px 16px;" data-en="💾 Save" data-am="💾 አስቀምጥ">💾 Save</button>
-                    </div>
-                </div>
-                <div id="renderedOutput"></div>
-            </div>
-            
-            <div id="swotContainer"></div>
-            <div id="journeyContainer"></div>
+    <div id="pricingPage" class="page" role="region" aria-label="Pricing">
+      <div class="hero hero--compact">
+        <h1 data-en="Simple, Transparent Pricing" data-am="ቀላል፣ ግልጽ ዋጋ">Simple, Transparent Pricing</h1>
+        <p data-en="No hidden fees. Cancel anytime." data-am="የተደበቀ ክፍያ የለም። በማንኛውም ጊዜ ይሰርዙ።">No hidden fees. Cancel anytime.</p>
+      </div>
+
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <h3 data-en="Free" data-am="ነጻ">Free</h3>
+          <div class="price">$0<span class="price-period">/month</span></div>
+          <ul class="feature-list" aria-label="Free plan features">
+            <li data-en="✅ 5 plans per month"     data-am="✅ በወር 5 እቅዶች">✅ 5 plans per month</li>
+            <li data-en="✅ PDF export"             data-am="✅ PDF ማውጣት">✅ PDF export</li>
+            <li data-en="✅ Save to history"        data-am="✅ በታሪክ ማስቀመጥ">✅ Save to history</li>
+            <li data-en="✅ Copy to clipboard"      data-am="✅ ወደ ቅንጥብ ሰሌዳ መቅዳት">✅ Copy to clipboard</li>
+            <li data-en="✅ Basic analytics"        data-am="✅ መሰረታዊ ትንታኔ">✅ Basic analytics</li>
+          </ul>
+          <button class="btn" onclick="showPage('app')" data-en="Get Started" data-am="ጀምር">Get Started</button>
         </div>
+
+        <div class="pricing-card popular" aria-label="Most popular plan">
+          <h3 data-en="Pro" data-am="ፕሮ">Pro</h3>
+          <div class="price">$29<span class="price-period">/month</span></div>
+          <ul class="feature-list" aria-label="Pro plan features">
+            <li data-en="✅ Unlimited plans"        data-am="✅ ያልተገደበ እቅድ">✅ Unlimited plans</li>
+            <li data-en="✅ Priority support"       data-am="✅ ቅድሚያ ድጋፍ">✅ Priority support</li>
+            <li data-en="✅ All export formats"     data-am="✅ ሁሉም የማውጫ ቅርጸቶች">✅ All export formats</li>
+            <li data-en="✅ Advanced analytics"     data-am="✅ የላቀ ትንታኔ">✅ Advanced analytics</li>
+            <li data-en="✅ Team sharing"           data-am="✅ የቡድን መጋራት">✅ Team sharing</li>
+          </ul>
+          <button class="btn" onclick="showPage('app')" data-en="Start Free Trial" data-am="ነጻ ሙከራ ጀምር">Start Free Trial</button>
+          <div class="popular-badge" data-en="Most popular" data-am="በጣም ተወዳጅ">Most popular</div>
+        </div>
+
+        <div class="pricing-card">
+          <h3 data-en="Enterprise" data-am="ድርጅታዊ">Enterprise</h3>
+          <div class="price" data-en="Custom" data-am="ብጁ">Custom</div>
+          <ul class="feature-list" aria-label="Enterprise plan features">
+            <li data-en="✅ Unlimited everything"  data-am="✅ ያልተገደበ ሁሉም ነገር">✅ Unlimited everything</li>
+            <li data-en="✅ API access"             data-am="✅ API መዳረሻ">✅ API access</li>
+            <li data-en="✅ SSO &amp; SAML"         data-am="✅ SSO &amp; SAML">✅ SSO &amp; SAML</li>
+            <li data-en="✅ Dedicated support"      data-am="✅ የተወሰነ ድጋፍ">✅ Dedicated support</li>
+            <li data-en="✅ Custom integrations"    data-am="✅ ብጁ ውህደቶች">✅ Custom integrations</li>
+          </ul>
+          <button class="btn btn-outline"
+                  onclick="window.location.href='mailto:sales@strategicmarketing.com'"
+                  data-en="Contact Sales"
+                  data-am="ሽያጭ አግኙ">Contact Sales</button>
+        </div>
+      </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p data-en="© 2025 Strategic Marketing System · Powered by AI · 13-Role Framework · Conscientious by Design" data-am="© 2025 ስትራቴጂክ ማርኬቲንግ ሲስተም · በAI የተጎላበተ · ባለ 13-ሚና ማዕቀፍ · በህሊና የተነደፈ">© 2025 Strategic Marketing System · Powered by AI · 13-Role Framework · Conscientious by Design</p>
-        <p style="margin-top: 8px; font-size: 10px;" data-en="🔒 Secure · 📊 Data-driven · 🎯 Actionable" data-am="🔒 ደህንነቱ የተጠበቀ · 📊 በውሂብ የሚመራ · 🎯 ተግባራዊ ሊሆን የሚችል">🔒 Secure · 📊 Data-driven · 🎯 Actionable</p>
-        <p style="margin-top: 8px;">
-            <a href="https://vercel.com" target="_blank" style="text-decoration: none;">
-                <img src="https://img.shields.io/badge/deployed%20on-vercel-black?style=flat&logo=vercel" alt="Deployed on Vercel">
-            </a>
-        </p>
-    </footer>
+    <!-- ============================================ -->
+    <!-- PAGE 5: APP PAGE                            -->
+    <!-- ============================================ -->
+    <div id="appPage" class="page" role="region" aria-label="Marketing Plan Generator">
+      <div class="input-area">
+        <label class="input-label"
+               for="customerData"
+               data-en="📊 Customer Data / Target Audience"
+               data-am="📊 የደንበኛ መረጃ / ዒላማ ታዳሚ">📊 Customer Data / Target Audience</label>
+        <textarea id="customerData"
+                  rows="3"
+                  aria-label="Customer data or target audience description"
+                  placeholder="Example: Enterprise CTOs at mid-sized tech companies ($50M-$500M revenue) looking for AI analytics solutions..."></textarea>
+
+        <label class="input-label"
+               for="productDescription"
+               data-en="📦 Product Description / Service"
+               data-am="📦 የምርት መግለጫ / አገልግሎት">📦 Product Description / Service</label>
+        <textarea id="productDescription"
+                  rows="5"
+                  aria-label="Product or service description"
+                  placeholder="Example: An AI-powered marketing analytics platform that provides real-time ROI predictions and channel optimization recommendations..."></textarea>
+
+        <div class="btn-row">
+          <button id="generateBtn"
+                  class="btn"
+                  data-en="✨ Generate Strategic Plan"
+                  data-am="✨ ስትራቴጂክ እቅድ ፍጠር">✨ Generate Strategic Plan</button>
+          <button id="clearBtn"
+                  class="btn btn-outline"
+                  data-en="Clear All"
+                  data-am="ሁሉንም አጽዳ">Clear All</button>
+        </div>
+      </div>
+
+      <div class="progress-bar" id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <div class="status-bar"
+           id="statusBar"
+           role="status"
+           aria-live="polite"
+           aria-atomic="true">
+        <span class="loader" aria-hidden="true"></span>
+        <span id="statusMessage"
+              data-en="Ready to generate"
+              data-am="ለማመንጨት ዝግጁ">Ready to generate</span>
+      </div>
+
+      <div class="kpi-grid" id="kpiGrid" aria-label="Key performance indicators"></div>
+
+      <div class="output-area" id="outputArea" aria-label="Generated marketing strategy">
+        <div class="output-header">
+          <h3 data-en="📊 Generated Marketing Strategy"
+              data-am="📊 የተፈጠረ የግብይት ስትራቴጂ">📊 Generated Marketing Strategy</h3>
+          <div class="output-actions">
+            <button id="copyOutputBtn"
+                    class="btn btn-outline btn-sm"
+                    data-en="📋 Copy"
+                    data-am="📋 ቅዳ">📋 Copy</button>
+            <button id="saveHistoryBtn"
+                    class="btn btn-outline btn-sm"
+                    data-en="💾 Save"
+                    data-am="💾 አስቀምጥ">💾 Save</button>
+          </div>
+        </div>
+        <div id="renderedOutput"></div>
+      </div>
+
+      <div id="swotContainer"></div>
+      <div id="journeyContainer"></div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p data-en="© 2025 Strategic Marketing System · Powered by AI · 13-Role Framework · Conscientious by Design"
+       data-am="© 2025 ስትራቴጂክ ማርኬቲንግ ሲስተም · በAI የተጎላበተ · ባለ 13-ሚና ማዕቀፍ · በህሊና የተነደፈ">© 2025 Strategic Marketing System · Powered by AI · 13-Role Framework · Conscientious by Design</p>
+    <p class="footer-line"
+       data-en="🔒 Secure · 📊 Data-driven · 🎯 Actionable"
+       data-am="🔒 ደህንነቱ የተጠበቀ · 📊 በውሂብ የሚመራ · 🎯 ተግባራዊ ሊሆን የሚችል">🔒 Secure · 📊 Data-driven · 🎯 Actionable</p>
+    <p class="footer-vercel">
+      <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" aria-label="Deployed on Vercel">
+        <img src="https://img.shields.io/badge/deployed%20on-vercel-black?style=flat&logo=vercel" alt="Deployed on Vercel">
+      </a>
+    </p>
+  </footer>
 </div>
 
 <!-- FEEDBACK WIDGET -->
 <div class="feedback-widget">
-    <button class="feedback-btn" id="feedbackBtn" data-en="💬 Feedback" data-am="💬 አስተያየት">💬 Feedback</button>
-    <div class="feedback-modal" id="feedbackModal">
-        <h4 style="margin-bottom: 12px;" data-en="Share your thoughts" data-am="ሀሳብዎን ያካፍሉ">Share your thoughts</h4>
-        <textarea id="feedbackText" rows="3" placeholder="What could be better?..." style="width: 100%; padding: 10px; border-radius: 12px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); color: white; margin-bottom: 12px; resize: vertical;"></textarea>
-        <div style="display: flex; gap: 8px;">
-            <button id="submitFeedbackBtn" class="btn" style="padding: 8px 16px;" data-en="Send" data-am="ላክ">Send</button>
-            <button id="closeFeedbackBtn" class="btn btn-outline" style="padding: 8px 16px;" data-en="Close" data-am="ዝጋ">Close</button>
-        </div>
+  <button class="feedback-btn"
+          id="feedbackBtn"
+          aria-expanded="false"
+          aria-controls="feedbackModal"
+          data-en="💬 Feedback"
+          data-am="💬 አስተያየት">💬 Feedback</button>
+  <div class="feedback-modal"
+       id="feedbackModal"
+       role="dialog"
+       aria-modal="true"
+       aria-label="Feedback form">
+    <h4 data-en="Share your thoughts" data-am="ሀሳብዎን ያካፍሉ">Share your thoughts</h4>
+    <textarea id="feedbackText"
+              rows="3"
+              aria-label="Your feedback"
+              placeholder="What could be better?..."></textarea>
+    <div class="feedback-modal-actions">
+      <button id="submitFeedbackBtn"
+              class="btn btn-sm"
+              data-en="Send"
+              data-am="ላክ">Send</button>
+      <button id="closeFeedbackBtn"
+              class="btn btn-outline btn-sm"
+              data-en="Close"
+              data-am="ዝጋ">Close</button>
     </div>
+  </div>
 </div>
 
 <script>
-    // =====================================================
-    // LANGUAGE MANAGEMENT (ENGLISH/AMHARIC)
-    // =====================================================
-    let currentLanguage = localStorage.getItem('language') || 'en';
-    
-    function setLanguage(lang) {
-        currentLanguage = lang;
-        localStorage.setItem('language', lang);
-        document.getElementById('welcomeModal').classList.add('hidden');
-        document.getElementById('langSelectorText').innerText = lang === 'en' ? 'English' : 'አማርኛ';
-        translatePage();
-    }
-    
-    function translatePage() {
-        const elementsWithDataLang = document.querySelectorAll('[data-en][data-am]');
-        elementsWithDataLang.forEach(el => {
-            const text = currentLanguage === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-am');
-            if (text) {
-                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                    el.placeholder = text;
-                } else {
-                    el.innerText = text;
-                }
-            }
-        });
-        
-        // Update status message if visible
-        const statusMsg = document.getElementById('statusMessage');
-        if (statusMsg && statusMsg.getAttribute('data-en')) {
-            statusMsg.innerText = currentLanguage === 'en' ? statusMsg.getAttribute('data-en') : statusMsg.getAttribute('data-am');
-        }
-        
-        // Update KPI cards if they have been populated
-        updateKPICardLanguage();
-    }
-    
-    function updateKPICardLanguage() {
-        const kpiCards = document.querySelectorAll('.kpi-card');
-        kpiCards.forEach(card => {
-            const labelEl = card.querySelector('.kpi-label');
-            if (labelEl && labelEl.getAttribute('data-en')) {
-                labelEl.innerText = currentLanguage === 'en' ? labelEl.getAttribute('data-en') : labelEl.getAttribute('data-am');
-            }
-        });
-    }
-    
-    function toggleLanguage() {
-        const newLang = currentLanguage === 'en' ? 'am' : 'en';
-        setLanguage(newLang);
-    }
-    
-    // =====================================================
-    // PAGE NAVIGATION
-    // =====================================================
-    function showPage(pageName) {
-        document.querySelectorAll('.page').forEach(page => {
-            page.classList.remove('active');
-        });
-        
-        document.getElementById(pageName + 'Page').classList.add('active');
-        
-        document.querySelectorAll('.nav-links button').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        
-        const navMap = {
-            'home': 'navHome',
-            'planner': 'navPlanner',
-            'about': 'navAbout',
-            'pricing': 'navPricing',
-            'app': 'navApp'
-        };
-        
-        const activeBtn = document.getElementById(navMap[pageName]);
-        if (activeBtn) activeBtn.classList.add('active');
-        
-        if (pageName === 'app') {
-            initApp();
-        }
-    }
-    
-    // =====================================================
-    // PLANNER TO APP DATA TRANSFER
-    // =====================================================
-    function goToAppWithData() {
-        const customerData = document.getElementById('plannerCustomer').value;
-        const productData = document.getElementById('plannerProduct').value;
-        
-        if (customerData) {
-            sessionStorage.setItem('prefillCustomer', customerData);
-        }
-        if (productData) {
-            sessionStorage.setItem('prefillProduct', productData);
-        }
-        
-        showPage('app');
-    }
-    
-    // =====================================================
-    // FEEDBACK WIDGET
-    // =====================================================
-    const feedbackBtn = document.getElementById('feedbackBtn');
-    const feedbackModal = document.getElementById('feedbackModal');
-    const closeFeedbackBtn = document.getElementById('closeFeedbackBtn');
-    const submitFeedbackBtn = document.getElementById('submitFeedbackBtn');
-    const feedbackText = document.getElementById('feedbackText');
+  /* =====================================================
+     LANGUAGE MANAGEMENT
+  ===================================================== */
+  let currentLanguage = localStorage.getItem('language') || 'en';
 
-    feedbackBtn?.addEventListener('click', () => {
-        feedbackModal?.classList.toggle('show');
+  function setLanguage(lang) {
+    currentLanguage = lang;
+    localStorage.setItem('language', lang);
+    // Update html lang attribute for screen readers
+    document.documentElement.lang = lang;
+    document.getElementById('welcomeModal').classList.add('hidden');
+    document.getElementById('langSelectorText').textContent = lang === 'en' ? 'English' : 'አማርኛ';
+    translatePage();
+  }
+
+  function translatePage() {
+    document.querySelectorAll('[data-en][data-am]').forEach(el => {
+      const text = el.getAttribute(currentLanguage === 'en' ? 'data-en' : 'data-am');
+      if (!text) return;
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.placeholder = text;
+      } else {
+        el.textContent = text;
+      }
+    });
+    updateKPICardLanguage();
+  }
+
+  function updateKPICardLanguage() {
+    document.querySelectorAll('.kpi-label[data-en]').forEach(el => {
+      el.textContent = el.getAttribute(currentLanguage === 'en' ? 'data-en' : 'data-am') || '';
+    });
+  }
+
+  function toggleLanguage() {
+    setLanguage(currentLanguage === 'en' ? 'am' : 'en');
+  }
+
+  /* =====================================================
+     PAGE NAVIGATION
+  ===================================================== */
+  function showPage(pageName) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageName + 'Page').classList.add('active');
+
+    document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+    const navMap = { home: 'navHome', planner: 'navPlanner', about: 'navAbout', pricing: 'navPricing', app: 'navApp' };
+    const activeBtn = document.getElementById(navMap[pageName]);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    if (pageName === 'app') initApp();
+  }
+
+  /* =====================================================
+     PLANNER → APP DATA TRANSFER
+  ===================================================== */
+  function goToAppWithData() {
+    const cd = document.getElementById('plannerCustomer').value;
+    const pd = document.getElementById('plannerProduct').value;
+    if (cd) sessionStorage.setItem('prefillCustomer', cd);
+    if (pd) sessionStorage.setItem('prefillProduct', pd);
+    showPage('app');
+  }
+
+  /* =====================================================
+     FEEDBACK WIDGET
+  ===================================================== */
+  (function () {
+    const btn   = document.getElementById('feedbackBtn');
+    const modal = document.getElementById('feedbackModal');
+    const close = document.getElementById('closeFeedbackBtn');
+    const submit = document.getElementById('submitFeedbackBtn');
+    const text  = document.getElementById('feedbackText');
+
+    btn.addEventListener('click', () => {
+      const isOpen = modal.classList.toggle('show');
+      btn.setAttribute('aria-expanded', String(isOpen));
+      if (isOpen) text.focus();
     });
 
-    closeFeedbackBtn?.addEventListener('click', () => {
-        feedbackModal?.classList.remove('show');
+    close.addEventListener('click', () => {
+      modal.classList.remove('show');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.focus();
     });
 
-    submitFeedbackBtn?.addEventListener('click', () => {
-        const text = feedbackText?.value.trim();
-        if (text) {
-            const feedbacks = JSON.parse(localStorage.getItem('user_feedback') || '[]');
-            feedbacks.push({ text, timestamp: new Date().toISOString(), url: window.location.href, language: currentLanguage });
-            localStorage.setItem('user_feedback', JSON.stringify(feedbacks));
-            
-            fetch('https://Bisratprompt-marketing-system-api.hf.space/feedback', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'user_feedback', message: text, language: currentLanguage })
-            }).catch(() => {});
-            
-            alert(currentLanguage === 'en' ? 'Thank you for your feedback!' : 'አስተያየትዎ እናመሰግናለን!');
-            feedbackModal?.classList.remove('show');
-            feedbackText.value = '';
-        } else {
-            alert(currentLanguage === 'en' ? 'Please enter your feedback' : 'እባክዎ አስተያየትዎን ያስገቡ');
-        }
+    submit.addEventListener('click', () => {
+      const value = text.value.trim();
+      if (!value) {
+        alert(currentLanguage === 'en' ? 'Please enter your feedback' : 'እባክዎ አስተያየትዎን ያስገቡ');
+        return;
+      }
+      const feedbacks = JSON.parse(localStorage.getItem('user_feedback') || '[]');
+      feedbacks.push({ text: value, timestamp: new Date().toISOString(), language: currentLanguage });
+      localStorage.setItem('user_feedback', JSON.stringify(feedbacks));
+
+      fetch('https://Bisratprompt-marketing-system-api.hf.space/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'user_feedback', message: value, language: currentLanguage })
+      }).catch(() => {});
+
+      alert(currentLanguage === 'en' ? 'Thank you for your feedback!' : 'አስተያየትዎ እናመሰግናለን!');
+      modal.classList.remove('show');
+      btn.setAttribute('aria-expanded', 'false');
+      text.value = '';
     });
-    
-    // =====================================================
-    // APP FUNCTIONALITY
-    // =====================================================
-    const API_BASE = 'https://Bisratprompt-marketing-system-api.hf.space';
-    
-    let currentPlan = null;
-    let isGenerating = false;
-    
-    const elements = {
-        customerData: document.getElementById('customerData'),
-        productDescription: document.getElementById('productDescription'),
-        generateBtn: document.getElementById('generateBtn'),
-        clearBtn: document.getElementById('clearBtn'),
-        copyOutputBtn: document.getElementById('copyOutputBtn'),
-        saveHistoryBtn: document.getElementById('saveHistoryBtn'),
-        statusBar: document.getElementById('statusBar'),
-        statusMessage: document.getElementById('statusMessage'),
-        progressFill: document.getElementById('progressFill'),
-        outputArea: document.getElementById('outputArea'),
-        renderedOutput: document.getElementById('renderedOutput'),
-        kpiGrid: document.getElementById('kpiGrid'),
-        swotContainer: document.getElementById('swotContainer'),
-        journeyContainer: document.getElementById('journeyContainer')
+  })();
+
+  /* =====================================================
+     APP — single init guard
+  ===================================================== */
+  const API_BASE = 'https://Bisratprompt-marketing-system-api.hf.space';
+  let currentPlan = null;
+  let isGenerating = false;
+  let appInitialized = false; // ← duplicate-binding fix
+
+  const els = {
+    get customerData()     { return document.getElementById('customerData'); },
+    get productDesc()      { return document.getElementById('productDescription'); },
+    get generateBtn()      { return document.getElementById('generateBtn'); },
+    get clearBtn()         { return document.getElementById('clearBtn'); },
+    get copyBtn()          { return document.getElementById('copyOutputBtn'); },
+    get saveBtn()          { return document.getElementById('saveHistoryBtn'); },
+    get statusBar()        { return document.getElementById('statusBar'); },
+    get statusMsg()        { return document.getElementById('statusMessage'); },
+    get progressBar()      { return document.getElementById('progressBar'); },
+    get progressFill()     { return document.getElementById('progressFill'); },
+    get outputArea()       { return document.getElementById('outputArea'); },
+    get renderedOutput()   { return document.getElementById('renderedOutput'); },
+    get kpiGrid()          { return document.getElementById('kpiGrid'); },
+    get swotContainer()    { return document.getElementById('swotContainer'); },
+    get journeyContainer() { return document.getElementById('journeyContainer'); },
+  };
+
+  function setStatus(message, loading = true) {
+    els.statusMsg.textContent = message;
+    els.statusBar.style.display = 'flex';
+    if (!loading) setTimeout(() => { els.statusBar.style.display = 'none'; }, 3000);
+  }
+
+  function updateProgress(pct) {
+    els.progressFill.style.width = pct + '%';
+    els.progressBar.setAttribute('aria-valuenow', String(pct));
+  }
+
+  function initKPICards() {
+    const kpis = [
+      { icon: '👥', en: 'SEGMENTATION',  am: 'ክፍፍል',        val: 'Ready', src: 'Click generate to start' },
+      { icon: '📊', en: 'MARKET SIZE',   am: 'የገበያ መጠን',   val: 'Ready', src: 'TAM · SAM · SOM' },
+      { icon: '🎯', en: 'KEY METRICS',   am: 'ቁልፍ መለኪያዎች', val: 'Ready', src: 'Primary KPIs' },
+      { icon: '🏆', en: 'COMPETITION',   am: 'ውድድር',         val: 'Ready', src: 'Competitor analysis' },
+    ];
+    els.kpiGrid.innerHTML = kpis.map(k => `
+      <div class="kpi-card">
+        <div class="kpi-icon" aria-hidden="true">${k.icon}</div>
+        <div class="kpi-label" data-en="${k.en}" data-am="${k.am}">${currentLanguage === 'en' ? k.en : k.am}</div>
+        <div class="kpi-value">${k.val}</div>
+        <div class="kpi-source">${k.src}</div>
+      </div>`).join('');
+  }
+
+  function updateKPICards(plan) {
+    const seg  = plan.match(/Primary Target[:\s]*([^\n]+)/i)?.[1]?.substring(0, 40) || 'Analysis complete';
+    const tam  = plan.match(/TAM[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '';
+    const sam  = plan.match(/SAM[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '';
+    const kpi  = plan.match(/Primary KPI[:\s]*([^\n]+)/i)?.[1]?.substring(0, 35) || 'KPIs defined';
+    const comp = plan.match(/Direct\s*\|\s*🔴\s*\|\s*([^\|]+)/i)?.[1]?.trim() || 'Analysis complete';
+    const cards = document.querySelectorAll('.kpi-card .kpi-value');
+    if (cards[0]) cards[0].textContent = seg;
+    if (cards[1]) cards[1].textContent = tam && sam ? `${tam} → ${sam}` : (tam || 'Market sized');
+    if (cards[2]) cards[2].textContent = kpi;
+    if (cards[3]) cards[3].textContent = comp;
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+  }
+
+  function formatRoleContent(content) {
+    let html = content;
+    // Markdown tables
+    html = html.replace(/\n\|(.+)\|\n\|[-:\s|]+\|\n((?:\|.+\|\n?)+)/gm, (_, header, rows) => {
+      const ths = header.split('|').filter(h => h.trim()).map(h => `<th style="padding:8px;text-align:left;background:rgba(99,102,241,.1)">${escapeHtml(h.trim())}</th>`).join('');
+      const trs = rows.trim().split('\n').map(row => {
+        const tds = row.split('|').filter(c => c.trim()).map(c => `<td style="padding:8px;border-bottom:1px solid rgba(255,255,255,.1)">${escapeHtml(c.trim())}</td>`).join('');
+        return `<tr>${tds}</tr>`;
+      }).join('');
+      return `<table style="width:100%;border-collapse:collapse;margin:16px 0"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table>`;
+    });
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/^[-•*]\s+(.*?)$/gm, '<li>$1</li>');
+    html = html.replace(/(<li>.*?<\/li>)+/gs, '<ul style="margin:8px 0;padding-left:20px">$&</ul>');
+    html = html.replace(/\n/g, '<br>');
+    return html;
+  }
+
+  function renderSWOT(plan) {
+    const match = plan.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+    if (!match) return;
+    const swotText = match[1];
+    const extract = label => {
+      const re = new RegExp(`${label}:[\\s\\S]*?(?=\\n(?:Strengths|Weaknesses|Opportunities|Threats):|$)`, 'i');
+      return (swotText.match(re)?.[0] || '').split('\n').filter(l => /^[-•*]\s+/.test(l.trim())).map(l => l.replace(/^[-•*]\s+/, '').trim()).slice(0, 4);
     };
-    
-    if (sessionStorage.getItem('prefillCustomer')) {
-        elements.customerData.value = sessionStorage.getItem('prefillCustomer');
-        sessionStorage.removeItem('prefillCustomer');
+    const S = extract('Strengths'), W = extract('Weaknesses'), O = extract('Opportunities'), T = extract('Threats');
+    const L = k => ({ sLabel: '💪 STRENGTHS', wLabel: '⚠️ WEAKNESSES', oLabel: '🚀 OPPORTUNITIES', tLabel: '⚡ THREATS' }[k] ||
+      (currentLanguage === 'en' ? k : k));
+
+    els.swotContainer.innerHTML = `
+      <h3 style="margin:30px 0 15px" data-en="📊 SWOT Analysis" data-am="📊 SWOT ትንተና">📊 SWOT Analysis</h3>
+      <div class="swot-grid">
+        <div class="swot-card swot-s"><strong style="color:#4ade80">${currentLanguage==='en'?'💪 STRENGTHS':'💪 ጥንካሬዎች'}</strong>
+          <ul class="swot-list">${S.map(s=>`<li>✓ ${escapeHtml(s)}</li>`).join('')||'<li>No data</li>'}</ul></div>
+        <div class="swot-card swot-w"><strong style="color:#f87171">${currentLanguage==='en'?'⚠️ WEAKNESSES':'⚠️ ድክመቶች'}</strong>
+          <ul class="swot-list">${W.map(w=>`<li>✓ ${escapeHtml(w)}</li>`).join('')||'<li>No data</li>'}</ul></div>
+        <div class="swot-card swot-o"><strong style="color:#22d3ee">${currentLanguage==='en'?'🚀 OPPORTUNITIES':'🚀 እድሎች'}</strong>
+          <ul class="swot-list">${O.map(o=>`<li>✓ ${escapeHtml(o)}</li>`).join('')||'<li>No data</li>'}</ul></div>
+        <div class="swot-card swot-t"><strong style="color:#fbbf24">${currentLanguage==='en'?'⚡ THREATS':'⚡ ስጋቶች'}</strong>
+          <ul class="swot-list">${T.map(t=>`<li>✓ ${escapeHtml(t)}</li>`).join('')||'<li>No data</li>'}</ul></div>
+      </div>`;
+  }
+
+  function renderJourney() {
+    const stages = ['AWARENESS','CONSIDERATION','PURCHASE','RETENTION','ADVOCACY'];
+    const icons  = ['👁️','🤔','💰','❤️','🗣️'];
+    const amLabels = ['ግንዛቤ','ማሰብ','ግዢ','ማቆየት','መደገፍ'];
+    els.journeyContainer.innerHTML = `
+      <h3 style="margin:30px 0 15px">🗺️ ${currentLanguage==='en'?'Customer Journey Map':'የደንበኛ ጉዞ ካርታ'}</h3>
+      <div class="journey-grid">
+        ${stages.map((s,i)=>`
+          <div class="journey-card">
+            <div class="journey-icon" aria-hidden="true">${icons[i]}</div>
+            <div class="journey-label">${currentLanguage==='en'?s:amLabels[i]}</div>
+            <div class="journey-sub">${currentLanguage==='en'?'Journey stage':'የጉዞ ደረጃ'}</div>
+          </div>`).join('')}
+      </div>`;
+  }
+
+  async function streamRoles(plan) {
+    const roles = [
+      { tag:'SEGMENTATION OUTPUT',   icon:'🎯', en:'Market Segmentation',        am:'የገበያ ክፍፍል' },
+      { tag:'TAMSAMSOM OUTPUT',       icon:'📊', en:'Market Sizing (TAM/SAM/SOM)', am:'የገበያ መጠን (TAM/SAM/SOM)' },
+      { tag:'PESTLE OUTPUT',          icon:'⚡', en:'PESTLE Analysis',             am:'PESTLE ትንተና' },
+      { tag:'PORTER OUTPUT',          icon:'🏢', en:"Porter's Five Forces",        am:"የፖርተር አምስት ኃይሎች" },
+      { tag:'COMPETITOR OUTPUT',      icon:'🔍', en:'Competitor Profiling',        am:'ተፎካካሪ መገለጫ' },
+      { tag:'POSITIONING OUTPUT',     icon:'📍', en:'Brand Positioning',           am:'የምርት ስም አቀማመጥ' },
+      { tag:'4Ps OUTPUT',             icon:'🎨', en:'Marketing Mix (4Ps)',         am:'የግብይት ድብልቅ (4Ps)' },
+      { tag:'SWOT OUTPUT',            icon:'💪', en:'SWOT Analysis',              am:'SWOT ትንተና' },
+      { tag:'CUSTOMER JOURNEY OUTPUT',icon:'🗺️', en:'Customer Journey Map',        am:'የደንበኛ ጉዞ ካርታ' },
+      { tag:'KPI OUTPUT',             icon:'📈', en:'KPIs & Budget',              am:'KPIs እና በጀት' },
+      { tag:'OKRS OUTPUT',            icon:'🎯', en:'OKR Strategist',             am:'OKR ስትራቴጂስት' },
+      { tag:'ROADMAP OUTPUT',         icon:'📅', en:'30-Day Roadmap',             am:'የ30-ቀን የመንገድ ካርታ' },
+    ];
+
+    const matched = roles.filter(r => {
+      const re = new RegExp(`\\[${r.tag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
+      const m = plan.match(re);
+      if (m && m[1] && m[1].trim().length > 30) { r.content = m[1].trim(); return true; }
+      return false;
+    });
+
+    if (!matched.length) {
+      els.renderedOutput.innerHTML = `<div style="line-height:1.8">${escapeHtml(plan).replace(/\n/g,'<br>')}</div>`;
+      return;
     }
-    if (sessionStorage.getItem('prefillProduct')) {
-        elements.productDescription.value = sessionStorage.getItem('prefillProduct');
-        sessionStorage.removeItem('prefillProduct');
+
+    els.renderedOutput.innerHTML = '';
+    for (let i = 0; i < matched.length; i++) {
+      const role = matched[i];
+      const card = document.createElement('div');
+      card.className = 'role-card';
+      card.innerHTML = `
+        <div class="role-header">
+          <div class="role-icon" aria-hidden="true">${role.icon}</div>
+          <div class="role-title">${currentLanguage==='en'?role.en:role.am}</div>
+          <div class="role-counter">${currentLanguage==='en'?`Role ${i+1}/${matched.length}`:`ሚና ${i+1}/${matched.length}`}</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="loader" aria-hidden="true"></span>
+          <span style="color:var(--color-text-muted)">${currentLanguage==='en'?'Loading…':'በመጫን ላይ…'}</span>
+        </div>`;
+      els.renderedOutput.appendChild(card);
+      await new Promise(r => setTimeout(r, 300));
+
+      const loading = card.querySelector('div:last-child');
+      if (loading) loading.remove();
+      const content = document.createElement('div');
+      content.style.lineHeight = '1.8';
+      content.innerHTML = formatRoleContent(role.content);
+      card.appendChild(content);
+      setTimeout(() => card.classList.add('visible'), 50);
+      updateProgress(Math.round(((i + 1) / matched.length) * 100));
     }
-    
-    function setStatus(message, isLoading = true) {
-        elements.statusMessage.innerText = message;
-        elements.statusBar.style.display = 'flex';
-        if (!isLoading) {
-            setTimeout(() => {
-                elements.statusBar.style.display = 'none';
-            }, 3000);
-        }
+  }
+
+  async function generateMarketingPlan(cd, pd) {
+    const res = await fetch(`${API_BASE}/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ customer_data: cd, product_description: pd })
+    });
+    if (!res.ok) throw new Error('Generation failed');
+    return (await res.json()).plan;
+  }
+
+  async function handleGenerate() {
+    if (isGenerating) return;
+    const cd = els.customerData.value.trim();
+    const pd = els.productDesc.value.trim();
+    if (!cd || !pd) {
+      setStatus(currentLanguage==='en'?'Please fill in both fields':'እባክዎ ሁለቱንም መስኮች ይሙሉ', false);
+      return;
     }
-    
-    function updateProgress(percent) {
-        elements.progressFill.style.width = percent + '%';
+
+    isGenerating = true;
+    els.generateBtn.disabled = true;
+    els.generateBtn.textContent = currentLanguage==='en'?'⏳ Generating…':'⏳ በማመንጨት ላይ…';
+    els.outputArea.style.display = 'none';
+    els.swotContainer.innerHTML = '';
+    els.journeyContainer.innerHTML = '';
+
+    initKPICards();
+    setStatus(currentLanguage==='en'?'🧠 AI is analyzing your market…':'🧠 AI የእርስዎን ገበያ በመተንተን ላይ…');
+    updateProgress(5);
+
+    try {
+      const plan = await generateMarketingPlan(cd, pd);
+      currentPlan = plan;
+      els.outputArea.style.display = 'block';
+      await streamRoles(plan);
+      updateKPICards(plan);
+      renderSWOT(plan);
+      renderJourney();
+      setStatus(currentLanguage==='en'?'✅ Strategy generated successfully!':'✅ ስትራቴጂ በተሳካ ሁኔታ ተፈጥሯል!', false);
+      updateProgress(100);
+      setTimeout(() => updateProgress(0), 2000);
+      els.outputArea.scrollIntoView({ behavior: 'smooth' });
+    } catch (err) {
+      setStatus(`${currentLanguage==='en'?'❌ Error: ':'❌ ስህተት: '}${err.message}`, false);
+      console.error(err);
+    } finally {
+      isGenerating = false;
+      els.generateBtn.disabled = false;
+      els.generateBtn.textContent = currentLanguage==='en'?'✨ Generate Strategic Plan':'✨ ስትራቴጂክ እቅድ ፍጠር';
     }
-    
-    function initKPICards() {
-        const kpis = [
-            { icon: '👥', labelEn: 'SEGMENTATION', labelAm: 'ክፍፍል', value: 'Ready', source: 'Click generate to start' },
-            { icon: '📊', labelEn: 'MARKET SIZE', labelAm: 'የገበያ መጠን', value: 'Ready', source: 'TAM · SAM · SOM' },
-            { icon: '🎯', labelEn: 'KEY METRICS', labelAm: 'ቁልፍ መለኪያዎች', value: 'Ready', source: 'Primary KPIs' },
-            { icon: '🏆', labelEn: 'COMPETITION', labelAm: 'ውድድር', value: 'Ready', source: 'Competitor analysis' }
-        ];
-        
-        elements.kpiGrid.innerHTML = kpis.map(kpi => `
-            <div class="kpi-card">
-                <div style="font-size: 32px;">${kpi.icon}</div>
-                <div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);" data-en="${kpi.labelEn}" data-am="${kpi.labelAm}">${currentLanguage === 'en' ? kpi.labelEn : kpi.labelAm}</div>
-                <div class="kpi-value">${kpi.value}</div>
-                <div style="font-size: 10px; color: rgba(255,255,255,.4);">${kpi.source}</div>
-            </div>
-        `).join('');
-    }
-    
-    function updateKPICards(plan) {
-        const primarySegment = plan.match(/Primary Target[:\s]*([^\n]+)/i)?.[1]?.substring(0, 40) || 'Analysis complete';
-        const tam = plan.match(/TAM[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '';
-        const sam = plan.match(/SAM[:\s]*([$\d,]+(?:[BMK]?))/i)?.[1] || '';
-        const kpi = plan.match(/Primary KPI[:\s]*([^\n]+)/i)?.[1]?.substring(0, 35) || 'KPIs defined';
-        const comp = plan.match(/Direct\s*\|\s*🔴\s*\|\s*([^\|]+)/i)?.[1]?.trim() || 'Analysis complete';
-        
-        const cards = document.querySelectorAll('.kpi-card');
-        if (cards.length >= 4) {
-            if (cards[0]) cards[0].querySelector('.kpi-value').textContent = primarySegment;
-            if (cards[1]) cards[1].querySelector('.kpi-value').textContent = tam && sam ? `${tam} → ${sam}` : (tam || 'Market sized');
-            if (cards[2]) cards[2].querySelector('.kpi-value').textContent = kpi;
-            if (cards[3]) cards[3].querySelector('.kpi-value').textContent = comp;
-        }
-    }
-    
-    function renderSWOT(plan) {
-        const swotMatch = plan.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if (!swotMatch) return;
-        
-        const swotText = swotMatch[1];
-        const extract = (label) => {
-            const re = new RegExp(`${label}:[\\s\\S]*?(?=\\n(?:Strengths|Weaknesses|Opportunities|Threats):|$)`, 'i');
-            const block = swotText.match(re)?.[0] || '';
-            return block.split('\n').filter(l => /^[-•*]\s+/.test(l.trim())).map(l => l.replace(/^[-•*]\s+/, '').trim()).slice(0, 4);
-        };
-        
-        const S = extract('Strengths');
-        const W = extract('Weaknesses');
-        const O = extract('Opportunities');
-        const T = extract('Threats');
-        
-        const strengthLabel = currentLanguage === 'en' ? '💪 STRENGTHS' : '💪 ጥንካሬዎች';
-        const weaknessLabel = currentLanguage === 'en' ? '⚠️ WEAKNESSES' : '⚠️ ድክመቶች';
-        const oppLabel = currentLanguage === 'en' ? '🚀 OPPORTUNITIES' : '🚀 እድሎች';
-        const threatLabel = currentLanguage === 'en' ? '⚡ THREATS' : '⚡ ስጋቶች';
-        
-        elements.swotContainer.innerHTML = `
-            <h3 style="margin: 30px 0 15px;" data-en="📊 SWOT Analysis" data-am="📊 SWOT ትንተና">📊 SWOT Analysis</h3>
-            <div class="swot-grid">
-                <div class="swot-card swot-s"><strong style="color: #4ade80;">${strengthLabel}</strong><ul style="margin-top: 12px; list-style: none;">${S.map(s => `<li style="padding: 4px 0;">✓ ${escapeHtml(s)}</li>`).join('') || '<li>No data extracted</li>'}</ul></div>
-                <div class="swot-card swot-w"><strong style="color: #f87171;">${weaknessLabel}</strong><ul style="margin-top: 12px; list-style: none;">${W.map(w => `<li style="padding: 4px 0;">✓ ${escapeHtml(w)}</li>`).join('') || '<li>No data extracted</li>'}</ul></div>
-                <div class="swot-card swot-o"><strong style="color: #22d3ee;">${oppLabel}</strong><ul style="margin-top: 12px; list-style: none;">${O.map(o => `<li style="padding: 4px 0;">✓ ${escapeHtml(o)}</li>`).join('') || '<li>No data extracted</li>'}</ul></div>
-                <div class="swot-card swot-t"><strong style="color: #fbbf24;">${threatLabel}</strong><ul style="margin-top: 12px; list-style: none;">${T.map(t => `<li style="padding: 4px 0;">✓ ${escapeHtml(t)}</li>`).join('') || '<li>No data extracted</li>'}</ul></div>
-            </div>
-        `;
-    }
-    
-    function renderJourney() {
-        const stages = ['AWARENESS', 'CONSIDERATION', 'PURCHASE', 'RETENTION', 'ADVOCACY'];
-        const icons = ['👁️', '🤔', '💰', '❤️', '🗣️'];
-        const stageLabels = currentLanguage === 'en' ? stages : ['ግንዛቤ', 'ማሰብ', 'ግዢ', 'ማቆየት', 'መደገፍ'];
-        
-        elements.journeyContainer.innerHTML = `
-            <h3 style="margin: 30px 0 15px;" data-en="🗺️ Customer Journey Map" data-am="🗺️ የደንበኛ ጉዞ ካርታ">🗺️ Customer Journey Map</h3>
-            <div class="journey-grid">
-                ${stages.map((stage, i) => `
-                    <div class="journey-card">
-                        <div style="font-size: 28px;">${icons[i]}</div>
-                        <div style="font-weight: bold; margin: 8px 0;">${stageLabels[i]}</div>
-                        <div style="font-size: 11px; color: rgba(255,255,255,.5);">${currentLanguage === 'en' ? 'Customer journey stage' : 'የደንበኛ ጉዞ ደረጃ'}</div>
-                    </div>
-                `).join('')}
-            </div>
-        `;
-    }
-    
-    async function streamRoles(plan) {
-        const roles = [
-            { tag: 'SEGMENTATION OUTPUT', icon: '🎯', titleEn: 'Market Segmentation', titleAm: 'የገበያ ክፍፍል' },
-            { tag: 'TAMSAMSOM OUTPUT', icon: '📊', titleEn: 'Market Sizing (TAM/SAM/SOM)', titleAm: 'የገበያ መጠን (TAM/SAM/SOM)' },
-            { tag: 'PESTLE OUTPUT', icon: '⚡', titleEn: 'PESTLE Analysis', titleAm: 'PESTLE ትንተና' },
-            { tag: 'PORTER OUTPUT', icon: '🏢', titleEn: "Porter's Five Forces", titleAm: "የፖርተር አምስት ኃይሎች" },
-            { tag: 'COMPETITOR OUTPUT', icon: '🔍', titleEn: 'Competitor Profiling', titleAm: 'ተፎካካሪ መገለጫ' },
-            { tag: 'POSITIONING OUTPUT', icon: '📍', titleEn: 'Brand Positioning', titleAm: 'የምርት ስም አቀማመጥ' },
-            { tag: '4Ps OUTPUT', icon: '🎨', titleEn: 'Marketing Mix (4Ps)', titleAm: 'የግብይት ድብልቅ (4Ps)' },
-            { tag: 'SWOT OUTPUT', icon: '💪', titleEn: 'SWOT Analysis', titleAm: 'SWOT ትንተና' },
-            { tag: 'CUSTOMER JOURNEY OUTPUT', icon: '🗺️', titleEn: 'Customer Journey Map', titleAm: 'የደንበኛ ጉዞ ካርታ' },
-            { tag: 'KPI OUTPUT', icon: '📈', titleEn: 'KPIs & Budget', titleAm: 'KPIs እና በጀት' },
-            { tag: 'OKRS OUTPUT', icon: '🎯', titleEn: 'OKR Strategist', titleAm: 'OKR ስትራቴጂስት' },
-            { tag: 'ROADMAP OUTPUT', icon: '📅', titleEn: '30-Day Roadmap', titleAm: 'የ30-ቀን የመንገድ ካርታ' }
-        ];
-        
-        const output = [];
-        
-        for (const role of roles) {
-            const regex = new RegExp(`\\[${role.tag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
-            const match = plan.match(regex);
-            if (match && match[1] && match[1].trim().length > 30) {
-                output.push({ ...role, content: match[1].trim() });
-            }
-        }
-        
-        if (output.length === 0) {
-            elements.renderedOutput.innerHTML = `<div style="line-height: 1.8;">${escapeHtml(plan).replace(/\n/g, '<br>')}</div>`;
-            return;
-        }
-        
-        elements.renderedOutput.innerHTML = '';
-        
-        for (let i = 0; i < output.length; i++) {
-            const role = output[i];
-            const card = document.createElement('div');
-            card.className = 'role-card';
-            card.innerHTML = `
-                <div class="role-header">
-                    <div class="role-icon">${role.icon}</div>
-                    <div class="role-title">${currentLanguage === 'en' ? role.titleEn : role.titleAm}</div>
-                    <div style="margin-left: auto; font-size: 11px; color: rgba(255,255,255,.4);">${currentLanguage === 'en' ? `Role ${i+1}/${output.length}` : `ሚና ${i+1}/${output.length}`}</div>
-                </div>
-                <div class="stream-loading" style="display: flex; gap: 8px; align-items: center;">
-                    <span class="loader"></span>
-                    <span style="color: rgba(255,255,255,.5);">${currentLanguage === 'en' ? 'Loading...' : 'በመጫን ላይ...'}</span>
-                </div>
-            `;
-            elements.renderedOutput.appendChild(card);
-            
-            await new Promise(resolve => setTimeout(resolve, 300));
-            
-            const loading = card.querySelector('.stream-loading');
-            if (loading) loading.remove();
-            
-            const contentDiv = document.createElement('div');
-            contentDiv.style.lineHeight = '1.8';
-            contentDiv.innerHTML = formatRoleContent(role.content);
-            card.appendChild(contentDiv);
-            
-            setTimeout(() => card.classList.add('visible'), 50);
-            updateProgress(Math.round(((i + 1) / output.length) * 100));
-        }
-    }
-    
-    function formatRoleContent(content) {
-        let html = content;
-        html = html.replace(/\n\|(.+)\|\n\|[-:\s|]+\|\n((?:\|.+\|\n?)+)/gm, (match, header, rows) => {
-            const headers = header.split('|').filter(h => h.trim()).map(h => `<th style="padding: 8px; text-align: left; background: rgba(99,102,241,.1);">${escapeHtml(h.trim())}</th>`).join('');
-            const bodyRows = rows.trim().split('\n').map(row => {
-                const cells = row.split('|').filter(c => c.trim()).map(c => `<td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,.1);">${escapeHtml(c.trim())}</td>`).join('');
-                return `<tr>${cells}</tr>`;
-            }).join('');
-            return `<table style="width: 100%; border-collapse: collapse; margin: 16px 0;">${headers ? `<thead><tr>${headers}</tr></thead>` : ''}<tbody>${bodyRows}</tbody></table>`;
-        });
-        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        html = html.replace(/^[-•*]\s+(.*?)$/gm, '<li>$1</li>');
-        html = html.replace(/(<li>.*?<\/li>)+/gs, '<ul style="margin: 8px 0; padding-left: 20px;">$&</ul>');
-        html = html.replace(/\n/g, '<br>');
-        return html;
-    }
-    
-    async function generateMarketingPlan(customerData, productDescription) {
-        const response = await fetch(`${API_BASE}/generate`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ customer_data: customerData, product_description: productDescription })
-        });
-        if (!response.ok) throw new Error('Generation failed');
-        const data = await response.json();
-        return data.plan;
-    }
-    
-    async function handleGenerate() {
-        if (isGenerating) return;
-        
-        const cd = elements.customerData.value.trim();
-        const pd = elements.productDescription.value.trim();
-        
-        if (!cd || !pd) {
-            setStatus(currentLanguage === 'en' ? 'Please fill in both fields' : 'እባክዎ ሁለቱንም መስኮች ይሙሉ', false);
-            return;
-        }
-        
-        isGenerating = true;
-        elements.generateBtn.disabled = true;
-        elements.generateBtn.textContent = currentLanguage === 'en' ? '⏳ Generating...' : '⏳ በማመንጨት ላይ...';
-        elements.outputArea.style.display = 'none';
-        elements.swotContainer.innerHTML = '';
-        elements.journeyContainer.innerHTML = '';
-        
-        initKPICards();
-        setStatus(currentLanguage === 'en' ? '🧠 AI is analyzing your market...' : '🧠 AI የእርስዎን ገበያ በመተንተን ላይ...', true);
-        updateProgress(5);
-        
-        try {
-            const plan = await generateMarketingPlan(cd, pd);
-            currentPlan = plan;
-            
-            elements.outputArea.style.display = 'block';
-            await streamRoles(plan);
-            updateKPICards(plan);
-            renderSWOT(plan);
-            renderJourney();
-            
-            setStatus(currentLanguage === 'en' ? '✅ Strategy generated successfully!' : '✅ ስትራቴጂ በተሳካ ሁኔታ ተፈጥሯል!', false);
-            updateProgress(100);
-            setTimeout(() => updateProgress(0), 2000);
-            
-            elements.outputArea.scrollIntoView({ behavior: 'smooth' });
-        } catch (error) {
-            setStatus(`${currentLanguage === 'en' ? '❌ Error: ' : '❌ ስህተት: '}${error.message}`, false);
-            console.error(error);
-        } finally {
-            isGenerating = false;
-            elements.generateBtn.disabled = false;
-            elements.generateBtn.textContent = currentLanguage === 'en' ? '✨ Generate Strategic Plan' : '✨ ስትራቴጂክ እቅድ ፍጠር';
-        }
-    }
-    
-    function handleClear() {
-        elements.customerData.value = '';
-        elements.productDescription.value = '';
-        elements.outputArea.style.display = 'none';
-        elements.swotContainer.innerHTML = '';
-        elements.journeyContainer.innerHTML = '';
-        elements.renderedOutput.innerHTML = '';
-        currentPlan = null;
-        initKPICards();
-        setStatus(currentLanguage === 'en' ? 'Cleared. Ready for new strategy.' : 'ጸዳ። ለአዲስ ስትራቴጂ ዝግጁ።', false);
-    }
-    
-    function handleCopy() {
-        if (!currentPlan) {
-            setStatus(currentLanguage === 'en' ? 'No plan to copy' : 'የሚቀዳ እቅድ የለም', false);
-            return;
-        }
-        navigator.clipboard.writeText(currentPlan);
-        setStatus(currentLanguage === 'en' ? '✅ Copied to clipboard!' : '✅ ወደ ቅንጥብ ሰሌዳ ተቀድቷል!', false);
-    }
-    
-    function saveToHistory() {
-        if (!currentPlan) {
-            setStatus(currentLanguage === 'en' ? 'No plan to save' : 'የሚቀመጥ እቅድ የለም', false);
-            return;
-        }
-        const history = {
-            id: Date.now(),
-            timestamp: new Date().toISOString(),
-            plan: currentPlan,
-            customerData: elements.customerData.value,
-            productData: elements.productDescription.value
-        };
-        
-        let saved = JSON.parse(localStorage.getItem('marketing_history') || '[]');
-        saved.unshift(history);
-        if (saved.length > 10) saved.pop();
-        localStorage.setItem('marketing_history', JSON.stringify(saved));
-        setStatus(currentLanguage === 'en' ? '✅ Saved to history!' : '✅ በታሪክ ውስጥ ተቀምጧል!', false);
-    }
-    
-    function escapeHtml(str) {
-        if (!str) return '';
-        return String(str).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
-    }
-    
-    function initApp() {
-        initKPICards();
-        elements.generateBtn.addEventListener('click', handleGenerate);
-        elements.clearBtn.addEventListener('click', handleClear);
-        if (elements.copyOutputBtn) elements.copyOutputBtn.addEventListener('click', handleCopy);
-        if (elements.saveHistoryBtn) elements.saveHistoryBtn.addEventListener('click', saveToHistory);
-    }
-    
-    // Check if language was already selected
-    if (localStorage.getItem('language')) {
-        document.getElementById('welcomeModal').classList.add('hidden');
-        setLanguage(localStorage.getItem('language'));
-    }
-    
-    initApp();
+  }
+
+  function handleClear() {
+    els.customerData.value = '';
+    els.productDesc.value = '';
+    els.outputArea.style.display = 'none';
+    els.swotContainer.innerHTML = '';
+    els.journeyContainer.innerHTML = '';
+    els.renderedOutput.innerHTML = '';
+    currentPlan = null;
+    initKPICards();
+    setStatus(currentLanguage==='en'?'Cleared. Ready for new strategy.':'ጸዳ። ለአዲስ ስትራቴጂ ዝግጁ።', false);
+  }
+
+  function handleCopy() {
+    if (!currentPlan) { setStatus(currentLanguage==='en'?'No plan to copy':'የሚቀዳ እቅድ የለም', false); return; }
+    navigator.clipboard.writeText(currentPlan).then(() => {
+      setStatus(currentLanguage==='en'?'✅ Copied to clipboard!':'✅ ወደ ቅንጥብ ሰሌዳ ተቀድቷል!', false);
+    });
+  }
+
+  function saveToHistory() {
+    if (!currentPlan) { setStatus(currentLanguage==='en'?'No plan to save':'የሚቀመጥ እቅድ የለም', false); return; }
+    let saved = JSON.parse(localStorage.getItem('marketing_history') || '[]');
+    saved.unshift({ id: Date.now(), timestamp: new Date().toISOString(), plan: currentPlan, customerData: els.customerData.value, productData: els.productDesc.value });
+    if (saved.length > 10) saved.pop();
+    localStorage.setItem('marketing_history', JSON.stringify(saved));
+    setStatus(currentLanguage==='en'?'✅ Saved to history!':'✅ በታሪክ ውስጥ ተቀምጧል!', false);
+  }
+
+  function initApp() {
+    if (appInitialized) return; // ← prevents duplicate event listeners
+    appInitialized = true;
+
+    initKPICards();
+
+    // Prefill from planner
+    const prefillCd = sessionStorage.getItem('prefillCustomer');
+    const prefillPd = sessionStorage.getItem('prefillProduct');
+    if (prefillCd) { els.customerData.value = prefillCd; sessionStorage.removeItem('prefillCustomer'); }
+    if (prefillPd) { els.productDesc.value  = prefillPd; sessionStorage.removeItem('prefillProduct'); }
+
+    els.generateBtn.addEventListener('click', handleGenerate);
+    els.clearBtn.addEventListener('click', handleClear);
+    els.copyBtn?.addEventListener('click', handleCopy);
+    els.saveBtn?.addEventListener('click', saveToHistory);
+  }
+
+  /* =====================================================
+     BOOT
+  ===================================================== */
+  if (localStorage.getItem('language')) {
+    document.getElementById('welcomeModal').classList.add('hidden');
+    setLanguage(localStorage.getItem('language'));
+  } else {
+    // Trap focus inside welcome modal
+    const modal = document.getElementById('welcomeModal');
+    const focusable = modal.querySelectorAll('button');
+    modal.addEventListener('keydown', e => {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const idx = Array.from(focusable).indexOf(document.activeElement);
+        focusable[(idx + (e.shiftKey ? -1 : 1) + focusable.length) % focusable.length].focus();
+      }
+      if (e.key === 'Escape') { /* can't close until language is picked */ }
+    });
+    // Auto-focus first option
+    setTimeout(() => focusable[0]?.focus(), 350);
+  }
+
+  initApp();
 </script>
 </body>
 </html>
