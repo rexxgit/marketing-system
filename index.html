@@ -87,13 +87,19 @@
             color: white !important;
         }
         
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
         .lang-selector {
             background: rgba(255,255,255,.05);
             border: 1px solid rgba(255,255,255,.1);
             border-radius: 50px;
-            padding: 6px 12px;
+            padding: 8px 16px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 13px;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -103,6 +109,95 @@
         .lang-selector:hover {
             background: rgba(99,102,241,.2);
             border-color: rgba(99,102,241,.5);
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .btn-signin {
+            background: transparent;
+            border: 1px solid rgba(99,102,241,.5);
+            border-radius: 50px;
+            padding: 8px 20px;
+            color: #a5b4fc;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-signin:hover {
+            background: rgba(99,102,241,.1);
+            border-color: #6366f1;
+            transform: translateY(-1px);
+        }
+        
+        .btn-signup {
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            border: none;
+            border-radius: 50px;
+            padding: 8px 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-signup:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99,102,241,.3);
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,.05);
+            border-radius: 50px;
+            padding: 6px 16px 6px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .user-menu:hover {
+            background: rgba(99,102,241,.15);
+        }
+        
+        .user-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #a5b4fc;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        .logout-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,.5);
+            cursor: pointer;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 50px;
+            transition: all 0.2s;
+        }
+        
+        .logout-btn:hover {
+            color: #f87171;
+            background: rgba(248,113,113,.1);
         }
         
         /* Welcome Modal */
@@ -602,6 +697,8 @@
             }
             .hero h1 { font-size: 32px; }
             .nav-links { gap: 12px; }
+            .nav-right { gap: 8px; }
+            .btn-signin, .btn-signup { padding: 6px 14px; font-size: 11px; }
         }
         
         .footer {
@@ -645,10 +742,19 @@
     <!-- Navigation -->
     <nav class="nav">
         <div class="logo" data-en="StrategicMarketing" data-am="ስትራቴጂክማርኬቲንግ">StrategicMarketing</div>
-        <div style="display: flex; gap: 16px; align-items: center;">
+        <div class="nav-right">
             <div class="lang-selector" id="langSelector" onclick="toggleLanguage()">
                 <span>🌐</span>
                 <span id="langSelectorText">English</span>
+            </div>
+            <div id="authContainer" class="auth-buttons">
+                <button class="btn-signin" id="signInBtnNav" data-en="Sign In" data-am="ግባ">Sign In</button>
+                <button class="btn-signup" id="signUpBtnNav" data-en="Sign Up" data-am="ተመዝገብ">Sign Up</button>
+            </div>
+            <div id="userMenu" class="user-menu" style="display: none;">
+                <span class="user-name" id="userNameDisplay"></span>
+                <div class="user-avatar" id="userAvatar"></div>
+                <button class="logout-btn" id="logoutBtnNav" data-en="Sign Out" data-am="ውጣ">Sign Out</button>
             </div>
             <div class="nav-links">
                 <button onclick="showPage('home')" class="active" id="navHome" data-en="🏠 Home" data-am="🏠 መነሻ">🏠 Home</button>
@@ -743,9 +849,9 @@
     </div>
 
     <!-- AUTHENTICATION MODAL -->
-    <div id="authModal" class="modal-backdrop"><div class="modal-box"><div class="modal-header"><h2 class="modal-title" data-en="Sign In / Sign Up" data-am="ግባ / ተመዝገብ">Sign In / Sign Up</h2><button class="modal-close" onclick="closeAuthModal()">✕</button></div>
-        <div id="loginForm"><div class="lead-input-grp"><label class="field-label" data-en="Email" data-am="ኢሜይል">Email</label><input type="email" id="loginEmail" class="lead-input" placeholder="you@example.com"></div><div class="lead-input-grp"><label class="field-label" data-en="Password" data-am="የይለፍ ቃል">Password</label><input type="password" id="loginPassword" class="lead-input" placeholder="••••••••"></div><button id="loginBtn" class="btn btn-primary" style="width: 100%; justify-content: center;">Sign In</button><p style="text-align: center; margin: 16px 0; color: var(--ink-3);">or</p><button id="showSignupBtn" class="btn btn-outline" style="width: 100%; justify-content: center;">Create Account</button></div>
-        <div id="signupForm" style="display: none;"><div class="lead-input-grp"><label class="field-label" data-en="Full Name" data-am="ሙሉ ስም">Full Name</label><input type="text" id="signupName" class="lead-input" placeholder="Alex Johnson"></div><div class="lead-input-grp"><label class="field-label" data-en="Email" data-am="ኢሜይል">Email</label><input type="email" id="signupEmail" class="lead-input" placeholder="you@example.com"></div><div class="lead-input-grp"><label class="field-label" data-en="Password" data-am="የይለፍ ቃል">Password</label><input type="password" id="signupPassword" class="lead-input" placeholder="••••••••"></div><div class="lead-input-grp"><label class="field-label" data-en="Select Plan" data-am="እቅድ ምረጥ">Select Plan</label><select id="signupPlan" class="lead-input"><option value="free">Free - 5 plans/month</option><option value="pro">Pro - $29/month - Unlimited</option></select></div><button id="signupBtn" class="btn btn-primary" style="width: 100%; justify-content: center;">Create Account</button><p style="text-align: center; margin: 16px 0; color: var(--ink-3);">or</p><button id="showLoginBtn" class="btn btn-outline" style="width: 100%; justify-content: center;">Back to Sign In</button></div>
+    <div id="authModal" class="modal-backdrop"><div class="modal-box"><div class="modal-header"><h2 class="modal-title" id="authModalTitle" data-en="Sign In / Sign Up" data-am="ግባ / ተመዝገብ">Sign In / Sign Up</h2><button class="modal-close" onclick="closeAuthModal()">✕</button></div>
+        <div id="loginForm"><div class="lead-input-grp"><label class="field-label" data-en="Email" data-am="ኢሜይል">Email</label><input type="email" id="loginEmail" class="lead-input" placeholder="you@example.com"></div><div class="lead-input-grp"><label class="field-label" data-en="Password" data-am="የይለፍ ቃል">Password</label><input type="password" id="loginPassword" class="lead-input" placeholder="••••••••"></div><button id="loginBtn" class="btn btn-primary" style="width: 100%; justify-content: center;" data-en="Sign In" data-am="ግባ">Sign In</button><p style="text-align: center; margin: 16px 0; color: rgba(255,255,255,.5);" data-en="or" data-am="ወይም">or</p><button id="showSignupBtn" class="btn btn-outline" style="width: 100%; justify-content: center;" data-en="Create Account" data-am="መለያ ፍጠር">Create Account</button></div>
+        <div id="signupForm" style="display: none;"><div class="lead-input-grp"><label class="field-label" data-en="Full Name" data-am="ሙሉ ስም">Full Name</label><input type="text" id="signupName" class="lead-input" placeholder="Alex Johnson"></div><div class="lead-input-grp"><label class="field-label" data-en="Email" data-am="ኢሜይል">Email</label><input type="email" id="signupEmail" class="lead-input" placeholder="you@example.com"></div><div class="lead-input-grp"><label class="field-label" data-en="Password" data-am="የይለፍ ቃል">Password</label><input type="password" id="signupPassword" class="lead-input" placeholder="••••••••"></div><div class="lead-input-grp"><label class="field-label" data-en="Select Plan" data-am="እቅድ ምረጥ">Select Plan</label><select id="signupPlan" class="lead-input"><option value="free">Free - 5 plans/month</option><option value="pro">Pro - $29/month - Unlimited</option></select></div><button id="signupBtn" class="btn btn-primary" style="width: 100%; justify-content: center;" data-en="Create Account" data-am="መለያ ፍጠር">Create Account</button><p style="text-align: center; margin: 16px 0; color: rgba(255,255,255,.5);" data-en="or" data-am="ወይም">or</p><button id="showLoginBtn" class="btn btn-outline" style="width: 100%; justify-content: center;" data-en="Back to Sign In" data-am="ወደ ግባ ተመለስ">Back to Sign In</button></div>
     </div></div>
 
     <footer class="footer"><p data-en="© 2025 Strategic Marketing System · Powered by AI · 13-Role Framework · Conscientious by Design" data-am="© 2025 ስትራቴጂክ ማርኬቲንግ ሲስተም · በAI የተጎላበተ · ባለ 13-ሚና ማዕቀፍ · በህሊና የተነደፈ">© 2025 Strategic Marketing System · Powered by AI · 13-Role Framework · Conscientious by Design</p><p style="margin-top: 8px; font-size: 10px;" data-en="🔒 Secure · 📊 Data-driven · 🎯 Actionable" data-am="🔒 ደህንነቱ የተጠበቀ · 📊 በውሂብ የሚመራ · 🎯 ተግባራዊ ሊሆን የሚችል">🔒 Secure · 📊 Data-driven · 🎯 Actionable</p><p style="margin-top: 8px;"><a href="https://vercel.com" target="_blank"><img src="https://img.shields.io/badge/deployed%20on-vercel-black?style=flat&logo=vercel" alt="Deployed on Vercel"></a></p></footer>
@@ -772,7 +878,7 @@
         document.querySelectorAll('[data-en][data-am]').forEach(el => {
             const text = currentLanguage === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-am');
             if (text) {
-                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = text;
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') el.placeholder = text;
                 else el.innerText = text;
             }
         });
@@ -780,7 +886,7 @@
         if (statusMsg && statusMsg.getAttribute('data-en')) {
             statusMsg.innerText = currentLanguage === 'en' ? statusMsg.getAttribute('data-en') : statusMsg.getAttribute('data-am');
         }
-        updateAuthButton();
+        updateAuthButtonsText();
     }
     
     function toggleLanguage() { setLanguage(currentLanguage === 'en' ? 'am' : 'en'); }
@@ -813,47 +919,51 @@
     // =====================================================
     let currentUser = null;
     
+    function updateAuthButtonsText() {
+        const signInBtn = document.getElementById('signInBtnNav');
+        const signUpBtn = document.getElementById('signUpBtnNav');
+        if (signInBtn) signInBtn.innerText = currentLanguage === 'en' ? 'Sign In' : 'ግባ';
+        if (signUpBtn) signUpBtn.innerText = currentLanguage === 'en' ? 'Sign Up' : 'ተመዝገብ';
+        const logoutBtn = document.getElementById('logoutBtnNav');
+        if (logoutBtn) logoutBtn.innerText = currentLanguage === 'en' ? 'Sign Out' : 'ውጣ';
+        const modalTitle = document.getElementById('authModalTitle');
+        if (modalTitle) modalTitle.innerText = currentLanguage === 'en' ? 'Sign In / Sign Up' : 'ግባ / ተመዝገብ';
+    }
+    
     function initUserSystem() {
         if (!localStorage.getItem('users')) localStorage.setItem('users', JSON.stringify([]));
         const savedUser = sessionStorage.getItem('currentUser');
         if (savedUser) {
             currentUser = JSON.parse(savedUser);
             updateDashboardUI();
+            showLoggedInUI();
             const dashboardNav = document.getElementById('navDashboard');
             if (dashboardNav) dashboardNav.style.display = 'inline-block';
-        }
-        updateAuthButton();
-    }
-    
-    function updateAuthButton() {
-        const authBtn = document.getElementById('navAuth');
-        if (authBtn) {
-            if (currentUser) {
-                const displayName = currentUser.name.split(' ')[0];
-                authBtn.setAttribute('data-en', `👤 ${displayName}`);
-                authBtn.setAttribute('data-am', `👤 ${displayName}`);
-                authBtn.textContent = currentLanguage === 'en' ? `👤 ${displayName}` : `👤 ${displayName}`;
-                authBtn.onclick = signOut;
-            } else {
-                authBtn.setAttribute('data-en', '👤 Sign In');
-                authBtn.setAttribute('data-am', '👤 ግባ');
-                authBtn.textContent = currentLanguage === 'en' ? '👤 Sign In' : '👤 ግባ';
-                authBtn.onclick = openAuthModal;
-            }
+        } else {
+            showLoggedOutUI();
         }
     }
     
-    function addAuthButton() {
-        const navRight = document.querySelector('.nav-right');
-        if (navRight && !document.getElementById('navAuth')) {
-            const authBtn = document.createElement('button');
-            authBtn.id = 'navAuth';
-            authBtn.className = 'theme-toggle';
-            authBtn.setAttribute('data-en', '👤 Sign In');
-            authBtn.setAttribute('data-am', '👤 ግባ');
-            authBtn.textContent = '👤 Sign In';
-            navRight.appendChild(authBtn);
+    function showLoggedInUI() {
+        const authContainer = document.getElementById('authContainer');
+        const userMenu = document.getElementById('userMenu');
+        const userNameSpan = document.getElementById('userNameDisplay');
+        const userAvatarDiv = document.getElementById('userAvatar');
+        
+        if (authContainer) authContainer.style.display = 'none';
+        if (userMenu) userMenu.style.display = 'flex';
+        if (userNameSpan && currentUser) {
+            const displayName = currentUser.name.split(' ')[0];
+            userNameSpan.textContent = displayName;
+            userAvatarDiv.textContent = displayName.charAt(0).toUpperCase();
         }
+    }
+    
+    function showLoggedOutUI() {
+        const authContainer = document.getElementById('authContainer');
+        const userMenu = document.getElementById('userMenu');
+        if (authContainer) authContainer.style.display = 'flex';
+        if (userMenu) userMenu.style.display = 'none';
     }
     
     function openAuthModal() {
@@ -884,7 +994,7 @@
         closeAuthModal();
         showPage('dashboard');
         document.getElementById('navDashboard').style.display = 'inline-block';
-        updateAuthButton();
+        showLoggedInUI();
         showToast(currentLanguage === 'en' ? 'Account created successfully!' : 'መለያ በተሳካ ሁኔታ ተፈጥሯል!');
         return true;
     }
@@ -902,7 +1012,7 @@
         closeAuthModal();
         showPage('dashboard');
         document.getElementById('navDashboard').style.display = 'inline-block';
-        updateAuthButton();
+        showLoggedInUI();
         showToast(currentLanguage === 'en' ? `Welcome back, ${user.name}!` : `እንኳን ደህና መጡ, ${user.name}!`);
         return true;
     }
@@ -912,7 +1022,7 @@
         sessionStorage.removeItem('currentUser');
         document.getElementById('navDashboard').style.display = 'none';
         showPage('home');
-        updateAuthButton();
+        showLoggedOutUI();
         showToast(currentLanguage === 'en' ? 'Signed out successfully' : 'በተሳካ ሁኔታ ወጥተዋል');
     }
     
@@ -1150,7 +1260,7 @@
         html = html.replace(/\n\|(.+)\|\n\|[-:\s|]+\|\n((?:\|.+\|\n?)+)/gm, (match, header, rows) => {
             const headers = header.split('|').filter(h => h.trim()).map(h => `<th style="padding: 8px; text-align: left; background: rgba(99,102,241,.1);">${escapeHtml(h.trim())}</th>`).join('');
             const bodyRows = rows.trim().split('\n').map(row => {
-                const cells = row.split('|').filter(c => c.trim()).map(c => `<td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,.1);">${escapeHtml(c.trim())}<table>`).join('');
+                const cells = row.split('|').filter(c => c.trim()).map(c => `<td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,.1);">${escapeHtml(c.trim())}<tr>`).join('');
                 return `<tr>${cells}</tr>`;
             }).join('');
             return `<table style="width: 100%; border-collapse: collapse; margin: 16px 0;">${headers ? `<thead><tr>${headers}</tr></thead>` : ''}<tbody>${bodyRows}</tbody></table>`;
@@ -1266,6 +1376,9 @@
     });
     
     // Auth modal event listeners
+    document.getElementById('signInBtnNav')?.addEventListener('click', openAuthModal);
+    document.getElementById('signUpBtnNav')?.addEventListener('click', openAuthModal);
+    document.getElementById('logoutBtnNav')?.addEventListener('click', signOut);
     document.getElementById('showSignupBtn')?.addEventListener('click', () => { document.getElementById('loginForm').style.display = 'none'; document.getElementById('signupForm').style.display = 'block'; });
     document.getElementById('showLoginBtn')?.addEventListener('click', () => { document.getElementById('loginForm').style.display = 'block'; document.getElementById('signupForm').style.display = 'none'; });
     document.getElementById('loginBtn')?.addEventListener('click', () => { const email = document.getElementById('loginEmail').value; const password = document.getElementById('loginPassword').value; if (email && password) signIn(email, password); });
@@ -1274,7 +1387,6 @@
     
     // Initialize
     if (localStorage.getItem('language')) { document.getElementById('welcomeModal').classList.add('hidden'); setLanguage(localStorage.getItem('language')); }
-    addAuthButton();
     initUserSystem();
     initApp();
 </script>
