@@ -748,12 +748,12 @@
                 <span id="langSelectorText">English</span>
             </div>
             <div id="authContainer" class="auth-buttons">
-                <button class="btn-signin" id="signInBtnNav" data-en="Sign In" data-am="ግባ">Sign In</button>
-                <button class="btn-signup" id="signUpBtnNav" data-en="Sign Up" data-am="ተመዝገብ">Sign Up</button>
+                <button class="btn-signin" id="demoSignInBtn" data-en="Sign In" data-am="ግባ">Sign In</button>
+                <button class="btn-signup" id="demoSignUpBtn" data-en="Sign Up" data-am="ተመዝገብ">Sign Up</button>
             </div>
             <div id="userMenu" class="user-menu" style="display: none;">
-                <span class="user-name" id="userNameDisplay"></span>
-                <div class="user-avatar" id="userAvatar"></div>
+                <span class="user-name" id="userNameDisplay">Demo User</span>
+                <div class="user-avatar" id="userAvatar">D</div>
                 <button class="logout-btn" id="logoutBtnNav" data-en="Sign Out" data-am="ውጣ">Sign Out</button>
             </div>
             <div class="nav-links">
@@ -848,12 +848,6 @@
         <div id="upgradeBanner" style="display: none; background: linear-gradient(135deg, rgba(99,102,241,.1), rgba(236,72,153,.1)); border: 1px solid rgba(99,102,241,.3); border-radius: 24px; padding: 24px; text-align: center; margin-top: 30px;"><h4 data-en="🚀 Upgrade to Pro for Unlimited Plans" data-am="🚀 ያልተገደበ እቅድ ለማግኘት ወደ ፕሮ ያሻሽሉ">🚀 Upgrade to Pro for Unlimited Plans</h4><p style="color: rgba(255,255,255,.7); margin: 12px 0;" data-en="You've reached your monthly limit. Upgrade to continue generating plans." data-am="ወርሃዊ ገደብዎ ላይ ደርሰዋል። እቅዶችን ማመንጨት ለመቀጠል ያሻሽሉ።">You've reached your monthly limit. Upgrade to continue generating plans.</p><button class="btn" onclick="showPricingAndUpgrade()" data-en="Upgrade Now →" data-am="አሁን ያሻሽሉ →">Upgrade Now →</button></div>
     </div>
 
-    <!-- AUTHENTICATION MODAL -->
-    <div id="authModal" class="modal-backdrop"><div class="modal-box"><div class="modal-header"><h2 class="modal-title" id="authModalTitle" data-en="Sign In / Sign Up" data-am="ግባ / ተመዝገብ">Sign In / Sign Up</h2><button class="modal-close" onclick="closeAuthModal()">✕</button></div>
-        <div id="loginForm"><div class="lead-input-grp"><label class="field-label" data-en="Email" data-am="ኢሜይል">Email</label><input type="email" id="loginEmail" class="lead-input" placeholder="you@example.com"></div><div class="lead-input-grp"><label class="field-label" data-en="Password" data-am="የይለፍ ቃል">Password</label><input type="password" id="loginPassword" class="lead-input" placeholder="••••••••"></div><button id="loginBtn" class="btn btn-primary" style="width: 100%; justify-content: center;" data-en="Sign In" data-am="ግባ">Sign In</button><p style="text-align: center; margin: 16px 0; color: rgba(255,255,255,.5);" data-en="or" data-am="ወይም">or</p><button id="showSignupBtn" class="btn btn-outline" style="width: 100%; justify-content: center;" data-en="Create Account" data-am="መለያ ፍጠር">Create Account</button></div>
-        <div id="signupForm" style="display: none;"><div class="lead-input-grp"><label class="field-label" data-en="Full Name" data-am="ሙሉ ስም">Full Name</label><input type="text" id="signupName" class="lead-input" placeholder="Alex Johnson"></div><div class="lead-input-grp"><label class="field-label" data-en="Email" data-am="ኢሜይል">Email</label><input type="email" id="signupEmail" class="lead-input" placeholder="you@example.com"></div><div class="lead-input-grp"><label class="field-label" data-en="Password" data-am="የይለፍ ቃል">Password</label><input type="password" id="signupPassword" class="lead-input" placeholder="••••••••"></div><div class="lead-input-grp"><label class="field-label" data-en="Select Plan" data-am="እቅድ ምረጥ">Select Plan</label><select id="signupPlan" class="lead-input"><option value="free">Free - 5 plans/month</option><option value="pro">Pro - $29/month - Unlimited</option></select></div><button id="signupBtn" class="btn btn-primary" style="width: 100%; justify-content: center;" data-en="Create Account" data-am="መለያ ፍጠር">Create Account</button><p style="text-align: center; margin: 16px 0; color: rgba(255,255,255,.5);" data-en="or" data-am="ወይም">or</p><button id="showLoginBtn" class="btn btn-outline" style="width: 100%; justify-content: center;" data-en="Back to Sign In" data-am="ወደ ግባ ተመለስ">Back to Sign In</button></div>
-    </div></div>
-
     <footer class="footer"><p data-en="© 2025 Strategic Marketing System · Powered by AI · 13-Role Framework · Conscientious by Design" data-am="© 2025 ስትራቴጂክ ማርኬቲንግ ሲስተም · በAI የተጎላበተ · ባለ 13-ሚና ማዕቀፍ · በህሊና የተነደፈ">© 2025 Strategic Marketing System · Powered by AI · 13-Role Framework · Conscientious by Design</p><p style="margin-top: 8px; font-size: 10px;" data-en="🔒 Secure · 📊 Data-driven · 🎯 Actionable" data-am="🔒 ደህንነቱ የተጠበቀ · 📊 በውሂብ የሚመራ · 🎯 ተግባራዊ ሊሆን የሚችል">🔒 Secure · 📊 Data-driven · 🎯 Actionable</p><p style="margin-top: 8px;"><a href="https://vercel.com" target="_blank"><img src="https://img.shields.io/badge/deployed%20on-vercel-black?style=flat&logo=vercel" alt="Deployed on Vercel"></a></p></footer>
 </div>
 
@@ -886,7 +880,6 @@
         if (statusMsg && statusMsg.getAttribute('data-en')) {
             statusMsg.innerText = currentLanguage === 'en' ? statusMsg.getAttribute('data-en') : statusMsg.getAttribute('data-am');
         }
-        updateAuthButtonsText();
     }
     
     function toggleLanguage() { setLanguage(currentLanguage === 'en' ? 'am' : 'en'); }
@@ -915,33 +908,78 @@
     function showPricingAndUpgrade() { showPage('pricing'); }
     
     // =====================================================
-    // USER AUTHENTICATION & DASHBOARD
+    // DEMO AUTHENTICATION - NO CREDENTIALS REQUIRED
     // =====================================================
     let currentUser = null;
     
-    function updateAuthButtonsText() {
-        const signInBtn = document.getElementById('signInBtnNav');
-        const signUpBtn = document.getElementById('signUpBtnNav');
-        if (signInBtn) signInBtn.innerText = currentLanguage === 'en' ? 'Sign In' : 'ግባ';
-        if (signUpBtn) signUpBtn.innerText = currentLanguage === 'en' ? 'Sign Up' : 'ተመዝገብ';
-        const logoutBtn = document.getElementById('logoutBtnNav');
-        if (logoutBtn) logoutBtn.innerText = currentLanguage === 'en' ? 'Sign Out' : 'ውጣ';
-        const modalTitle = document.getElementById('authModalTitle');
-        if (modalTitle) modalTitle.innerText = currentLanguage === 'en' ? 'Sign In / Sign Up' : 'ግባ / ተመዝገብ';
+    // Demo user data that persists in localStorage
+    function getDemoUser() {
+        let demoUser = localStorage.getItem('demo_user');
+        if (!demoUser) {
+            demoUser = {
+                id: Date.now(),
+                name: 'Demo User',
+                email: 'demo@strategicmarketing.com',
+                plan: 'free',
+                planStartDate: new Date().toISOString(),
+                plansGenerated: 0,
+                roadmapTasks: {
+                    day1: false, day3: false, day5: false, day8: false, day11: false,
+                    day15: false, day19: false, day22: false, day26: false
+                },
+                createdAt: new Date().toISOString()
+            };
+            localStorage.setItem('demo_user', JSON.stringify(demoUser));
+        }
+        return JSON.parse(demoUser);
     }
     
-    function initUserSystem() {
-        if (!localStorage.getItem('users')) localStorage.setItem('users', JSON.stringify([]));
-        const savedUser = sessionStorage.getItem('currentUser');
-        if (savedUser) {
-            currentUser = JSON.parse(savedUser);
-            updateDashboardUI();
-            showLoggedInUI();
-            const dashboardNav = document.getElementById('navDashboard');
-            if (dashboardNav) dashboardNav.style.display = 'inline-block';
-        } else {
-            showLoggedOutUI();
-        }
+    function saveDemoUser(user) {
+        localStorage.setItem('demo_user', JSON.stringify(user));
+    }
+    
+    function demoSignIn() {
+        currentUser = getDemoUser();
+        sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+        updateDashboardUI();
+        showLoggedInUI();
+        document.getElementById('navDashboard').style.display = 'inline-block';
+        showPage('dashboard');
+        showToast(currentLanguage === 'en' ? 'Welcome to your dashboard!' : 'እንኳን ወደ ዳሽቦርድዎ በደህና መጡ!');
+    }
+    
+    function demoSignUp() {
+        // Reset demo user to ensure fresh start
+        const newDemoUser = {
+            id: Date.now(),
+            name: 'Demo User',
+            email: 'demo@strategicmarketing.com',
+            plan: 'free',
+            planStartDate: new Date().toISOString(),
+            plansGenerated: 0,
+            roadmapTasks: {
+                day1: false, day3: false, day5: false, day8: false, day11: false,
+                day15: false, day19: false, day22: false, day26: false
+            },
+            createdAt: new Date().toISOString()
+        };
+        localStorage.setItem('demo_user', JSON.stringify(newDemoUser));
+        currentUser = newDemoUser;
+        sessionStorage.setItem('currentUser', JSON.stringify(newDemoUser));
+        updateDashboardUI();
+        showLoggedInUI();
+        document.getElementById('navDashboard').style.display = 'inline-block';
+        showPage('dashboard');
+        showToast(currentLanguage === 'en' ? 'Account created! Welcome to your dashboard.' : 'መለያ ተፈጥሯል! እንኳን ወደ ዳሽቦርድዎ በደህና መጡ።');
+    }
+    
+    function demoSignOut() {
+        currentUser = null;
+        sessionStorage.removeItem('currentUser');
+        document.getElementById('navDashboard').style.display = 'none';
+        showPage('home');
+        showLoggedOutUI();
+        showToast(currentLanguage === 'en' ? 'Signed out successfully' : 'በተሳካ ሁኔታ ወጥተዋል');
     }
     
     function showLoggedInUI() {
@@ -953,9 +991,8 @@
         if (authContainer) authContainer.style.display = 'none';
         if (userMenu) userMenu.style.display = 'flex';
         if (userNameSpan && currentUser) {
-            const displayName = currentUser.name.split(' ')[0];
-            userNameSpan.textContent = displayName;
-            userAvatarDiv.textContent = displayName.charAt(0).toUpperCase();
+            userNameSpan.textContent = currentUser.name;
+            userAvatarDiv.textContent = currentUser.name.charAt(0).toUpperCase();
         }
     }
     
@@ -966,68 +1003,15 @@
         if (userMenu) userMenu.style.display = 'none';
     }
     
-    function openAuthModal() {
-        document.getElementById('authModal').classList.add('show');
-        document.getElementById('loginForm').style.display = 'block';
-        document.getElementById('signupForm').style.display = 'none';
-    }
-    
-    function closeAuthModal() { document.getElementById('authModal').classList.remove('show'); }
-    
-    function signUp(name, email, password, plan) {
-        const users = JSON.parse(localStorage.getItem('users'));
-        if (users.find(u => u.email === email)) {
-            alert(currentLanguage === 'en' ? 'Email already registered' : 'ኢሜይሉ ቀድሞ ተመዝግቧል');
-            return false;
-        }
-        const newUser = {
-            id: Date.now(), name: name, email: email, password: btoa(password), plan: plan,
-            planStartDate: new Date().toISOString(), plansGenerated: 0, monthlyReset: new Date().toISOString(),
-            roadmapTasks: { day1: false, day3: false, day5: false, day8: false, day11: false, day15: false, day19: false, day22: false, day26: false },
-            createdAt: new Date().toISOString()
-        };
-        users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(users));
-        currentUser = newUser;
-        sessionStorage.setItem('currentUser', JSON.stringify(newUser));
-        updateDashboardUI();
-        closeAuthModal();
-        showPage('dashboard');
-        document.getElementById('navDashboard').style.display = 'inline-block';
-        showLoggedInUI();
-        showToast(currentLanguage === 'en' ? 'Account created successfully!' : 'መለያ በተሳካ ሁኔታ ተፈጥሯል!');
-        return true;
-    }
-    
-    function signIn(email, password) {
-        const users = JSON.parse(localStorage.getItem('users'));
-        const user = users.find(u => u.email === email && u.password === btoa(password));
-        if (!user) {
-            alert(currentLanguage === 'en' ? 'Invalid email or password' : 'የተሳሳተ ኢሜይል ወይም የይለፍ ቃል');
-            return false;
-        }
-        currentUser = user;
-        sessionStorage.setItem('currentUser', JSON.stringify(user));
-        updateDashboardUI();
-        closeAuthModal();
-        showPage('dashboard');
-        document.getElementById('navDashboard').style.display = 'inline-block';
-        showLoggedInUI();
-        showToast(currentLanguage === 'en' ? `Welcome back, ${user.name}!` : `እንኳን ደህና መጡ, ${user.name}!`);
-        return true;
-    }
-    
-    function signOut() {
-        currentUser = null;
-        sessionStorage.removeItem('currentUser');
-        document.getElementById('navDashboard').style.display = 'none';
-        showPage('home');
-        showLoggedOutUI();
-        showToast(currentLanguage === 'en' ? 'Signed out successfully' : 'በተሳካ ሁኔታ ወጥተዋል');
-    }
-    
     function updateDashboardUI() {
-        if (!currentUser) return;
+        if (!currentUser) {
+            // If no user, create one automatically for demo
+            currentUser = getDemoUser();
+            sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showLoggedInUI();
+            document.getElementById('navDashboard').style.display = 'inline-block';
+        }
+        
         const tierLimit = currentUser.plan === 'free' ? 5 : 999;
         const remaining = Math.max(0, tierLimit - (currentUser.plansGenerated || 0));
         document.getElementById('statPlansGenerated').textContent = currentUser.plansGenerated || 0;
@@ -1071,7 +1055,10 @@
     }
     
     function toggleTaskCompletion(taskId) {
-        if (!currentUser) return;
+        if (!currentUser) {
+            currentUser = getDemoUser();
+            sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+        }
         if (currentUser.plan === 'free') {
             const completedCount = Object.values(currentUser.roadmapTasks || {}).filter(v => v === true).length;
             if (completedCount >= 3 && !currentUser.roadmapTasks[taskId]) {
@@ -1080,13 +1067,8 @@
             }
         }
         currentUser.roadmapTasks[taskId] = !currentUser.roadmapTasks[taskId];
-        const users = JSON.parse(localStorage.getItem('users'));
-        const userIndex = users.findIndex(u => u.id === currentUser.id);
-        if (userIndex !== -1) {
-            users[userIndex].roadmapTasks = currentUser.roadmapTasks;
-            localStorage.setItem('users', JSON.stringify(users));
-            sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-        }
+        saveDemoUser(currentUser);
+        sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
         updateRoadmapUI();
         if (currentUser.roadmapTasks[taskId]) {
             showToast(currentLanguage === 'en' ? '✅ Task completed!' : '✅ ተግባር ተጠናቋል!');
@@ -1120,20 +1102,19 @@
     }
     
     function trackPlanGeneration() {
-        if (!currentUser) return true;
+        if (!currentUser) {
+            currentUser = getDemoUser();
+            sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showLoggedInUI();
+        }
         const tierLimit = currentUser.plan === 'free' ? 5 : 999;
         if ((currentUser.plansGenerated || 0) >= tierLimit) {
             showToast(currentLanguage === 'en' ? 'Monthly limit reached. Upgrade to Pro for unlimited plans!' : 'ወርሃዊ ገደብ ላይ ደርሰዋል። ያልተገደበ እቅድ ለማግኘት ወደ ፕሮ ያሻሽሉ!');
             return false;
         }
         currentUser.plansGenerated = (currentUser.plansGenerated || 0) + 1;
-        const users = JSON.parse(localStorage.getItem('users'));
-        const userIndex = users.findIndex(u => u.id === currentUser.id);
-        if (userIndex !== -1) {
-            users[userIndex].plansGenerated = currentUser.plansGenerated;
-            localStorage.setItem('users', JSON.stringify(users));
-            sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-        }
+        saveDemoUser(currentUser);
+        sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
         updateDashboardUI();
         return true;
     }
@@ -1260,7 +1241,7 @@
         html = html.replace(/\n\|(.+)\|\n\|[-:\s|]+\|\n((?:\|.+\|\n?)+)/gm, (match, header, rows) => {
             const headers = header.split('|').filter(h => h.trim()).map(h => `<th style="padding: 8px; text-align: left; background: rgba(99,102,241,.1);">${escapeHtml(h.trim())}</th>`).join('');
             const bodyRows = rows.trim().split('\n').map(row => {
-                const cells = row.split('|').filter(c => c.trim()).map(c => `<td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,.1);">${escapeHtml(c.trim())}<tr>`).join('');
+                const cells = row.split('|').filter(c => c.trim()).map(c => `<td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,.1);">${escapeHtml(c.trim())}</td>`).join('');
                 return `<tr>${cells}</tr>`;
             }).join('');
             return `<table style="width: 100%; border-collapse: collapse; margin: 16px 0;">${headers ? `<thead><tr>${headers}</tr></thead>` : ''}<tbody>${bodyRows}</tbody></table>`;
@@ -1357,6 +1338,24 @@
         if (elements.saveHistoryBtn) elements.saveHistoryBtn.addEventListener('click', saveToHistory);
     }
     
+    // Initialize demo user on page load (auto-login)
+    function initDemoUser() {
+        // Auto-login for demo purposes
+        const savedUser = sessionStorage.getItem('currentUser');
+        if (savedUser) {
+            currentUser = JSON.parse(savedUser);
+            showLoggedInUI();
+            document.getElementById('navDashboard').style.display = 'inline-block';
+        } else {
+            // Auto-sign-in for demo
+            currentUser = getDemoUser();
+            sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showLoggedInUI();
+            document.getElementById('navDashboard').style.display = 'inline-block';
+        }
+        updateDashboardUI();
+    }
+    
     // Feedback Widget
     document.getElementById('feedbackBtn')?.addEventListener('click', () => document.getElementById('feedbackModal')?.classList.toggle('show'));
     document.getElementById('closeFeedbackBtn')?.addEventListener('click', () => document.getElementById('feedbackModal')?.classList.remove('show'));
@@ -1375,19 +1374,14 @@
         }
     });
     
-    // Auth modal event listeners
-    document.getElementById('signInBtnNav')?.addEventListener('click', openAuthModal);
-    document.getElementById('signUpBtnNav')?.addEventListener('click', openAuthModal);
-    document.getElementById('logoutBtnNav')?.addEventListener('click', signOut);
-    document.getElementById('showSignupBtn')?.addEventListener('click', () => { document.getElementById('loginForm').style.display = 'none'; document.getElementById('signupForm').style.display = 'block'; });
-    document.getElementById('showLoginBtn')?.addEventListener('click', () => { document.getElementById('loginForm').style.display = 'block'; document.getElementById('signupForm').style.display = 'none'; });
-    document.getElementById('loginBtn')?.addEventListener('click', () => { const email = document.getElementById('loginEmail').value; const password = document.getElementById('loginPassword').value; if (email && password) signIn(email, password); });
-    document.getElementById('signupBtn')?.addEventListener('click', () => { const name = document.getElementById('signupName').value; const email = document.getElementById('signupEmail').value; const password = document.getElementById('signupPassword').value; const plan = document.getElementById('signupPlan').value; if (name && email && password) signUp(name, email, password, plan); });
-    document.getElementById('authModal')?.addEventListener('click', (e) => { if (e.target === document.getElementById('authModal')) closeAuthModal(); });
+    // Demo auth buttons (no credentials needed)
+    document.getElementById('demoSignInBtn')?.addEventListener('click', demoSignIn);
+    document.getElementById('demoSignUpBtn')?.addEventListener('click', demoSignUp);
+    document.getElementById('logoutBtnNav')?.addEventListener('click', demoSignOut);
     
     // Initialize
     if (localStorage.getItem('language')) { document.getElementById('welcomeModal').classList.add('hidden'); setLanguage(localStorage.getItem('language')); }
-    initUserSystem();
+    initDemoUser();
     initApp();
 </script>
 </body>
