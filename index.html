@@ -29,7 +29,7 @@
         }
         
         /* =====================================================
-           LEFT PANEL - 13 ROLES
+           LEFT PANEL - 13 ROLES (Visible only when logged in)
         ===================================================== */
         .left-panel {
             width: 280px;
@@ -40,6 +40,12 @@
             height: 100vh;
             overflow-y: auto;
             z-index: 50;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .left-panel.open {
+            transform: translateX(0);
         }
         
         .panel-logo {
@@ -111,8 +117,13 @@
         ===================================================== */
         .main-content {
             flex: 1;
-            margin-left: 280px;
+            margin-left: 0;
             padding: 24px 32px;
+            transition: margin-left 0.3s ease;
+        }
+        
+        .main-content.panel-open {
+            margin-left: 280px;
         }
         
         /* Navigation */
@@ -134,6 +145,29 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            cursor: pointer;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .nav-links button {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,.7);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 8px 0;
+            transition: color 0.3s;
+        }
+        
+        .nav-links button:hover,
+        .nav-links button.active {
+            color: #6366f1;
         }
         
         .nav-right {
@@ -161,246 +195,226 @@
             font-size: 13px;
         }
         
-        /* Role Content Area */
-        .role-content-area {
-            display: none;
-            background: rgba(255,255,255,.03);
-            border: 1px solid rgba(255,255,255,.08);
-            border-radius: 24px;
-            padding: 32px;
-            margin-top: 24px;
-        }
-        
-        .role-content-header {
+        .auth-buttons {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
             gap: 12px;
+            align-items: center;
         }
         
-        .role-content-title {
-            font-size: 20px;
-            color: #a5b4fc;
-        }
-        
-        .close-role-content {
+        .btn-signin {
             background: transparent;
             border: 1px solid rgba(99,102,241,.5);
             border-radius: 50px;
-            padding: 6px 16px;
+            padding: 8px 20px;
             color: #a5b4fc;
             cursor: pointer;
-            font-size: 12px;
-            transition: all 0.2s;
-        }
-        
-        .close-role-content:hover {
-            background: rgba(99,102,241,.1);
-        }
-        
-        .role-content-body {
-            line-height: 1.8;
-            color: rgba(255,255,255,.7);
-        }
-        
-        .role-content-body table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 16px 0;
-        }
-        
-        .role-content-body th {
-            background: rgba(99,102,241,.1);
-            padding: 10px;
-            text-align: left;
-            color: #a5b4fc;
-        }
-        
-        .role-content-body td {
-            padding: 10px;
-            border-bottom: 1px solid rgba(255,255,255,.1);
-        }
-        
-        .role-content-body ul {
-            margin: 8px 0;
-            padding-left: 20px;
-        }
-        
-        .role-content-body li {
-            margin: 4px 0;
-        }
-        
-        /* Dashboard Container */
-        .dashboard-container {
-            display: none;
-        }
-        
-        .dashboard-container.active {
-            display: block;
-        }
-        
-        /* Journey Map */
-        .journey-map-container {
-            background: rgba(255,255,255,.03);
-            border: 1px solid rgba(255,255,255,.08);
-            border-radius: 24px;
-            padding: 32px;
-            margin-top: 24px;
-        }
-        
-        .journey-title {
-            margin-bottom: 32px;
-            font-size: 20px;
-        }
-        
-        .journey-timeline {
-            position: relative;
-            padding: 20px 0;
-        }
-        
-        .journey-dotted-line {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: repeating-linear-gradient(90deg, #6366f1, #6366f1 10px, transparent 10px, transparent 20px);
-            transform: translateY(-50%);
-            z-index: 0;
-        }
-        
-        .journey-stages {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .journey-stage-node {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            flex: 1;
-            position: relative;
-        }
-        
-        .stage-dot {
-            width: 16px;
-            height: 16px;
-            background: #6366f1;
-            border-radius: 50%;
-            box-shadow: 0 0 0 4px rgba(99,102,241,.2);
+            font-size: 13px;
+            font-weight: 500;
             transition: all 0.3s;
         }
         
-        .stage-dot.completed {
-            background: #4ade80;
-            box-shadow: 0 0 0 4px rgba(74,222,128,.2);
+        .btn-signin:hover {
+            background: rgba(99,102,241,.1);
+            border-color: #6366f1;
+            transform: translateY(-1px);
         }
         
-        .stage-date {
-            font-size: 11px;
-            color: rgba(255,255,255,.5);
-            text-align: center;
+        .btn-signup {
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            border: none;
+            border-radius: 50px;
+            padding: 8px 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
         }
         
-        .stage-name {
-            font-size: 12px;
-            font-weight: 600;
-            text-align: center;
+        .btn-signup:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99,102,241,.3);
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,.05);
+            border-radius: 50px;
+            padding: 6px 16px 6px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .user-menu:hover {
+            background: rgba(99,102,241,.15);
+        }
+        
+        .user-name {
+            font-size: 13px;
+            font-weight: 500;
             color: #a5b4fc;
         }
         
-        .stage-desc {
-            font-size: 10px;
-            color: rgba(255,255,255,.4);
-            text-align: center;
-            max-width: 120px;
-        }
-        
-        /* Start/End Graphics */
-        .journey-start {
-            position: absolute;
-            left: -20px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 24px;
-        }
-        
-        .journey-end {
-            position: absolute;
-            right: -20px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 24px;
-        }
-        
-        /* Modal */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,.9);
-            backdrop-filter: blur(8px);
-            z-index: 2000;
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            border-radius: 50%;
+            display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 14px;
         }
         
-        .modal-overlay.show {
+        .logout-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,.5);
+            cursor: pointer;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 50px;
+            transition: all 0.2s;
+        }
+        
+        .logout-btn:hover {
+            color: #f87171;
+            background: rgba(248,113,113,.1);
+        }
+        
+        /* Pages */
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 0;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, #a5b4fc, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            color: rgba(255,255,255,.7);
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+        
+        /* Steps */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 60px 0;
+        }
+        
+        .step-card {
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .step-card:hover { transform: translateY(-5px); }
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            border-radius: 50%;
             display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
         }
         
-        .modal-content {
-            background: linear-gradient(135deg, #0c1120, #1a1a2e);
+        /* Roles Grid */
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 40px 0;
+        }
+        
+        .role-badge {
+            background: rgba(99,102,241,.1);
             border: 1px solid rgba(99,102,241,.3);
+            border-radius: 100px;
+            padding: 8px 16px;
+            text-align: center;
+            font-size: 12px;
+            color: #a5b4fc;
+            transition: all 0.3s;
+        }
+        
+        .role-badge:hover { background: rgba(99,102,241,.2); transform: translateY(-2px); }
+        
+        /* Pricing */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 60px 0;
+        }
+        
+        .pricing-card {
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
             border-radius: 24px;
             padding: 32px;
             text-align: center;
-            max-width: 400px;
-            width: 90%;
+            transition: transform 0.3s;
         }
         
-        .modal-buttons {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            margin-top: 24px;
+        .pricing-card:hover { transform: translateY(-5px); }
+        .pricing-card.popular { border-color: #6366f1; background: rgba(99,102,241,.05); }
+        .price { font-size: 48px; font-weight: bold; margin: 20px 0; }
+        .price span { font-size: 16px; font-weight: normal; }
+        .feature-list { list-style: none; margin: 30px 0; }
+        .feature-list li { padding: 8px 0; color: rgba(255,255,255,.7); }
+        
+        /* About Page */
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 40px 0;
         }
         
-        .btn {
-            padding: 10px 24px;
-            border-radius: 50px;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #6366f1, #ec4899);
-            color: white;
-        }
-        
-        .btn-outline {
-            background: transparent;
-            border: 1px solid rgba(99,102,241,.5);
-            color: #a5b4fc;
-        }
-        
-        /* Empty State */
-        .empty-state {
+        .principle-card {
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 20px;
+            padding: 30px;
             text-align: center;
-            padding: 60px;
-            color: rgba(255,255,255,.4);
+            transition: transform 0.3s;
         }
         
-        /* Input Area */
+        .principle-card:hover { transform: translateY(-5px); }
+        
+        /* App Generator Area */
         .input-area {
             background: rgba(255,255,255,.05);
             border: 1px solid rgba(255,255,255,.1);
@@ -494,6 +508,235 @@
             transform: translateY(0);
         }
         
+        /* Dashboard Container */
+        .dashboard-container {
+            display: none;
+        }
+        
+        .dashboard-container.active {
+            display: block;
+        }
+        
+        /* Journey Map */
+        .journey-map-container {
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 24px;
+            padding: 32px;
+            margin-top: 24px;
+        }
+        
+        .journey-title {
+            margin-bottom: 32px;
+            font-size: 20px;
+        }
+        
+        .journey-timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+        
+        .journey-dotted-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: repeating-linear-gradient(90deg, #6366f1, #6366f1 10px, transparent 10px, transparent 20px);
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+        
+        .journey-stages {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .journey-stage-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            position: relative;
+        }
+        
+        .stage-dot {
+            width: 16px;
+            height: 16px;
+            background: #6366f1;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(99,102,241,.2);
+            transition: all 0.3s;
+        }
+        
+        .stage-dot.completed {
+            background: #4ade80;
+            box-shadow: 0 0 0 4px rgba(74,222,128,.2);
+        }
+        
+        .stage-date {
+            font-size: 11px;
+            color: rgba(255,255,255,.5);
+            text-align: center;
+        }
+        
+        .stage-name {
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            color: #a5b4fc;
+        }
+        
+        .stage-desc {
+            font-size: 10px;
+            color: rgba(255,255,255,.4);
+            text-align: center;
+            max-width: 120px;
+        }
+        
+        .journey-start {
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+        }
+        
+        .journey-end {
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+        }
+        
+        /* Role Content Area */
+        .role-content-area {
+            display: none;
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 24px;
+            padding: 32px;
+            margin-top: 24px;
+        }
+        
+        .role-content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .role-content-title {
+            font-size: 20px;
+            color: #a5b4fc;
+        }
+        
+        .close-role-content {
+            background: transparent;
+            border: 1px solid rgba(99,102,241,.5);
+            border-radius: 50px;
+            padding: 6px 16px;
+            color: #a5b4fc;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .close-role-content:hover {
+            background: rgba(99,102,241,.1);
+        }
+        
+        .role-content-body {
+            line-height: 1.8;
+            color: rgba(255,255,255,.7);
+        }
+        
+        .role-content-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+        
+        .role-content-body th {
+            background: rgba(99,102,241,.1);
+            padding: 10px;
+            text-align: left;
+            color: #a5b4fc;
+        }
+        
+        .role-content-body td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: rgba(255,255,255,.4);
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,.9);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #0c1120, #1a1a2e);
+            border: 1px solid rgba(99,102,241,.3);
+            border-radius: 24px;
+            padding: 32px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+        
+        .btn {
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            color: white;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(99,102,241,.5);
+            color: #a5b4fc;
+        }
+        
         .loader {
             display: inline-block;
             width: 20px;
@@ -507,11 +750,32 @@
         
         @keyframes spin { to { transform: rotate(360deg); } }
         
+        /* Changelog */
+        .changelog-section {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(255,255,255,.03);
+            border-radius: 16px;
+        }
+        
+        .changelog-section details { cursor: pointer; }
+        .changelog-section summary { color: #a5b4fc; margin-bottom: 8px; }
+        .changelog-section p { font-size: 12px; color: rgba(255,255,255,.6); margin: 4px 0; }
+        
+        .footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid rgba(255,255,255,.1);
+            margin-top: 60px;
+            color: rgba(255,255,255,.5);
+            font-size: 12px;
+        }
+        
         @media (max-width: 768px) {
-            .left-panel { width: 80px; }
-            .role-name, .role-status { display: none; }
-            .main-content { margin-left: 80px; padding: 16px; }
-            .role-item { justify-content: center; padding: 12px; }
+            .left-panel { width: 260px; }
+            .main-content.panel-open { margin-left: 260px; }
+            .steps, .pricing-grid, .principles-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 32px; }
             .journey-stages { flex-direction: column; gap: 24px; }
             .journey-dotted-line { display: none; }
         }
@@ -520,8 +784,8 @@
 <body>
 
 <div class="app-wrapper">
-    <!-- LEFT PANEL - 13 ROLES -->
-    <div class="left-panel">
+    <!-- LEFT PANEL - 13 ROLES (Visible only when logged in) -->
+    <div class="left-panel" id="leftPanel">
         <div class="panel-logo">
             <h2>StratMark AI</h2>
         </div>
@@ -584,7 +848,7 @@
             <div class="role-item" data-role="roadmap">
                 <span class="role-icon">📅</span>
                 <span class="role-name">Roadmap</span>
-                <span class="role-status has-data" id="roadmapStatus">—</span>
+                <span class="role-status" id="roadmapStatus">—</span>
             </div>
             <div class="role-item" data-role="design">
                 <span class="role-icon">🎨</span>
@@ -595,36 +859,107 @@
     </div>
 
     <!-- MAIN CONTENT -->
-    <div class="main-content">
+    <div class="main-content" id="mainContent">
         <nav class="nav">
-            <div class="logo">StrategicMarketing</div>
+            <div class="logo" onclick="showPage('home')">StrategicMarketing</div>
+            <div class="nav-links" id="navLinks">
+                <button onclick="showPage('home')" class="active" id="navHome">🏠 Home</button>
+                <button onclick="showPage('planner')" id="navPlanner">📋 Planner</button>
+                <button onclick="showPage('about')" id="navAbout">💡 About</button>
+                <button onclick="showPage('pricing')" id="navPricing">💰 Pricing</button>
+                <button onclick="showPage('app')" id="navApp" class="cta-nav">✨ Launch App →</button>
+            </div>
             <div class="nav-right">
                 <div class="lang-selector" id="langSelector">🌐 English</div>
-                <button class="btn-dashboard" id="dashboardToggleBtn">📊 Dashboard</button>
+                <div id="authContainer" class="auth-buttons">
+                    <button class="btn-signin" id="demoSignInBtn">Sign In</button>
+                    <button class="btn-signup" id="demoSignUpBtn">Sign Up</button>
+                </div>
+                <div id="userMenu" class="user-menu" style="display: none;">
+                    <span class="user-name" id="userNameDisplay">Demo User</span>
+                    <div class="user-avatar" id="userAvatar">D</div>
+                    <button class="logout-btn" id="logoutBtnNav">Sign Out</button>
+                </div>
             </div>
         </nav>
 
+        <!-- HOME PAGE -->
+        <div id="homePage" class="page active">
+            <div class="hero">
+                <h1>Stop second-guessing.<br>Start executing.</h1>
+                <p>A conscientious marketing system that delivers 13 disciplined roles—executed in precise sequence—so you get clarity, not confusion.</p>
+                <button class="btn-primary" onclick="showPage('app')">✨ Start Your Free Plan →</button>
+            </div>
+            <h2 style="text-align: center; margin-bottom: 40px;">How it works</h2>
+            <div class="steps">
+                <div class="step-card"><div class="step-number">1</div><h3>Describe your audience</h3><p style="color: rgba(255,255,255,.6);">Tell us who you want to sell to</p></div>
+                <div class="step-card"><div class="step-number">2</div><h3>Describe your product</h3><p style="color: rgba(255,255,255,.6);">Tell us what you're selling</p></div>
+                <div class="step-card"><div class="step-number">3</div><h3>Get your full plan</h3><p style="color: rgba(255,255,255,.6);">Receive 13 roles of strategic analysis</p></div>
+            </div>
+            <h2 style="text-align: center; margin-bottom: 30px;">13 Disciplined Roles</h2>
+            <div class="roles-grid">
+                <div class="role-badge">🎯 Segmentation</div>
+                <div class="role-badge">📊 Market Sizing</div>
+                <div class="role-badge">⚡ PESTLE</div>
+                <div class="role-badge">🎯 Porter's Forces</div>
+                <div class="role-badge">🔍 Competitors</div>
+                <div class="role-badge">📍 Positioning</div>
+                <div class="role-badge">🎨 4Ps</div>
+                <div class="role-badge">💪 SWOT</div>
+                <div class="role-badge">🗺️ Journey Map</div>
+                <div class="role-badge">📈 KPIs</div>
+                <div class="role-badge">🎯 OKRs</div>
+                <div class="role-badge">📅 Roadmap</div>
+                <div class="role-badge">🎨 Design</div>
+            </div>
+            <div class="changelog-section"><details><summary>📋 What's New (v1.0.0)</summary><div><p>✅ <strong>June 2, 2025 - Full Launch</strong></p><p style="margin-left: 16px;">• 13-role AI marketing framework</p><p style="margin-left: 16px;">• Real-time streaming output</p><p style="margin-left: 16px;">• PDF export & save to history</p><p style="margin-left: 16px;">• Interactive dashboard with journey map</p></div></details></div>
+        </div>
+
+        <!-- PLANNER PAGE -->
+        <div id="plannerPage" class="page">
+            <div class="hero" style="padding: 40px 0;"><h1>Strategy Planner</h1><p>Fill in your business details and let our AI do the rest</p></div>
+            <div class="input-area">
+                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);">👥 Customer Data / Target Audience</label>
+                <textarea id="plannerCustomer" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies ($50M-$500M revenue) looking for AI analytics solutions..."></textarea>
+                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);">📦 Product Description / Service</label>
+                <textarea id="plannerProduct" rows="4" placeholder="Example: An AI-powered marketing analytics platform that provides real-time ROI predictions and channel optimization recommendations..."></textarea>
+                <button class="btn-primary" onclick="goToAppWithData()">✨ Generate Strategic Plan →</button>
+            </div>
+        </div>
+
+        <!-- ABOUT PAGE -->
+        <div id="aboutPage" class="page">
+            <div class="hero" style="padding: 40px 0;"><h1>Built on <span style="color: #6366f1;">Conscientiousness</span></h1><p>We believe marketing strategy should be disciplined, not chaotic. 13 roles. One clear output. Every time.</p></div>
+            <div style="background: rgba(255,255,255,.05); border-radius: 24px; padding: 32px; margin: 40px 0;"><h2 style="text-align: center; margin-bottom: 24px;">The 13-Role Framework</h2><div class="roles-grid"><div class="role-badge">1. Segmentation</div><div class="role-badge">2. Market Sizing</div><div class="role-badge">3. PESTLE</div><div class="role-badge">4. Porter's Forces</div><div class="role-badge">5. Competitors</div><div class="role-badge">6. Positioning</div><div class="role-badge">7. 4Ps</div><div class="role-badge">8. SWOT</div><div class="role-badge">9. Journey Map</div><div class="role-badge">10. KPIs</div><div class="role-badge">11. OKRs</div><div class="role-badge">12. Roadmap</div><div class="role-badge">13. Design</div></div></div>
+            <div class="principles-grid"><div class="principle-card"><div style="font-size: 48px; margin-bottom: 16px;">🤖</div><h3>Autonomy</h3><p style="color: rgba(255,255,255,.6);">The system works by itself. You don't have to tell it what to do next.</p></div><div class="principle-card"><div style="font-size: 48px; margin-bottom: 16px;">🧠</div><h3>Intelligence</h3><p style="color: rgba(255,255,255,.6);">Smart analysis that learns and adapts to your business.</p></div><div class="principle-card"><div style="font-size: 48px; margin-bottom: 16px;">💚</div><h3>Goodness</h3><p style="color: rgba(255,255,255,.6);">Ethical strategies that benefit everyone, not just the bottom line.</p></div></div>
+            <div style="background: rgba(99,102,241,.08); border-radius: 24px; padding: 32px; text-align: center;"><h3>Our Mission</h3><p style="color: rgba(255,255,255,.7); max-width: 600px; margin: 16px auto 0;">To democratize strategic marketing by making professional-grade planning accessible, understandable, and actionable for everyone.</p></div>
+        </div>
+
+        <!-- PRICING PAGE -->
+        <div id="pricingPage" class="page">
+            <div class="hero" style="padding: 40px 0;"><h1>Simple, Transparent Pricing</h1><p>No hidden fees. Cancel anytime.</p></div>
+            <div class="pricing-grid">
+                <div class="pricing-card"><h3>Free</h3><div class="price">$0<span>/month</span></div><ul class="feature-list"><li>✅ 5 plans per month</li><li>✅ PDF export</li><li>✅ Save to history</li><li>✅ Copy to clipboard</li><li>✅ Basic analytics</li></ul><button class="btn-primary" onclick="showPage('app')">Get Started</button></div>
+                <div class="pricing-card popular"><h3>Pro</h3><div class="price">$29<span>/month</span></div><ul class="feature-list"><li>✅ Unlimited plans</li><li>✅ Priority support</li><li>✅ All export formats</li><li>✅ Advanced analytics</li><li>✅ Team sharing</li></ul><button class="btn-primary" onclick="showPage('app')">Start Free Trial</button><div style="margin-top: 12px; font-size: 11px; color: #a5b4fc;">Most popular</div></div>
+                <div class="pricing-card"><h3>Enterprise</h3><div class="price">Custom</div><ul class="feature-list"><li>✅ Unlimited everything</li><li>✅ API access</li><li>✅ SSO & SAML</li><li>✅ Dedicated support</li><li>✅ Custom integrations</li></ul><button class="btn-outline" onclick="alert('Contact sales@strategicmarketing.com')">Contact Sales</button></div>
+            </div>
+        </div>
+
         <!-- APP PAGE (Generator) -->
-        <div id="appPage" class="page active">
+        <div id="appPage" class="page">
             <div class="input-area">
                 <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);">📊 Customer Data / Target Audience</label>
                 <textarea id="customerData" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies ($50M-$500M revenue) looking for AI analytics solutions..."></textarea>
-                
                 <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);">📦 Product Description / Service</label>
                 <textarea id="productDescription" rows="5" placeholder="Example: An AI-powered marketing analytics platform that provides real-time ROI predictions and channel optimization recommendations..."></textarea>
-                
                 <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                     <button id="generateBtn" class="btn-primary" style="padding: 12px 28px;">✨ Generate Strategic Plan</button>
                     <button id="clearBtn" class="btn-outline" style="padding: 12px 28px;">Clear All</button>
                 </div>
             </div>
-            
             <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
-            
             <div class="status-bar" id="statusBar"><span class="loader"></span><span id="statusMessage">Ready to generate</span></div>
-            
             <div class="kpi-grid" id="kpiGrid"></div>
-            
             <div class="output-area" id="outputArea">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
                     <h3>📊 Generated Marketing Strategy</h3>
@@ -637,7 +972,7 @@
             </div>
         </div>
 
-        <!-- DASHBOARD PAGE -->
+        <!-- DASHBOARD PAGE (Only visible when logged in) -->
         <div id="dashboardPage" class="dashboard-container">
             <div class="journey-map-container">
                 <h2 class="journey-title">🗺️ 30-Day Customer Journey Map</h2>
@@ -648,8 +983,6 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Role Content Display Area -->
             <div id="roleContentArea" class="role-content-area">
                 <div class="role-content-header">
                     <h3 id="roleContentTitle" class="role-content-title">Role Title</h3>
@@ -658,19 +991,11 @@
                 <div id="roleContentBody" class="role-content-body"></div>
             </div>
         </div>
-    </div>
-</div>
 
-<!-- GO TO DASHBOARD MODAL -->
-<div id="gotoDashboardModal" class="modal-overlay">
-    <div class="modal-content">
-        <div style="font-size: 48px; margin-bottom: 16px;">🗺️</div>
-        <h3 style="margin-bottom: 12px;">Roadmap Generated!</h3>
-        <p style="color: rgba(255,255,255,.7); margin-bottom: 24px;">Your 30-day customer journey map is ready. Would you like to view it in your dashboard?</p>
-        <div class="modal-buttons">
-            <button id="modalYesBtn" class="btn-primary">✅ Yes, Show Dashboard</button>
-            <button id="modalNoBtn" class="btn-outline">🔁 No, Stay Here</button>
-        </div>
+        <footer class="footer">
+            <p>© 2025 Strategic Marketing System · Powered by AI · 13-Role Framework · Conscientious by Design</p>
+            <p style="margin-top: 8px; font-size: 10px;">🔒 Secure · 📊 Data-driven · 🎯 Actionable</p>
+        </footer>
     </div>
 </div>
 
@@ -681,7 +1006,8 @@
     let currentPlan = null;
     let isGenerating = false;
     let roadmapData = null;
-    let pendingPlan = null;
+    let currentUser = null;
+    let currentLanguage = 'en';
     
     const API_BASE = 'https://Bisratprompt-marketing-system-api.hf.space';
     
@@ -689,6 +1015,8 @@
     const elements = {
         customerData: document.getElementById('customerData'),
         productDescription: document.getElementById('productDescription'),
+        plannerCustomer: document.getElementById('plannerCustomer'),
+        plannerProduct: document.getElementById('plannerProduct'),
         generateBtn: document.getElementById('generateBtn'),
         clearBtn: document.getElementById('clearBtn'),
         copyOutputBtn: document.getElementById('copyOutputBtn'),
@@ -702,62 +1030,261 @@
         dashboardPage: document.getElementById('dashboardPage'),
         appPage: document.getElementById('appPage'),
         journeyMapContent: document.getElementById('journeyMapContent'),
-        dashboardToggleBtn: document.getElementById('dashboardToggleBtn'),
-        modal: document.getElementById('gotoDashboardModal'),
-        modalYesBtn: document.getElementById('modalYesBtn'),
-        modalNoBtn: document.getElementById('modalNoBtn'),
         roleContentArea: document.getElementById('roleContentArea'),
         roleContentTitle: document.getElementById('roleContentTitle'),
         roleContentBody: document.getElementById('roleContentBody'),
-        closeRoleContent: document.getElementById('closeRoleContent')
+        closeRoleContent: document.getElementById('closeRoleContent'),
+        leftPanel: document.getElementById('leftPanel'),
+        mainContent: document.getElementById('mainContent'),
+        authContainer: document.getElementById('authContainer'),
+        userMenu: document.getElementById('userMenu'),
+        userNameDisplay: document.getElementById('userNameDisplay'),
+        userAvatar: document.getElementById('userAvatar'),
+        roadmapStatus: document.getElementById('roadmapStatus')
     };
     
     // =====================================================
-    // EXTRACT FUNCTIONS FOR EACH ROLE
+    // PAGE NAVIGATION
     // =====================================================
+    function showPage(pageName) {
+        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+        const pageMap = {
+            'home': 'homePage',
+            'planner': 'plannerPage',
+            'about': 'aboutPage',
+            'pricing': 'pricingPage',
+            'app': 'appPage'
+        };
+        document.getElementById(pageMap[pageName]).classList.add('active');
+        
+        document.querySelectorAll('.nav-links button').forEach(btn => btn.classList.remove('active'));
+        const navMap = { 'home': 'navHome', 'planner': 'navPlanner', 'about': 'navAbout', 'pricing': 'navPricing', 'app': 'navApp' };
+        const activeBtn = document.getElementById(navMap[pageName]);
+        if (activeBtn) activeBtn.classList.add('active');
+    }
     
+    function goToAppWithData() {
+        const customerData = elements.plannerCustomer?.value;
+        const productData = elements.plannerProduct?.value;
+        if (customerData) sessionStorage.setItem('prefillCustomer', customerData);
+        if (productData) sessionStorage.setItem('prefillProduct', productData);
+        showPage('app');
+    }
+    
+    // =====================================================
+    // DEMO AUTHENTICATION
+    // =====================================================
+    function getDemoUser() {
+        let demoUser = localStorage.getItem('demo_user');
+        if (!demoUser) {
+            demoUser = {
+                id: Date.now(),
+                name: 'Demo User',
+                email: 'demo@strategicmarketing.com',
+                plan: 'free',
+                planStartDate: new Date().toISOString(),
+                plansGenerated: 0,
+                roadmapTasks: {},
+                createdAt: new Date().toISOString()
+            };
+            localStorage.setItem('demo_user', JSON.stringify(demoUser));
+        }
+        return JSON.parse(demoUser);
+    }
+    
+    function saveDemoUser(user) {
+        localStorage.setItem('demo_user', JSON.stringify(user));
+    }
+    
+    function showLoggedInUI() {
+        elements.authContainer.style.display = 'none';
+        elements.userMenu.style.display = 'flex';
+        elements.userNameDisplay.textContent = currentUser.name;
+        elements.userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+        
+        // Show left panel and adjust main content
+        elements.leftPanel.classList.add('open');
+        elements.mainContent.classList.add('panel-open');
+        
+        // Show dashboard page
+        elements.dashboardPage.classList.add('active');
+        
+        // If there's a plan already generated, render it
+        if (currentPlan) {
+            const roadmap = extractRoadmapFromPlan(currentPlan);
+            if (roadmap) {
+                renderJourneyMap(roadmap);
+                roadmapData = roadmap;
+            }
+        }
+    }
+    
+    function showLoggedOutUI() {
+        elements.authContainer.style.display = 'flex';
+        elements.userMenu.style.display = 'none';
+        
+        // Hide left panel
+        elements.leftPanel.classList.remove('open');
+        elements.mainContent.classList.remove('panel-open');
+        
+        // Hide dashboard
+        elements.dashboardPage.classList.remove('active');
+        elements.roleContentArea.style.display = 'none';
+        
+        // Show app page (generator)
+        showPage('app');
+    }
+    
+    function demoSignIn() {
+        currentUser = getDemoUser();
+        sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+        showLoggedInUI();
+        showToast('Welcome to your dashboard!');
+    }
+    
+    function demoSignUp() {
+        const newDemoUser = {
+            id: Date.now(),
+            name: 'Demo User',
+            email: 'demo@strategicmarketing.com',
+            plan: 'free',
+            planStartDate: new Date().toISOString(),
+            plansGenerated: 0,
+            roadmapTasks: {},
+            createdAt: new Date().toISOString()
+        };
+        localStorage.setItem('demo_user', JSON.stringify(newDemoUser));
+        currentUser = newDemoUser;
+        sessionStorage.setItem('currentUser', JSON.stringify(newDemoUser));
+        showLoggedInUI();
+        showToast('Account created! Welcome to your dashboard.');
+    }
+    
+    function demoSignOut() {
+        currentUser = null;
+        sessionStorage.removeItem('currentUser');
+        showLoggedOutUI();
+        showToast('Signed out successfully');
+    }
+    
+    // =====================================================
+    // EXTRACT FUNCTIONS FOR ROLES
+    // =====================================================
+    function extractRoadmapFromPlan(plan) {
+        const roadmapMatch = plan.match(/\[ROADMAP OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!roadmapMatch) return null;
+        const roadmapText = roadmapMatch[1];
+        const tasks = [];
+        const lines = roadmapText.split('\n');
+        for (const line of lines) {
+            if (line.match(/^\d+\./) && line.length > 10) {
+                const taskText = line.replace(/^\d+\./, '').trim();
+                if (taskText.length > 10 && taskText.length < 200) tasks.push(taskText);
+            }
+        }
+        if (tasks.length === 0) {
+            for (const line of lines) {
+                if (line.match(/^[-•*]\s+/) && line.length > 10) {
+                    const taskText = line.replace(/^[-•*]\s+/, '').trim();
+                    if (taskText.length > 10 && taskText.length < 200) tasks.push(taskText);
+                }
+            }
+        }
+        if (tasks.length === 0) {
+            return {
+                stages: [
+                    { day: 1, name: 'Market Research', desc: 'Audience analysis & segmentation' },
+                    { day: 7, name: 'Strategy Dev', desc: 'PESTLE & Porter analysis' },
+                    { day: 14, name: 'Execution Plan', desc: '4Ps & channel planning' },
+                    { day: 21, name: 'Launch Prep', desc: 'Campaign setup & testing' },
+                    { day: 30, name: 'Launch & Monitor', desc: 'Go live & optimization' }
+                ]
+            };
+        }
+        const milestones = [1, 7, 14, 21, 30];
+        return { stages: tasks.slice(0, 5).map((task, index) => ({ day: milestones[index], name: task.substring(0, 30), desc: task.substring(0, 60) })) };
+    }
+    
+    function renderJourneyMap(roadmap) {
+        if (!roadmap || !roadmap.stages || roadmap.stages.length === 0) {
+            elements.journeyMapContent.innerHTML = `<div class="empty-state"><p>✨ No roadmap data available</p><p style="font-size: 12px; margin-top: 8px;">Generate a plan to see your 30-day journey</p></div>`;
+            return;
+        }
+        const stages = roadmap.stages;
+        let html = `<div class="journey-timeline" style="position: relative; padding: 20px 0;"><div class="journey-start">🏁</div><div class="journey-dotted-line"></div><div class="journey-stages">`;
+        stages.forEach((stage) => {
+            html += `<div class="journey-stage-node"><div class="stage-dot completed"></div><div class="stage-date">Day ${stage.day}</div><div class="stage-name">${escapeHtml(stage.name)}</div><div class="stage-desc">${escapeHtml(stage.desc)}</div></div>`;
+        });
+        html += `</div><div class="journey-end">🎯</div></div><div style="margin-top: 32px; padding: 16px; background: rgba(99,102,241,.05); border-radius: 16px; text-align: center;"><span style="font-size: 12px; color: rgba(255,255,255,.5);">📅 30-Day Customer Journey · Milestones at Days 1, 7, 14, 21, 30</span></div>`;
+        elements.journeyMapContent.innerHTML = html;
+        if (elements.roadmapStatus) {
+            elements.roadmapStatus.textContent = `${stages.length} tasks`;
+            elements.roadmapStatus.classList.add('has-data');
+        }
+    }
+    
+    function formatContent(content) {
+        let html = content;
+        html = html.replace(/\n\|(.+)\|\n\|[-:\s|]+\|\n((?:\|.+\|\n?)+)/gm, (match, header, rows) => {
+            const headers = header.split('|').filter(h => h.trim()).map(h => `<th style="padding: 8px; text-align: left; background: rgba(99,102,241,.1);">${escapeHtml(h.trim())}</th>`).join('');
+            const bodyRows = rows.trim().split('\n').map(row => {
+                const cells = row.split('|').filter(c => c.trim()).map(c => `<td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,.1);">${escapeHtml(c.trim())}</tr>`).join('');
+                return `<tr>${cells}</tr>`;
+            }).join('');
+            return `<table style="width: 100%; border-collapse: collapse; margin: 16px 0;">${headers ? `<thead><tr>${headers}</tr></thead>` : ''}<tbody>${bodyRows}</tbody></table>`;
+        });
+        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/^[-•*]\s+(.*?)$/gm, '<li>$1</li>');
+        html = html.replace(/(<li>.*?<\/li>)+/gs, '<ul style="margin: 8px 0; padding-left: 20px;">$&</ul>');
+        html = html.replace(/\n/g, '<br>');
+        return html;
+    }
+    
+    function showRoleContent(roleId, roleTitle, contentGetter) {
+        if (!currentPlan) {
+            elements.roleContentBody.innerHTML = '<p style="color: #f87171;">⚠️ Generate a marketing plan first to see this content.</p>';
+            elements.roleContentTitle.innerHTML = roleTitle;
+            elements.roleContentArea.style.display = 'block';
+            return;
+        }
+        const content = contentGetter();
+        elements.roleContentBody.innerHTML = content;
+        elements.roleContentTitle.innerHTML = roleTitle;
+        elements.roleContentArea.style.display = 'block';
+        document.querySelectorAll('.role-item').forEach(item => item.classList.remove('active'));
+        const activeItem = document.querySelector(`.role-item[data-role="${roleId}"]`);
+        if (activeItem) activeItem.classList.add('active');
+    }
+    
+    // Role content getters
     function extractSegmentation(plan) {
         const match = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if (!match) return '<p>No segmentation data available</p>';
-        return formatContent(match[1]);
+        return match ? formatContent(match[1]) : '<p>No segmentation data available</p>';
     }
-    
     function extractMarketSizing(plan) {
         const match = plan.match(/\[TAMSAMSOM OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if (!match) return '<p>No market sizing data available</p>';
-        return formatContent(match[1]);
+        return match ? formatContent(match[1]) : '<p>No market sizing data available</p>';
     }
-    
     function extractPESTLE(plan) {
         const match = plan.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if (!match) return '<p>No PESTLE analysis available</p>';
-        return formatContent(match[1]);
+        return match ? formatContent(match[1]) : '<p>No PESTLE analysis available</p>';
     }
-    
     function extractPorter(plan) {
         const match = plan.match(/\[PORTER OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if (!match) return '<p>No Porter\'s Five Forces available</p>';
-        return formatContent(match[1]);
+        return match ? formatContent(match[1]) : '<p>No Porter\'s Five Forces available</p>';
     }
-    
     function extractCompetitors(plan) {
         const match = plan.match(/\[COMPETITOR OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if (!match) return '<p>No competitor analysis available</p>';
-        return formatContent(match[1]);
+        return match ? formatContent(match[1]) : '<p>No competitor analysis available</p>';
     }
-    
     function extractPositioning(plan) {
         const match = plan.match(/\[POSITIONING OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if (!match) return '<p>No positioning statement available</p>';
-        return formatContent(match[1]);
+        return match ? formatContent(match[1]) : '<p>No positioning statement available</p>';
     }
-    
     function extract4Ps(plan) {
         const match = plan.match(/\[4Ps OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if (!match) return '<p>No marketing mix (4Ps) available</p>';
-        return formatContent(match[1]);
+        return match ? formatContent(match[1]) : '<p>No marketing mix (4Ps) available</p>';
     }
-    
     function extractSWOT(plan) {
         const match = plan.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
         if (!match) return '<p>No SWOT analysis available</p>';
@@ -774,249 +1301,35 @@
         html += '</div>';
         return html;
     }
-    
     function extractJourney(plan) {
         const match = plan.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if (!match) return '<p>No customer journey map available</p>';
-        return formatContent(match[1]);
+        return match ? formatContent(match[1]) : '<p>No customer journey map available</p>';
     }
-    
     function extractKPIs(plan) {
         const match = plan.match(/\[KPI OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if (!match) return '<p>No KPI data available</p>';
-        return formatContent(match[1]);
+        return match ? formatContent(match[1]) : '<p>No KPI data available</p>';
     }
-    
     function extractOKRs(plan) {
         const match = plan.match(/\[OKRS OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if (!match) return '<p>No OKR data available</p>';
-        return formatContent(match[1]);
+        return match ? formatContent(match[1]) : '<p>No OKR data available</p>';
     }
-    
-    function extractRoadmap(plan) {
+    function extractRoadmapContent(plan) {
         const roadmap = extractRoadmapFromPlan(plan);
         if (!roadmap || !roadmap.stages) return '<p>No roadmap data available</p>';
-        
         let html = '<div style="display: flex; flex-direction: column; gap: 16px;">';
         roadmap.stages.forEach(stage => {
-            html += `
-                <div style="background: rgba(255,255,255,.03); border-radius: 16px; padding: 16px;">
-                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-                        <span style="background: #6366f1; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">${stage.day}</span>
-                        <strong>Day ${stage.day}</strong>
-                    </div>
-                    <div style="margin-left: 40px;">
-                        <div style="font-weight: 600; margin-bottom: 4px;">${escapeHtml(stage.name)}</div>
-                        <div style="font-size: 13px; color: rgba(255,255,255,.6);">${escapeHtml(stage.desc)}</div>
-                    </div>
-                </div>
-            `;
+            html += `<div style="background: rgba(255,255,255,.03); border-radius: 16px; padding: 16px;"><div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;"><span style="background: #6366f1; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">${stage.day}</span><strong>Day ${stage.day}</strong></div><div style="margin-left: 40px;"><div style="font-weight: 600; margin-bottom: 4px;">${escapeHtml(stage.name)}</div><div style="font-size: 13px; color: rgba(255,255,255,.6);">${escapeHtml(stage.desc)}</div></div></div>`;
         });
         html += '</div>';
         return html;
     }
-    
     function extractDesign(plan) {
         const match = plan.match(/\[DESIGN OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if (!match) return '<p>No design recommendations available</p>';
-        return formatContent(match[1]);
-    }
-    
-    function formatContent(content) {
-        let html = content;
-        html = html.replace(/\n\|(.+)\|\n\|[-:\s|]+\|\n((?:\|.+\|\n?)+)/gm, (match, header, rows) => {
-            const headers = header.split('|').filter(h => h.trim()).map(h => `<th style="padding: 8px; text-align: left; background: rgba(99,102,241,.1);">${escapeHtml(h.trim())}</th>`).join('');
-            const bodyRows = rows.trim().split('\n').map(row => {
-                const cells = row.split('|').filter(c => c.trim()).map(c => `<td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,.1);">${escapeHtml(c.trim())}</td>`).join('');
-                return `<tr>${cells}</tr>`;
-            }).join('');
-            return `<table style="width: 100%; border-collapse: collapse; margin: 16px 0;">${headers ? `<thead><tr>${headers}</table></thead>` : ''}<tbody>${bodyRows}</tbody></table>`;
-        });
-        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        html = html.replace(/^[-•*]\s+(.*?)$/gm, '<li>$1</li>');
-        html = html.replace(/(<li>.*?<\/li>)+/gs, '<ul style="margin: 8px 0; padding-left: 20px;">$&</ul>');
-        html = html.replace(/\n/g, '<br>');
-        return html;
-    }
-    
-    // Role handlers mapping
-    const roleHandlers = {
-        'segmentation': () => extractSegmentation(currentPlan),
-        'marketsizing': () => extractMarketSizing(currentPlan),
-        'pestle': () => extractPESTLE(currentPlan),
-        'porter': () => extractPorter(currentPlan),
-        'competitors': () => extractCompetitors(currentPlan),
-        'positioning': () => extractPositioning(currentPlan),
-        '4ps': () => extract4Ps(currentPlan),
-        'swot': () => extractSWOT(currentPlan),
-        'journey': () => extractJourney(currentPlan),
-        'kpi': () => extractKPIs(currentPlan),
-        'okrs': () => extractOKRs(currentPlan),
-        'roadmap': () => extractRoadmap(currentPlan),
-        'design': () => extractDesign(currentPlan)
-    };
-    
-    const roleTitles = {
-        'segmentation': '🎯 Market Segmentation',
-        'marketsizing': '📊 Market Sizing (TAM/SAM/SOM)',
-        'pestle': '⚡ PESTLE Analysis',
-        'porter': '🏢 Porter\'s Five Forces',
-        'competitors': '🔍 Competitor Profiling',
-        'positioning': '📍 Brand Positioning',
-        '4ps': '🎨 Marketing Mix (4Ps)',
-        'swot': '💪 SWOT Analysis',
-        'journey': '🗺️ Customer Journey Map',
-        'kpi': '📈 KPIs & Budget Allocation',
-        'okrs': '🎯 OKR Strategist',
-        'roadmap': '📅 30-Day Roadmap',
-        'design': '🎨 Design & Media Recommendations'
-    };
-    
-    function showRoleContent(roleId) {
-        if (!currentPlan) {
-            elements.roleContentBody.innerHTML = '<p style="color: #f87171;">⚠️ Generate a marketing plan first to see this content.</p>';
-            elements.roleContentTitle.innerHTML = roleTitles[roleId] || roleId;
-            elements.roleContentArea.style.display = 'block';
-            return;
-        }
-        
-        const handler = roleHandlers[roleId];
-        if (handler) {
-            const content = handler();
-            elements.roleContentBody.innerHTML = content;
-            elements.roleContentTitle.innerHTML = roleTitles[roleId] || roleId;
-            elements.roleContentArea.style.display = 'block';
-            
-            // Update active state in left panel
-            document.querySelectorAll('.role-item').forEach(item => item.classList.remove('active'));
-            const activeItem = document.querySelector(`.role-item[data-role="${roleId}"]`);
-            if (activeItem) activeItem.classList.add('active');
-        }
+        return match ? formatContent(match[1]) : '<p>No design recommendations available</p>';
     }
     
     // =====================================================
-    // EXTRACT ROADMAP FROM PLAN
-    // =====================================================
-    function extractRoadmapFromPlan(plan) {
-        const roadmapMatch = plan.match(/\[ROADMAP OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if (!roadmapMatch) return null;
-        
-        const roadmapText = roadmapMatch[1];
-        const tasks = [];
-        const lines = roadmapText.split('\n');
-        
-        for (const line of lines) {
-            if (line.match(/^\d+\./) && line.length > 10) {
-                const taskText = line.replace(/^\d+\./, '').trim();
-                if (taskText.length > 10 && taskText.length < 200) {
-                    tasks.push(taskText);
-                }
-            }
-        }
-        
-        if (tasks.length === 0) {
-            for (const line of lines) {
-                if (line.match(/^[-•*]\s+/) && line.length > 10) {
-                    const taskText = line.replace(/^[-•*]\s+/, '').trim();
-                    if (taskText.length > 10 && taskText.length < 200) {
-                        tasks.push(taskText);
-                    }
-                }
-            }
-        }
-        
-        if (tasks.length === 0) {
-            return {
-                stages: [
-                    { day: 1, name: 'Market Research', desc: 'Audience analysis & segmentation' },
-                    { day: 7, name: 'Strategy Dev', desc: 'PESTLE & Porter analysis' },
-                    { day: 14, name: 'Execution Plan', desc: '4Ps & channel planning' },
-                    { day: 21, name: 'Launch Prep', desc: 'Campaign setup & testing' },
-                    { day: 30, name: 'Launch & Monitor', desc: 'Go live & optimization' }
-                ]
-            };
-        }
-        
-        const milestones = [1, 7, 14, 21, 30];
-        const stages = tasks.slice(0, 5).map((task, index) => ({
-            day: milestones[index],
-            name: task.substring(0, 30),
-            desc: task.substring(0, 60)
-        }));
-        
-        return { stages };
-    }
-    
-    // =====================================================
-    // RENDER DYNAMIC JOURNEY MAP
-    // =====================================================
-    function renderJourneyMap(roadmap) {
-        if (!roadmap || !roadmap.stages || roadmap.stages.length === 0) {
-            elements.journeyMapContent.innerHTML = `
-                <div class="empty-state">
-                    <p>✨ No roadmap data available</p>
-                    <p style="font-size: 12px; margin-top: 8px;">Generate a plan to see your 30-day journey</p>
-                </div>
-            `;
-            return;
-        }
-        
-        const stages = roadmap.stages;
-        const totalDays = 30;
-        
-        let html = `
-            <div class="journey-timeline" style="position: relative; padding: 20px 0;">
-                <div class="journey-start">🏁</div>
-                <div class="journey-dotted-line"></div>
-                <div class="journey-stages">
-        `;
-        
-        stages.forEach((stage) => {
-            const isCompleted = stage.day <= 30;
-            html += `
-                <div class="journey-stage-node" style="position: relative;">
-                    <div class="stage-dot ${isCompleted ? 'completed' : ''}"></div>
-                    <div class="stage-date">Day ${stage.day}</div>
-                    <div class="stage-name">${escapeHtml(stage.name)}</div>
-                    <div class="stage-desc">${escapeHtml(stage.desc)}</div>
-                </div>
-            `;
-        });
-        
-        html += `
-                </div>
-                <div class="journey-end">🎯</div>
-            </div>
-            <div style="margin-top: 32px; padding: 16px; background: rgba(99,102,241,.05); border-radius: 16px; text-align: center;">
-                <span style="font-size: 12px; color: rgba(255,255,255,.5);">📅 30-Day Customer Journey · Milestones at Days 1, 7, 14, 21, 30</span>
-            </div>
-        `;
-        
-        elements.journeyMapContent.innerHTML = html;
-        
-        const roadmapStatus = document.getElementById('roadmapStatus');
-        if (roadmapStatus) {
-            roadmapStatus.textContent = `${stages.length} tasks`;
-            roadmapStatus.classList.add('has-data');
-        }
-    }
-    
-    // =====================================================
-    // SHOW MODAL AFTER GENERATION
-    // =====================================================
-    function showGotoDashboardModal(plan, roadmap) {
-        pendingPlan = plan;
-        roadmapData = roadmap;
-        elements.modal.classList.add('show');
-    }
-    
-    function hideModal() {
-        elements.modal.classList.remove('show');
-        pendingPlan = null;
-    }
-    
-    // =====================================================
-    // APP FUNCTIONALITY
+    // APP GENERATOR FUNCTIONALITY
     // =====================================================
     function setStatus(message, isLoading = true) {
         elements.statusMessage.textContent = message;
@@ -1033,31 +1346,7 @@
             { icon: '🎯', label: 'KEY METRICS', value: 'Ready', source: 'Primary KPIs' },
             { icon: '🏆', label: 'COMPETITION', value: 'Ready', source: 'Competitor analysis' }
         ];
-        elements.kpiGrid.innerHTML = kpis.map(kpi => `
-            <div class="kpi-card">
-                <div style="font-size: 32px;">${kpi.icon}</div>
-                <div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);">${kpi.label}</div>
-                <div class="kpi-value">${kpi.value}</div>
-                <div style="font-size: 10px; color: rgba(255,255,255,.4);">${kpi.source}</div>
-            </div>
-        `).join('');
-    }
-    
-    function formatRoleContent(content) {
-        let html = content;
-        html = html.replace(/\n\|(.+)\|\n\|[-:\s|]+\|\n((?:\|.+\|\n?)+)/gm, (match, header, rows) => {
-            const headers = header.split('|').filter(h => h.trim()).map(h => `<th style="padding: 8px; text-align: left; background: rgba(99,102,241,.1);">${escapeHtml(h.trim())}</th>`).join('');
-            const bodyRows = rows.trim().split('\n').map(row => {
-                const cells = row.split('|').filter(c => c.trim()).map(c => `<td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,.1);">${escapeHtml(c.trim())}</td>`).join('');
-                return `<tr>${cells}</tr>`;
-            }).join('');
-            return `<table style="width: 100%; border-collapse: collapse; margin: 16px 0;">${headers ? `<thead><tr>${headers}</table></thead>` : ''}<tbody>${bodyRows}</tbody></table>`;
-        });
-        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        html = html.replace(/^[-•*]\s+(.*?)$/gm, '<li>$1</li>');
-        html = html.replace(/(<li>.*?<\/li>)+/gs, '<ul style="margin: 8px 0; padding-left: 20px;">$&</ul>');
-        html = html.replace(/\n/g, '<br>');
-        return html;
+        elements.kpiGrid.innerHTML = kpis.map(kpi => `<div class="kpi-card"><div style="font-size: 32px;">${kpi.icon}</div><div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);">${kpi.label}</div><div class="kpi-value">${kpi.value}</div><div style="font-size: 10px; color: rgba(255,255,255,.4);">${kpi.source}</div></div>`).join('');
     }
     
     async function streamRoles(plan) {
@@ -1075,50 +1364,30 @@
             { tag: 'OKRS OUTPUT', icon: '🎯', title: 'OKR Strategist' },
             { tag: 'ROADMAP OUTPUT', icon: '📅', title: '30-Day Roadmap' }
         ];
-        
         const output = [];
         for (const role of roles) {
             const regex = new RegExp(`\\[${role.tag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
             const match = plan.match(regex);
-            if (match && match[1] && match[1].trim().length > 30) {
-                output.push({ ...role, content: match[1].trim() });
-            }
+            if (match && match[1] && match[1].trim().length > 30) output.push({ ...role, content: match[1].trim() });
         }
-        
         if (output.length === 0) {
             elements.renderedOutput.innerHTML = `<div style="line-height: 1.8;">${escapeHtml(plan).replace(/\n/g, '<br>')}</div>`;
             return;
         }
-        
         elements.renderedOutput.innerHTML = '';
-        
         for (let i = 0; i < output.length; i++) {
             const role = output[i];
             const card = document.createElement('div');
             card.className = 'role-card';
-            card.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1);">
-                    <div style="font-size: 28px;">${role.icon}</div>
-                    <div style="font-size: 18px; font-weight: bold; color: #a5b4fc;">${role.title}</div>
-                    <div style="margin-left: auto; font-size: 11px; color: rgba(255,255,255,.4);">Role ${i+1}/${output.length}</div>
-                </div>
-                <div class="stream-loading" style="display: flex; gap: 8px; align-items: center;">
-                    <span class="loader"></span>
-                    <span style="color: rgba(255,255,255,.5);">Loading...</span>
-                </div>
-            `;
+            card.innerHTML = `<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1);"><div style="font-size: 28px;">${role.icon}</div><div style="font-size: 18px; font-weight: bold; color: #a5b4fc;">${role.title}</div><div style="margin-left: auto; font-size: 11px; color: rgba(255,255,255,.4);">Role ${i+1}/${output.length}</div></div><div class="stream-loading" style="display: flex; gap: 8px; align-items: center;"><span class="loader"></span><span style="color: rgba(255,255,255,.5);">Loading...</span></div>`;
             elements.renderedOutput.appendChild(card);
-            
             await new Promise(resolve => setTimeout(resolve, 300));
-            
             const loading = card.querySelector('.stream-loading');
             if (loading) loading.remove();
-            
             const contentDiv = document.createElement('div');
             contentDiv.style.lineHeight = '1.8';
-            contentDiv.innerHTML = formatRoleContent(role.content);
+            contentDiv.innerHTML = formatContent(role.content);
             card.appendChild(contentDiv);
-            
             setTimeout(() => card.classList.add('visible'), 50);
             updateProgress(Math.round(((i + 1) / output.length) * 100));
         }
@@ -1164,13 +1433,22 @@
             elements.outputArea.style.display = 'block';
             await streamRoles(plan);
             
+            // Track plan generation for logged-in users
+            if (currentUser) {
+                currentUser.plansGenerated = (currentUser.plansGenerated || 0) + 1;
+                saveDemoUser(currentUser);
+                sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+                // Update dashboard if visible
+                if (elements.dashboardPage.classList.contains('active') && roadmap) {
+                    renderJourneyMap(roadmap);
+                }
+            }
+            
             setStatus('✅ Strategy generated successfully!', false);
             updateProgress(100);
             setTimeout(() => updateProgress(0), 2000);
             
             elements.outputArea.scrollIntoView({ behavior: 'smooth' });
-            
-            showGotoDashboardModal(plan, roadmap);
             
         } catch (error) {
             setStatus(`❌ Error: ${error.message}`, false);
@@ -1213,91 +1491,81 @@
         return String(str).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
     }
     
+    function showToast(message) {
+        let toast = document.getElementById('dynamicToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'dynamicToast';
+            toast.style.cssText = 'position: fixed; bottom: 100px; right: 24px; background: #0c1120; border: 1px solid rgba(99,102,241,.3); border-radius: 12px; padding: 12px 20px; z-index: 2000; transform: translateX(400px); transition: transform 0.3s ease;';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = message;
+        toast.style.transform = 'translateX(0)';
+        setTimeout(() => { toast.style.transform = 'translateX(400px)'; }, 2500);
+    }
+    
     function initApp() {
         initKPICards();
         elements.generateBtn.addEventListener('click', handleGenerate);
         elements.clearBtn.addEventListener('click', handleClear);
         if (elements.copyOutputBtn) elements.copyOutputBtn.addEventListener('click', handleCopy);
         if (elements.saveHistoryBtn) elements.saveHistoryBtn.addEventListener('click', saveToHistory);
-    }
-    
-    // =====================================================
-    // DASHBOARD TOGGLE & ROLE CLICK HANDLERS
-    // =====================================================
-    let isDashboardVisible = false;
-    
-    function showApp() {
-        elements.appPage.style.display = 'block';
-        elements.dashboardPage.classList.remove('active');
-        isDashboardVisible = false;
-        elements.dashboardToggleBtn.textContent = '📊 Dashboard';
-        elements.roleContentArea.style.display = 'none';
-    }
-    
-    function showDashboard() {
-        elements.appPage.style.display = 'none';
-        elements.dashboardPage.classList.add('active');
-        isDashboardVisible = true;
-        elements.dashboardToggleBtn.textContent = '✏️ Generator';
-    }
-    
-    function toggleDashboard() {
-        if (isDashboardVisible) {
-            showApp();
-        } else {
-            if (roadmapData) {
-                renderJourneyMap(roadmapData);
+        
+        // Role click handlers
+        document.querySelectorAll('.role-item').forEach(item => {
+            const roleId = item.dataset.role;
+            const roleName = item.querySelector('.role-name')?.innerText || roleId;
+            let handler;
+            switch(roleId) {
+                case 'segmentation': handler = () => showRoleContent(roleId, roleName, () => extractSegmentation(currentPlan)); break;
+                case 'marketsizing': handler = () => showRoleContent(roleId, roleName, () => extractMarketSizing(currentPlan)); break;
+                case 'pestle': handler = () => showRoleContent(roleId, roleName, () => extractPESTLE(currentPlan)); break;
+                case 'porter': handler = () => showRoleContent(roleId, roleName, () => extractPorter(currentPlan)); break;
+                case 'competitors': handler = () => showRoleContent(roleId, roleName, () => extractCompetitors(currentPlan)); break;
+                case 'positioning': handler = () => showRoleContent(roleId, roleName, () => extractPositioning(currentPlan)); break;
+                case '4ps': handler = () => showRoleContent(roleId, roleName, () => extract4Ps(currentPlan)); break;
+                case 'swot': handler = () => showRoleContent(roleId, roleName, () => extractSWOT(currentPlan)); break;
+                case 'journey': handler = () => showRoleContent(roleId, roleName, () => extractJourney(currentPlan)); break;
+                case 'kpi': handler = () => showRoleContent(roleId, roleName, () => extractKPIs(currentPlan)); break;
+                case 'okrs': handler = () => showRoleContent(roleId, roleName, () => extractOKRs(currentPlan)); break;
+                case 'roadmap': handler = () => showRoleContent(roleId, roleName, () => extractRoadmapContent(currentPlan)); break;
+                case 'design': handler = () => showRoleContent(roleId, roleName, () => extractDesign(currentPlan)); break;
+                default: handler = () => {};
             }
-            showDashboard();
-        }
-    }
-    
-    // Add click listeners to all role items
-    document.querySelectorAll('.role-item').forEach(item => {
-        const roleId = item.dataset.role;
-        item.addEventListener('click', () => {
-            if (!isDashboardVisible) {
-                // If not in dashboard, switch to dashboard first
-                if (roadmapData) {
-                    renderJourneyMap(roadmapData);
-                }
-                showDashboard();
-            }
-            showRoleContent(roleId);
+            item.addEventListener('click', handler);
         });
-    });
-    
-    // Close role content
-    elements.closeRoleContent.addEventListener('click', () => {
-        elements.roleContentArea.style.display = 'none';
-    });
-    
-    // Modal handlers
-    function handleModalYes() {
-        if (pendingPlan && roadmapData) {
-            renderJourneyMap(roadmapData);
-            showDashboard();
-        }
-        hideModal();
+        
+        elements.closeRoleContent.addEventListener('click', () => {
+            elements.roleContentArea.style.display = 'none';
+        });
     }
     
-    function handleModalNo() {
-        hideModal();
+    // Pre-fill from planner
+    if (sessionStorage.getItem('prefillCustomer')) {
+        elements.customerData.value = sessionStorage.getItem('prefillCustomer');
+        sessionStorage.removeItem('prefillCustomer');
+    }
+    if (sessionStorage.getItem('prefillProduct')) {
+        elements.productDescription.value = sessionStorage.getItem('prefillProduct');
+        sessionStorage.removeItem('prefillProduct');
     }
     
-    // =====================================================
-    // INITIALIZATION
-    // =====================================================
-    elements.dashboardToggleBtn.addEventListener('click', toggleDashboard);
-    elements.modalYesBtn.addEventListener('click', handleModalYes);
-    elements.modalNoBtn.addEventListener('click', handleModalNo);
+    // Auth event listeners
+    document.getElementById('demoSignInBtn')?.addEventListener('click', demoSignIn);
+    document.getElementById('demoSignUpBtn')?.addEventListener('click', demoSignUp);
+    document.getElementById('logoutBtnNav')?.addEventListener('click', demoSignOut);
     
-    elements.modal.addEventListener('click', (e) => {
-        if (e.target === elements.modal) hideModal();
-    });
+    // Check for existing session
+    const savedUser = sessionStorage.getItem('currentUser');
+    if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        showLoggedInUI();
+    } else {
+        showLoggedOutUI();
+    }
     
     initApp();
-    showApp();
+    showPage('home');
 </script>
 </body>
 </html>
