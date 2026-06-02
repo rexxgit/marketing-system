@@ -29,6 +29,664 @@
         }
         
         /* =====================================================
+           CSS-ONLY ICONS LIBRARY
+        ===================================================== */
+        
+        /* Target/Bullseye Icon */
+        .icon-target {
+            width: 20px;
+            height: 20px;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-target::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 6px;
+            height: 6px;
+            background: currentColor;
+            border-radius: 50%;
+        }
+        .icon-target::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 6px;
+            background: currentColor;
+        }
+        
+        /* Bar Chart Icon */
+        .icon-bars {
+            display: inline-flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 20px;
+        }
+        .icon-bars span {
+            width: 4px;
+            background: currentColor;
+            border-radius: 1px;
+            transition: height 0.2s ease;
+        }
+        .icon-bars span:nth-child(1) { height: 10px; }
+        .icon-bars span:nth-child(2) { height: 16px; }
+        .icon-bars span:nth-child(3) { height: 8px; }
+        .icon-bars span:nth-child(4) { height: 14px; }
+        
+        /* Lightning/PESTLE Icon */
+        .icon-lightning {
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 16px solid currentColor;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-lightning::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: -4px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 12px solid currentColor;
+        }
+        
+        /* Building/Porter Icon */
+        .icon-building {
+            width: 18px;
+            height: 18px;
+            border: 2px solid currentColor;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-building::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 6px;
+            height: 6px;
+            background: currentColor;
+        }
+        .icon-building::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 2px;
+            right: 2px;
+            height: 4px;
+            background: currentColor;
+        }
+        
+        /* Search/Competitors Icon */
+        .icon-search {
+            width: 16px;
+            height: 16px;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-search::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            right: -4px;
+            width: 8px;
+            height: 2px;
+            background: currentColor;
+            transform: rotate(45deg);
+        }
+        
+        /* Map Pin/Positioning Icon */
+        .icon-pin {
+            width: 14px;
+            height: 20px;
+            border: 2px solid currentColor;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            position: relative;
+            display: inline-block;
+        }
+        .icon-pin::before {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 4px;
+            height: 4px;
+            background: currentColor;
+            border-radius: 50%;
+        }
+        
+        /* Grid/4Ps Icon */
+        .icon-grid {
+            display: inline-grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px;
+            width: 18px;
+            height: 18px;
+        }
+        .icon-grid span {
+            background: currentColor;
+            border-radius: 2px;
+        }
+        
+        /* Diamond/SWOT Icon */
+        .icon-diamond {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 18px solid currentColor;
+            transform: rotate(180deg);
+            display: inline-block;
+        }
+        
+        /* Journey Path Icon */
+        .icon-path {
+            width: 20px;
+            height: 14px;
+            border-bottom: 2px dotted currentColor;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-path::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 6px;
+            height: 6px;
+            background: currentColor;
+            border-radius: 50%;
+        }
+        .icon-path::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            bottom: -4px;
+            width: 6px;
+            height: 6px;
+            background: currentColor;
+            border-radius: 50%;
+        }
+        
+        /* Line Chart/KPI Icon */
+        .icon-linechart {
+            width: 20px;
+            height: 16px;
+            border-left: 2px solid currentColor;
+            border-bottom: 2px solid currentColor;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-linechart::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 6px;
+            height: 8px;
+            background: currentColor;
+            clip-path: polygon(0% 100%, 100% 0%, 100% 100%);
+        }
+        .icon-linechart::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 8px;
+            width: 6px;
+            height: 12px;
+            background: currentColor;
+            clip-path: polygon(0% 100%, 100% 0%, 100% 100%);
+        }
+        
+        /* Bullseye/OKR Icon */
+        .icon-bullseye {
+            width: 18px;
+            height: 18px;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-bullseye::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 6px;
+            height: 6px;
+            background: currentColor;
+            border-radius: 50%;
+        }
+        
+        /* Calendar/Roadmap Icon */
+        .icon-calendar {
+            width: 18px;
+            height: 18px;
+            border: 2px solid currentColor;
+            border-radius: 2px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-calendar::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 3px;
+            width: 4px;
+            height: 4px;
+            background: currentColor;
+            border-radius: 1px;
+        }
+        .icon-calendar::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            right: 3px;
+            width: 4px;
+            height: 4px;
+            background: currentColor;
+            border-radius: 1px;
+        }
+        
+        /* Paintbrush/Design Icon */
+        .icon-paintbrush {
+            width: 16px;
+            height: 16px;
+            border-bottom: 2px solid currentColor;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-paintbrush::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 0;
+            width: 8px;
+            height: 8px;
+            background: currentColor;
+            border-radius: 50% 0 50% 50%;
+        }
+        
+        /* Home Icon */
+        .icon-home {
+            width: 18px;
+            height: 16px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-home::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: currentColor;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+        .icon-home::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 4px;
+            right: 4px;
+            height: 6px;
+            background: currentColor;
+        }
+        
+        /* Clipboard/Planner Icon */
+        .icon-clipboard {
+            width: 16px;
+            height: 18px;
+            border: 2px solid currentColor;
+            border-radius: 2px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-clipboard::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 3px;
+            right: 3px;
+            height: 3px;
+            background: currentColor;
+            border-radius: 1px;
+        }
+        
+        /* Lightbulb/About Icon */
+        .icon-lightbulb {
+            width: 16px;
+            height: 16px;
+            background: currentColor;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-lightbulb::before {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: currentColor;
+            border-radius: 1px;
+        }
+        .icon-lightbulb::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 2px;
+            background: currentColor;
+        }
+        
+        /* Dollar/Pricing Icon */
+        .icon-dollar {
+            width: 16px;
+            height: 18px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-dollar::before {
+            content: '$';
+            position: absolute;
+            top: 0;
+            left: 4px;
+            font-weight: bold;
+            font-size: 16px;
+            color: currentColor;
+        }
+        
+        /* Rocket/Launch Icon */
+        .icon-rocket {
+            width: 18px;
+            height: 18px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-rocket::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 4px;
+            right: 4px;
+            height: 8px;
+            background: currentColor;
+            clip-path: polygon(0% 0%, 100% 0%, 80% 100%, 20% 100%);
+        }
+        .icon-rocket::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 6px;
+            right: 6px;
+            height: 8px;
+            background: currentColor;
+            clip-path: polygon(50% 0%, 100% 40%, 70% 100%, 30% 100%, 0% 40%);
+        }
+        
+        /* User/Sign In Icon */
+        .icon-user {
+            width: 16px;
+            height: 16px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-user::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 3px;
+            right: 3px;
+            height: 7px;
+            background: currentColor;
+            border-radius: 50%;
+        }
+        .icon-user::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 7px;
+            background: currentColor;
+            clip-path: polygon(0% 0%, 100% 0%, 80% 100%, 20% 100%);
+        }
+        
+        /* Arrow Right */
+        .icon-arrow {
+            width: 14px;
+            height: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-arrow::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            width: 10px;
+            height: 2px;
+            background: currentColor;
+        }
+        .icon-arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 6px;
+            height: 6px;
+            border-top: 2px solid currentColor;
+            border-right: 2px solid currentColor;
+            transform: rotate(45deg);
+        }
+        
+        /* Lock/Security Icon */
+        .icon-lock {
+            width: 12px;
+            height: 14px;
+            border: 2px solid currentColor;
+            border-radius: 2px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-lock::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 2px;
+            right: 2px;
+            height: 6px;
+            border: 2px solid currentColor;
+            border-radius: 2px 2px 0 0;
+        }
+        
+        /* Data/Chart Icon */
+        .icon-data {
+            width: 18px;
+            height: 14px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-data::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 4px;
+            height: 8px;
+            background: currentColor;
+        }
+        .icon-data::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 4px;
+            background: currentColor;
+        }
+        
+        /* Checkmark/Success Icon */
+        .icon-check {
+            width: 14px;
+            height: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-check::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 6px;
+            height: 2px;
+            background: currentColor;
+            transform: rotate(45deg);
+            transform-origin: left bottom;
+        }
+        .icon-check::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            bottom: 2px;
+            width: 10px;
+            height: 2px;
+            background: currentColor;
+            transform: rotate(-45deg);
+            transform-origin: left bottom;
+        }
+        
+        /* Star/Popular Icon */
+        .icon-star {
+            width: 16px;
+            height: 16px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-star::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 6px;
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-bottom: 8px solid currentColor;
+        }
+        .icon-star::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 2px;
+            right: 2px;
+            height: 6px;
+            background: currentColor;
+            clip-path: polygon(50% 100%, 0% 40%, 100% 40%);
+        }
+        
+        /* Heart/Goodness Icon */
+        .icon-heart {
+            width: 16px;
+            height: 14px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-heart::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 8px;
+            background: currentColor;
+            border-radius: 50% 0 50% 50%;
+            transform: rotate(-45deg);
+        }
+        .icon-heart::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 8px;
+            height: 8px;
+            background: currentColor;
+            border-radius: 0 50% 50% 50%;
+            transform: rotate(45deg);
+        }
+        
+        /* Brain/Intelligence Icon */
+        .icon-brain {
+            width: 18px;
+            height: 14px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-brain::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 10px;
+            background: currentColor;
+            border-radius: 50% 0 50% 50%;
+        }
+        .icon-brain::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 8px;
+            height: 10px;
+            background: currentColor;
+            border-radius: 0 50% 50% 50%;
+        }
+        
+        /* Gear/Settings Icon */
+        .icon-gear {
+            width: 16px;
+            height: 16px;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-gear::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            background: currentColor;
+            border-radius: 50%;
+        }
+        
+        /* =====================================================
            LEFT PANEL - 13 ROLES
         ===================================================== */
         .left-panel {
@@ -92,299 +750,12 @@
             border-left: 3px solid #6366f1;
         }
         
-        /* CSS-Only Icons for roles */
         .role-icon {
             width: 28px;
             height: 28px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-        }
-        
-        /* Segmentation icon - target */
-        .icon-target {
-            width: 20px;
-            height: 20px;
-            border: 2px solid currentColor;
-            border-radius: 50%;
-            position: relative;
-        }
-        .icon-target::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 6px;
-            height: 6px;
-            background: currentColor;
-            border-radius: 50%;
-        }
-        .icon-target::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 6px;
-            background: currentColor;
-        }
-        
-        /* Market Sizing icon - bar chart */
-        .icon-bars {
-            display: flex;
-            align-items: flex-end;
-            gap: 3px;
-            height: 20px;
-        }
-        .icon-bars span {
-            width: 5px;
-            background: currentColor;
-            border-radius: 1px;
-            transition: height 0.2s ease;
-        }
-        .icon-bars span:nth-child(1) { height: 10px; }
-        .icon-bars span:nth-child(2) { height: 16px; }
-        .icon-bars span:nth-child(3) { height: 8px; }
-        .icon-bars span:nth-child(4) { height: 14px; }
-        .role-item:hover .icon-bars span:nth-child(1) { height: 14px; }
-        .role-item:hover .icon-bars span:nth-child(2) { height: 20px; }
-        .role-item:hover .icon-bars span:nth-child(3) { height: 12px; }
-        .role-item:hover .icon-bars span:nth-child(4) { height: 18px; }
-        
-        /* PESTLE icon - lightning */
-        .icon-lightning {
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-bottom: 16px solid currentColor;
-            position: relative;
-        }
-        .icon-lightning::after {
-            content: '';
-            position: absolute;
-            top: 4px;
-            left: -4px;
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 12px solid currentColor;
-        }
-        
-        /* Porter icon - building */
-        .icon-building {
-            width: 18px;
-            height: 18px;
-            border: 2px solid currentColor;
-            position: relative;
-        }
-        .icon-building::before {
-            content: '';
-            position: absolute;
-            top: 4px;
-            left: 4px;
-            width: 6px;
-            height: 6px;
-            background: currentColor;
-        }
-        .icon-building::after {
-            content: '';
-            position: absolute;
-            bottom: 2px;
-            left: 2px;
-            right: 2px;
-            height: 4px;
-            background: currentColor;
-        }
-        
-        /* Competitors icon - magnifying glass */
-        .icon-search {
-            width: 16px;
-            height: 16px;
-            border: 2px solid currentColor;
-            border-radius: 50%;
-            position: relative;
-        }
-        .icon-search::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            right: -4px;
-            width: 8px;
-            height: 2px;
-            background: currentColor;
-            transform: rotate(45deg);
-        }
-        
-        /* Positioning icon - map pin */
-        .icon-pin {
-            width: 14px;
-            height: 20px;
-            border: 2px solid currentColor;
-            border-radius: 50% 50% 50% 0;
-            transform: rotate(-45deg);
-            position: relative;
-        }
-        .icon-pin::before {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 4px;
-            height: 4px;
-            background: currentColor;
-            border-radius: 50%;
-        }
-        
-        /* 4Ps icon - grid */
-        .icon-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3px;
-            width: 18px;
-            height: 18px;
-        }
-        .icon-grid span {
-            background: currentColor;
-            border-radius: 2px;
-        }
-        
-        /* SWOT icon - circle/diamond */
-        .icon-swot {
-            width: 0;
-            height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-bottom: 18px solid currentColor;
-            transform: rotate(180deg);
-        }
-        
-        /* Journey icon - path */
-        .icon-journey {
-            width: 20px;
-            height: 14px;
-            border-bottom: 2px dotted currentColor;
-            position: relative;
-        }
-        .icon-journey::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: -4px;
-            width: 6px;
-            height: 6px;
-            background: currentColor;
-            border-radius: 50%;
-        }
-        .icon-journey::after {
-            content: '';
-            position: absolute;
-            right: 0;
-            bottom: -4px;
-            width: 6px;
-            height: 6px;
-            background: currentColor;
-            border-radius: 50%;
-        }
-        
-        /* KPI icon - line chart */
-        .icon-linechart {
-            width: 20px;
-            height: 16px;
-            border-left: 2px solid currentColor;
-            border-bottom: 2px solid currentColor;
-            position: relative;
-        }
-        .icon-linechart::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 6px;
-            height: 8px;
-            background: currentColor;
-            clip-path: polygon(0% 100%, 100% 0%, 100% 100%);
-        }
-        .icon-linechart::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 8px;
-            width: 6px;
-            height: 12px;
-            background: currentColor;
-            clip-path: polygon(0% 100%, 100% 0%, 100% 100%);
-        }
-        
-        /* OKR icon - bullseye */
-        .icon-okr {
-            width: 18px;
-            height: 18px;
-            border: 2px solid currentColor;
-            border-radius: 50%;
-            position: relative;
-        }
-        .icon-okr::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 6px;
-            height: 6px;
-            background: currentColor;
-            border-radius: 50%;
-        }
-        
-        /* Roadmap icon - calendar */
-        .icon-calendar {
-            width: 18px;
-            height: 18px;
-            border: 2px solid currentColor;
-            border-radius: 2px;
-            position: relative;
-        }
-        .icon-calendar::before {
-            content: '';
-            position: absolute;
-            top: -4px;
-            left: 3px;
-            width: 4px;
-            height: 4px;
-            background: currentColor;
-            border-radius: 1px;
-        }
-        .icon-calendar::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            right: 3px;
-            width: 4px;
-            height: 4px;
-            background: currentColor;
-            border-radius: 1px;
-        }
-        
-        /* Design icon - paintbrush */
-        .icon-design {
-            width: 16px;
-            height: 16px;
-            border-bottom: 2px solid currentColor;
-            position: relative;
-        }
-        .icon-design::before {
-            content: '';
-            position: absolute;
-            top: -4px;
-            left: 0;
-            width: 8px;
-            height: 8px;
-            background: currentColor;
-            border-radius: 50% 0 50% 50%;
         }
         
         .role-name {
@@ -453,6 +824,9 @@
             font-size: 14px;
             padding: 8px 0;
             transition: color 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         
         .nav-links button:hover {
@@ -477,6 +851,9 @@
             cursor: pointer;
             font-size: 13px;
             transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         
         .lang-selector:hover {
@@ -500,6 +877,9 @@
             font-size: 13px;
             font-weight: 500;
             transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         
         .btn-signin:hover {
@@ -518,6 +898,9 @@
             font-size: 13px;
             font-weight: 500;
             transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         
         .btn-signup:hover {
@@ -641,9 +1024,11 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
+            font-size: 18px;
+            font-weight: bold;
         }
         
-        /* Roles Grid */
+        /* Roles Grid (Homepage) */
         .roles-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -655,16 +1040,28 @@
             background: rgba(99,102,241,.1);
             border: 1px solid rgba(99,102,241,.3);
             border-radius: 100px;
-            padding: 8px 16px;
+            padding: 10px 16px;
             text-align: center;
             font-size: 12px;
             color: #a5b4fc;
             transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
         .role-badge:hover { 
             background: rgba(99,102,241,.2); 
             transform: translateY(-2px);
+        }
+        
+        .role-badge .role-badge-icon {
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
         
         /* Pricing */
@@ -689,7 +1086,14 @@
         .price { font-size: 48px; font-weight: bold; margin: 20px 0; }
         .price span { font-size: 16px; font-weight: normal; }
         .feature-list { list-style: none; margin: 30px 0; }
-        .feature-list li { padding: 8px 0; color: rgba(255,255,255,.7); }
+        .feature-list li { 
+            padding: 10px 0; 
+            color: rgba(255,255,255,.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
         
         /* About Page */
         .principles-grid {
@@ -709,9 +1113,17 @@
         }
         
         .principle-card:hover { transform: translateY(-5px); border-color: rgba(99,102,241,.2); }
+        .principle-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         
         /* =====================================================
-           SEGMENTATION VISUALIZATION (Dynamic Pie Chart / Icons)
+           SEGMENTATION VISUALIZATION
         ===================================================== */
         .segmentation-visual {
             background: rgba(255,255,255,.03);
@@ -736,7 +1148,6 @@
             min-height: 200px;
         }
         
-        /* Pie Chart for 3 segments */
         .pie-chart {
             width: 180px;
             height: 180px;
@@ -760,7 +1171,6 @@
             transform: scale(1.05);
         }
         
-        /* Large Single Icon for 1 segment */
         .single-segment-icon {
             width: 120px;
             height: 120px;
@@ -781,7 +1191,6 @@
             height: 20px;
         }
         
-        /* Two Segment Icons */
         .two-segments {
             display: flex;
             justify-content: center;
@@ -800,12 +1209,7 @@
             height: 60px;
             margin: 0 auto 12px;
         }
-        .segment-icon .icon-target::before {
-            width: 12px;
-            height: 12px;
-        }
         
-        /* Priority Card */
         .priority-card {
             background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(236,72,153,.1));
             border: 1px solid rgba(99,102,241,.4);
@@ -814,6 +1218,7 @@
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
+            margin-top: 24px;
         }
         
         .priority-card::before {
@@ -933,6 +1338,16 @@
             border-color: rgba(99,102,241,.3);
         }
         
+        .kpi-icon {
+            width: 32px;
+            height: 32px;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a5b4fc;
+        }
+        
         .kpi-value {
             font-size: 28px;
             font-weight: bold;
@@ -977,6 +1392,9 @@
         .journey-title {
             margin-bottom: 32px;
             font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .journey-timeline {
@@ -1089,6 +1507,9 @@
         .role-content-title {
             font-size: 20px;
             color: #a5b4fc;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .close-role-content {
@@ -1163,6 +1584,9 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .btn-primary:hover {
@@ -1179,6 +1603,9 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .btn-outline:hover {
@@ -1204,6 +1631,17 @@
             margin-top: 60px;
             color: rgba(255,255,255,.5);
             font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .footer-icons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 8px;
         }
         
         @media (max-width: 768px) {
@@ -1213,6 +1651,7 @@
             .hero h1 { font-size: 32px; }
             .journey-stages { flex-direction: column; gap: 24px; }
             .journey-dotted-line { display: none; }
+            .nav-links button span:first-child { display: none; }
         }
     </style>
 </head>
@@ -1261,12 +1700,12 @@
                 <span class="role-status"></span>
             </div>
             <div class="role-item" data-role="swot">
-                <div class="role-icon"><div class="icon-swot"></div></div>
+                <div class="role-icon"><div class="icon-diamond"></div></div>
                 <span class="role-name">SWOT</span>
                 <span class="role-status"></span>
             </div>
             <div class="role-item" data-role="journey">
-                <div class="role-icon"><div class="icon-journey"></div></div>
+                <div class="role-icon"><div class="icon-path"></div></div>
                 <span class="role-name">Journey Map</span>
                 <span class="role-status"></span>
             </div>
@@ -1276,7 +1715,7 @@
                 <span class="role-status"></span>
             </div>
             <div class="role-item" data-role="okrs">
-                <div class="role-icon"><div class="icon-okr"></div></div>
+                <div class="role-icon"><div class="icon-bullseye"></div></div>
                 <span class="role-name">OKRs</span>
                 <span class="role-status"></span>
             </div>
@@ -1286,7 +1725,7 @@
                 <span class="role-status" id="roadmapStatus">—</span>
             </div>
             <div class="role-item" data-role="design">
-                <div class="role-icon"><div class="icon-design"></div></div>
+                <div class="role-icon"><div class="icon-paintbrush"></div></div>
                 <span class="role-name">Design</span>
                 <span class="role-status"></span>
             </div>
@@ -1298,17 +1737,41 @@
         <nav class="nav">
             <div class="logo" onclick="showPage('home')">StrategicMarketing</div>
             <div class="nav-links" id="navLinks">
-                <button onclick="showPage('home')" class="active" id="navHome">🏠 Home</button>
-                <button onclick="showPage('planner')" id="navPlanner">📋 Planner</button>
-                <button onclick="showPage('about')" id="navAbout">💡 About</button>
-                <button onclick="showPage('pricing')" id="navPricing">💰 Pricing</button>
-                <button onclick="showPage('app')" id="navApp">✨ Launch App →</button>
+                <button onclick="showPage('home')" class="active" id="navHome">
+                    <span class="icon-home" style="width: 18px; height: 16px;"></span>
+                    <span>Home</span>
+                </button>
+                <button onclick="showPage('planner')" id="navPlanner">
+                    <span class="icon-clipboard" style="width: 16px; height: 18px;"></span>
+                    <span>Planner</span>
+                </button>
+                <button onclick="showPage('about')" id="navAbout">
+                    <span class="icon-lightbulb" style="width: 16px; height: 16px;"></span>
+                    <span>About</span>
+                </button>
+                <button onclick="showPage('pricing')" id="navPricing">
+                    <span class="icon-dollar" style="width: 16px; height: 18px;"></span>
+                    <span>Pricing</span>
+                </button>
+                <button onclick="showPage('app')" id="navApp">
+                    <span class="icon-rocket" style="width: 18px; height: 18px;"></span>
+                    <span>Launch App</span>
+                </button>
             </div>
             <div class="nav-right">
-                <div class="lang-selector" id="langSelector">🌐 English</div>
+                <div class="lang-selector" id="langSelector">
+                    <span class="icon-gear" style="width: 16px; height: 16px;"></span>
+                    <span>English</span>
+                </div>
                 <div id="authContainer" class="auth-buttons">
-                    <button class="btn-signin" id="demoSignInBtn">Sign In</button>
-                    <button class="btn-signup" id="demoSignUpBtn">Sign Up</button>
+                    <button class="btn-signin" id="demoSignInBtn">
+                        <span class="icon-user" style="width: 16px; height: 16px;"></span>
+                        <span>Sign In</span>
+                    </button>
+                    <button class="btn-signup" id="demoSignUpBtn">
+                        <span class="icon-user" style="width: 16px; height: 16px;"></span>
+                        <span>Sign Up</span>
+                    </button>
                 </div>
                 <div id="userMenu" class="user-menu" style="display: none;">
                     <span class="user-name" id="userNameDisplay">Demo User</span>
@@ -1323,72 +1786,197 @@
             <div class="hero">
                 <h1>Stop second-guessing.<br>Start executing.</h1>
                 <p>A conscientious marketing system that delivers 13 disciplined roles—executed in precise sequence—so you get clarity, not confusion.</p>
-                <button class="btn-primary" onclick="showPage('app')">✨ Start Your Free Plan →</button>
+                <button class="btn-primary" onclick="showPage('app')">
+                    <span class="icon-rocket" style="width: 18px; height: 18px;"></span>
+                    <span>Start Your Free Plan</span>
+                    <span class="icon-arrow" style="width: 14px; height: 10px;"></span>
+                </button>
             </div>
             <h2 style="text-align: center; margin-bottom: 40px;">How it works</h2>
             <div class="steps">
-                <div class="step-card"><div class="step-number">1</div><h3>Describe your audience</h3><p style="color: rgba(255,255,255,.6);">Tell us who you want to sell to</p></div>
-                <div class="step-card"><div class="step-number">2</div><h3>Describe your product</h3><p style="color: rgba(255,255,255,.6);">Tell us what you're selling</p></div>
-                <div class="step-card"><div class="step-number">3</div><h3>Get your full plan</h3><p style="color: rgba(255,255,255,.6);">Receive 13 roles of strategic analysis</p></div>
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Describe your audience</h3>
+                    <p style="color: rgba(255,255,255,.6);">Tell us who you want to sell to</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Describe your product</h3>
+                    <p style="color: rgba(255,255,255,.6);">Tell us what you're selling</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Get your full plan</h3>
+                    <p style="color: rgba(255,255,255,.6);">Receive 13 roles of strategic analysis</p>
+                </div>
             </div>
             <h2 style="text-align: center; margin-bottom: 30px;">13 Disciplined Roles</h2>
             <div class="roles-grid">
-                <div class="role-badge">🎯 Segmentation</div>
-                <div class="role-badge">📊 Market Sizing</div>
-                <div class="role-badge">⚡ PESTLE</div>
-                <div class="role-badge">🎯 Porter's Forces</div>
-                <div class="role-badge">🔍 Competitors</div>
-                <div class="role-badge">📍 Positioning</div>
-                <div class="role-badge">🎨 4Ps</div>
-                <div class="role-badge">💪 SWOT</div>
-                <div class="role-badge">🗺️ Journey Map</div>
-                <div class="role-badge">📈 KPIs</div>
-                <div class="role-badge">🎯 OKRs</div>
-                <div class="role-badge">📅 Roadmap</div>
-                <div class="role-badge">🎨 Design</div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-target" style="width: 14px; height: 14px;"></div></span><span>Segmentation</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-bars" style="height: 14px;"><span></span><span></span><span></span><span></span></div></span><span>Market Sizing</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-lightning" style="border-bottom-width: 12px;"></div></span><span>PESTLE</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-building" style="width: 14px; height: 14px;"></div></span><span>Porter's Forces</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-search" style="width: 12px; height: 12px;"></div></span><span>Competitors</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-pin" style="width: 10px; height: 14px;"></div></span><span>Positioning</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-grid" style="width: 14px; height: 14px;"><span></span><span></span><span></span><span></span></div></span><span>4Ps</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-diamond" style="border-bottom-width: 12px;"></div></span><span>SWOT</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-path" style="width: 16px; height: 10px;"></div></span><span>Journey Map</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-linechart" style="width: 16px; height: 12px;"></div></span><span>KPIs</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-bullseye" style="width: 14px; height: 14px;"></div></span><span>OKRs</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-calendar" style="width: 14px; height: 14px;"></div></span><span>Roadmap</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-paintbrush" style="width: 12px; height: 12px;"></div></span><span>Design</span></div>
             </div>
-            <div class="changelog-section"><details><summary>📋 What's New (v1.0.0)</summary><div><p>✅ <strong>June 2, 2025 - Full Launch</strong></p><p style="margin-left: 16px;">• 13-role AI marketing framework</p><p style="margin-left: 16px;">• Real-time streaming output</p><p style="margin-left: 16px;">• Interactive dashboard with journey map</p><p style="margin-left: 16px;">• Dynamic segmentation visualization</p></div></details></div>
+            <div class="changelog-section">
+                <details>
+                    <summary>📋 What's New (v1.0.0)</summary>
+                    <div>
+                        <p>✅ <strong>June 2, 2025 - Full Launch</strong></p>
+                        <p style="margin-left: 16px;">• 13-role AI marketing framework</p>
+                        <p style="margin-left: 16px;">• Real-time streaming output</p>
+                        <p style="margin-left: 16px;">• Interactive dashboard with journey map</p>
+                        <p style="margin-left: 16px;">• Dynamic segmentation visualization</p>
+                    </div>
+                </details>
+            </div>
         </div>
 
         <!-- PLANNER PAGE -->
         <div id="plannerPage" class="page">
-            <div class="hero" style="padding: 40px 0;"><h1>Strategy Planner</h1><p>Fill in your business details and let our AI do the rest</p></div>
+            <div class="hero" style="padding: 40px 0;">
+                <h1>Strategy Planner</h1>
+                <p>Fill in your business details and let our AI do the rest</p>
+            </div>
             <div class="input-area">
-                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);">👥 Customer Data / Target Audience</label>
+                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5); display: flex; align-items: center; gap: 6px;">
+                    <span class="icon-user" style="width: 14px; height: 14px;"></span>
+                    Customer Data / Target Audience
+                </label>
                 <textarea id="plannerCustomer" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies ($50M-$500M revenue) looking for AI analytics solutions..."></textarea>
-                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);">📦 Product Description / Service</label>
+                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5); display: flex; align-items: center; gap: 6px; margin-top: 20px;">
+                    <span class="icon-grid" style="width: 14px; height: 14px;"><span></span><span></span><span></span><span></span></span>
+                    Product Description / Service
+                </label>
                 <textarea id="plannerProduct" rows="4" placeholder="Example: An AI-powered marketing analytics platform that provides real-time ROI predictions and channel optimization recommendations..."></textarea>
-                <button class="btn-primary" onclick="goToAppWithData()">✨ Generate Strategic Plan →</button>
+                <button class="btn-primary" onclick="goToAppWithData()">
+                    <span class="icon-rocket" style="width: 16px; height: 16px;"></span>
+                    Generate Strategic Plan
+                    <span class="icon-arrow" style="width: 12px; height: 8px;"></span>
+                </button>
             </div>
         </div>
 
         <!-- ABOUT PAGE -->
         <div id="aboutPage" class="page">
-            <div class="hero" style="padding: 40px 0;"><h1>Built on <span style="color: #6366f1;">Conscientiousness</span></h1><p>We believe marketing strategy should be disciplined, not chaotic. 13 roles. One clear output. Every time.</p></div>
-            <div style="background: rgba(255,255,255,.05); border-radius: 24px; padding: 32px; margin: 40px 0;"><h2 style="text-align: center; margin-bottom: 24px;">The 13-Role Framework</h2><div class="roles-grid"><div class="role-badge">1. Segmentation</div><div class="role-badge">2. Market Sizing</div><div class="role-badge">3. PESTLE</div><div class="role-badge">4. Porter's Forces</div><div class="role-badge">5. Competitors</div><div class="role-badge">6. Positioning</div><div class="role-badge">7. 4Ps</div><div class="role-badge">8. SWOT</div><div class="role-badge">9. Journey Map</div><div class="role-badge">10. KPIs</div><div class="role-badge">11. OKRs</div><div class="role-badge">12. Roadmap</div><div class="role-badge">13. Design</div></div></div>
-            <div class="principles-grid"><div class="principle-card"><div style="font-size: 48px; margin-bottom: 16px;">🤖</div><h3>Autonomy</h3><p style="color: rgba(255,255,255,.6);">The system works by itself. You don't have to tell it what to do next.</p></div><div class="principle-card"><div style="font-size: 48px; margin-bottom: 16px;">🧠</div><h3>Intelligence</h3><p style="color: rgba(255,255,255,.6);">Smart analysis that learns and adapts to your business.</p></div><div class="principle-card"><div style="font-size: 48px; margin-bottom: 16px;">💚</div><h3>Goodness</h3><p style="color: rgba(255,255,255,.6);">Ethical strategies that benefit everyone, not just the bottom line.</p></div></div>
-            <div style="background: rgba(99,102,241,.08); border-radius: 24px; padding: 32px; text-align: center;"><h3>Our Mission</h3><p style="color: rgba(255,255,255,.7); max-width: 600px; margin: 16px auto 0;">To democratize strategic marketing by making professional-grade planning accessible, understandable, and actionable for everyone.</p></div>
+            <div class="hero" style="padding: 40px 0;">
+                <h1>Built on <span style="color: #6366f1;">Conscientiousness</span></h1>
+                <p>We believe marketing strategy should be disciplined, not chaotic. 13 roles. One clear output. Every time.</p>
+            </div>
+            <div style="background: rgba(255,255,255,.05); border-radius: 24px; padding: 32px; margin: 40px 0;">
+                <h2 style="text-align: center; margin-bottom: 24px;">The 13-Role Framework</h2>
+                <div class="roles-grid">
+                    <div class="role-badge">1. Segmentation</div>
+                    <div class="role-badge">2. Market Sizing</div>
+                    <div class="role-badge">3. PESTLE</div>
+                    <div class="role-badge">4. Porter's Forces</div>
+                    <div class="role-badge">5. Competitors</div>
+                    <div class="role-badge">6. Positioning</div>
+                    <div class="role-badge">7. 4Ps</div>
+                    <div class="role-badge">8. SWOT</div>
+                    <div class="role-badge">9. Journey Map</div>
+                    <div class="role-badge">10. KPIs</div>
+                    <div class="role-badge">11. OKRs</div>
+                    <div class="role-badge">12. Roadmap</div>
+                    <div class="role-badge">13. Design</div>
+                </div>
+            </div>
+            <div class="principles-grid">
+                <div class="principle-card">
+                    <div class="principle-icon"><div class="icon-gear" style="width: 32px; height: 32px;"></div></div>
+                    <h3>Autonomy</h3>
+                    <p style="color: rgba(255,255,255,.6);">The system works by itself. You don't have to tell it what to do next.</p>
+                </div>
+                <div class="principle-card">
+                    <div class="principle-icon"><div class="icon-brain" style="width: 32px; height: 24px;"></div></div>
+                    <h3>Intelligence</h3>
+                    <p style="color: rgba(255,255,255,.6);">Smart analysis that learns and adapts to your business.</p>
+                </div>
+                <div class="principle-card">
+                    <div class="principle-icon"><div class="icon-heart" style="width: 28px; height: 24px;"></div></div>
+                    <h3>Goodness</h3>
+                    <p style="color: rgba(255,255,255,.6);">Ethical strategies that benefit everyone, not just the bottom line.</p>
+                </div>
+            </div>
+            <div style="background: rgba(99,102,241,.08); border-radius: 24px; padding: 32px; text-align: center;">
+                <h3>Our Mission</h3>
+                <p style="color: rgba(255,255,255,.7); max-width: 600px; margin: 16px auto 0;">To democratize strategic marketing by making professional-grade planning accessible, understandable, and actionable for everyone.</p>
+            </div>
         </div>
 
         <!-- PRICING PAGE -->
         <div id="pricingPage" class="page">
-            <div class="hero" style="padding: 40px 0;"><h1>Simple, Transparent Pricing</h1><p>No hidden fees. Cancel anytime.</p></div>
+            <div class="hero" style="padding: 40px 0;">
+                <h1>Simple, Transparent Pricing</h1>
+                <p>No hidden fees. Cancel anytime.</p>
+            </div>
             <div class="pricing-grid">
-                <div class="pricing-card"><h3>Free</h3><div class="price">$0<span>/month</span></div><ul class="feature-list"><li>✅ 5 plans per month</li><li>✅ PDF export</li><li>✅ Save to history</li><li>✅ Copy to clipboard</li><li>✅ Basic analytics</li></ul><button class="btn-primary" onclick="showPage('app')">Get Started</button></div>
-                <div class="pricing-card popular"><h3>Pro</h3><div class="price">$29<span>/month</span></div><ul class="feature-list"><li>✅ Unlimited plans</li><li>✅ Priority support</li><li>✅ All export formats</li><li>✅ Advanced analytics</li><li>✅ Team sharing</li></ul><button class="btn-primary" onclick="showPage('app')">Start Free Trial</button><div style="margin-top: 12px; font-size: 11px; color: #a5b4fc;">Most popular</div></div>
-                <div class="pricing-card"><h3>Enterprise</h3><div class="price">Custom</div><ul class="feature-list"><li>✅ Unlimited everything</li><li>✅ API access</li><li>✅ SSO & SAML</li><li>✅ Dedicated support</li><li>✅ Custom integrations</li></ul><button class="btn-outline" onclick="alert('Contact sales@strategicmarketing.com')">Contact Sales</button></div>
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="price">$0<span>/month</span></div>
+                    <ul class="feature-list">
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> 5 plans per month</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> PDF export</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Save to history</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Copy to clipboard</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Basic analytics</li>
+                    </ul>
+                    <button class="btn-primary" onclick="showPage('app')">Get Started</button>
+                </div>
+                <div class="pricing-card popular">
+                    <h3>Pro <span class="icon-star" style="width: 16px; height: 16px; display: inline-block; margin-left: 4px;"></span></h3>
+                    <div class="price">$29<span>/month</span></div>
+                    <ul class="feature-list">
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Unlimited plans</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Priority support</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> All export formats</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Advanced analytics</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Team sharing</li>
+                    </ul>
+                    <button class="btn-primary" onclick="showPage('app')">Start Free Trial</button>
+                    <div style="margin-top: 12px; font-size: 11px; color: #a5b4fc;">Most popular</div>
+                </div>
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="price">Custom</div>
+                    <ul class="feature-list">
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Unlimited everything</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> API access</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> SSO & SAML</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Dedicated support</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Custom integrations</li>
+                    </ul>
+                    <button class="btn-outline" onclick="alert('Contact sales@strategicmarketing.com')">Contact Sales</button>
+                </div>
             </div>
         </div>
 
         <!-- APP PAGE (Generator) -->
         <div id="appPage" class="page">
             <div class="input-area">
-                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);">📊 Customer Data / Target Audience</label>
+                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5); display: flex; align-items: center; gap: 6px;">
+                    <span class="icon-user" style="width: 14px; height: 14px;"></span>
+                    Customer Data / Target Audience
+                </label>
                 <textarea id="customerData" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies ($50M-$500M revenue) looking for AI analytics solutions..."></textarea>
-                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5);">📦 Product Description / Service</label>
+                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5); display: flex; align-items: center; gap: 6px; margin-top: 20px;">
+                    <span class="icon-grid" style="width: 14px; height: 14px;"><span></span><span></span><span></span><span></span></span>
+                    Product Description / Service
+                </label>
                 <textarea id="productDescription" rows="5" placeholder="Example: An AI-powered marketing analytics platform that provides real-time ROI predictions and channel optimization recommendations..."></textarea>
                 <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                    <button id="generateBtn" class="btn-primary">✨ Generate Strategic Plan</button>
+                    <button id="generateBtn" class="btn-primary">
+                        <span class="icon-rocket" style="width: 16px; height: 16px;"></span>
+                        Generate Strategic Plan
+                    </button>
                     <button id="clearBtn" class="btn-outline">Clear All</button>
                 </div>
             </div>
@@ -1397,10 +1985,19 @@
             <div class="kpi-grid" id="kpiGrid"></div>
             <div class="output-area" id="outputArea">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
-                    <h3>📊 Generated Marketing Strategy</h3>
+                    <h3 style="display: flex; align-items: center; gap: 8px;">
+                        <span class="icon-data" style="width: 18px; height: 14px;"></span>
+                        Generated Marketing Strategy
+                    </h3>
                     <div style="display: flex; gap: 8px;">
-                        <button id="copyOutputBtn" class="btn-outline">📋 Copy</button>
-                        <button id="saveHistoryBtn" class="btn-outline">💾 Save</button>
+                        <button id="copyOutputBtn" class="btn-outline">
+                            <span class="icon-clipboard" style="width: 14px; height: 16px;"></span>
+                            Copy
+                        </button>
+                        <button id="saveHistoryBtn" class="btn-outline">
+                            <span class="icon-calendar" style="width: 14px; height: 14px;"></span>
+                            Save
+                        </button>
                     </div>
                 </div>
                 <div id="renderedOutput"></div>
@@ -1409,11 +2006,12 @@
 
         <!-- DASHBOARD PAGE -->
         <div id="dashboardPage" class="dashboard-container">
-            <!-- Segmentation Visualization (dynamic) will be inserted here -->
             <div id="segmentationVisual" class="segmentation-visual"></div>
-            
             <div class="journey-map-container">
-                <h2 class="journey-title">🗺️ 30-Day Customer Journey Map</h2>
+                <h2 class="journey-title">
+                    <span class="icon-path" style="width: 24px; height: 16px;"></span>
+                    30-Day Customer Journey Map
+                </h2>
                 <div id="journeyMapContent">
                     <div class="empty-state">
                         <p>✨ Generate a marketing plan first</p>
@@ -1423,7 +2021,10 @@
             </div>
             <div id="roleContentArea" class="role-content-area">
                 <div class="role-content-header">
-                    <h3 id="roleContentTitle" class="role-content-title">Role Title</h3>
+                    <h3 id="roleContentTitle" class="role-content-title">
+                        <span class="icon-target" style="width: 20px; height: 20px;"></span>
+                        Role Title
+                    </h3>
                     <button id="closeRoleContent" class="close-role-content">✕ Close</button>
                 </div>
                 <div id="roleContentBody" class="role-content-body"></div>
@@ -1431,8 +2032,13 @@
         </div>
 
         <footer class="footer">
+            <div class="footer-icons">
+                <span class="icon-lock" style="width: 14px; height: 16px;"></span>
+                <span class="icon-data" style="width: 18px; height: 14px;"></span>
+                <span class="icon-target" style="width: 16px; height: 16px;"></span>
+            </div>
             <p>© 2025 Strategic Marketing System · Powered by AI · 13-Role Framework · Conscientious by Design</p>
-            <p style="margin-top: 8px; font-size: 10px;">🔒 Secure · 📊 Data-driven · 🎯 Actionable</p>
+            <p style="font-size: 10px;">Secure · Data-driven · Actionable</p>
         </footer>
     </div>
 </div>
@@ -1482,7 +2088,7 @@
     };
     
     // =====================================================
-    // SEGMENTATION VISUALIZATION (Dynamic)
+    // SEGMENTATION VISUALIZATION
     // =====================================================
     function renderSegmentationVisualization(plan) {
         if (!plan) {
@@ -1490,14 +2096,12 @@
             return;
         }
         
-        // Extract segments from plan
         const segmentationMatch = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
         let segments = [];
         let primaryTarget = '';
         
         if (segmentationMatch) {
             const segText = segmentationMatch[1];
-            // Extract segments (looking for numbered or bullet points)
             const segmentLines = segText.split('\n');
             for (const line of segmentLines) {
                 if (line.match(/^\d+\.|^[-•*]\s+/) && line.length > 10) {
@@ -1505,25 +2109,23 @@
                     if (segmentName.length > 5) segments.push(segmentName);
                 }
             }
-            // Extract primary target
             const primaryMatch = plan.match(/Primary Target[:\s]*([^\n]+)/i);
             if (primaryMatch) primaryTarget = primaryMatch[1].trim();
         }
         
         const segmentCount = segments.length;
-        
         let visualizationHtml = '';
         
         if (segmentCount === 3) {
-            // Pie chart for 3 segments
             visualizationHtml = `
                 <div class="segmentation-header">
-                    <h3 style="color: #a5b4fc;">🎯 Market Segmentation</h3>
+                    <h3 style="color: #a5b4fc; display: flex; align-items: center; gap: 8px;">
+                        <span class="icon-target" style="width: 20px; height: 20px;"></span>
+                        Market Segmentation
+                    </h3>
                     <div class="priority-badge">Primary Target Identified</div>
                 </div>
-                <div class="segmentation-chart">
-                    <div class="pie-chart"></div>
-                </div>
+                <div class="segmentation-chart"><div class="pie-chart"></div></div>
                 <div style="display: flex; justify-content: center; gap: 30px; margin: 20px 0;">
                     <div style="text-align: center;"><div style="width: 12px; height: 12px; background: #4ade80; border-radius: 50%; display: inline-block; margin-right: 6px;"></div><span style="font-size: 12px;">${escapeHtml(segments[0] || 'Segment 1')}</span></div>
                     <div style="text-align: center;"><div style="width: 12px; height: 12px; background: #22d3ee; border-radius: 50%; display: inline-block; margin-right: 6px;"></div><span style="font-size: 12px;">${escapeHtml(segments[1] || 'Segment 2')}</span></div>
@@ -1531,54 +2133,38 @@
                 </div>
             `;
         } else if (segmentCount === 2) {
-            // Two professional icons
             visualizationHtml = `
                 <div class="segmentation-header">
-                    <h3 style="color: #a5b4fc;">🎯 Market Segmentation</h3>
+                    <h3 style="color: #a5b4fc; display: flex; align-items: center; gap: 8px;">
+                        <span class="icon-target" style="width: 20px; height: 20px;"></span>
+                        Market Segmentation
+                    </h3>
                     <div class="priority-badge">Primary Target Identified</div>
                 </div>
                 <div class="two-segments">
-                    <div class="segment-icon">
-                        <div class="icon-target" style="width: 60px; height: 60px; margin: 0 auto;"></div>
-                        <div style="margin-top: 12px; font-size: 13px; font-weight: 500;">${escapeHtml(segments[0] || 'Segment A')}</div>
-                    </div>
-                    <div class="segment-icon">
-                        <div class="icon-target" style="width: 60px; height: 60px; margin: 0 auto;"></div>
-                        <div style="margin-top: 12px; font-size: 13px; font-weight: 500;">${escapeHtml(segments[1] || 'Segment B')}</div>
-                    </div>
+                    <div class="segment-icon"><div class="icon-target" style="width: 60px; height: 60px;"></div><div style="margin-top: 12px; font-size: 13px; font-weight: 500;">${escapeHtml(segments[0] || 'Segment A')}</div></div>
+                    <div class="segment-icon"><div class="icon-target" style="width: 60px; height: 60px;"></div><div style="margin-top: 12px; font-size: 13px; font-weight: 500;">${escapeHtml(segments[1] || 'Segment B')}</div></div>
                 </div>
             `;
         } else if (segmentCount === 1) {
-            // One large icon
             visualizationHtml = `
                 <div class="segmentation-header">
-                    <h3 style="color: #a5b4fc;">🎯 Market Segmentation</h3>
+                    <h3 style="color: #a5b4fc; display: flex; align-items: center; gap: 8px;">
+                        <span class="icon-target" style="width: 20px; height: 20px;"></span>
+                        Market Segmentation
+                    </h3>
                     <div class="priority-badge">Single Segment Focus</div>
                 </div>
-                <div class="single-segment-icon">
-                    <div class="icon-target"></div>
-                </div>
-                <div style="text-align: center; margin-top: 16px;">
-                    <div style="font-size: 16px; font-weight: 500;">${escapeHtml(segments[0] || 'Primary Segment')}</div>
-                </div>
+                <div class="single-segment-icon"><div class="icon-target"></div></div>
+                <div style="text-align: center; margin-top: 16px;"><div style="font-size: 16px; font-weight: 500;">${escapeHtml(segments[0] || 'Primary Segment')}</div></div>
             `;
         } else {
-            // Default when no segments found
-            visualizationHtml = `
-                <div class="segmentation-header">
-                    <h3 style="color: #a5b4fc;">🎯 Market Segmentation</h3>
-                </div>
-                <div class="empty-state" style="padding: 40px;">
-                    <p>No segmentation data available yet</p>
-                    <p style="font-size: 12px; margin-top: 8px;">Generate a plan to see segment visualization</p>
-                </div>
-            `;
+            visualizationHtml = `<div class="segmentation-header"><h3 style="color: #a5b4fc; display: flex; align-items: center; gap: 8px;"><span class="icon-target" style="width: 20px; height: 20px;"></span>Market Segmentation</h3></div><div class="empty-state" style="padding: 40px;"><p>No segmentation data available yet</p><p style="font-size: 12px; margin-top: 8px;">Generate a plan to see segment visualization</p></div>`;
         }
         
-        // Add Priority Card for primary target
         if (primaryTarget) {
             visualizationHtml += `
-                <div class="priority-card" style="margin-top: 24px;">
+                <div class="priority-card">
                     <div class="priority-badge">🏆 PRIMARY TARGET - #1 PRIORITY</div>
                     <div class="priority-title">${escapeHtml(primaryTarget)}</div>
                     <p style="font-size: 13px; color: rgba(255,255,255,.6); margin-top: 8px;">This segment represents the highest potential for growth and should be prioritized in all marketing efforts.</p>
@@ -1587,8 +2173,6 @@
         }
         
         elements.segmentationVisual.innerHTML = visualizationHtml;
-        
-        // Update CSS icon sizes for single segment
         if (segmentCount === 1) {
             const style = document.createElement('style');
             style.textContent = `.single-segment-icon .icon-target { width: 100px; height: 100px; border-width: 4px; } .single-segment-icon .icon-target::before { width: 24px; height: 24px; }`;
@@ -1654,11 +2238,9 @@
         elements.userMenu.style.display = 'flex';
         elements.userNameDisplay.textContent = currentUser.name;
         elements.userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
-        
         elements.leftPanel.classList.add('open');
         elements.mainContent.classList.add('panel-open');
         elements.dashboardPage.classList.add('active');
-        
         if (currentPlan) {
             const roadmap = extractRoadmapFromPlan(currentPlan);
             if (roadmap) {
@@ -1775,7 +2357,7 @@
                 const cells = row.split('|').filter(c => c.trim()).map(c => `<td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,.1);">${escapeHtml(c.trim())}</td>`).join('');
                 return `<tr>${cells}</tr>`;
             }).join('');
-            return `<table style="width: 100%; border-collapse: collapse; margin: 16px 0;">${headers ? `<thead><tr>${headers}</tr></thead>` : ''}<tbody>${bodyRows}</tbody></table>`;
+            return `<table style="width: 100%; border-collapse: collapse; margin: 16px 0;">${headers ? `<thead><tr>${headers}<tr></thead>` : ''}<tbody>${bodyRows}</tbody></table>`;
         });
         html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         html = html.replace(/^[-•*]\s+(.*?)$/gm, '<li>$1</li>');
@@ -1784,7 +2366,6 @@
         return html;
     }
     
-    // Role content getters
     function extractSegmentation(plan) {
         const match = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
         return match ? formatContent(match[1]) : '<p>No segmentation data available</p>';
@@ -1885,28 +2466,38 @@
     
     function initKPICards() {
         const kpis = [
-            { icon: '👥', label: 'SEGMENTATION', value: 'Ready', source: 'Click generate to start' },
-            { icon: '📊', label: 'MARKET SIZE', value: 'Ready', source: 'TAM · SAM · SOM' },
-            { icon: '🎯', label: 'KEY METRICS', value: 'Ready', source: 'Primary KPIs' },
-            { icon: '🏆', label: 'COMPETITION', value: 'Ready', source: 'Competitor analysis' }
+            { icon: 'target', label: 'SEGMENTATION', value: 'Ready', source: 'Click generate to start' },
+            { icon: 'bars', label: 'MARKET SIZE', value: 'Ready', source: 'TAM · SAM · SOM' },
+            { icon: 'bullseye', label: 'KEY METRICS', value: 'Ready', source: 'Primary KPIs' },
+            { icon: 'search', label: 'COMPETITION', value: 'Ready', source: 'Competitor analysis' }
         ];
-        elements.kpiGrid.innerHTML = kpis.map(kpi => `<div class="kpi-card"><div style="font-size: 32px;">${kpi.icon}</div><div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);">${kpi.label}</div><div class="kpi-value">${kpi.value}</div><div style="font-size: 10px; color: rgba(255,255,255,.4);">${kpi.source}</div></div>`).join('');
+        elements.kpiGrid.innerHTML = kpis.map(kpi => `
+            <div class="kpi-card">
+                <div class="kpi-icon">${kpi.icon === 'target' ? '<div class="icon-target" style="width: 28px; height: 28px;"></div>' : 
+                    kpi.icon === 'bars' ? '<div class="icon-bars" style="height: 28px;"><span></span><span></span><span></span><span></span></div>' :
+                    kpi.icon === 'bullseye' ? '<div class="icon-bullseye" style="width: 28px; height: 28px;"></div>' :
+                    '<div class="icon-search" style="width: 24px; height: 24px;"></div>'}</div>
+                <div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);">${kpi.label}</div>
+                <div class="kpi-value">${kpi.value}</div>
+                <div style="font-size: 10px; color: rgba(255,255,255,.4);">${kpi.source}</div>
+            </div>
+        `).join('');
     }
     
     async function streamRoles(plan) {
         const roles = [
-            { tag: 'SEGMENTATION OUTPUT', icon: '🎯', title: 'Market Segmentation' },
-            { tag: 'TAMSAMSOM OUTPUT', icon: '📊', title: 'Market Sizing (TAM/SAM/SOM)' },
-            { tag: 'PESTLE OUTPUT', icon: '⚡', title: 'PESTLE Analysis' },
-            { tag: 'PORTER OUTPUT', icon: '🏢', title: "Porter's Five Forces" },
-            { tag: 'COMPETITOR OUTPUT', icon: '🔍', title: 'Competitor Profiling' },
-            { tag: 'POSITIONING OUTPUT', icon: '📍', title: 'Brand Positioning' },
-            { tag: '4Ps OUTPUT', icon: '🎨', title: 'Marketing Mix (4Ps)' },
-            { tag: 'SWOT OUTPUT', icon: '💪', title: 'SWOT Analysis' },
-            { tag: 'CUSTOMER JOURNEY OUTPUT', icon: '🗺️', title: 'Customer Journey Map' },
-            { tag: 'KPI OUTPUT', icon: '📈', title: 'KPIs & Budget' },
-            { tag: 'OKRS OUTPUT', icon: '🎯', title: 'OKR Strategist' },
-            { tag: 'ROADMAP OUTPUT', icon: '📅', title: '30-Day Roadmap' }
+            { tag: 'SEGMENTATION OUTPUT', icon: 'target', title: 'Market Segmentation' },
+            { tag: 'TAMSAMSOM OUTPUT', icon: 'bars', title: 'Market Sizing (TAM/SAM/SOM)' },
+            { tag: 'PESTLE OUTPUT', icon: 'lightning', title: 'PESTLE Analysis' },
+            { tag: 'PORTER OUTPUT', icon: 'building', title: "Porter's Five Forces" },
+            { tag: 'COMPETITOR OUTPUT', icon: 'search', title: 'Competitor Profiling' },
+            { tag: 'POSITIONING OUTPUT', icon: 'pin', title: 'Brand Positioning' },
+            { tag: '4Ps OUTPUT', icon: 'grid', title: 'Marketing Mix (4Ps)' },
+            { tag: 'SWOT OUTPUT', icon: 'diamond', title: 'SWOT Analysis' },
+            { tag: 'CUSTOMER JOURNEY OUTPUT', icon: 'path', title: 'Customer Journey Map' },
+            { tag: 'KPI OUTPUT', icon: 'linechart', title: 'KPIs & Budget' },
+            { tag: 'OKRS OUTPUT', icon: 'bullseye', title: 'OKR Strategist' },
+            { tag: 'ROADMAP OUTPUT', icon: 'calendar', title: '30-Day Roadmap' }
         ];
         const output = [];
         for (const role of roles) {
@@ -1923,7 +2514,7 @@
             const role = output[i];
             const card = document.createElement('div');
             card.className = 'role-card';
-            card.innerHTML = `<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1);"><div style="font-size: 28px;">${role.icon}</div><div style="font-size: 18px; font-weight: bold; color: #a5b4fc;">${role.title}</div><div style="margin-left: auto; font-size: 11px; color: rgba(255,255,255,.4);">Role ${i+1}/${output.length}</div></div><div class="stream-loading" style="display: flex; gap: 8px; align-items: center;"><span class="loader"></span><span style="color: rgba(255,255,255,.5);">Loading...</span></div>`;
+            card.innerHTML = `<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1);"><div style="font-size: 28px;"><div class="icon-${role.icon}" style="width: 28px; height: 28px;"></div></div><div style="font-size: 18px; font-weight: bold; color: #a5b4fc;">${role.title}</div><div style="margin-left: auto; font-size: 11px; color: rgba(255,255,255,.4);">Role ${i+1}/${output.length}</div></div><div class="stream-loading" style="display: flex; gap: 8px; align-items: center;"><span class="loader"></span><span style="color: rgba(255,255,255,.5);">Loading...</span></div>`;
             elements.renderedOutput.appendChild(card);
             await new Promise(resolve => setTimeout(resolve, 300));
             const loading = card.querySelector('.stream-loading');
@@ -1949,34 +2540,23 @@
     
     async function handleGenerate() {
         if (isGenerating) return;
-        
         const cd = elements.customerData.value.trim();
         const pd = elements.productDescription.value.trim();
-        
-        if (!cd || !pd) {
-            setStatus('Please fill in both fields', false);
-            return;
-        }
-        
+        if (!cd || !pd) { setStatus('Please fill in both fields', false); return; }
         isGenerating = true;
         elements.generateBtn.disabled = true;
         elements.generateBtn.textContent = '⏳ Generating...';
         elements.outputArea.style.display = 'none';
-        
         initKPICards();
         setStatus('🧠 AI is analyzing your market...', true);
         updateProgress(5);
-        
         try {
             const plan = await generateMarketingPlan(cd, pd);
             currentPlan = plan;
-            
             const roadmap = extractRoadmapFromPlan(plan);
             roadmapData = roadmap;
-            
             elements.outputArea.style.display = 'block';
             await streamRoles(plan);
-            
             if (currentUser) {
                 currentUser.plansGenerated = (currentUser.plansGenerated || 0) + 1;
                 saveDemoUser(currentUser);
@@ -1986,13 +2566,10 @@
                     renderSegmentationVisualization(plan);
                 }
             }
-            
             setStatus('✅ Strategy generated successfully!', false);
             updateProgress(100);
             setTimeout(() => updateProgress(0), 2000);
-            
             elements.outputArea.scrollIntoView({ behavior: 'smooth' });
-            
         } catch (error) {
             setStatus(`❌ Error: ${error.message}`, false);
             console.error(error);
@@ -2054,7 +2631,6 @@
         if (elements.copyOutputBtn) elements.copyOutputBtn.addEventListener('click', handleCopy);
         if (elements.saveHistoryBtn) elements.saveHistoryBtn.addEventListener('click', saveToHistory);
         
-        // Role click handlers
         document.querySelectorAll('.role-item').forEach(item => {
             const roleId = item.dataset.role;
             const roleName = item.querySelector('.role-name')?.innerText || roleId;
@@ -2077,13 +2653,9 @@
             }
             item.addEventListener('click', handler);
         });
-        
-        elements.closeRoleContent.addEventListener('click', () => {
-            elements.roleContentArea.style.display = 'none';
-        });
+        elements.closeRoleContent.addEventListener('click', () => { elements.roleContentArea.style.display = 'none'; });
     }
     
-    // Pre-fill from planner
     if (sessionStorage.getItem('prefillCustomer')) {
         elements.customerData.value = sessionStorage.getItem('prefillCustomer');
         sessionStorage.removeItem('prefillCustomer');
@@ -2093,12 +2665,10 @@
         sessionStorage.removeItem('prefillProduct');
     }
     
-    // Auth event listeners
     document.getElementById('demoSignInBtn')?.addEventListener('click', demoSignIn);
     document.getElementById('demoSignUpBtn')?.addEventListener('click', demoSignUp);
     document.getElementById('logoutBtnNav')?.addEventListener('click', demoSignOut);
     
-    // Check for existing session
     const savedUser = sessionStorage.getItem('currentUser');
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
