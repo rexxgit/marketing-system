@@ -161,6 +161,77 @@
             font-size: 13px;
         }
         
+        /* Role Content Area */
+        .role-content-area {
+            display: none;
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 24px;
+            padding: 32px;
+            margin-top: 24px;
+        }
+        
+        .role-content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .role-content-title {
+            font-size: 20px;
+            color: #a5b4fc;
+        }
+        
+        .close-role-content {
+            background: transparent;
+            border: 1px solid rgba(99,102,241,.5);
+            border-radius: 50px;
+            padding: 6px 16px;
+            color: #a5b4fc;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .close-role-content:hover {
+            background: rgba(99,102,241,.1);
+        }
+        
+        .role-content-body {
+            line-height: 1.8;
+            color: rgba(255,255,255,.7);
+        }
+        
+        .role-content-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+        
+        .role-content-body th {
+            background: rgba(99,102,241,.1);
+            padding: 10px;
+            text-align: left;
+            color: #a5b4fc;
+        }
+        
+        .role-content-body td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+        }
+        
+        .role-content-body ul {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+        
+        .role-content-body li {
+            margin: 4px 0;
+        }
+        
         /* Dashboard Container */
         .dashboard-container {
             display: none;
@@ -510,7 +581,7 @@
                 <span class="role-name">OKRs</span>
                 <span class="role-status"></span>
             </div>
-            <div class="role-item active" data-role="roadmap">
+            <div class="role-item" data-role="roadmap">
                 <span class="role-icon">📅</span>
                 <span class="role-name">Roadmap</span>
                 <span class="role-status has-data" id="roadmapStatus">—</span>
@@ -577,6 +648,15 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Role Content Display Area -->
+            <div id="roleContentArea" class="role-content-area">
+                <div class="role-content-header">
+                    <h3 id="roleContentTitle" class="role-content-title">Role Title</h3>
+                    <button id="closeRoleContent" class="close-role-content">✕ Close</button>
+                </div>
+                <div id="roleContentBody" class="role-content-body"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -625,8 +705,194 @@
         dashboardToggleBtn: document.getElementById('dashboardToggleBtn'),
         modal: document.getElementById('gotoDashboardModal'),
         modalYesBtn: document.getElementById('modalYesBtn'),
-        modalNoBtn: document.getElementById('modalNoBtn')
+        modalNoBtn: document.getElementById('modalNoBtn'),
+        roleContentArea: document.getElementById('roleContentArea'),
+        roleContentTitle: document.getElementById('roleContentTitle'),
+        roleContentBody: document.getElementById('roleContentBody'),
+        closeRoleContent: document.getElementById('closeRoleContent')
     };
+    
+    // =====================================================
+    // EXTRACT FUNCTIONS FOR EACH ROLE
+    // =====================================================
+    
+    function extractSegmentation(plan) {
+        const match = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!match) return '<p>No segmentation data available</p>';
+        return formatContent(match[1]);
+    }
+    
+    function extractMarketSizing(plan) {
+        const match = plan.match(/\[TAMSAMSOM OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!match) return '<p>No market sizing data available</p>';
+        return formatContent(match[1]);
+    }
+    
+    function extractPESTLE(plan) {
+        const match = plan.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!match) return '<p>No PESTLE analysis available</p>';
+        return formatContent(match[1]);
+    }
+    
+    function extractPorter(plan) {
+        const match = plan.match(/\[PORTER OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!match) return '<p>No Porter\'s Five Forces available</p>';
+        return formatContent(match[1]);
+    }
+    
+    function extractCompetitors(plan) {
+        const match = plan.match(/\[COMPETITOR OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!match) return '<p>No competitor analysis available</p>';
+        return formatContent(match[1]);
+    }
+    
+    function extractPositioning(plan) {
+        const match = plan.match(/\[POSITIONING OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!match) return '<p>No positioning statement available</p>';
+        return formatContent(match[1]);
+    }
+    
+    function extract4Ps(plan) {
+        const match = plan.match(/\[4Ps OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!match) return '<p>No marketing mix (4Ps) available</p>';
+        return formatContent(match[1]);
+    }
+    
+    function extractSWOT(plan) {
+        const match = plan.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!match) return '<p>No SWOT analysis available</p>';
+        const text = match[1];
+        let html = '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">';
+        const sections = ['Strengths', 'Weaknesses', 'Opportunities', 'Threats'];
+        sections.forEach(s => {
+            const sectionMatch = text.match(new RegExp(`${s}:([\\s\\S]*?)(?=\\n(?:Strengths|Weaknesses|Opportunities|Threats):|$)`, 'i'));
+            const sectionText = sectionMatch ? sectionMatch[1] : '';
+            const items = sectionText.split('\n').filter(l => /^[-•*]\s+/.test(l)).map(l => l.replace(/^[-•*]\s+/, '').trim()).slice(0, 4);
+            const color = s === 'Strengths' ? '#4ade80' : s === 'Weaknesses' ? '#f87171' : s === 'Opportunities' ? '#22d3ee' : '#fbbf24';
+            html += `<div><strong style="color: ${color};">${s}</strong><ul style="margin-top: 8px;">${items.map(i => `<li>${escapeHtml(i)}</li>`).join('') || '<li>No data</li>'}</ul></div>`;
+        });
+        html += '</div>';
+        return html;
+    }
+    
+    function extractJourney(plan) {
+        const match = plan.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!match) return '<p>No customer journey map available</p>';
+        return formatContent(match[1]);
+    }
+    
+    function extractKPIs(plan) {
+        const match = plan.match(/\[KPI OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!match) return '<p>No KPI data available</p>';
+        return formatContent(match[1]);
+    }
+    
+    function extractOKRs(plan) {
+        const match = plan.match(/\[OKRS OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!match) return '<p>No OKR data available</p>';
+        return formatContent(match[1]);
+    }
+    
+    function extractRoadmap(plan) {
+        const roadmap = extractRoadmapFromPlan(plan);
+        if (!roadmap || !roadmap.stages) return '<p>No roadmap data available</p>';
+        
+        let html = '<div style="display: flex; flex-direction: column; gap: 16px;">';
+        roadmap.stages.forEach(stage => {
+            html += `
+                <div style="background: rgba(255,255,255,.03); border-radius: 16px; padding: 16px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                        <span style="background: #6366f1; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">${stage.day}</span>
+                        <strong>Day ${stage.day}</strong>
+                    </div>
+                    <div style="margin-left: 40px;">
+                        <div style="font-weight: 600; margin-bottom: 4px;">${escapeHtml(stage.name)}</div>
+                        <div style="font-size: 13px; color: rgba(255,255,255,.6);">${escapeHtml(stage.desc)}</div>
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        return html;
+    }
+    
+    function extractDesign(plan) {
+        const match = plan.match(/\[DESIGN OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!match) return '<p>No design recommendations available</p>';
+        return formatContent(match[1]);
+    }
+    
+    function formatContent(content) {
+        let html = content;
+        html = html.replace(/\n\|(.+)\|\n\|[-:\s|]+\|\n((?:\|.+\|\n?)+)/gm, (match, header, rows) => {
+            const headers = header.split('|').filter(h => h.trim()).map(h => `<th style="padding: 8px; text-align: left; background: rgba(99,102,241,.1);">${escapeHtml(h.trim())}</th>`).join('');
+            const bodyRows = rows.trim().split('\n').map(row => {
+                const cells = row.split('|').filter(c => c.trim()).map(c => `<td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,.1);">${escapeHtml(c.trim())}</td>`).join('');
+                return `<tr>${cells}</tr>`;
+            }).join('');
+            return `<table style="width: 100%; border-collapse: collapse; margin: 16px 0;">${headers ? `<thead><tr>${headers}</table></thead>` : ''}<tbody>${bodyRows}</tbody></table>`;
+        });
+        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/^[-•*]\s+(.*?)$/gm, '<li>$1</li>');
+        html = html.replace(/(<li>.*?<\/li>)+/gs, '<ul style="margin: 8px 0; padding-left: 20px;">$&</ul>');
+        html = html.replace(/\n/g, '<br>');
+        return html;
+    }
+    
+    // Role handlers mapping
+    const roleHandlers = {
+        'segmentation': () => extractSegmentation(currentPlan),
+        'marketsizing': () => extractMarketSizing(currentPlan),
+        'pestle': () => extractPESTLE(currentPlan),
+        'porter': () => extractPorter(currentPlan),
+        'competitors': () => extractCompetitors(currentPlan),
+        'positioning': () => extractPositioning(currentPlan),
+        '4ps': () => extract4Ps(currentPlan),
+        'swot': () => extractSWOT(currentPlan),
+        'journey': () => extractJourney(currentPlan),
+        'kpi': () => extractKPIs(currentPlan),
+        'okrs': () => extractOKRs(currentPlan),
+        'roadmap': () => extractRoadmap(currentPlan),
+        'design': () => extractDesign(currentPlan)
+    };
+    
+    const roleTitles = {
+        'segmentation': '🎯 Market Segmentation',
+        'marketsizing': '📊 Market Sizing (TAM/SAM/SOM)',
+        'pestle': '⚡ PESTLE Analysis',
+        'porter': '🏢 Porter\'s Five Forces',
+        'competitors': '🔍 Competitor Profiling',
+        'positioning': '📍 Brand Positioning',
+        '4ps': '🎨 Marketing Mix (4Ps)',
+        'swot': '💪 SWOT Analysis',
+        'journey': '🗺️ Customer Journey Map',
+        'kpi': '📈 KPIs & Budget Allocation',
+        'okrs': '🎯 OKR Strategist',
+        'roadmap': '📅 30-Day Roadmap',
+        'design': '🎨 Design & Media Recommendations'
+    };
+    
+    function showRoleContent(roleId) {
+        if (!currentPlan) {
+            elements.roleContentBody.innerHTML = '<p style="color: #f87171;">⚠️ Generate a marketing plan first to see this content.</p>';
+            elements.roleContentTitle.innerHTML = roleTitles[roleId] || roleId;
+            elements.roleContentArea.style.display = 'block';
+            return;
+        }
+        
+        const handler = roleHandlers[roleId];
+        if (handler) {
+            const content = handler();
+            elements.roleContentBody.innerHTML = content;
+            elements.roleContentTitle.innerHTML = roleTitles[roleId] || roleId;
+            elements.roleContentArea.style.display = 'block';
+            
+            // Update active state in left panel
+            document.querySelectorAll('.role-item').forEach(item => item.classList.remove('active'));
+            const activeItem = document.querySelector(`.role-item[data-role="${roleId}"]`);
+            if (activeItem) activeItem.classList.add('active');
+        }
+    }
     
     // =====================================================
     // EXTRACT ROADMAP FROM PLAN
@@ -636,8 +902,6 @@
         if (!roadmapMatch) return null;
         
         const roadmapText = roadmapMatch[1];
-        
-        // Extract 5 tasks (standard 30-day roadmap structure)
         const tasks = [];
         const lines = roadmapText.split('\n');
         
@@ -650,7 +914,6 @@
             }
         }
         
-        // If no numbered tasks found, look for bullet points
         if (tasks.length === 0) {
             for (const line of lines) {
                 if (line.match(/^[-•*]\s+/) && line.length > 10) {
@@ -662,7 +925,6 @@
             }
         }
         
-        // Default tasks if none found
         if (tasks.length === 0) {
             return {
                 stages: [
@@ -675,7 +937,6 @@
             };
         }
         
-        // Create staged roadmap (5 key milestones over 30 days)
         const milestones = [1, 7, 14, 21, 30];
         const stages = tasks.slice(0, 5).map((task, index) => ({
             day: milestones[index],
@@ -687,7 +948,7 @@
     }
     
     // =====================================================
-    // RENDER DYNAMIC JOURNEY MAP WITH DOTTED LINE
+    // RENDER DYNAMIC JOURNEY MAP
     // =====================================================
     function renderJourneyMap(roadmap) {
         if (!roadmap || !roadmap.stages || roadmap.stages.length === 0) {
@@ -710,10 +971,8 @@
                 <div class="journey-stages">
         `;
         
-        stages.forEach((stage, idx) => {
-            const progressPercent = (stage.day / totalDays) * 100;
+        stages.forEach((stage) => {
             const isCompleted = stage.day <= 30;
-            
             html += `
                 <div class="journey-stage-node" style="position: relative;">
                     <div class="stage-dot ${isCompleted ? 'completed' : ''}"></div>
@@ -735,7 +994,6 @@
         
         elements.journeyMapContent.innerHTML = html;
         
-        // Update left panel roadmap status
         const roadmapStatus = document.getElementById('roadmapStatus');
         if (roadmapStatus) {
             roadmapStatus.textContent = `${stages.length} tasks`;
@@ -746,8 +1004,6 @@
     // =====================================================
     // SHOW MODAL AFTER GENERATION
     // =====================================================
-    let modalCallback = null;
-    
     function showGotoDashboardModal(plan, roadmap) {
         pendingPlan = plan;
         roadmapData = roadmap;
@@ -760,7 +1016,7 @@
     }
     
     // =====================================================
-    // APP FUNCTIONALITY (STREAMING ROLES)
+    // APP FUNCTIONALITY
     // =====================================================
     function setStatus(message, isLoading = true) {
         elements.statusMessage.textContent = message;
@@ -795,7 +1051,7 @@
                 const cells = row.split('|').filter(c => c.trim()).map(c => `<td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,.1);">${escapeHtml(c.trim())}</td>`).join('');
                 return `<tr>${cells}</tr>`;
             }).join('');
-            return `<table style="width: 100%; border-collapse: collapse; margin: 16px 0;">${headers ? `<thead><tr>${headers}<tr></thead>` : ''}<tbody>${bodyRows}</tbody></table>`;
+            return `<table style="width: 100%; border-collapse: collapse; margin: 16px 0;">${headers ? `<thead><tr>${headers}</table></thead>` : ''}<tbody>${bodyRows}</tbody></table>`;
         });
         html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         html = html.replace(/^[-•*]\s+(.*?)$/gm, '<li>$1</li>');
@@ -902,7 +1158,6 @@
             const plan = await generateMarketingPlan(cd, pd);
             currentPlan = plan;
             
-            // Extract roadmap for dashboard
             const roadmap = extractRoadmapFromPlan(plan);
             roadmapData = roadmap;
             
@@ -915,7 +1170,6 @@
             
             elements.outputArea.scrollIntoView({ behavior: 'smooth' });
             
-            // Show modal asking to go to dashboard
             showGotoDashboardModal(plan, roadmap);
             
         } catch (error) {
@@ -968,7 +1222,7 @@
     }
     
     // =====================================================
-    // DASHBOARD TOGGLE
+    // DASHBOARD TOGGLE & ROLE CLICK HANDLERS
     // =====================================================
     let isDashboardVisible = false;
     
@@ -977,6 +1231,7 @@
         elements.dashboardPage.classList.remove('active');
         isDashboardVisible = false;
         elements.dashboardToggleBtn.textContent = '📊 Dashboard';
+        elements.roleContentArea.style.display = 'none';
     }
     
     function showDashboard() {
@@ -996,6 +1251,26 @@
             showDashboard();
         }
     }
+    
+    // Add click listeners to all role items
+    document.querySelectorAll('.role-item').forEach(item => {
+        const roleId = item.dataset.role;
+        item.addEventListener('click', () => {
+            if (!isDashboardVisible) {
+                // If not in dashboard, switch to dashboard first
+                if (roadmapData) {
+                    renderJourneyMap(roadmapData);
+                }
+                showDashboard();
+            }
+            showRoleContent(roleId);
+        });
+    });
+    
+    // Close role content
+    elements.closeRoleContent.addEventListener('click', () => {
+        elements.roleContentArea.style.display = 'none';
+    });
     
     // Modal handlers
     function handleModalYes() {
@@ -1017,7 +1292,6 @@
     elements.modalYesBtn.addEventListener('click', handleModalYes);
     elements.modalNoBtn.addEventListener('click', handleModalNo);
     
-    // Close modal on outside click
     elements.modal.addEventListener('click', (e) => {
         if (e.target === elements.modal) hideModal();
     });
