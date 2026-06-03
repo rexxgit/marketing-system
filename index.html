@@ -1,707 +1,2932 @@
-Here is the updated HTML document with the requested changes for the Market Sizing visualizations and left panel placement.
+I understand. You want me to keep the **exact structure** of your `index.html` file (all CSS icons, layout, etc.) and only modify the **Market Sizing** section inside the **left panel** to add the interactive TAM/SAM/SOM visualizations, while ensuring the main generation area only shows the plan text.
+
+Here is the fully updated HTML file. I have preserved your complete original structure and only enhanced the `role-content-panel` (inside the left panel) with the requested market sizing features, without altering the generation output area.
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StratMark AI | Strategic Marketing System</title>
+    <title>Strategic Marketing System | AI-Powered Marketing Plan Generator</title>
+    
     <style>
+        /* =====================================================
+           GLOBAL STYLES (YOUR ORIGINAL STYLES PRESERVED)
+        ===================================================== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0c12;
-            color: #eef2ff;
-            line-height: 1.5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e1a;
+            color: #ffffff;
+            line-height: 1.6;
             min-height: 100vh;
         }
-
-        /* Layout */
+        
         .app-wrapper {
             display: flex;
             min-height: 100vh;
         }
-
-        /* ========= LEFT PANEL ========= */
-        .left-panel {
-            width: 360px;
-            background: linear-gradient(180deg, #0f111a 0%, #080b12 100%);
-            border-right: 1px solid rgba(255, 255, 255, 0.06);
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            z-index: 40;
-            transform: translateX(-100%);
-            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            padding: 24px 0 32px 0;
+        
+        /* =====================================================
+           CSS-ONLY ICONS LIBRARY (YOUR ORIGINAL ICONS)
+        ===================================================== */
+        .icon-target {
+            width: 20px;
+            height: 20px;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            position: relative;
+            display: inline-block;
         }
-
-        .left-panel.open {
-            transform: translateX(0);
+        .icon-target::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 6px;
+            height: 6px;
+            background: currentColor;
+            border-radius: 50%;
         }
-
-        .panel-logo {
-            padding: 0 20px 24px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            margin-bottom: 20px;
+        .icon-target::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 6px;
+            background: currentColor;
         }
-
-        .panel-logo h2 {
-            font-size: 1.35rem;
-            background: linear-gradient(135deg, #fff, #818cf8);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+        
+        .icon-bars {
+            display: inline-flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 20px;
         }
-
-        .roles-list {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            padding: 0 12px;
+        .icon-bars span {
+            width: 4px;
+            background: currentColor;
+            border-radius: 1px;
+            transition: height 0.2s ease;
         }
-
-        .role-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 14px;
-            border-radius: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #9ca3af;
+        .icon-bars span:nth-child(1) { height: 10px; }
+        .icon-bars span:nth-child(2) { height: 16px; }
+        .icon-bars span:nth-child(3) { height: 8px; }
+        .icon-bars span:nth-child(4) { height: 14px; }
+        
+        .icon-lightning {
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 16px solid currentColor;
+            position: relative;
+            display: inline-block;
         }
-
-        .role-item:hover {
-            background: rgba(99, 102, 241, 0.12);
-            color: #c7d2fe;
+        .icon-lightning::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: -4px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 12px solid currentColor;
         }
-
-        .role-item.active {
-            background: rgba(99, 102, 241, 0.2);
-            color: #a5b4fc;
-            border-left: 3px solid #6366f1;
+        
+        .icon-building {
+            width: 18px;
+            height: 18px;
+            border: 2px solid currentColor;
+            position: relative;
+            display: inline-block;
         }
-
-        .role-icon {
-            width: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .icon-building::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 6px;
+            height: 6px;
+            background: currentColor;
         }
-
-        .role-name {
-            font-size: 0.85rem;
-            font-weight: 500;
-            flex: 1;
+        .icon-building::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 2px;
+            right: 2px;
+            height: 4px;
+            background: currentColor;
         }
-
-        /* Role content area (inside left panel) */
-        .role-content-panel {
-            margin-top: 28px;
-            padding: 0 16px 24px;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-            display: none;
+        
+        .icon-search {
+            width: 16px;
+            height: 16px;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            position: relative;
+            display: inline-block;
         }
-
-        .role-content-panel.visible {
-            display: block;
+        .icon-search::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            right: -4px;
+            width: 8px;
+            height: 2px;
+            background: currentColor;
+            transform: rotate(45deg);
         }
-
-        /* ---------- MARKET SIZING CARDS (interactive) ---------- */
-        .market-sizing-container {
+        
+        .icon-pin {
+            width: 14px;
+            height: 20px;
+            border: 2px solid currentColor;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            position: relative;
+            display: inline-block;
+        }
+        .icon-pin::before {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 4px;
+            height: 4px;
+            background: currentColor;
+            border-radius: 50%;
+        }
+        
+        .icon-grid {
+            display: inline-grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px;
+            width: 18px;
+            height: 18px;
+        }
+        .icon-grid span {
+            background: currentColor;
+            border-radius: 2px;
+        }
+        
+        .icon-diamond {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 18px solid currentColor;
+            transform: rotate(180deg);
+            display: inline-block;
+        }
+        
+        .icon-path {
+            width: 20px;
+            height: 14px;
+            border-bottom: 2px dotted currentColor;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-path::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 6px;
+            height: 6px;
+            background: currentColor;
+            border-radius: 50%;
+        }
+        .icon-path::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            bottom: -4px;
+            width: 6px;
+            height: 6px;
+            background: currentColor;
+            border-radius: 50%;
+        }
+        
+        .icon-linechart {
+            width: 20px;
+            height: 16px;
+            border-left: 2px solid currentColor;
+            border-bottom: 2px solid currentColor;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-linechart::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 6px;
+            height: 8px;
+            background: currentColor;
+            clip-path: polygon(0% 100%, 100% 0%, 100% 100%);
+        }
+        .icon-linechart::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 8px;
+            width: 6px;
+            height: 12px;
+            background: currentColor;
+            clip-path: polygon(0% 100%, 100% 0%, 100% 100%);
+        }
+        
+        .icon-bullseye {
+            width: 18px;
+            height: 18px;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-bullseye::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 6px;
+            height: 6px;
+            background: currentColor;
+            border-radius: 50%;
+        }
+        
+        .icon-calendar {
+            width: 18px;
+            height: 18px;
+            border: 2px solid currentColor;
+            border-radius: 2px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-calendar::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 3px;
+            width: 4px;
+            height: 4px;
+            background: currentColor;
+            border-radius: 1px;
+        }
+        .icon-calendar::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            right: 3px;
+            width: 4px;
+            height: 4px;
+            background: currentColor;
+            border-radius: 1px;
+        }
+        
+        .icon-paintbrush {
+            width: 16px;
+            height: 16px;
+            border-bottom: 2px solid currentColor;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-paintbrush::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 0;
+            width: 8px;
+            height: 8px;
+            background: currentColor;
+            border-radius: 50% 0 50% 50%;
+        }
+        
+        .icon-home {
+            width: 18px;
+            height: 16px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-home::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: currentColor;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+        .icon-home::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 4px;
+            right: 4px;
+            height: 6px;
+            background: currentColor;
+        }
+        
+        .icon-clipboard {
+            width: 16px;
+            height: 18px;
+            border: 2px solid currentColor;
+            border-radius: 2px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-clipboard::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 3px;
+            right: 3px;
+            height: 3px;
+            background: currentColor;
+            border-radius: 1px;
+        }
+        
+        .icon-lightbulb {
+            width: 16px;
+            height: 16px;
+            background: currentColor;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-lightbulb::before {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: currentColor;
+            border-radius: 1px;
+        }
+        .icon-lightbulb::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 2px;
+            background: currentColor;
+        }
+        
+        .icon-dollar {
+            width: 16px;
+            height: 18px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-dollar::before {
+            content: '$';
+            position: absolute;
+            top: 0;
+            left: 4px;
+            font-weight: bold;
+            font-size: 16px;
+            color: currentColor;
+        }
+        
+        .icon-rocket {
+            width: 18px;
+            height: 18px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-rocket::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 4px;
+            right: 4px;
+            height: 8px;
+            background: currentColor;
+            clip-path: polygon(0% 0%, 100% 0%, 80% 100%, 20% 100%);
+        }
+        .icon-rocket::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 6px;
+            right: 6px;
+            height: 8px;
+            background: currentColor;
+            clip-path: polygon(50% 0%, 100% 40%, 70% 100%, 30% 100%, 0% 40%);
+        }
+        
+        .icon-user {
+            width: 16px;
+            height: 16px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-user::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 3px;
+            right: 3px;
+            height: 7px;
+            background: currentColor;
+            border-radius: 50%;
+        }
+        .icon-user::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 7px;
+            background: currentColor;
+            clip-path: polygon(0% 0%, 100% 0%, 80% 100%, 20% 100%);
+        }
+        
+        .icon-arrow {
+            width: 14px;
+            height: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-arrow::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            width: 10px;
+            height: 2px;
+            background: currentColor;
+        }
+        .icon-arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 6px;
+            height: 6px;
+            border-top: 2px solid currentColor;
+            border-right: 2px solid currentColor;
+            transform: rotate(45deg);
+        }
+        
+        .icon-lock {
+            width: 12px;
+            height: 14px;
+            border: 2px solid currentColor;
+            border-radius: 2px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-lock::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 2px;
+            right: 2px;
+            height: 6px;
+            border: 2px solid currentColor;
+            border-radius: 2px 2px 0 0;
+        }
+        
+        .icon-data {
+            width: 18px;
+            height: 14px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-data::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 4px;
+            height: 8px;
+            background: currentColor;
+        }
+        .icon-data::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 4px;
+            background: currentColor;
+        }
+        
+        .icon-check {
+            width: 14px;
+            height: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-check::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 6px;
+            height: 2px;
+            background: currentColor;
+            transform: rotate(45deg);
+            transform-origin: left bottom;
+        }
+        .icon-check::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            bottom: 2px;
+            width: 10px;
+            height: 2px;
+            background: currentColor;
+            transform: rotate(-45deg);
+            transform-origin: left bottom;
+        }
+        
+        .icon-star {
+            width: 16px;
+            height: 16px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-star::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 6px;
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-bottom: 8px solid currentColor;
+        }
+        .icon-star::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 2px;
+            right: 2px;
+            height: 6px;
+            background: currentColor;
+            clip-path: polygon(50% 100%, 0% 40%, 100% 40%);
+        }
+        
+        .icon-heart {
+            width: 16px;
+            height: 14px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-heart::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 8px;
+            background: currentColor;
+            border-radius: 50% 0 50% 50%;
+            transform: rotate(-45deg);
+        }
+        .icon-heart::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 8px;
+            height: 8px;
+            background: currentColor;
+            border-radius: 0 50% 50% 50%;
+            transform: rotate(45deg);
+        }
+        
+        .icon-brain {
+            width: 18px;
+            height: 14px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-brain::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 10px;
+            background: currentColor;
+            border-radius: 50% 0 50% 50%;
+        }
+        .icon-brain::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 8px;
+            height: 10px;
+            background: currentColor;
+            border-radius: 0 50% 50% 50%;
+        }
+        
+        .icon-gear {
+            width: 16px;
+            height: 16px;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-gear::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            background: currentColor;
+            border-radius: 50%;
+        }
+        
+        /* ========= NEW MARKET SIZING STYLES (ADDED FOR LEFT PANEL) ========= */
+        .market-sizing-panel {
             display: flex;
             flex-direction: column;
             gap: 24px;
-            margin-top: 12px;
+            margin-top: 16px;
         }
-
-        .tam-card, .sam-card, .som-card {
-            background: rgba(20, 24, 36, 0.7);
-            border-radius: 24px;
+        .tam-block, .sam-block, .som-block {
+            background: rgba(255,255,255,.03);
+            border-radius: 20px;
             padding: 20px;
+            border: 1px solid rgba(255,255,255,.1);
             cursor: pointer;
             transition: all 0.2s ease;
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            backdrop-filter: blur(2px);
         }
-
-        .tam-card:hover, .sam-card:hover, .som-card:hover {
-            transform: translateY(-2px);
-            border-color: rgba(99, 102, 241, 0.5);
-            background: rgba(30, 35, 50, 0.8);
+        .tam-block:hover, .sam-block:hover, .som-block:hover {
+            background: rgba(99,102,241,.1);
+            border-color: rgba(99,102,241,.4);
         }
-
         .tam-header, .sam-header, .som-header {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             flex-wrap: wrap;
         }
-
-        .tam-label, .sam-label, .som-label {
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            background: rgba(99,102,241,0.2);
-            padding: 2px 10px;
-            border-radius: 40px;
-        }
-        .tam-label { color: #4ade80; }
-        .sam-label { color: #38bdf8; }
-        .som-label { color: #fbbf24; }
-
+        .tam-label { color: #4ade80; font-weight: bold; font-size: 14px; }
+        .sam-label { color: #38bdf8; font-weight: bold; font-size: 14px; }
+        .som-label { color: #fbbf24; font-weight: bold; font-size: 14px; }
         .tam-value, .sam-value, .som-value {
-            font-size: 38px;
-            font-weight: 800;
+            font-size: 32px;
+            font-weight: bold;
         }
         .tam-value { color: #4ade80; }
         .sam-value { color: #38bdf8; }
         .som-value { color: #fbbf24; }
-
-        /* SAM layout: hand pointing right + value on the right */
+        
         .sam-layout {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            margin: 16px 0 8px;
+            align-items: center;
+            margin: 16px 0;
         }
-        .hand-pointing {
+        .hand-icon {
             font-size: 48px;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
         }
-        .sam-value-large {
-            font-size: 40px;
-            font-weight: 800;
-            color: #38bdf8;
+        .sam-right {
+            text-align: right;
         }
-
-        /* SOM huge hand centered */
-        .som-huge-hand {
+        .som-huge {
             text-align: center;
-            font-size: 80px;
-            margin: 16px 0 8px;
+            font-size: 72px;
+            margin: 16px 0;
         }
-
         .click-hint {
             font-size: 10px;
-            text-align: center;
             color: #6b7280;
+            text-align: center;
             margin-top: 12px;
-            letter-spacing: 0.3px;
         }
-
-        /* expandable detail with market icons */
-        .tam-detail, .sam-detail, .som-detail {
+        .hidden-detail {
             display: none;
             margin-top: 20px;
             padding-top: 16px;
-            border-top: 1px solid rgba(255,255,255,0.08);
-            animation: fadeSlide 0.25s ease;
+            border-top: 1px solid rgba(255,255,255,.1);
         }
-
-        .tam-detail.show, .sam-detail.show, .som-detail.show {
+        .hidden-detail.show {
             display: block;
         }
-
-        .icon-grid-market {
+        .icon-market-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
-            margin: 16px 0 8px;
+            margin-top: 12px;
         }
-
         .market-icon {
-            width: 36px;
-            height: 36px;
-            background: rgba(100, 116, 139, 0.3);
+            width: 32px;
+            height: 32px;
+            background: rgba(99,102,241,.3);
             clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%);
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
+            font-size: 14px;
+        }
+        
+        /* =====================================================
+           LEFT PANEL - 13 ROLES (YOUR ORIGINAL)
+        ===================================================== */
+        .left-panel {
+            width: 280px;
+            background: linear-gradient(180deg, #0c1120 0%, #050810 100%);
+            border-right: 1px solid rgba(255,255,255,.08);
+            padding: 24px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 50;
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        
+        .left-panel.open {
+            transform: translateX(0);
+        }
+        
+        .panel-logo {
+            padding: 0 20px 24px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            margin-bottom: 24px;
+        }
+        
+        .panel-logo h2 {
             font-size: 18px;
-            font-weight: bold;
-            transition: 0.1s ease;
+            background: linear-gradient(135deg, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
-
-        /* segmentation & journey inside left panel */
-        .segmentation-visual {
-            background: rgba(20, 24, 36, 0.6);
-            border-radius: 24px;
-            padding: 18px;
-            margin-bottom: 20px;
-        }
-        .pie-chart {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            background: conic-gradient(#4ade80 0deg 120deg, #38bdf8 120deg 240deg, #fbbf24 240deg 360deg);
-            margin: 0 auto;
-        }
-        .two-segments {
+        
+        .roles-list {
             display: flex;
-            justify-content: center;
-            gap: 32px;
+            flex-direction: column;
+            gap: 4px;
         }
-        .priority-card {
-            background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(236,72,153,0.1));
-            border-radius: 20px;
-            padding: 16px;
-            margin-top: 16px;
-        }
-        .journey-map-panel {
-            background: rgba(20, 24, 36, 0.6);
-            border-radius: 20px;
-            padding: 16px;
-        }
-        .journey-stage-item {
-            display: flex;
-            gap: 12px;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .journey-stage-day {
-            width: 38px;
-            height: 38px;
-            background: #1e293b;
-            border-radius: 40px;
+        
+        .role-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-weight: bold;
+            gap: 12px;
+            padding: 12px 20px;
+            margin: 0 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            color: rgba(255,255,255,.6);
         }
-
-        /* ========= MAIN CONTENT (only plan text) ========= */
+        
+        .role-item:hover {
+            background: rgba(99,102,241,.1);
+            color: #a5b4fc;
+            transform: translateX(4px);
+        }
+        
+        .role-item.active {
+            background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(236,72,153,.1));
+            color: #a5b4fc;
+            border-left: 3px solid #6366f1;
+        }
+        
+        .role-icon {
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .role-name {
+            font-size: 13px;
+            font-weight: 500;
+            flex: 1;
+        }
+        
+        .role-status {
+            font-size: 10px;
+            color: rgba(255,255,255,.3);
+        }
+        
+        .role-status.has-data {
+            color: #4ade80;
+        }
+        
+        /* Role Content Area inside Left Panel (NEW) */
+        .role-content-panel {
+            margin-top: 24px;
+            padding: 0 16px 20px;
+            border-top: 1px solid rgba(255,255,255,.08);
+            display: none;
+        }
+        .role-content-panel.visible {
+            display: block;
+        }
+        
+        /* =====================================================
+           MAIN CONTENT (YOUR ORIGINAL)
+        ===================================================== */
         .main-content {
             flex: 1;
             margin-left: 0;
             padding: 24px 32px;
-            transition: margin-left 0.3s cubic-bezier(0.2,0.9,0.4,1.1);
+            transition: margin-left 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
+        
         .main-content.panel-open {
-            margin-left: 360px;
+            margin-left: 280px;
         }
-
-        /* navigation & UI same as before but cleaner */
+        
+        /* Navigation */
         .nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,.1);
             flex-wrap: wrap;
             gap: 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            padding-bottom: 16px;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
+        
         .logo {
-            font-size: 1.6rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #a5b4fc, #c084fc);
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             cursor: pointer;
         }
-        .nav-links { display: flex; gap: 24px; }
+        
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
         .nav-links button {
             background: none;
             border: none;
-            color: #9ca3af;
+            color: rgba(255,255,255,.7);
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 14px;
+            padding: 8px 0;
+            transition: color 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             display: flex;
             align-items: center;
             gap: 6px;
         }
-        .nav-links button.active, .nav-links button:hover { color: #a5b4fc; }
-        .auth-buttons { display: flex; gap: 12px; }
-        .btn-signin, .btn-signup {
-            padding: 8px 18px;
-            border-radius: 40px;
-            font-weight: 500;
-            background: transparent;
-            border: 1px solid #334155;
-            color: #e2e8f0;
-            cursor: pointer;
+        
+        .nav-links button:hover {
+            color: #6366f1;
         }
-        .btn-signup { background: linear-gradient(135deg, #4f46e5, #7c3aed); border: none; }
-        .user-menu { display: flex; align-items: center; gap: 12px; background: #1e293b; padding: 5px 14px; border-radius: 60px; cursor: pointer; }
-        .page { display: none; animation: fade 0.25s; }
-        .page.active { display: block; }
-
-        /* generator area */
-        .input-area {
-            background: rgba(255,255,255,0.03);
-            border-radius: 28px;
-            padding: 28px;
-            border: 1px solid rgba(255,255,255,0.06);
+        
+        .nav-links button.active {
+            color: #6366f1;
         }
-        textarea {
-            width: 100%;
-            background: #0f111a;
-            border: 1px solid #2d3748;
-            border-radius: 20px;
-            padding: 14px;
-            color: white;
-            margin: 12px 0;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #4f46e5, #db2777);
-            border: none;
-            border-radius: 40px;
-            padding: 12px 28px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .output-area {
-            background: rgba(255,255,255,0.03);
-            border-radius: 28px;
-            padding: 28px;
-            margin-top: 28px;
-            display: none;
-        }
-        .status-bar, .progress-bar { margin: 18px 0; }
-        .progress-fill { height: 4px; background: linear-gradient(90deg, #4f46e5, #db2777); width: 0%; transition: width 0.3s; }
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+        
+        .nav-right {
+            display: flex;
+            align-items: center;
             gap: 16px;
-            margin: 28px 0;
         }
-        .kpi-card {
-            background: #11131f;
-            border-radius: 24px;
-            padding: 18px;
+        
+        .lang-selector {
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 50px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .lang-selector:hover {
+            background: rgba(99,102,241,.1);
+            border-color: rgba(99,102,241,.3);
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .btn-signin {
+            background: transparent;
+            border: 1px solid rgba(99,102,241,.5);
+            border-radius: 50px;
+            padding: 8px 20px;
+            color: #a5b4fc;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .btn-signin:hover {
+            background: rgba(99,102,241,.1);
+            border-color: #6366f1;
+            transform: translateY(-1px);
+        }
+        
+        .btn-signup {
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            border: none;
+            border-radius: 50px;
+            padding: 8px 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .btn-signup:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99,102,241,.3);
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,.05);
+            border-radius: 50px;
+            padding: 6px 16px 6px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .user-menu:hover {
+            background: rgba(99,102,241,.15);
+        }
+        
+        .user-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #a5b4fc;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        .logout-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,.5);
+            cursor: pointer;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 50px;
+            transition: all 0.2s ease;
+        }
+        
+        .logout-btn:hover {
+            color: #f87171;
+            background: rgba(248,113,113,.1);
+        }
+        
+        /* Pages */
+        .page {
+            display: none;
+            animation: fadeIn 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Hero Section */
+        .hero {
             text-align: center;
+            padding: 60px 0;
         }
-        .kpi-value { font-size: 28px; font-weight: bold; color: #a5b4fc; }
-        .role-card {
-            background: #0f111e;
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, #a5b4fc, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            color: rgba(255,255,255,.7);
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+        
+        /* Steps */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 60px 0;
+        }
+        
+        .step-card {
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
             border-radius: 20px;
-            padding: 20px;
-            margin: 20px 0;
-            opacity: 0;
-            transform: translateY(16px);
-            transition: 0.4s;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1), border-color 0.2s;
         }
-        .role-card.visible { opacity: 1; transform: translateY(0); }
-        .loader {
+        
+        .step-card:hover { 
+            transform: translateY(-5px); 
+            border-color: rgba(99,102,241,.3);
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        /* Roles Grid (Homepage) */
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 40px 0;
+        }
+        
+        .role-badge {
+            background: rgba(99,102,241,.1);
+            border: 1px solid rgba(99,102,241,.3);
+            border-radius: 100px;
+            padding: 10px 16px;
+            text-align: center;
+            font-size: 12px;
+            color: #a5b4fc;
+            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .role-badge:hover { 
+            background: rgba(99,102,241,.2); 
+            transform: translateY(-2px);
+        }
+        
+        .role-badge .role-badge-icon {
             width: 18px;
             height: 18px;
-            border: 2px solid #334155;
-            border-top-color: #818cf8;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
-
-        @keyframes fadeSlide { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Pricing */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 60px 0;
+        }
+        
+        .pricing-card {
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 24px;
+            padding: 32px;
+            text-align: center;
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        
+        .pricing-card:hover { transform: translateY(-5px); }
+        .pricing-card.popular { border-color: #6366f1; background: rgba(99,102,241,.05); }
+        .price { font-size: 48px; font-weight: bold; margin: 20px 0; }
+        .price span { font-size: 16px; font-weight: normal; }
+        .feature-list { list-style: none; margin: 30px 0; }
+        .feature-list li { 
+            padding: 10px 0; 
+            color: rgba(255,255,255,.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        /* About Page */
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 40px 0;
+        }
+        
+        .principle-card {
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        
+        .principle-card:hover { transform: translateY(-5px); border-color: rgba(99,102,241,.2); }
+        .principle-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* =====================================================
+           SEGMENTATION VISUALIZATION (YOUR ORIGINAL)
+        ===================================================== */
+        .segmentation-visual {
+            background: rgba(255,255,255,.03);
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .segmentation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .segmentation-chart {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+        }
+        
+        .pie-chart {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #4ade80 0deg 120deg,
+                #22d3ee 120deg 240deg,
+                #fbbf24 240deg 360deg
+            );
+            margin: 0 auto;
+            transition: transform 0.3s ease;
+            animation: subtlePulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes subtlePulse {
+            0%, 100% { transform: scale(1); opacity: 0.95; }
+            50% { transform: scale(1.02); opacity: 1; }
+        }
+        
+        .pie-chart:hover {
+            transform: scale(1.05);
+        }
+        
+        .single-segment-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .single-segment-icon .icon-target {
+            width: 80px;
+            height: 80px;
+            border-width: 4px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .single-segment-icon .icon-target::before {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .two-segments {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            align-items: center;
+        }
+        .segment-icon {
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .segment-icon:hover {
+            transform: translateY(-5px);
+        }
+        .segment-icon .icon-target {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 12px;
+        }
+        
+        .priority-card {
+            background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(236,72,153,.1));
+            border: 1px solid rgba(99,102,241,.4);
+            border-radius: 20px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            margin-top: 24px;
+        }
+        
+        .priority-card::before {
+            content: '🏆';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 60px;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .priority-card:hover {
+            transform: translateX(5px);
+            border-color: #4ade80;
+            box-shadow: 0 4px 20px rgba(74,222,128,.1);
+        }
+        
+        .priority-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #4ade80, #22d3ee);
+            color: #0a0e1a;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 50px;
+            margin-bottom: 12px;
+        }
+        
+        .priority-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #4ade80;
+        }
+        
+        /* App Generator Area */
+        .input-area {
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 30px;
+            transition: border-color 0.2s;
+        }
+        
+        .input-area:focus-within {
+            border-color: rgba(99,102,241,.3);
+        }
+        
+        textarea {
+            width: 100%;
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 16px;
+            padding: 16px;
+            color: white;
+            font-family: inherit;
+            resize: vertical;
+            margin: 15px 0;
+            transition: border-color 0.2s;
+        }
+        
+        textarea:focus { outline: none; border-color: #6366f1; }
+        
+        .output-area {
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 24px;
+            padding: 32px;
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .status-bar {
+            background: rgba(99,102,241,.1);
+            border: 1px solid rgba(99,102,241,.3);
+            border-radius: 12px;
+            padding: 12px 20px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .progress-bar {
+            background: rgba(255,255,255,.1);
+            border-radius: 10px;
+            height: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            transition: width 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 30px 0;
+        }
+        
+        .kpi-card {
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(99,102,241,.3);
+        }
+        
+        .kpi-icon {
+            width: 32px;
+            height: 32px;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a5b4fc;
+        }
+        
+        .kpi-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #a5b4fc;
+            margin: 10px 0;
+        }
+        
+        .role-card {
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 20px;
+            padding: 24px;
+            margin: 20px 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        
+        .role-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Dashboard Container */
+        .dashboard-container {
+            display: none;
+        }
+        
+        .dashboard-container.active {
+            display: block;
+        }
+        
+        /* Journey Map */
+        .journey-map-container {
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 24px;
+            padding: 32px;
+            margin-top: 24px;
+        }
+        
+        .journey-title {
+            margin-bottom: 32px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .journey-timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+        
+        .journey-dotted-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: repeating-linear-gradient(90deg, #6366f1, #6366f1 10px, transparent 10px, transparent 20px);
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+        
+        .journey-stages {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .journey-stage-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        
+        .journey-stage-node:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stage-dot {
+            width: 16px;
+            height: 16px;
+            background: #6366f1;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(99,102,241,.2);
+            transition: all 0.3s ease;
+        }
+        
+        .stage-dot.completed {
+            background: #4ade80;
+            box-shadow: 0 0 0 4px rgba(74,222,128,.2);
+        }
+        
+        .stage-date {
+            font-size: 11px;
+            color: rgba(255,255,255,.5);
+            text-align: center;
+        }
+        
+        .stage-name {
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            color: #a5b4fc;
+        }
+        
+        .stage-desc {
+            font-size: 10px;
+            color: rgba(255,255,255,.4);
+            text-align: center;
+            max-width: 120px;
+        }
+        
+        .journey-start {
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+        }
+        
+        .journey-end {
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+        }
+        
+        /* Role Content Area */
+        .role-content-area {
+            display: none;
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 24px;
+            padding: 32px;
+            margin-top: 24px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .role-content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .role-content-title {
+            font-size: 20px;
+            color: #a5b4fc;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .close-role-content {
+            background: transparent;
+            border: 1px solid rgba(99,102,241,.5);
+            border-radius: 50px;
+            padding: 6px 16px;
+            color: #a5b4fc;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .close-role-content:hover {
+            background: rgba(99,102,241,.1);
+        }
+        
+        .role-content-body {
+            line-height: 1.8;
+            color: rgba(255,255,255,.7);
+        }
+        
+        .role-content-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+        
+        .role-content-body th {
+            background: rgba(99,102,241,.1);
+            padding: 10px;
+            text-align: left;
+            color: #a5b4fc;
+        }
+        
+        .role-content-body td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+        }
+        
+        .role-content-body ul {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: rgba(255,255,255,.4);
+        }
+        
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,.3);
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+        
         @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-        .icon-building-small { display: inline-block; width: 32px; height: 32px; background: currentColor; clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%); margin: 4px; opacity: 0.8; }
-        .flex-between { display: flex; justify-content: space-between; align-items: center; }
-        @media (max-width: 720px) { .left-panel { width: 300px; } .main-content.panel-open { margin-left: 300px; } }
-        .footer { text-align: center; margin-top: 60px; padding: 24px; color: #5b6b8c; font-size: 12px; }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 28px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99,102,241,.3);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(99,102,241,.5);
+            border-radius: 50px;
+            padding: 12px 28px;
+            color: #a5b4fc;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(99,102,241,.1);
+            transform: translateY(-2px);
+        }
+        
+        .changelog-section {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(255,255,255,.03);
+            border-radius: 16px;
+        }
+        
+        .changelog-section details { cursor: pointer; }
+        .changelog-section summary { color: #a5b4fc; margin-bottom: 8px; }
+        .changelog-section p { font-size: 12px; color: rgba(255,255,255,.6); margin: 4px 0; }
+        
+        .footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid rgba(255,255,255,.1);
+            margin-top: 60px;
+            color: rgba(255,255,255,.5);
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .footer-icons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .left-panel { width: 260px; }
+            .main-content.panel-open { margin-left: 260px; }
+            .steps, .pricing-grid, .principles-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 32px; }
+            .journey-stages { flex-direction: column; gap: 24px; }
+            .journey-dotted-line { display: none; }
+            .nav-links button span:first-child { display: none; }
+        }
     </style>
 </head>
 <body>
+
 <div class="app-wrapper">
+    <!-- LEFT PANEL - 13 ROLES -->
     <div class="left-panel" id="leftPanel">
-        <div class="panel-logo"><h2>⚡ StratMark AI</h2></div>
-        <div class="roles-list">
-            <div class="role-item" data-role="segmentation"><div class="role-icon">🎯</div><span class="role-name">Segmentation</span></div>
-            <div class="role-item" data-role="marketsizing"><div class="role-icon">📊</div><span class="role-name">Market Sizing</span></div>
-            <div class="role-item" data-role="pestle"><div class="role-icon">🌍</div><span class="role-name">PESTLE</span></div>
-            <div class="role-item" data-role="porter"><div class="role-icon">⚔️</div><span class="role-name">Porter's Forces</span></div>
-            <div class="role-item" data-role="competitors"><div class="role-icon">🔍</div><span class="role-name">Competitors</span></div>
-            <div class="role-item" data-role="positioning"><div class="role-icon">📍</div><span class="role-name">Positioning</span></div>
-            <div class="role-item" data-role="4ps"><div class="role-icon">📦</div><span class="role-name">4Ps</span></div>
-            <div class="role-item" data-role="swot"><div class="role-icon">⚡</div><span class="role-name">SWOT</span></div>
-            <div class="role-item" data-role="journey"><div class="role-icon">🗺️</div><span class="role-name">Journey Map</span></div>
-            <div class="role-item" data-role="kpi"><div class="role-icon">📈</div><span class="role-name">KPIs</span></div>
-            <div class="role-item" data-role="okrs"><div class="role-icon">🎯</div><span class="role-name">OKRs</span></div>
-            <div class="role-item" data-role="roadmap"><div class="role-icon">📅</div><span class="role-name">Roadmap</span></div>
-            <div class="role-item" data-role="design"><div class="role-icon">🎨</div><span class="role-name">Design</span></div>
+        <div class="panel-logo">
+            <h2>StratMark AI</h2>
         </div>
+        <div class="roles-list">
+            <div class="role-item" data-role="segmentation">
+                <div class="role-icon"><div class="icon-target"></div></div>
+                <span class="role-name">Segmentation</span>
+                <span class="role-status"></span>
+            </div>
+            <div class="role-item" data-role="marketsizing">
+                <div class="role-icon"><div class="icon-bars"><span></span><span></span><span></span><span></span></div></div>
+                <span class="role-name">Market Sizing</span>
+                <span class="role-status"></span>
+            </div>
+            <div class="role-item" data-role="pestle">
+                <div class="role-icon"><div class="icon-lightning"></div></div>
+                <span class="role-name">PESTLE</span>
+                <span class="role-status"></span>
+            </div>
+            <div class="role-item" data-role="porter">
+                <div class="role-icon"><div class="icon-building"></div></div>
+                <span class="role-name">Porter's Forces</span>
+                <span class="role-status"></span>
+            </div>
+            <div class="role-item" data-role="competitors">
+                <div class="role-icon"><div class="icon-search"></div></div>
+                <span class="role-name">Competitors</span>
+                <span class="role-status"></span>
+            </div>
+            <div class="role-item" data-role="positioning">
+                <div class="role-icon"><div class="icon-pin"></div></div>
+                <span class="role-name">Positioning</span>
+                <span class="role-status"></span>
+            </div>
+            <div class="role-item" data-role="4ps">
+                <div class="role-icon"><div class="icon-grid"><span></span><span></span><span></span><span></span></div></div>
+                <span class="role-name">4Ps</span>
+                <span class="role-status"></span>
+            </div>
+            <div class="role-item" data-role="swot">
+                <div class="role-icon"><div class="icon-diamond"></div></div>
+                <span class="role-name">SWOT</span>
+                <span class="role-status"></span>
+            </div>
+            <div class="role-item" data-role="journey">
+                <div class="role-icon"><div class="icon-path"></div></div>
+                <span class="role-name">Journey Map</span>
+                <span class="role-status"></span>
+            </div>
+            <div class="role-item" data-role="kpi">
+                <div class="role-icon"><div class="icon-linechart"></div></div>
+                <span class="role-name">KPIs</span>
+                <span class="role-status"></span>
+            </div>
+            <div class="role-item" data-role="okrs">
+                <div class="role-icon"><div class="icon-bullseye"></div></div>
+                <span class="role-name">OKRs</span>
+                <span class="role-status"></span>
+            </div>
+            <div class="role-item active" data-role="roadmap">
+                <div class="role-icon"><div class="icon-calendar"></div></div>
+                <span class="role-name">Roadmap</span>
+                <span class="role-status" id="roadmapStatus">—</span>
+            </div>
+            <div class="role-item" data-role="design">
+                <div class="role-icon"><div class="icon-paintbrush"></div></div>
+                <span class="role-name">Design</span>
+                <span class="role-status"></span>
+            </div>
+        </div>
+        <!-- DYNAMIC CONTENT PANEL (INSIDE LEFT PANEL) -->
         <div id="roleContentPanel" class="role-content-panel"></div>
     </div>
 
+    <!-- MAIN CONTENT -->
     <div class="main-content" id="mainContent">
         <nav class="nav">
             <div class="logo" onclick="showPage('home')">StrategicMarketing</div>
-            <div class="nav-links">
-                <button onclick="showPage('home')" id="navHome" class="active">🏠 Home</button>
-                <button onclick="showPage('planner')" id="navPlanner">📋 Planner</button>
-                <button onclick="showPage('about')" id="navAbout">ℹ️ About</button>
-                <button onclick="showPage('pricing')" id="navPricing">💰 Pricing</button>
-                <button onclick="showPage('app')" id="navApp">🚀 Launch App</button>
+            <div class="nav-links" id="navLinks">
+                <button onclick="showPage('home')" class="active" id="navHome">
+                    <span class="icon-home" style="width: 18px; height: 16px;"></span>
+                    <span>Home</span>
+                </button>
+                <button onclick="showPage('planner')" id="navPlanner">
+                    <span class="icon-clipboard" style="width: 16px; height: 18px;"></span>
+                    <span>Planner</span>
+                </button>
+                <button onclick="showPage('about')" id="navAbout">
+                    <span class="icon-lightbulb" style="width: 16px; height: 16px;"></span>
+                    <span>About</span>
+                </button>
+                <button onclick="showPage('pricing')" id="navPricing">
+                    <span class="icon-dollar" style="width: 16px; height: 18px;"></span>
+                    <span>Pricing</span>
+                </button>
+                <button onclick="showPage('app')" id="navApp">
+                    <span class="icon-rocket" style="width: 18px; height: 18px;"></span>
+                    <span>Launch App</span>
+                </button>
             </div>
             <div class="nav-right">
+                <div class="lang-selector" id="langSelector">
+                    <span class="icon-gear" style="width: 16px; height: 16px;"></span>
+                    <span>English</span>
+                </div>
                 <div id="authContainer" class="auth-buttons">
-                    <button class="btn-signin" id="demoSignInBtn">Sign In</button>
-                    <button class="btn-signup" id="demoSignUpBtn">Sign Up</button>
+                    <button class="btn-signin" id="demoSignInBtn">
+                        <span class="icon-user" style="width: 16px; height: 16px;"></span>
+                        <span>Sign In</span>
+                    </button>
+                    <button class="btn-signup" id="demoSignUpBtn">
+                        <span class="icon-user" style="width: 16px; height: 16px;"></span>
+                        <span>Sign Up</span>
+                    </button>
                 </div>
                 <div id="userMenu" class="user-menu" style="display: none;">
-                    <span id="userNameDisplay">Demo User</span>
-                    <button id="logoutBtnNav" style="background: none; border: none; color: #f87171;">Logout</button>
+                    <span class="user-name" id="userNameDisplay">Demo User</span>
+                    <div class="user-avatar" id="userAvatar">D</div>
+                    <button class="logout-btn" id="logoutBtnNav">Sign Out</button>
                 </div>
             </div>
         </nav>
 
-        <!-- Home, Planner, About, Pricing (keep short) -->
-        <div id="homePage" class="page active"><div class="hero" style="text-align:center; padding:60px 0"><h1>Strategic Marketing System</h1><p>13 disciplined roles — full AI marketing plan.</p><button class="btn-primary" onclick="showPage('app')">Start Now →</button></div></div>
-        <div id="plannerPage" class="page"><div class="input-area"><textarea id="plannerCustomer" placeholder="Target audience: ..."></textarea><textarea id="plannerProduct" placeholder="Product description: ..."></textarea><button class="btn-primary" onclick="goToAppWithData()">Generate Plan →</button></div></div>
-        <div id="aboutPage" class="page"><div style="padding:40px"><h2>Conscientious framework</h2><p>13 roles executed in strict sequence for clarity.</p></div></div>
-        <div id="pricingPage" class="page"><div style="padding:40px"><h2>Simple pricing</h2><p>Free / $29 Pro / Enterprise</p></div></div>
+        <!-- HOME PAGE -->
+        <div id="homePage" class="page active">
+            <div class="hero">
+                <h1>Stop second-guessing.<br>Start executing.</h1>
+                <p>A conscientious marketing system that delivers 13 disciplined roles—executed in precise sequence—so you get clarity, not confusion.</p>
+                <button class="btn-primary" onclick="showPage('app')">
+                    <span class="icon-rocket" style="width: 18px; height: 18px;"></span>
+                    <span>Start Your Free Plan</span>
+                    <span class="icon-arrow" style="width: 14px; height: 10px;"></span>
+                </button>
+            </div>
+            <h2 style="text-align: center; margin-bottom: 40px;">How it works</h2>
+            <div class="steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Describe your audience</h3>
+                    <p style="color: rgba(255,255,255,.6);">Tell us who you want to sell to</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Describe your product</h3>
+                    <p style="color: rgba(255,255,255,.6);">Tell us what you're selling</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Get your full plan</h3>
+                    <p style="color: rgba(255,255,255,.6);">Receive 13 roles of strategic analysis</p>
+                </div>
+            </div>
+            <h2 style="text-align: center; margin-bottom: 30px;">13 Disciplined Roles</h2>
+            <div class="roles-grid">
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-target" style="width: 14px; height: 14px;"></div></span><span>Segmentation</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-bars" style="height: 14px;"><span></span><span></span><span></span><span></span></div></span><span>Market Sizing</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-lightning" style="border-bottom-width: 12px;"></div></span><span>PESTLE</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-building" style="width: 14px; height: 14px;"></div></span><span>Porter's Forces</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-search" style="width: 12px; height: 12px;"></div></span><span>Competitors</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-pin" style="width: 10px; height: 14px;"></div></span><span>Positioning</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-grid" style="width: 14px; height: 14px;"><span></span><span></span><span></span><span></span></div></span><span>4Ps</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-diamond" style="border-bottom-width: 12px;"></div></span><span>SWOT</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-path" style="width: 16px; height: 10px;"></div></span><span>Journey Map</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-linechart" style="width: 16px; height: 12px;"></div></span><span>KPIs</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-bullseye" style="width: 14px; height: 14px;"></div></span><span>OKRs</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-calendar" style="width: 14px; height: 14px;"></div></span><span>Roadmap</span></div>
+                <div class="role-badge"><span class="role-badge-icon"><div class="icon-paintbrush" style="width: 12px; height: 12px;"></div></span><span>Design</span></div>
+            </div>
+            <div class="changelog-section">
+                <details>
+                    <summary>📋 What's New (v1.0.0)</summary>
+                    <div>
+                        <p>✅ <strong>June 2, 2025 - Full Launch</strong></p>
+                        <p style="margin-left: 16px;">• 13-role AI marketing framework</p>
+                        <p style="margin-left: 16px;">• Real-time streaming output</p>
+                        <p style="margin-left: 16px;">• Interactive dashboard with journey map</p>
+                        <p style="margin-left: 16px;">• Dynamic segmentation visualization</p>
+                    </div>
+                </details>
+            </div>
+        </div>
 
-        <!-- APP PAGE: only shows generated plan, no extra charts -->
+        <!-- PLANNER PAGE -->
+        <div id="plannerPage" class="page">
+            <div class="hero" style="padding: 40px 0;">
+                <h1>Strategy Planner</h1>
+                <p>Fill in your business details and let our AI do the rest</p>
+            </div>
+            <div class="input-area">
+                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5); display: flex; align-items: center; gap: 6px;">
+                    <span class="icon-user" style="width: 14px; height: 14px;"></span>
+                    Customer Data / Target Audience
+                </label>
+                <textarea id="plannerCustomer" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies ($50M-$500M revenue) looking for AI analytics solutions..."></textarea>
+                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5); display: flex; align-items: center; gap: 6px; margin-top: 20px;">
+                    <span class="icon-grid" style="width: 14px; height: 14px;"><span></span><span></span><span></span><span></span></span>
+                    Product Description / Service
+                </label>
+                <textarea id="plannerProduct" rows="4" placeholder="Example: An AI-powered marketing analytics platform that provides real-time ROI predictions and channel optimization recommendations..."></textarea>
+                <button class="btn-primary" onclick="goToAppWithData()">
+                    <span class="icon-rocket" style="width: 16px; height: 16px;"></span>
+                    Generate Strategic Plan
+                    <span class="icon-arrow" style="width: 12px; height: 8px;"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ABOUT PAGE -->
+        <div id="aboutPage" class="page">
+            <div class="hero" style="padding: 40px 0;">
+                <h1>Built on <span style="color: #6366f1;">Conscientiousness</span></h1>
+                <p>We believe marketing strategy should be disciplined, not chaotic. 13 roles. One clear output. Every time.</p>
+            </div>
+            <div style="background: rgba(255,255,255,.05); border-radius: 24px; padding: 32px; margin: 40px 0;">
+                <h2 style="text-align: center; margin-bottom: 24px;">The 13-Role Framework</h2>
+                <div class="roles-grid">
+                    <div class="role-badge">1. Segmentation</div>
+                    <div class="role-badge">2. Market Sizing</div>
+                    <div class="role-badge">3. PESTLE</div>
+                    <div class="role-badge">4. Porter's Forces</div>
+                    <div class="role-badge">5. Competitors</div>
+                    <div class="role-badge">6. Positioning</div>
+                    <div class="role-badge">7. 4Ps</div>
+                    <div class="role-badge">8. SWOT</div>
+                    <div class="role-badge">9. Journey Map</div>
+                    <div class="role-badge">10. KPIs</div>
+                    <div class="role-badge">11. OKRs</div>
+                    <div class="role-badge">12. Roadmap</div>
+                    <div class="role-badge">13. Design</div>
+                </div>
+            </div>
+            <div class="principles-grid">
+                <div class="principle-card">
+                    <div class="principle-icon"><div class="icon-gear" style="width: 32px; height: 32px;"></div></div>
+                    <h3>Autonomy</h3>
+                    <p style="color: rgba(255,255,255,.6);">The system works by itself. You don't have to tell it what to do next.</p>
+                </div>
+                <div class="principle-card">
+                    <div class="principle-icon"><div class="icon-brain" style="width: 32px; height: 24px;"></div></div>
+                    <h3>Intelligence</h3>
+                    <p style="color: rgba(255,255,255,.6);">Smart analysis that learns and adapts to your business.</p>
+                </div>
+                <div class="principle-card">
+                    <div class="principle-icon"><div class="icon-heart" style="width: 28px; height: 24px;"></div></div>
+                    <h3>Goodness</h3>
+                    <p style="color: rgba(255,255,255,.6);">Ethical strategies that benefit everyone, not just the bottom line.</p>
+                </div>
+            </div>
+            <div style="background: rgba(99,102,241,.08); border-radius: 24px; padding: 32px; text-align: center;">
+                <h3>Our Mission</h3>
+                <p style="color: rgba(255,255,255,.7); max-width: 600px; margin: 16px auto 0;">To democratize strategic marketing by making professional-grade planning accessible, understandable, and actionable for everyone.</p>
+            </div>
+        </div>
+
+        <!-- PRICING PAGE -->
+        <div id="pricingPage" class="page">
+            <div class="hero" style="padding: 40px 0;">
+                <h1>Simple, Transparent Pricing</h1>
+                <p>No hidden fees. Cancel anytime.</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="price">$0<span>/month</span></div>
+                    <ul class="feature-list">
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> 5 plans per month</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> PDF export</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Save to history</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Copy to clipboard</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Basic analytics</li>
+                    </ul>
+                    <button class="btn-primary" onclick="showPage('app')">Get Started</button>
+                </div>
+                <div class="pricing-card popular">
+                    <h3>Pro <span class="icon-star" style="width: 16px; height: 16px; display: inline-block; margin-left: 4px;"></span></h3>
+                    <div class="price">$29<span>/month</span></div>
+                    <ul class="feature-list">
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Unlimited plans</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Priority support</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> All export formats</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Advanced analytics</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Team sharing</li>
+                    </ul>
+                    <button class="btn-primary" onclick="showPage('app')">Start Free Trial</button>
+                    <div style="margin-top: 12px; font-size: 11px; color: #a5b4fc;">Most popular</div>
+                </div>
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="price">Custom</div>
+                    <ul class="feature-list">
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Unlimited everything</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> API access</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> SSO & SAML</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Dedicated support</li>
+                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Custom integrations</li>
+                    </ul>
+                    <button class="btn-outline" onclick="alert('Contact sales@strategicmarketing.com')">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- APP PAGE (Generator) - ONLY SHOWS PLAN TEXT -->
         <div id="appPage" class="page">
             <div class="input-area">
-                <textarea id="customerData" rows="3" placeholder="Customer / audience: Enterprise CTOs at mid-sized tech..."></textarea>
-                <textarea id="productDescription" rows="4" placeholder="Product: AI marketing analytics platform ..."></textarea>
-                <button id="generateBtn" class="btn-primary">✨ Generate Strategic Plan</button>
-                <button id="clearBtn" class="btn-outline" style="margin-left: 12px;">Clear</button>
+                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5); display: flex; align-items: center; gap: 6px;">
+                    <span class="icon-user" style="width: 14px; height: 14px;"></span>
+                    Customer Data / Target Audience
+                </label>
+                <textarea id="customerData" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies ($50M-$500M revenue) looking for AI analytics solutions..."></textarea>
+                <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5); display: flex; align-items: center; gap: 6px; margin-top: 20px;">
+                    <span class="icon-grid" style="width: 14px; height: 14px;"><span></span><span></span><span></span><span></span></span>
+                    Product Description / Service
+                </label>
+                <textarea id="productDescription" rows="5" placeholder="Example: An AI-powered marketing analytics platform that provides real-time ROI predictions and channel optimization recommendations..."></textarea>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <button id="generateBtn" class="btn-primary">
+                        <span class="icon-rocket" style="width: 16px; height: 16px;"></span>
+                        Generate Strategic Plan
+                    </button>
+                    <button id="clearBtn" class="btn-outline">Clear All</button>
+                </div>
             </div>
-            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-            <div class="status-bar" id="statusBar"><span class="loader"></span><span id="statusMessage">Ready</span></div>
+            <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
+            <div class="status-bar" id="statusBar"><span class="loader"></span><span id="statusMessage">Ready to generate</span></div>
             <div class="kpi-grid" id="kpiGrid"></div>
-            <div class="output-area" id="outputArea"><div id="renderedOutput"></div><div style="display:flex; gap:12px; margin-top:20px;"><button id="copyOutputBtn" class="btn-outline">📋 Copy</button><button id="saveHistoryBtn" class="btn-outline">💾 Save</button></div></div>
+            <div class="output-area" id="outputArea">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+                    <h3 style="display: flex; align-items: center; gap: 8px;">
+                        <span class="icon-data" style="width: 18px; height: 14px;"></span>
+                        Generated Marketing Strategy
+                    </h3>
+                    <div style="display: flex; gap: 8px;">
+                        <button id="copyOutputBtn" class="btn-outline">
+                            <span class="icon-clipboard" style="width: 14px; height: 16px;"></span>
+                            Copy
+                        </button>
+                        <button id="saveHistoryBtn" class="btn-outline">
+                            <span class="icon-calendar" style="width: 14px; height: 14px;"></span>
+                            Save
+                        </button>
+                    </div>
+                </div>
+                <div id="renderedOutput"></div>
+            </div>
         </div>
-        <div class="footer">© 2025 StratMark AI — 13‑role framework</div>
+
+        <!-- DASHBOARD PAGE (YOUR ORIGINAL) -->
+        <div id="dashboardPage" class="dashboard-container">
+            <div id="segmentationVisual" class="segmentation-visual"></div>
+            <div class="journey-map-container">
+                <h2 class="journey-title">
+                    <span class="icon-path" style="width: 24px; height: 16px;"></span>
+                    30-Day Customer Journey Map
+                </h2>
+                <div id="journeyMapContent">
+                    <div class="empty-state">
+                        <p>✨ Generate a marketing plan first</p>
+                        <p style="font-size: 12px; margin-top: 8px;">The roadmap will appear here after generation</p>
+                    </div>
+                </div>
+            </div>
+            <div id="roleContentArea" class="role-content-area">
+                <div class="role-content-header">
+                    <h3 id="roleContentTitle" class="role-content-title">
+                        <span class="icon-target" style="width: 20px; height: 20px;"></span>
+                        Role Title
+                    </h3>
+                    <button id="closeRoleContent" class="close-role-content">✕ Close</button>
+                </div>
+                <div id="roleContentBody" class="role-content-body"></div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-icons">
+                <span class="icon-lock" style="width: 14px; height: 16px;"></span>
+                <span class="icon-data" style="width: 18px; height: 14px;"></span>
+                <span class="icon-target" style="width: 16px; height: 16px;"></span>
+            </div>
+            <p>© 2025 Strategic Marketing System · Powered by AI · 13-Role Framework · Conscientious by Design</p>
+            <p style="font-size: 10px;">Secure · Data-driven · Actionable</p>
+        </footer>
     </div>
 </div>
 
 <script>
-    // ---------- MOCK PLAN with realistic TAM/SAM/SOM numbers & location ----------
-    const MOCK_PLAN = `[SEGMENTATION OUTPUT]
-**Segmentation**: 
-1. Enterprise CTOs ($50M-$500M) in North America & Europe
-2. Marketing Directors at B2B SaaS 
-3. Analytics Managers in data-driven orgs
-Primary Target: Enterprise CTOs at mid-market tech firms
+    // =====================================================
+    // STATE
+    // =====================================================
+    let currentPlan = null;
+    let isGenerating = false;
+    let roadmapData = null;
+    let currentUser = null;
+    
+    const API_BASE = 'https://Bisratprompt-marketing-system-api.hf.space';
+    
+    // DOM Elements
+    const elements = {
+        customerData: document.getElementById('customerData'),
+        productDescription: document.getElementById('productDescription'),
+        plannerCustomer: document.getElementById('plannerCustomer'),
+        plannerProduct: document.getElementById('plannerProduct'),
+        generateBtn: document.getElementById('generateBtn'),
+        clearBtn: document.getElementById('clearBtn'),
+        copyOutputBtn: document.getElementById('copyOutputBtn'),
+        saveHistoryBtn: document.getElementById('saveHistoryBtn'),
+        statusBar: document.getElementById('statusBar'),
+        statusMessage: document.getElementById('statusMessage'),
+        progressFill: document.getElementById('progressFill'),
+        outputArea: document.getElementById('outputArea'),
+        renderedOutput: document.getElementById('renderedOutput'),
+        kpiGrid: document.getElementById('kpiGrid'),
+        dashboardPage: document.getElementById('dashboardPage'),
+        appPage: document.getElementById('appPage'),
+        journeyMapContent: document.getElementById('journeyMapContent'),
+        segmentationVisual: document.getElementById('segmentationVisual'),
+        roleContentArea: document.getElementById('roleContentArea'),
+        roleContentTitle: document.getElementById('roleContentTitle'),
+        roleContentBody: document.getElementById('roleContentBody'),
+        closeRoleContent: document.getElementById('closeRoleContent'),
+        leftPanel: document.getElementById('leftPanel'),
+        mainContent: document.getElementById('mainContent'),
+        authContainer: document.getElementById('authContainer'),
+        userMenu: document.getElementById('userMenu'),
+        userNameDisplay: document.getElementById('userNameDisplay'),
+        userAvatar: document.getElementById('userAvatar'),
+        roadmapStatus: document.getElementById('roadmapStatus'),
+        roleContentPanel: document.getElementById('roleContentPanel')
+    };
+    
+    // =====================================================
+    // HELPER FUNCTIONS
+    // =====================================================
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+    }
+    
+    function formatContent(content) {
+        let html = content;
+        html = html.replace(/\n\|(.+)\|\n\|[-:\s|]+\|\n((?:\|.+\|\n?)+)/gm, (match, header, rows) => {
+            const headers = header.split('|').filter(h => h.trim()).map(h => `<th style="padding: 8px; text-align: left; background: rgba(99,102,241,.1);">${escapeHtml(h.trim())}</th>`).join('');
+            const bodyRows = rows.trim().split('\n').map(row => {
+                const cells = row.split('|').filter(c => c.trim()).map(c => `<td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,.1);">${escapeHtml(c.trim())}</td>`).join('');
+                return `<tr>${cells}</tr>`;
+            }).join('');
+            return `<table style="width: 100%; border-collapse: collapse; margin: 16px 0;">${headers ? `<thead><tr>${headers}</tr></thead>` : ''}<tbody>${bodyRows}</tbody>|`;
+        });
+        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/^[-•*]\s+(.*?)$/gm, '<li>$1</li>');
+        html = html.replace(/(<li>.*?<\/li>)+/gs, '<ul style="margin: 8px 0; padding-left: 20px;">$&</ul>');
+        html = html.replace(/\n/g, '<br>');
+        return html;
+    }
+    
+    function showToast(message) {
+        let toast = document.getElementById('dynamicToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'dynamicToast';
+            toast.style.cssText = 'position: fixed; bottom: 100px; right: 24px; background: #0c1120; border: 1px solid rgba(99,102,241,.3); border-radius: 12px; padding: 12px 20px; z-index: 2000; transform: translateX(400px); transition: transform 0.3s ease;';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = message;
+        toast.style.transform = 'translateX(0)';
+        setTimeout(() => { toast.style.transform = 'translateX(400px)'; }, 2500);
+    }
+    
+    // =====================================================
+    // EXTRACT FUNCTIONS (YOUR ORIGINALS)
+    // =====================================================
+    function extractRoadmapFromPlan(plan) {
+        const roadmapMatch = plan.match(/\[ROADMAP OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!roadmapMatch) return null;
+        const roadmapText = roadmapMatch[1];
+        const tasks = [];
+        const lines = roadmapText.split('\n');
+        for (const line of lines) {
+            if (line.match(/^\d+\./) && line.length > 10) {
+                const taskText = line.replace(/^\d+\./, '').trim();
+                if (taskText.length > 10 && taskText.length < 200) tasks.push(taskText);
+            }
+        }
+        if (tasks.length === 0) {
+            for (const line of lines) {
+                if (line.match(/^[-•*]\s+/) && line.length > 10) {
+                    const taskText = line.replace(/^[-•*]\s+/, '').trim();
+                    if (taskText.length > 10 && taskText.length < 200) tasks.push(taskText);
+                }
+            }
+        }
+        if (tasks.length === 0) {
+            return {
+                stages: [
+                    { day: 1, name: 'Market Research', desc: 'Audience analysis & segmentation' },
+                    { day: 7, name: 'Strategy Dev', desc: 'PESTLE & Porter analysis' },
+                    { day: 14, name: 'Execution Plan', desc: '4Ps & channel planning' },
+                    { day: 21, name: 'Launch Prep', desc: 'Campaign setup & testing' },
+                    { day: 30, name: 'Launch & Monitor', desc: 'Go live & optimization' }
+                ]
+            };
+        }
+        const milestones = [1, 7, 14, 21, 30];
+        return { stages: tasks.slice(0, 5).map((task, index) => ({ day: milestones[index], name: task.substring(0, 30), desc: task.substring(0, 60) })) };
+    }
+    
+    function renderJourneyMap(roadmap) {
+        if (!roadmap || !roadmap.stages || roadmap.stages.length === 0) {
+            elements.journeyMapContent.innerHTML = `<div class="empty-state"><p>✨ No roadmap data available</p><p style="font-size: 12px; margin-top: 8px;">Generate a plan to see your 30-day journey</p></div>`;
+            return;
+        }
+        const stages = roadmap.stages;
+        let html = `<div class="journey-timeline" style="position: relative; padding: 20px 0;"><div class="journey-start">🏁</div><div class="journey-dotted-line"></div><div class="journey-stages">`;
+        stages.forEach((stage) => {
+            html += `<div class="journey-stage-node"><div class="stage-dot completed"></div><div class="stage-date">Day ${stage.day}</div><div class="stage-name">${escapeHtml(stage.name)}</div><div class="stage-desc">${escapeHtml(stage.desc)}</div></div>`;
+        });
+        html += `</div><div class="journey-end">🎯</div></div><div style="margin-top: 32px; padding: 16px; background: rgba(99,102,241,.05); border-radius: 16px; text-align: center;"><span style="font-size: 12px; color: rgba(255,255,255,.5);">📅 30-Day Customer Journey · Milestones at Days 1, 7, 14, 21, 30</span></div>`;
+        elements.journeyMapContent.innerHTML = html;
+        if (elements.roadmapStatus) {
+            elements.roadmapStatus.textContent = `${stages.length} tasks`;
+            elements.roadmapStatus.classList.add('has-data');
+        }
+    }
+    
+    function extractSegmentation(plan) {
+        const match = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        return match ? formatContent(match[1]) : '<p>No segmentation data available</p>';
+    }
+    
+    function extractMarketSizing(plan) {
+        const match = plan.match(/\[TAMSAMSOM OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        return match ? formatContent(match[1]) : '<p>No market sizing data available</p>';
+    }
+    
+    function extractPESTLE(plan) {
+        const match = plan.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        return match ? formatContent(match[1]) : '<p>No PESTLE analysis available</p>';
+    }
+    
+    function extractPorter(plan) {
+        const match = plan.match(/\[PORTER OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        return match ? formatContent(match[1]) : '<p>No Porter\'s Five Forces available</p>';
+    }
+    
+    function extractCompetitors(plan) {
+        const match = plan.match(/\[COMPETITOR OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        return match ? formatContent(match[1]) : '<p>No competitor analysis available</p>';
+    }
+    
+    function extractPositioning(plan) {
+        const match = plan.match(/\[POSITIONING OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        return match ? formatContent(match[1]) : '<p>No positioning statement available</p>';
+    }
+    
+    function extract4Ps(plan) {
+        const match = plan.match(/\[4Ps OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        return match ? formatContent(match[1]) : '<p>No marketing mix (4Ps) available</p>';
+    }
+    
+    function extractSWOT(plan) {
+        const match = plan.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!match) return '<p>No SWOT analysis available</p>';
+        const text = match[1];
+        let html = '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">';
+        const sections = ['Strengths', 'Weaknesses', 'Opportunities', 'Threats'];
+        sections.forEach(s => {
+            const sectionMatch = text.match(new RegExp(`${s}:([\\s\\S]*?)(?=\\n(?:Strengths|Weaknesses|Opportunities|Threats):|$)`, 'i'));
+            const sectionText = sectionMatch ? sectionMatch[1] : '';
+            const items = sectionText.split('\n').filter(l => /^[-•*]\s+/.test(l)).map(l => l.replace(/^[-•*]\s+/, '').trim()).slice(0, 4);
+            const color = s === 'Strengths' ? '#4ade80' : s === 'Weaknesses' ? '#f87171' : s === 'Opportunities' ? '#22d3ee' : '#fbbf24';
+            html += `<div><strong style="color: ${color};">${s}</strong><ul style="margin-top: 8px;">${items.map(i => `<li>${escapeHtml(i)}</li>`).join('') || '<li>No data</li>'}</ul></div>`;
+        });
+        html += '</div>';
+        return html;
+    }
+    
+    function extractJourney(plan) {
+        const match = plan.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        return match ? formatContent(match[1]) : '<p>No customer journey map available</p>';
+    }
+    
+    function extractKPIs(plan) {
+        const match = plan.match(/\[KPI OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        return match ? formatContent(match[1]) : '<p>No KPI data available</p>';
+    }
+    
+    function extractOKRs(plan) {
+        const match = plan.match(/\[OKRS OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        return match ? formatContent(match[1]) : '<p>No OKR data available</p>';
+    }
+    
+    function extractRoadmapContent(plan) {
+        const roadmap = extractRoadmapFromPlan(plan);
+        if (!roadmap || !roadmap.stages) return '<p>No roadmap data available</p>';
+        let html = '<div style="display: flex; flex-direction: column; gap: 16px;">';
+        roadmap.stages.forEach(stage => {
+            html += `<div style="background: rgba(255,255,255,.03); border-radius: 16px; padding: 16px;"><div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;"><span style="background: #6366f1; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">${stage.day}</span><strong>Day ${stage.day}</strong></div><div style="margin-left: 40px;"><div style="font-weight: 600; margin-bottom: 4px;">${escapeHtml(stage.name)}</div><div style="font-size: 13px; color: rgba(255,255,255,.6);">${escapeHtml(stage.desc)}</div></div></div>`;
+        });
+        html += '</div>';
+        return html;
+    }
+    
+    function extractDesign(plan) {
+        const match = plan.match(/\[DESIGN OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        return match ? formatContent(match[1]) : '<p>No design recommendations available</p>';
+    }
+    
+    // =====================================================
+    // LEFT PANEL RENDERERS (Market Sizing with Interactive Icons)
+    // =====================================================
+    function renderSegmentationPanel() {
+        if (!currentPlan) return '<div class="empty-state">Generate a plan first</div>';
+        const match = currentPlan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        const text = match ? match[1] : 'No data';
+        return `<div class="segmentation-visual"><h4>🎯 Market Segmentation</h4><div class="pie-chart"></div><div style="margin-top:16px;">${formatContent(text.substring(0, 300))}</div></div>`;
+    }
+    
+    function renderMarketSizingPanel() {
+        if (!currentPlan) return '<div class="empty-state">Generate a plan first</div>';
+        
+        // Extract TAM/SAM/SOM values from the plan
+        let tam = "100M", sam = "30M", som = "10M", location = "Aurora Economic Region (Fictional)";
+        const tamMatch = currentPlan.match(/TAM[:\s]*\$?([\d,.]+[BKM]?)/i);
+        const samMatch = currentPlan.match(/SAM[:\s]*\$?([\d,.]+[BKM]?)/i);
+        const somMatch = currentPlan.match(/SOM[:\s]*\$?([\d,.]+[BKM]?)/i);
+        const locMatch = currentPlan.match(/Location[:\s]*([^\n]+)/i);
+        if (tamMatch) tam = tamMatch[1];
+        if (samMatch) sam = samMatch[1];
+        if (somMatch) som = somMatch[1];
+        if (locMatch) location = locMatch[1];
+        
+        // Calculate number of icons based on value
+        const getIconCount = (val) => {
+            let num = parseFloat(val);
+            if (isNaN(num)) return 5;
+            if (val.includes('B')) return Math.min(15, Math.floor(num * 1.5));
+            if (val.includes('M')) return Math.min(12, Math.max(3, Math.floor(num / 30)));
+            return 5;
+        };
+        const tamIcons = getIconCount(tam);
+        const samIcons = getIconCount(sam);
+        const somIcons = getIconCount(som);
+        
+        const generateIcons = (count, color) => {
+            let icons = '';
+            for (let i = 0; i < Math.min(count, 20); i++) {
+                icons += `<div class="market-icon" style="background: ${color}20; border: 1px solid ${color};">🏢</div>`;
+            }
+            return `<div class="icon-market-grid">${icons}</div>`;
+        };
+        
+        return `
+            <div class="market-sizing-panel">
+                <!-- TAM BLOCK -->
+                <div class="tam-block" onclick="document.getElementById('tamDetail').classList.toggle('show')">
+                    <div class="tam-header">
+                        <span class="tam-label">🌍 TAM - Total Addressable Market</span>
+                        <span class="tam-value">$${escapeHtml(tam)}</span>
+                    </div>
+                    <div style="font-size:12px; color:#94a3b8;">📍 ${escapeHtml(location)}</div>
+                    <div class="click-hint">▼ Click to reveal market icons</div>
+                    <div id="tamDetail" class="hidden-detail">
+                        ${generateIcons(tamIcons, '#4ade80')}
+                        <p style="font-size:11px; margin-top:8px;">${tamIcons} market segments in ${escapeHtml(location)}</p>
+                    </div>
+                </div>
+                
+                <!-- SAM BLOCK -->
+                <div class="sam-block" onclick="document.getElementById('samDetail').classList.toggle('show')">
+                    <div class="sam-header">
+                        <span class="sam-label">✋ SAM - Serviceable Addressable Market</span>
+                        <span class="sam-value">$${escapeHtml(sam)}</span>
+                    </div>
+                    <div class="sam-layout">
+                        <div class="hand-icon">👉</div>
+                        <div class="sam-right"><strong>Targetable reach</strong></div>
+                    </div>
+                    <div class="click-hint">▼ Click to reveal addressable segments</div>
+                    <div id="samDetail" class="hidden-detail">
+                        ${generateIcons(samIcons, '#38bdf8')}
+                        <p style="font-size:11px; margin-top:8px;">${samIcons} addressable segments with distribution reach</p>
+                    </div>
+                </div>
+                
+                <!-- SOM BLOCK -->
+                <div class="som-block" onclick="document.getElementById('somDetail').classList.toggle('show')">
+                    <div class="som-header">
+                        <span class="som-label">🏆 SOM - Serviceable Obtainable Market</span>
+                        <span class="som-value">$${escapeHtml(som)}</span>
+                    </div>
+                    <div class="som-huge">✋</div>
+                    <div class="click-hint">▼ Click to reveal obtainable market icons</div>
+                    <div id="somDetail" class="hidden-detail">
+                        ${generateIcons(somIcons, '#fbbf24')}
+                        <p style="font-size:11px; margin-top:8px;">${somIcons} high-priority obtainable segments</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top:16px; font-size:12px; background:#0a0c16; padding:12px; border-radius:16px;">
+                    <strong>📈 Market Analysis</strong><br>
+                    Based on ${escapeHtml(location)} analysis. Click any card to see detailed market distribution.
+                </div>
+            </div>
+        `;
+    }
+    
+    function renderJourneyPanel() {
+        if (!currentPlan) return '<div class="empty-state">Generate a plan first</div>';
+        const match = currentPlan.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        const stages = [
+            { day: 1, name: 'Awareness', desc: 'Customer discovers your brand' },
+            { day: 7, name: 'Consideration', desc: 'Research and evaluation' },
+            { day: 14, name: 'Conversion', desc: 'First purchase decision' },
+            { day: 21, name: 'Retention', desc: 'Post-purchase engagement' },
+            { day: 30, name: 'Advocacy', desc: 'Loyalty and referrals' }
+        ];
+        let html = `<div class="journey-map-container" style="padding:16px;"><h4>🗺️ Customer Journey</h4>`;
+        stages.forEach(s => {
+            html += `<div class="journey-stage-item"><div class="journey-stage-day">Day ${s.day}</div><div><strong>${s.name}</strong><div style="font-size:12px;">${s.desc}</div></div></div>`;
+        });
+        html += `</div>`;
+        return html;
+    }
+    
+    function renderGenericPanel(title, content) {
+        return `<div style="padding:12px;"><h4>${escapeHtml(title)}</h4><div style="margin-top:12px;">${content}</div></div>`;
+    }
+    
+    function showRoleContent(roleId, roleTitle) {
+        if (!currentPlan) {
+            elements.roleContentPanel.innerHTML = '<div class="empty-state" style="padding:20px;">⚠️ Generate a plan first</div>';
+            elements.roleContentPanel.classList.add('visible');
+            return;
+        }
+        let content = '';
+        switch(roleId) {
+            case 'segmentation': content = renderSegmentationPanel(); break;
+            case 'marketsizing': content = renderMarketSizingPanel(); break;
+            case 'journey': content = renderJourneyPanel(); break;
+            case 'pestle': content = renderGenericPanel('PESTLE Analysis', extractPESTLE(currentPlan)); break;
+            case 'porter': content = renderGenericPanel("Porter's Five Forces", extractPorter(currentPlan)); break;
+            case 'competitors': content = renderGenericPanel('Competitor Analysis', extractCompetitors(currentPlan)); break;
+            case 'positioning': content = renderGenericPanel('Brand Positioning', extractPositioning(currentPlan)); break;
+            case '4ps': content = renderGenericPanel('Marketing Mix (4Ps)', extract4Ps(currentPlan)); break;
+            case 'swot': content = renderGenericPanel('SWOT Analysis', extractSWOT(currentPlan)); break;
+            case 'kpi': content = renderGenericPanel('KPIs & Metrics', extractKPIs(currentPlan)); break;
+            case 'okrs': content = renderGenericPanel('OKRs', extractOKRs(currentPlan)); break;
+            case 'roadmap': content = renderGenericPanel('30-Day Roadmap', extractRoadmapContent(currentPlan)); break;
+            case 'design': content = renderGenericPanel('Design Recommendations', extractDesign(currentPlan)); break;
+            default: content = '<p>Select a role</p>';
+        }
+        elements.roleContentPanel.innerHTML = content;
+        elements.roleContentPanel.classList.add('visible');
+        document.querySelectorAll('.role-item').forEach(el => el.classList.remove('active'));
+        const activeItem = document.querySelector(`.role-item[data-role="${roleId}"]`);
+        if (activeItem) activeItem.classList.add('active');
+    }
+    
+    // =====================================================
+    // PAGE NAVIGATION (YOUR ORIGINAL)
+    // =====================================================
+    function showPage(pageName) {
+        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+        const pageMap = {
+            'home': 'homePage',
+            'planner': 'plannerPage',
+            'about': 'aboutPage',
+            'pricing': 'pricingPage',
+            'app': 'appPage'
+        };
+        document.getElementById(pageMap[pageName]).classList.add('active');
+        
+        document.querySelectorAll('.nav-links button').forEach(btn => btn.classList.remove('active'));
+        const navMap = { 'home': 'navHome', 'planner': 'navPlanner', 'about': 'navAbout', 'pricing': 'navPricing', 'app': 'navApp' };
+        const activeBtn = document.getElementById(navMap[pageName]);
+        if (activeBtn) activeBtn.classList.add('active');
+    }
+    
+    function goToAppWithData() {
+        const customerData = elements.plannerCustomer?.value;
+        const productData = elements.plannerProduct?.value;
+        if (customerData) sessionStorage.setItem('prefillCustomer', customerData);
+        if (productData) sessionStorage.setItem('prefillProduct', productData);
+        showPage('app');
+    }
+    
+    // =====================================================
+    // DEMO AUTHENTICATION (YOUR ORIGINAL)
+    // =====================================================
+    function getDemoUser() {
+        let demoUser = localStorage.getItem('demo_user');
+        if (!demoUser) {
+            demoUser = {
+                id: Date.now(),
+                name: 'Demo User',
+                email: 'demo@strategicmarketing.com',
+                plan: 'free',
+                planStartDate: new Date().toISOString(),
+                plansGenerated: 0,
+                roadmapTasks: {},
+                createdAt: new Date().toISOString()
+            };
+            localStorage.setItem('demo_user', JSON.stringify(demoUser));
+        }
+        return JSON.parse(demoUser);
+    }
+    
+    function saveDemoUser(user) {
+        localStorage.setItem('demo_user', JSON.stringify(user));
+    }
+    
+    function showLoggedInUI() {
+        elements.authContainer.style.display = 'none';
+        elements.userMenu.style.display = 'flex';
+        elements.userNameDisplay.textContent = currentUser.name;
+        elements.userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+        elements.leftPanel.classList.add('open');
+        elements.mainContent.classList.add('panel-open');
+        elements.dashboardPage.classList.add('active');
+        if (currentPlan) {
+            const roadmap = extractRoadmapFromPlan(currentPlan);
+            if (roadmap) {
+                renderJourneyMap(roadmap);
+                roadmapData = roadmap;
+            }
+            renderSegmentationVisualization(currentPlan);
+        }
+    }
+    
+    function showLoggedOutUI() {
+        elements.authContainer.style.display = 'flex';
+        elements.userMenu.style.display = 'none';
+        elements.leftPanel.classList.remove('open');
+        elements.mainContent.classList.remove('panel-open');
+        elements.dashboardPage.classList.remove('active');
+        elements.roleContentArea.style.display = 'none';
+        showPage('app');
+    }
+    
+    function demoSignIn() {
+        currentUser = getDemoUser();
+        sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+        showLoggedInUI();
+        showToast('Welcome to your dashboard!');
+    }
+    
+    function demoSignUp() {
+        const newDemoUser = {
+            id: Date.now(),
+            name: 'Demo User',
+            email: 'demo@strategicmarketing.com',
+            plan: 'free',
+            planStartDate: new Date().toISOString(),
+            plansGenerated: 0,
+            roadmapTasks: {},
+            createdAt: new Date().toISOString()
+        };
+        localStorage.setItem('demo_user', JSON.stringify(newDemoUser));
+        currentUser = newDemoUser;
+        sessionStorage.setItem('currentUser', JSON.stringify(newDemoUser));
+        showLoggedInUI();
+        showToast('Account created! Welcome to your dashboard.');
+    }
+    
+    function demoSignOut() {
+        currentUser = null;
+        sessionStorage.removeItem('currentUser');
+        showLoggedOutUI();
+        showToast('Signed out successfully');
+    }
+    
+    // =====================================================
+    // APP GENERATOR FUNCTIONALITY (YOUR ORIGINAL - ONLY PLAN TEXT)
+    // =====================================================
+    function setStatus(message, isLoading = true) {
+        elements.statusMessage.textContent = message;
+        elements.statusBar.style.display = 'flex';
+        if (!isLoading) setTimeout(() => elements.statusBar.style.display = 'none', 3000);
+    }
+    
+    function updateProgress(percent) { elements.progressFill.style.width = percent + '%'; }
+    
+    function initKPICards() {
+        const kpis = [
+            { icon: 'target', label: 'SEGMENTATION', value: 'Ready', source: 'Click generate to start' },
+            { icon: 'bars', label: 'MARKET SIZE', value: 'Ready', source: 'TAM · SAM · SOM' },
+            { icon: 'bullseye', label: 'KEY METRICS', value: 'Ready', source: 'Primary KPIs' },
+            { icon: 'search', label: 'COMPETITION', value: 'Ready', source: 'Competitor analysis' }
+        ];
+        elements.kpiGrid.innerHTML = kpis.map(kpi => `
+            <div class="kpi-card">
+                <div class="kpi-icon">${kpi.icon === 'target' ? '<div class="icon-target" style="width: 28px; height: 28px;"></div>' : 
+                    kpi.icon === 'bars' ? '<div class="icon-bars" style="height: 28px;"><span></span><span></span><span></span><span></span></div>' :
+                    kpi.icon === 'bullseye' ? '<div class="icon-bullseye" style="width: 28px; height: 28px;"></div>' :
+                    '<div class="icon-search" style="width: 24px; height: 24px;"></div>'}</div>
+                <div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);">${kpi.label}</div>
+                <div class="kpi-value">${kpi.value}</div>
+                <div style="font-size: 10px; color: rgba(255,255,255,.4);">${kpi.source}</div>
+            </div>
+        `).join('');
+    }
+    
+    async function streamRoles(plan) {
+        const roles = [
+            { tag: 'SEGMENTATION OUTPUT', icon: 'target', title: 'Market Segmentation' },
+            { tag: 'TAMSAMSOM OUTPUT', icon: 'bars', title: 'Market Sizing (TAM/SAM/SOM)' },
+            { tag: 'PESTLE OUTPUT', icon: 'lightning', title: 'PESTLE Analysis' },
+            { tag: 'PORTER OUTPUT', icon: 'building', title: "Porter's Five Forces" },
+            { tag: 'COMPETITOR OUTPUT', icon: 'search', title: 'Competitor Profiling' },
+            { tag: 'POSITIONING OUTPUT', icon: 'pin', title: 'Brand Positioning' },
+            { tag: '4Ps OUTPUT', icon: 'grid', title: 'Marketing Mix (4Ps)' },
+            { tag: 'SWOT OUTPUT', icon: 'diamond', title: 'SWOT Analysis' },
+            { tag: 'CUSTOMER JOURNEY OUTPUT', icon: 'path', title: 'Customer Journey Map' },
+            { tag: 'KPI OUTPUT', icon: 'linechart', title: 'KPIs & Budget' },
+            { tag: 'OKRS OUTPUT', icon: 'bullseye', title: 'OKR Strategist' },
+            { tag: 'ROADMAP OUTPUT', icon: 'calendar', title: '30-Day Roadmap' }
+        ];
+        const output = [];
+        for (const role of roles) {
+            const regex = new RegExp(`\\[${role.tag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
+            const match = plan.match(regex);
+            if (match && match[1] && match[1].trim().length > 30) output.push({ ...role, content: match[1].trim() });
+        }
+        if (output.length === 0) {
+            elements.renderedOutput.innerHTML = `<div style="line-height: 1.8;">${escapeHtml(plan).replace(/\n/g, '<br>')}</div>`;
+            return;
+        }
+        elements.renderedOutput.innerHTML = '';
+        for (let i = 0; i < output.length; i++) {
+            const role = output[i];
+            const card = document.createElement('div');
+            card.className = 'role-card';
+            card.innerHTML = `<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1);"><div style="font-size: 28px;"><div class="icon-${role.icon}" style="width: 28px; height: 28px;"></div></div><div style="font-size: 18px; font-weight: bold; color: #a5b4fc;">${role.title}</div><div style="margin-left: auto; font-size: 11px; color: rgba(255,255,255,.4);">Role ${i+1}/${output.length}</div></div><div class="stream-loading" style="display: flex; gap: 8px; align-items: center;"><span class="loader"></span><span style="color: rgba(255,255,255,.5);">Loading...</span></div>`;
+            elements.renderedOutput.appendChild(card);
+            await new Promise(resolve => setTimeout(resolve, 300));
+            const loading = card.querySelector('.stream-loading');
+            if (loading) loading.remove();
+            const contentDiv = document.createElement('div');
+            contentDiv.style.lineHeight = '1.8';
+            contentDiv.innerHTML = formatContent(role.content);
+            card.appendChild(contentDiv);
+            setTimeout(() => card.classList.add('visible'), 50);
+            updateProgress(Math.round(((i + 1) / output.length) * 100));
+        }
+    }
+    
+    async function generateMarketingPlan(customerData, productDescription) {
+        // Mock data for demo since API has issues
+        const mockPlan = `[SEGMENTATION OUTPUT]
+**Market Segmentation**
+1. Enterprise CTOs at mid-sized tech companies ($50M-$500M)
+2. Marketing Directors at B2B SaaS companies
+3. Analytics Managers at data-driven organizations
+Primary Target: Enterprise CTOs
 
 ---
 
 [TAMSAMSOM OUTPUT]
-TAM: $2.8B (NORDIC REGION & DACH) — total addressable market in Aurora Region (fictional but illustrative)
+TAM: $2.8B
 SAM: $760M
 SOM: $210M
-Location: Aurora Economic Zone (NE tech corridor, fictitious)
+Location: Aurora Economic Region (Fictional)
 
 ---
 
 [PESTLE OUTPUT]
-Political stable, Economic growth 4.2% ...
+Political: Stable regulatory environment for AI
+Economic: Growing demand for efficiency
+Social: Increasing adoption of AI in marketing
+
+---
+
+[PORTER OUTPUT]
+Threat of new entrants: Medium
+Bargaining power of buyers: High
+Rivalry: High
+
+---
+
+[COMPETITOR OUTPUT]
+Competitor A: Market leader with 40% share
+Competitor B: Feature-rich alternative
+
+---
+
+[POSITIONING OUTPUT]
+For enterprise CTOs who need actionable marketing insights, our AI-powered platform delivers real-time ROI predictions.
+
+---
+
+[4Ps OUTPUT]
+Product: AI marketing analytics platform
+Price: Freemium model
+Place: Direct sales + self-service
+Promotion: Content marketing, webinars
+
+---
+
+[SWOT OUTPUT]
+Strengths: Advanced AI, real-time analytics
+Weaknesses: New market entrant
+Opportunities: Growing AI adoption
+Threats: Established competitors
+
+---
 
 [CUSTOMER JOURNEY OUTPUT]
-Stage 1: Awareness (Day 1-5) → Discovery via content
-Stage 2: Consideration (Day 6-12) → Demos & trials
+Stage 1: Awareness (Day 1-5)
+Stage 2: Consideration (Day 6-12)
 Stage 3: Decision (Day 13-18)
 Stage 4: Onboarding (Day 19-25)
 Stage 5: Advocacy (Day 26-30)
 
+---
+
+[KPI OUTPUT]
+CAC: $450, LTV: $6k, Conversion: 14%
+
+---
+
+[OKRS OUTPUT]
+O1: Acquire 100 customers
+KR1: 20% trial conversion
+
+---
+
 [ROADMAP OUTPUT]
-1. Week 1: Market intel
-2. Week 2: Strategy dev
-3. Week 3: Execute campaigns
-4. Week 4: Launch & optimize
+Week 1: Market research
+Week 2: Strategy development
+Week 3: Campaign execution
+Week 4: Launch & optimize
 
-[KPI OUTPUT] CAC: $450, LTV: $6k, conversion 14%
-[OKRS OUTPUT] O1: acquire 100 customers, KR1: 20% trial conversion
-[DESIGN OUTPUT] Modern dashboard, dark theme
-[COMPETITOR OUTPUT] 3 main competitors: Alpha, Beta, Gamma
-[POSITIONING OUTPUT] AI-first marketing insights for CTOs
-[4Ps OUTPUT] Product: AI platform, Price: freemium, Place: online, Promotion: inbound
-[SWOT OUTPUT] Strengths: AI tech, Weaknesses: new entrant
-[PORTER OUTPUT] Rivalry high, threat of substitutes medium`;
+---
 
-    // ---------- state ----------
-    let currentPlan = null;
-    let isGenerating = false;
-    let currentUser = null;
-    const USE_MOCK = true;   // using mock to guarantee visual experience
+[DESIGN OUTPUT]
+Modern dashboard, dark theme, mobile-responsive`;
 
-    // Helper
-    function escapeHtml(str) { return String(str).replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;});}
-    function formatContent(txt){ return txt.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>'); }
-
-    // ---------- extract market sizing numbers for dynamic icons ----------
-    function getMarketNumbers(plan) {
-        const tamMatch = plan.match(/TAM:\s*\$?([\d,.]+[BKM]?)/i);
-        const samMatch = plan.match(/SAM:\s*\$?([\d,.]+[BKM]?)/i);
-        const somMatch = plan.match(/SOM:\s*\$?([\d,.]+[BKM]?)/i);
-        const locationMatch = plan.match(/Location:\s*([^\n]+)/i) || plan.match(/Aurora[\w\s]+/i);
-        let tam = tamMatch ? tamMatch[1] : "2.8B";
-        let sam = samMatch ? samMatch[1] : "760M";
-        let som = somMatch ? somMatch[1] : "210M";
-        let location = locationMatch ? locationMatch[1] : "Aurora Economic Zone (fictitious)";
-        const getIcons = (val) => {
-            let num = parseFloat(val);
-            if (val.includes('B')) return Math.min(18, Math.floor(num * 2));
-            if (val.includes('M')) return Math.min(14, Math.max(3, Math.floor(num / 80)));
-            return 7;
-        };
-        return { tam, sam, som, location, tamIcons: getIcons(tam), samIcons: getIcons(sam), somIcons: getIcons(som) };
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        return mockPlan;
     }
-
-    // ---------- Rendering market sizing inside LEFT PANEL (exactly as required) ----------
-    function renderMarketSizingPanel() {
-        if (!currentPlan) return `<div style="padding:1rem; text-align:center">⚠️ Generate a plan first</div>`;
-        const { tam, sam, som, location, tamIcons, samIcons, somIcons } = getMarketNumbers(currentPlan);
-        const iconGrid = (count, colorStyle) => {
-            let icons = '';
-            for(let i=0;i<Math.min(count,22);i++) icons += `<div class="icon-building-small" style="color:${colorStyle};"></div>`;
-            return `<div class="icon-grid-market">${icons}</div>`;
-        };
-        return `
-            <div class="market-sizing-container">
-                <!-- TAM card: value + location, click reveals icons -->
-                <div class="tam-card" onclick="toggleTamDetail()">
-                    <div class="tam-header"><span class="tam-label">🌍 TAM</span><span class="tam-value">$${tam}</span></div>
-                    <div style="font-size:13px; color:#94a3b8;">📍 ${escapeHtml(location)}</div>
-                    <div class="click-hint">▼ click to reveal market icons</div>
-                    <div id="tamDetailBlock" class="tam-detail">${iconGrid(tamIcons, '#4ade80')}<p style="font-size:11px; margin-top:8px;">${tamIcons} market clusters in ${escapeHtml(location)}</p></div>
-                </div>
-                <!-- SAM: hand icon pointing right, value on right, then detail with icons -->
-                <div class="sam-card" onclick="toggleSamDetail()">
-                    <div class="sam-header"><span class="sam-label">✋ SAM</span><span class="sam-value">$${sam}</span></div>
-                    <div class="sam-layout"><div class="hand-pointing">👉</div><div class="sam-value-large">$${sam}</div></div>
-                    <div class="click-hint">▼ click to reveal addressable segments</div>
-                    <div id="samDetailBlock" class="sam-detail">${iconGrid(samIcons, '#38bdf8')}<p>${samIcons} serviceable segments</p></div>
-                </div>
-                <!-- SOM: huge hand in center, value below, click reveals obtainable icons -->
-                <div class="som-card" onclick="toggleSomDetail()">
-                    <div class="som-header"><span class="som-label">🏆 SOM</span><span class="som-value">$${som}</span></div>
-                    <div class="som-huge-hand">✋</div>
-                    <div class="click-hint">▼ click to see obtainable market icons</div>
-                    <div id="somDetailBlock" class="som-detail">${iconGrid(somIcons, '#fbbf24')}<p>${somIcons} high-priority obtainable segments</p></div>
-                </div>
-                <div style="margin-top:12px; font-size:12px; background:#0a0c16; padding:12px; border-radius:20px;"><strong>📈 Market analysis</strong><br>Based on Aurora region, realistic penetration.</div>
-            </div>
-        `;
-    }
-
-    // Toggle functions for details (icons appear only on click)
-    window.toggleTamDetail = function() { let el = document.getElementById('tamDetailBlock'); if(el) el.classList.toggle('show'); }
-    window.toggleSamDetail = function() { let el = document.getElementById('samDetailBlock'); if(el) el.classList.toggle('show'); }
-    window.toggleSomDetail = function() { let el = document.getElementById('somDetailBlock'); if(el) el.classList.toggle('show'); }
-
-    function renderSegmentationPanel() {
-        if(!currentPlan) return '<div>No plan</div>';
-        const match = currentPlan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        const text = match ? match[1] : 'Enterprise CTOs, Marketing Directors, Analytics Managers';
-        const hasThree = text.match(/1\.|Enterprise CTOs/i);
-        return `<div class="segmentation-visual"><h4>🎯 Segmentation</h4>${hasThree ? '<div class="pie-chart"></div><div style="display:flex; justify-content:center; gap:16px; margin-top:16px;"><span>🔹 Enterprise CTOs</span><span>🔸 Marketing Dir.</span><span>🔹 Analytics Mgr</span></div>' : '<div class="two-segments"><div>📌 Segment A</div><div>📌 Segment B</div></div>'}<div class="priority-card"><span class="priority-badge">🏆 Primary Target</span><div>Enterprise CTOs in mid-market</div></div><div style="margin-top:16px;">${formatContent(text.substring(0,280))}</div></div>`;
-    }
-    function renderJourneyPanel() {
-        const match = currentPlan?.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        let stages = [{day:1,name:"Awareness"},{day:7,name:"Consideration"},{day:14,name:"Conversion"},{day:21,name:"Retention"},{day:30,name:"Advocacy"}];
-        return `<div class="journey-map-panel"><h4>🗺️ Customer Journey</h4>${stages.map(s => `<div class="journey-stage-item"><div class="journey-stage-day">Day ${s.day}</div><div><strong>${s.name}</strong><div style="font-size:12px;">Key engagement milestone</div></div></div>`).join('')}</div>`;
-    }
-    function renderGeneric(title, content) { return `<div style="padding:8px 0;"><h4>${title}</h4><div>${content}</div></div>`; }
-
-    function showRoleContent(roleId) {
-        const panel = document.getElementById('roleContentPanel');
-        if(!currentPlan) { panel.innerHTML = `<div style="padding:20px;color:#f87171;">⚠️ Generate a plan first</div>`; panel.classList.add('visible'); return; }
-        let html = '';
-        if(roleId === 'segmentation') html = renderSegmentationPanel();
-        else if(roleId === 'marketsizing') html = renderMarketSizingPanel();
-        else if(roleId === 'journey') html = renderJourneyPanel();
-        else if(roleId === 'pestle') html = renderGeneric('PESTLE', formatContent(currentPlan.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data'));
-        else if(roleId === 'porter') html = renderGeneric("Porter's 5 Forces", formatContent(currentPlan.match(/\[PORTER OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'N/A'));
-        else if(roleId === 'competitors') html = renderGeneric('Competitors', formatContent(currentPlan.match(/\[COMPETITOR OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'N/A'));
-        else if(roleId === 'positioning') html = renderGeneric('Positioning', formatContent(currentPlan.match(/\[POSITIONING OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || ''));
-        else if(roleId === '4ps') html = renderGeneric('4Ps', formatContent(currentPlan.match(/\[4Ps OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || ''));
-        else if(roleId === 'swot') html = renderGeneric('SWOT', formatContent(currentPlan.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || ''));
-        else if(roleId === 'kpi') html = renderGeneric('KPIs', formatContent(currentPlan.match(/\[KPI OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || ''));
-        else if(roleId === 'okrs') html = renderGeneric('OKRs', formatContent(currentPlan.match(/\[OKRS OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || ''));
-        else if(roleId === 'roadmap') html = renderGeneric('Roadmap', formatContent(currentPlan.match(/\[ROADMAP OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || ''));
-        else if(roleId === 'design') html = renderGeneric('Design', formatContent(currentPlan.match(/\[DESIGN OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || ''));
-        else html = '<div>Select a role</div>';
-        panel.innerHTML = html;
-        panel.classList.add('visible');
-        document.querySelectorAll('.role-item').forEach(el=>el.classList.remove('active'));
-        document.querySelector(`.role-item[data-role="${roleId}"]`)?.classList.add('active');
-    }
-
-    // ---------- generate plan & show only textual plan in main area ----------
-    async function generateMarketingPlan() {
-        if(USE_MOCK) { await new Promise(r=>setTimeout(r,1800)); return MOCK_PLAN; }
-        // fallback mock
-        await new Promise(r=>setTimeout(r,1500));
-        return MOCK_PLAN;
-    }
+    
     async function handleGenerate() {
-        if(isGenerating) return;
-        const cd = document.getElementById('customerData').value.trim();
-        const pd = document.getElementById('productDescription').value.trim();
-        if(!cd || !pd) { setStatus('Fill both fields',false); return; }
-        isGenerating=true; document.getElementById('generateBtn').disabled=true;
-        document.getElementById('outputArea').style.display='none';
-        updateKPILoading();
-        setStatus('🧠 AI analyzing market...',true);
+        if (isGenerating) return;
+        const cd = elements.customerData.value.trim();
+        const pd = elements.productDescription.value.trim();
+        if (!cd || !pd) { setStatus('Please fill in both fields', false); return; }
+        isGenerating = true;
+        elements.generateBtn.disabled = true;
+        elements.generateBtn.textContent = '⏳ Generating...';
+        elements.outputArea.style.display = 'none';
+        initKPICards();
+        setStatus('🧠 AI is analyzing your market...', true);
         updateProgress(5);
         try {
-            const plan = await generateMarketingPlan();
+            const plan = await generateMarketingPlan(cd, pd);
             currentPlan = plan;
-            document.getElementById('outputArea').style.display='block';
-            await streamPlanText(plan);
-            updateKPIWithData();
-            if(currentUser && document.getElementById('leftPanel').classList.contains('open')) showRoleContent('marketsizing');
-            setStatus('✅ Strategy ready',false);
-            updateProgress(100); setTimeout(()=>updateProgress(0),1500);
-        } catch(e) { setStatus('Error: '+e.message,false); } finally {
-            isGenerating=false; document.getElementById('generateBtn').disabled=false;
-            document.getElementById('generateBtn').innerHTML='✨ Generate Strategic Plan';
+            const roadmap = extractRoadmapFromPlan(plan);
+            roadmapData = roadmap;
+            elements.outputArea.style.display = 'block';
+            await streamRoles(plan);
+            if (currentUser) {
+                currentUser.plansGenerated = (currentUser.plansGenerated || 0) + 1;
+                saveDemoUser(currentUser);
+                sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+                if (elements.dashboardPage.classList.contains('active')) {
+                    renderJourneyMap(roadmap);
+                    renderSegmentationVisualization(plan);
+                }
+            }
+            // Auto-show market sizing in left panel after generation (if logged in)
+            if (currentUser && elements.leftPanel.classList.contains('open')) {
+                showRoleContent('marketsizing', 'Market Sizing');
+            }
+            setStatus('✅ Strategy generated successfully!', false);
+            updateProgress(100);
+            setTimeout(() => updateProgress(0), 2000);
+            elements.outputArea.scrollIntoView({ behavior: 'smooth' });
+        } catch (error) {
+            setStatus(`❌ Error: ${error.message}`, false);
+            console.error(error);
+        } finally {
+            isGenerating = false;
+            elements.generateBtn.disabled = false;
+            elements.generateBtn.textContent = '✨ Generate Strategic Plan';
         }
     }
-    async function streamPlanText(plan) {
-        const container = document.getElementById('renderedOutput');
-        container.innerHTML = '';
-        const blocks = plan.split(/\[[A-Z\s]+\]/).filter(b=>b.trim().length>30);
-        for(let i=0;i<Math.min(blocks.length,8);i++){
-            const card = document.createElement('div'); card.className='role-card';
-            card.innerHTML = `<div style="font-weight:bold;color:#a5b4fc;margin-bottom:12px;">📌 Strategy insight ${i+1}</div><div>${formatContent(blocks[i].substring(0,500))}</div>`;
-            container.appendChild(card);
-            await new Promise(r=>setTimeout(r,180));
-            card.classList.add('visible');
-            updateProgress(20 + (i*10));
+    
+    function handleClear() {
+        elements.customerData.value = '';
+        elements.productDescription.value = '';
+        elements.outputArea.style.display = 'none';
+        elements.renderedOutput.innerHTML = '';
+        currentPlan = null;
+        initKPICards();
+        setStatus('Cleared. Ready for new strategy.', false);
+        if (elements.roleContentPanel) elements.roleContentPanel.classList.remove('visible');
+    }
+    
+    function handleCopy() {
+        if (!currentPlan) { setStatus('No plan to copy', false); return; }
+        navigator.clipboard.writeText(currentPlan);
+        setStatus('✅ Copied to clipboard!', false);
+    }
+    
+    function saveToHistory() {
+        if (!currentPlan) { setStatus('No plan to save', false); return; }
+        const history = { id: Date.now(), timestamp: new Date().toISOString(), plan: currentPlan };
+        let saved = JSON.parse(localStorage.getItem('marketing_history') || '[]');
+        saved.unshift(history);
+        if (saved.length > 10) saved.pop();
+        localStorage.setItem('marketing_history', JSON.stringify(saved));
+        setStatus('✅ Saved to history!', false);
+    }
+    
+    function renderSegmentationVisualization(plan) {
+        if (!plan) {
+            elements.segmentationVisual.innerHTML = `<div class="empty-state"><p>✨ Generate a plan to see segmentation visualization</p></div>`;
+            return;
         }
+        const segmentationMatch = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        let segments = [];
+        let primaryTarget = '';
+        if (segmentationMatch) {
+            const segText = segmentationMatch[1];
+            const segmentLines = segText.split('\n');
+            for (const line of segmentLines) {
+                if (line.match(/^\d+\.|^[-•*]\s+/) && line.length > 10) {
+                    const segmentName = line.replace(/^\d+\.|^[-•*]\s+/, '').trim().substring(0, 50);
+                    if (segmentName.length > 5) segments.push(segmentName);
+                }
+            }
+            const primaryMatch = plan.match(/Primary Target[:\s]*([^\n]+)/i);
+            if (primaryMatch) primaryTarget = primaryMatch[1].trim();
+        }
+        const segmentCount = segments.length;
+        let visualizationHtml = '';
+        if (segmentCount === 3) {
+            visualizationHtml = `<div class="segmentation-header"><h3 style="color: #a5b4fc;">Market Segmentation</h3><div class="priority-badge">Primary Target Identified</div></div><div class="segmentation-chart"><div class="pie-chart"></div></div><div style="display: flex; justify-content: center; gap: 30px; margin: 20px 0;">${segments.map((seg, i) => `<div><div style="width:12px;height:12px;background:${i===0?'#4ade80':i===1?'#22d3ee':'#fbbf24'};border-radius:50%;display:inline-block;"></div> ${escapeHtml(seg)}</div>`).join('')}</div>`;
+        } else if (segmentCount === 2) {
+            visualizationHtml = `<div class="two-segments">${segments.map(seg => `<div class="segment-icon"><div class="icon-target" style="width:60px;height:60px;"></div><div>${escapeHtml(seg)}</div></div>`).join('')}</div>`;
+        } else if (segmentCount === 1) {
+            visualizationHtml = `<div class="single-segment-icon"><div class="icon-target"></div></div><div style="text-align:center;margin-top:16px;"><strong>${escapeHtml(segments[0])}</strong></div>`;
+        } else {
+            visualizationHtml = `<div class="empty-state">No segmentation data</div>`;
+        }
+        if (primaryTarget) {
+            visualizationHtml += `<div class="priority-card"><div class="priority-badge">🏆 PRIMARY TARGET</div><div class="priority-title">${escapeHtml(primaryTarget)}</div></div>`;
+        }
+        elements.segmentationVisual.innerHTML = visualizationHtml;
     }
-    function updateKPILoading(){
-        document.getElementById('kpiGrid').innerHTML = `<div class="kpi-card"><div>📊</div><div class="kpi-value">Loading..</div><div>Analyzing market</div></div>`.repeat(4);
+    
+    // =====================================================
+    // INITIALIZATION
+    // =====================================================
+    function initApp() {
+        initKPICards();
+        elements.generateBtn.addEventListener('click', handleGenerate);
+        elements.clearBtn.addEventListener('click', handleClear);
+        if (elements.copyOutputBtn) elements.copyOutputBtn.addEventListener('click', handleCopy);
+        if (elements.saveHistoryBtn) elements.saveHistoryBtn.addEventListener('click', saveToHistory);
+        
+        document.querySelectorAll('.role-item').forEach(item => {
+            const roleId = item.dataset.role;
+            const roleName = item.querySelector('.role-name')?.innerText || roleId;
+            item.addEventListener('click', () => showRoleContent(roleId, roleName));
+        });
+        elements.closeRoleContent.addEventListener('click', () => { elements.roleContentArea.style.display = 'none'; });
     }
-    function updateKPIWithData(){
-        let vals = ['$2.8B TAM','$760M SAM','$210M SOM','3 competitors'];
-        document.getElementById('kpiGrid').innerHTML = vals.map(v=>`<div class="kpi-card"><div>🎯</div><div class="kpi-value">${v}</div><div>Market metric</div></div>`).join('');
+    
+    if (sessionStorage.getItem('prefillCustomer')) {
+        elements.customerData.value = sessionStorage.getItem('prefillCustomer');
+        sessionStorage.removeItem('prefillCustomer');
     }
-    function setStatus(msg,loading){ let sb=document.getElementById('statusBar'); let sm=document.getElementById('statusMessage'); sm.innerText=msg; sb.style.display='flex'; if(!loading) setTimeout(()=>sb.style.display='none',2800);}
-    function updateProgress(p){ document.getElementById('progressFill').style.width=p+'%';}
-    function handleClear(){ document.getElementById('customerData').value=''; document.getElementById('productDescription').value=''; document.getElementById('outputArea').style.display='none'; currentPlan=null; document.getElementById('roleContentPanel').innerHTML=''; document.getElementById('roleContentPanel').classList.remove('visible');}
-
-    // ---------- auth & ui ----------
-    function showPage(page){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(page+'Page').classList.add('active'); }
-    function goToAppWithData(){ let cust=document.getElementById('plannerCustomer')?.value; let prod=document.getElementById('plannerProduct')?.value; if(cust) sessionStorage.setItem('prefillCustomer',cust); if(prod) sessionStorage.setItem('prefillProduct',prod); showPage('app'); }
-    function demoSignIn(){ currentUser={name:'Demo User'}; localStorage.setItem('demo_user','demo'); document.getElementById('authContainer').style.display='none'; document.getElementById('userMenu').style.display='flex'; document.getElementById('userNameDisplay').innerText='Demo User'; document.getElementById('leftPanel').classList.add('open'); document.getElementById('mainContent').classList.add('panel-open'); if(currentPlan) showRoleContent('marketsizing'); }
-    function demoSignOut(){ currentUser=null; document.getElementById('authContainer').style.display='flex'; document.getElementById('userMenu').style.display='none'; document.getElementById('leftPanel').classList.remove('open'); document.getElementById('mainContent').classList.remove('panel-open'); showPage('app'); }
-    document.getElementById('demoSignInBtn')?.addEventListener('click',demoSignIn);
-    document.getElementById('demoSignUpBtn')?.addEventListener('click',demoSignIn);
-    document.getElementById('logoutBtnNav')?.addEventListener('click',demoSignOut);
-    document.getElementById('generateBtn')?.addEventListener('click',handleGenerate);
-    document.getElementById('clearBtn')?.addEventListener('click',handleClear);
-    document.getElementById('copyOutputBtn')?.addEventListener('click',()=>{ if(currentPlan) { navigator.clipboard.writeText(currentPlan); setStatus('Copied!',false); } });
-    document.getElementById('saveHistoryBtn')?.addEventListener('click',()=>{ if(currentPlan) { localStorage.setItem('saved_plan',currentPlan); setStatus('Saved',false); } });
-    document.querySelectorAll('.role-item').forEach(el=>{ el.addEventListener('click',()=>showRoleContent(el.dataset.role)); });
-    if(sessionStorage.getItem('prefillCustomer')){ document.getElementById('customerData').value=sessionStorage.getItem('prefillCustomer'); sessionStorage.removeItem('prefillCustomer');}
-    if(sessionStorage.getItem('prefillProduct')){ document.getElementById('productDescription').value=sessionStorage.getItem('prefillProduct'); sessionStorage.removeItem('prefillProduct');}
+    if (sessionStorage.getItem('prefillProduct')) {
+        elements.productDescription.value = sessionStorage.getItem('prefillProduct');
+        sessionStorage.removeItem('prefillProduct');
+    }
+    
+    document.getElementById('demoSignInBtn')?.addEventListener('click', demoSignIn);
+    document.getElementById('demoSignUpBtn')?.addEventListener('click', demoSignUp);
+    document.getElementById('logoutBtnNav')?.addEventListener('click', demoSignOut);
+    
+    const savedUser = sessionStorage.getItem('currentUser');
+    if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        showLoggedInUI();
+        if (currentPlan) renderSegmentationVisualization(currentPlan);
+    } else {
+        showLoggedOutUI();
+    }
+    
+    initApp();
     showPage('home');
 </script>
 </body>
