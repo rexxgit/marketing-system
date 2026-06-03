@@ -71,7 +71,6 @@
             width: 4px;
             background: currentColor;
             border-radius: 1px;
-            transition: height 0.2s ease;
         }
         .icon-bars span:nth-child(1) { height: 10px; }
         .icon-bars span:nth-child(2) { height: 16px; }
@@ -658,7 +657,9 @@
             border-radius: 50%;
         }
         
-        /* Market Sizing Styles */
+        /* =====================================================
+           MARKET SIZING STYLES (ADDED)
+        ===================================================== */
         .market-sizing-panel {
             display: flex;
             flex-direction: column;
@@ -972,7 +973,6 @@
             padding: 8px 16px;
             cursor: pointer;
             font-size: 13px;
-            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -998,7 +998,6 @@
             cursor: pointer;
             font-size: 13px;
             font-weight: 500;
-            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             display: flex;
             align-items: center;
             gap: 6px;
@@ -1019,7 +1018,6 @@
             cursor: pointer;
             font-size: 13px;
             font-weight: 500;
-            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             display: flex;
             align-items: center;
             gap: 6px;
@@ -1038,7 +1036,6 @@
             border-radius: 50px;
             padding: 6px 16px 6px 20px;
             cursor: pointer;
-            transition: all 0.2s ease;
         }
         
         .user-menu:hover {
@@ -1070,7 +1067,6 @@
             font-size: 12px;
             padding: 4px 8px;
             border-radius: 50px;
-            transition: all 0.2s ease;
         }
         
         .logout-btn:hover {
@@ -1126,7 +1122,6 @@
             border-radius: 20px;
             padding: 30px;
             text-align: center;
-            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1), border-color 0.2s;
         }
         
         .step-card:hover { 
@@ -1162,7 +1157,6 @@
             text-align: center;
             font-size: 12px;
             color: #a5b4fc;
-            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1172,14 +1166,6 @@
         .role-badge:hover { 
             background: rgba(99,102,241,.2); 
             transform: translateY(-2px);
-        }
-        
-        .role-badge .role-badge-icon {
-            width: 18px;
-            height: 18px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
         }
         
         .pricing-grid {
@@ -1195,7 +1181,6 @@
             border-radius: 24px;
             padding: 32px;
             text-align: center;
-            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
         
         .pricing-card:hover { transform: translateY(-5px); }
@@ -1225,7 +1210,6 @@
             border-radius: 20px;
             padding: 30px;
             text-align: center;
-            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
         
         .principle-card:hover { transform: translateY(-5px); border-color: rgba(99,102,241,.2); }
@@ -1244,11 +1228,6 @@
             border-radius: 24px;
             padding: 32px;
             margin-bottom: 30px;
-            transition: border-color 0.2s;
-        }
-        
-        .input-area:focus-within {
-            border-color: rgba(99,102,241,.3);
         }
         
         textarea {
@@ -1261,7 +1240,6 @@
             font-family: inherit;
             resize: vertical;
             margin: 15px 0;
-            transition: border-color 0.2s;
         }
         
         textarea:focus { outline: none; border-color: #6366f1; }
@@ -1296,7 +1274,7 @@
             width: 0%;
             height: 100%;
             background: linear-gradient(90deg, #6366f1, #ec4899);
-            transition: width 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transition: width 0.3s;
         }
         
         .kpi-grid {
@@ -1312,7 +1290,6 @@
             border-radius: 20px;
             padding: 20px;
             text-align: center;
-            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
         
         .kpi-card:hover {
@@ -1345,7 +1322,7 @@
             margin: 20px 0;
             opacity: 0;
             transform: translateY(20px);
-            transition: all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transition: all 0.5s;
         }
         
         .role-card.visible {
@@ -1380,7 +1357,6 @@
             color: white;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             display: inline-flex;
             align-items: center;
             gap: 8px;
@@ -1404,7 +1380,6 @@
             color: #a5b4fc;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             display: inline-flex;
             align-items: center;
             gap: 8px;
@@ -1530,7 +1505,7 @@
                 <span class="role-status"></span>
             </div>
         </div>
-        <!-- Dynamic Role Content Panel -->
+        <!-- Dynamic Role Content Panel (inside left panel) -->
         <div id="roleContentPanel" class="role-content-panel"></div>
     </div>
 
@@ -1688,7 +1663,7 @@
             </div>
         </div>
 
-        <!-- APP PAGE (Generator) -->
+        <!-- APP PAGE (Generator) - ONLY PLAN TEXT HERE -->
         <div id="appPage" class="page">
             <div class="input-area">
                 <textarea id="customerData" rows="3" placeholder="Customer / audience: Enterprise CTOs at mid-sized tech companies..."></textarea>
@@ -1726,7 +1701,7 @@
     
     const API_BASE = 'https://Bisratprompt-marketing-system-api.hf.space';
     
-    // MOCK PLAN with realistic TAM/SAM/SOM for demonstration when API is down
+    // MOCK PLAN with realistic TAM/SAM/SOM for demonstration
     const MOCK_PLAN = `[SEGMENTATION OUTPUT]
 **Market Segmentation Analysis**
 
@@ -1985,6 +1960,7 @@ Objective 1: Establish market presence
         
         return `
             <div class="market-sizing-panel">
+                <!-- TAM Card -->
                 <div class="tam-card" onclick="window.toggleDetail('tamDetail')">
                     <div class="tam-header">
                         <span class="tam-label">🌍 TAM - Total Addressable Market</span>
@@ -1998,6 +1974,7 @@ Objective 1: Establish market presence
                     </div>
                 </div>
                 
+                <!-- SAM Card: Hand icon pointing right, value on right -->
                 <div class="sam-card" onclick="window.toggleDetail('samDetail')">
                     <div class="sam-header">
                         <span class="sam-label">✋ SAM - Serviceable Addressable Market</span>
@@ -2005,7 +1982,7 @@ Objective 1: Establish market presence
                     </div>
                     <div class="sam-layout">
                         <div class="hand-icon">👉</div>
-                        <div class="sam-right"><strong style="color:#38bdf8;">$${escapeHtml(sam)}</strong></div>
+                        <div class="sam-right"><strong style="color:#38bdf8; font-size:28px;">$${escapeHtml(sam)}</strong></div>
                     </div>
                     <div class="click-hint">▼ Click to reveal addressable segments</div>
                     <div id="samDetail" class="hidden-detail">
@@ -2014,6 +1991,7 @@ Objective 1: Establish market presence
                     </div>
                 </div>
                 
+                <!-- SOM Card: Huge hand icon in center -->
                 <div class="som-card" onclick="window.toggleDetail('somDetail')">
                     <div class="som-header">
                         <span class="som-label">🏆 SOM - Serviceable Obtainable Market</span>
@@ -2149,7 +2127,7 @@ Objective 1: Establish market presence
     function demoSignOut() { currentUser = null; sessionStorage.removeItem('currentUser'); showLoggedOutUI(); showToast('Signed out'); }
     
     // =====================================================
-    // GENERATOR FUNCTIONALITY (with API + fallback)
+    // GENERATOR FUNCTIONALITY (ONLY PLAN TEXT)
     // =====================================================
     function setStatus(message, isLoading = true) {
         if (elements.statusMessage) elements.statusMessage.textContent = message;
@@ -2210,7 +2188,7 @@ Objective 1: Establish market presence
             const role = output[i];
             const card = document.createElement('div');
             card.className = 'role-card';
-            card.innerHTML = `<div style="display:flex; align-items:center; gap:12px; margin-bottom:16px; border-bottom:1px solid rgba(255,255,255,.1); padding-bottom:12px;"><div style="font-size:20px; font-weight:bold; color:#a5b4fc;">${role.title}</div><div style="margin-left:auto; font-size:11px;">${i+1}/${output.length}</div></div><div class="stream-loading"><span class="loader"></span> Loading...</div>`;
+            card.innerHTML = `<div style="display:flex; align-items:center; gap:12px; margin-bottom:16px; border-bottom:1px solid rgba(255,255,255,.1); padding-bottom:12px;"><div style="font-size:18px; font-weight:bold; color:#a5b4fc;">${role.title}</div><div style="margin-left:auto; font-size:11px;">${i+1}/${output.length}</div></div><div class="stream-loading"><span class="loader"></span> Loading...</div>`;
             if (elements.renderedOutput) elements.renderedOutput.appendChild(card);
             await new Promise(resolve => setTimeout(resolve, 150));
             const loading = card.querySelector('.stream-loading');
@@ -2233,7 +2211,6 @@ Objective 1: Establish market presence
             });
             
             if (!response.ok) {
-                const errorText = await response.text();
                 console.warn(`API returned ${response.status}, using mock data`);
                 return MOCK_PLAN;
             }
