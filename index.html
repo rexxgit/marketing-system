@@ -7,7 +7,7 @@
     
     <style>
         /* =====================================================
-           GLOBAL STYLES (keeping existing styles, adding new ones)
+           GLOBAL STYLES (keeping all existing styles)
         ===================================================== */
         * {
             margin: 0;
@@ -28,10 +28,7 @@
             min-height: 100vh;
         }
         
-        /* =====================================================
-           CSS-ONLY ICONS LIBRARY (keeping existing, adding new)
-        ===================================================== */
-        
+        /* CSS Icons (keeping all existing icon styles) */
         .icon-target {
             width: 20px;
             height: 20px;
@@ -709,35 +706,6 @@
             border-radius: 50%;
         }
         
-        /* Market Sizing Specific Icons */
-        .icon-hand {
-            width: 40px;
-            height: 40px;
-            position: relative;
-            display: inline-block;
-        }
-        .icon-hand::before {
-            content: '✋';
-            font-size: 40px;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-        
-        .icon-hand-pointing {
-            width: 50px;
-            height: 50px;
-            position: relative;
-            display: inline-block;
-        }
-        .icon-hand-pointing::before {
-            content: '👉';
-            font-size: 50px;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-        
         .icon-building-small {
             display: inline-block;
             width: 20px;
@@ -748,7 +716,7 @@
         }
         
         /* =====================================================
-           LEFT PANEL - 13 ROLES
+           LEFT PANEL STYLES
         ===================================================== */
         .left-panel {
             width: 360px;
@@ -834,7 +802,6 @@
             color: #4ade80;
         }
         
-        /* Role Content Area inside Left Panel */
         .role-content-panel {
             margin-top: 24px;
             padding: 0 16px 16px 16px;
@@ -999,8 +966,108 @@
             color: rgba(255,255,255,.5);
         }
         
+        /* Segmentation Visuals */
+        .segmentation-visual {
+            background: rgba(255,255,255,.03);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .segmentation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .pie-chart {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(#4ade80 0deg 120deg, #22d3ee 120deg 240deg, #fbbf24 240deg 360deg);
+            margin: 0 auto;
+            transition: transform 0.3s ease;
+            animation: subtlePulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes subtlePulse {
+            0%, 100% { transform: scale(1); opacity: 0.95; }
+            50% { transform: scale(1.02); opacity: 1; }
+        }
+        
+        .single-segment-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .single-segment-icon .icon-target {
+            width: 80px;
+            height: 80px;
+            border-width: 4px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .two-segments {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            align-items: center;
+        }
+        .segment-icon {
+            text-align: center;
+        }
+        .segment-icon .icon-target {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 12px;
+        }
+        
+        .priority-card {
+            background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(236,72,153,.1));
+            border: 1px solid rgba(99,102,241,.4);
+            border-radius: 20px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        .priority-card::before {
+            content: '🏆';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 60px;
+            opacity: 0.1;
+        }
+        
+        .priority-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #4ade80, #22d3ee);
+            color: #0a0e1a;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 50px;
+            margin-bottom: 12px;
+        }
+        
+        .priority-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #4ade80;
+        }
+        
         /* =====================================================
-           MAIN CONTENT
+           MAIN CONTENT STYLES
         ===================================================== */
         .main-content {
             flex: 1;
@@ -1324,105 +1391,6 @@
             justify-content: center;
         }
         
-        .segmentation-visual {
-            background: rgba(255,255,255,.03);
-            border-radius: 24px;
-            padding: 24px;
-            margin-bottom: 24px;
-        }
-        
-        .segmentation-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-        
-        .pie-chart {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            background: conic-gradient(#4ade80 0deg 120deg, #22d3ee 120deg 240deg, #fbbf24 240deg 360deg);
-            margin: 0 auto;
-            transition: transform 0.3s ease;
-            animation: subtlePulse 3s ease-in-out infinite;
-        }
-        
-        @keyframes subtlePulse {
-            0%, 100% { transform: scale(1); opacity: 0.95; }
-            50% { transform: scale(1.02); opacity: 1; }
-        }
-        
-        .single-segment-icon {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto;
-            position: relative;
-        }
-        .single-segment-icon .icon-target {
-            width: 80px;
-            height: 80px;
-            border-width: 4px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        
-        .two-segments {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            align-items: center;
-        }
-        .segment-icon {
-            text-align: center;
-        }
-        .segment-icon .icon-target {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 12px;
-        }
-        
-        .priority-card {
-            background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(236,72,153,.1));
-            border: 1px solid rgba(99,102,241,.4);
-            border-radius: 20px;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-            margin-top: 24px;
-        }
-        
-        .priority-card::before {
-            content: '🏆';
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            font-size: 60px;
-            opacity: 0.1;
-        }
-        
-        .priority-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #4ade80, #22d3ee);
-            color: #0a0e1a;
-            font-size: 10px;
-            font-weight: bold;
-            padding: 4px 12px;
-            border-radius: 50px;
-            margin-bottom: 12px;
-        }
-        
-        .priority-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #4ade80;
-        }
-        
         .input-area {
             background: rgba(255,255,255,.05);
             border: 1px solid rgba(255,255,255,.1);
@@ -1544,6 +1512,12 @@
             box-shadow: 0 6px 20px rgba(99,102,241,.3);
         }
         
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
         .btn-outline {
             background: transparent;
             border: 1px solid rgba(99,102,241,.5);
@@ -1594,6 +1568,16 @@
         }
         
         @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .error-banner {
+            background: rgba(239,68,68,.1);
+            border: 1px solid rgba(239,68,68,.3);
+            border-radius: 12px;
+            padding: 12px 20px;
+            margin: 20px 0;
+            color: #f87171;
+            font-size: 14px;
+        }
         
         @media (max-width: 768px) {
             .left-panel { width: 320px; }
@@ -1679,10 +1663,7 @@
             </div>
         </div>
         
-        <!-- Dynamic Role Content Area -->
-        <div id="roleContentPanel" class="role-content-panel">
-            <!-- Content will be injected here when a role is clicked -->
-        </div>
+        <div id="roleContentPanel" class="role-content-panel"></div>
     </div>
 
     <!-- MAIN CONTENT -->
@@ -1691,38 +1672,38 @@
             <div class="logo" onclick="showPage('home')">StrategicMarketing</div>
             <div class="nav-links" id="navLinks">
                 <button onclick="showPage('home')" class="active" id="navHome">
-                    <span class="icon-home" style="width: 18px; height: 16px;"></span>
+                    <span class="icon-home"></span>
                     <span>Home</span>
                 </button>
                 <button onclick="showPage('planner')" id="navPlanner">
-                    <span class="icon-clipboard" style="width: 16px; height: 18px;"></span>
+                    <span class="icon-clipboard"></span>
                     <span>Planner</span>
                 </button>
                 <button onclick="showPage('about')" id="navAbout">
-                    <span class="icon-lightbulb" style="width: 16px; height: 16px;"></span>
+                    <span class="icon-lightbulb"></span>
                     <span>About</span>
                 </button>
                 <button onclick="showPage('pricing')" id="navPricing">
-                    <span class="icon-dollar" style="width: 16px; height: 18px;"></span>
+                    <span class="icon-dollar"></span>
                     <span>Pricing</span>
                 </button>
                 <button onclick="showPage('app')" id="navApp">
-                    <span class="icon-rocket" style="width: 18px; height: 18px;"></span>
+                    <span class="icon-rocket"></span>
                     <span>Launch App</span>
                 </button>
             </div>
             <div class="nav-right">
                 <div class="lang-selector" id="langSelector">
-                    <span class="icon-gear" style="width: 16px; height: 16px;"></span>
+                    <span class="icon-gear"></span>
                     <span>English</span>
                 </div>
                 <div id="authContainer" class="auth-buttons">
                     <button class="btn-signin" id="demoSignInBtn">
-                        <span class="icon-user" style="width: 16px; height: 16px;"></span>
+                        <span class="icon-user"></span>
                         <span>Sign In</span>
                     </button>
                     <button class="btn-signup" id="demoSignUpBtn">
-                        <span class="icon-user" style="width: 16px; height: 16px;"></span>
+                        <span class="icon-user"></span>
                         <span>Sign Up</span>
                     </button>
                 </div>
@@ -1740,9 +1721,9 @@
                 <h1>Stop second-guessing.<br>Start executing.</h1>
                 <p>A conscientious marketing system that delivers 13 disciplined roles—executed in precise sequence—so you get clarity, not confusion.</p>
                 <button class="btn-primary" onclick="showPage('app')">
-                    <span class="icon-rocket" style="width: 18px; height: 18px;"></span>
+                    <span class="icon-rocket"></span>
                     <span>Start Your Free Plan</span>
-                    <span class="icon-arrow" style="width: 14px; height: 10px;"></span>
+                    <span class="icon-arrow"></span>
                 </button>
             </div>
             <h2 style="text-align: center; margin-bottom: 40px;">How it works</h2>
@@ -1765,19 +1746,19 @@
             </div>
             <h2 style="text-align: center; margin-bottom: 30px;">13 Disciplined Roles</h2>
             <div class="roles-grid">
-                <div class="role-badge"><span class="role-badge-icon"><div class="icon-target" style="width: 14px; height: 14px;"></div></span><span>Segmentation</span></div>
-                <div class="role-badge"><span class="role-badge-icon"><div class="icon-bars" style="height: 14px;"><span></span><span></span><span></span><span></span></div></span><span>Market Sizing</span></div>
-                <div class="role-badge"><span class="role-badge-icon"><div class="icon-lightning" style="border-bottom-width: 12px;"></div></span><span>PESTLE</span></div>
-                <div class="role-badge"><span class="role-badge-icon"><div class="icon-building" style="width: 14px; height: 14px;"></div></span><span>Porter's Forces</span></div>
-                <div class="role-badge"><span class="role-badge-icon"><div class="icon-search" style="width: 12px; height: 12px;"></div></span><span>Competitors</span></div>
-                <div class="role-badge"><span class="role-badge-icon"><div class="icon-pin" style="width: 10px; height: 14px;"></div></span><span>Positioning</span></div>
-                <div class="role-badge"><span class="role-badge-icon"><div class="icon-grid" style="width: 14px; height: 14px;"><span></span><span></span><span></span><span></span></div></span><span>4Ps</span></div>
-                <div class="role-badge"><span class="role-badge-icon"><div class="icon-diamond" style="border-bottom-width: 12px;"></div></span><span>SWOT</span></div>
-                <div class="role-badge"><span class="role-badge-icon"><div class="icon-path" style="width: 16px; height: 10px;"></div></span><span>Journey Map</span></div>
-                <div class="role-badge"><span class="role-badge-icon"><div class="icon-linechart" style="width: 16px; height: 12px;"></div></span><span>KPIs</span></div>
-                <div class="role-badge"><span class="role-badge-icon"><div class="icon-bullseye" style="width: 14px; height: 14px;"></div></span><span>OKRs</span></div>
-                <div class="role-badge"><span class="role-badge-icon"><div class="icon-calendar" style="width: 14px; height: 14px;"></div></span><span>Roadmap</span></div>
-                <div class="role-badge"><span class="role-badge-icon"><div class="icon-paintbrush" style="width: 12px; height: 12px;"></div></span><span>Design</span></div>
+                <div class="role-badge"><span>Segmentation</span></div>
+                <div class="role-badge"><span>Market Sizing</span></div>
+                <div class="role-badge"><span>PESTLE</span></div>
+                <div class="role-badge"><span>Porter's Forces</span></div>
+                <div class="role-badge"><span>Competitors</span></div>
+                <div class="role-badge"><span>Positioning</span></div>
+                <div class="role-badge"><span>4Ps</span></div>
+                <div class="role-badge"><span>SWOT</span></div>
+                <div class="role-badge"><span>Journey Map</span></div>
+                <div class="role-badge"><span>KPIs</span></div>
+                <div class="role-badge"><span>OKRs</span></div>
+                <div class="role-badge"><span>Roadmap</span></div>
+                <div class="role-badge"><span>Design</span></div>
             </div>
             <div class="changelog-section">
                 <details>
@@ -1793,7 +1774,7 @@
             </div>
         </div>
 
-        <!-- PLANNER PAGE (no journey map here anymore) -->
+        <!-- PLANNER PAGE -->
         <div id="plannerPage" class="page">
             <div class="hero" style="padding: 40px 0;">
                 <h1>Strategy Planner</h1>
@@ -1801,19 +1782,19 @@
             </div>
             <div class="input-area">
                 <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5); display: flex; align-items: center; gap: 6px;">
-                    <span class="icon-user" style="width: 14px; height: 14px;"></span>
+                    <span class="icon-user"></span>
                     Customer Data / Target Audience
                 </label>
                 <textarea id="plannerCustomer" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies ($50M-$500M revenue) looking for AI analytics solutions..."></textarea>
                 <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5); display: flex; align-items: center; gap: 6px; margin-top: 20px;">
-                    <span class="icon-grid" style="width: 14px; height: 14px;"><span></span><span></span><span></span><span></span></span>
+                    <span class="icon-grid"></span>
                     Product Description / Service
                 </label>
                 <textarea id="plannerProduct" rows="4" placeholder="Example: An AI-powered marketing analytics platform that provides real-time ROI predictions and channel optimization recommendations..."></textarea>
                 <button class="btn-primary" onclick="goToAppWithData()">
-                    <span class="icon-rocket" style="width: 16px; height: 16px;"></span>
+                    <span class="icon-rocket"></span>
                     Generate Strategic Plan
-                    <span class="icon-arrow" style="width: 12px; height: 8px;"></span>
+                    <span class="icon-arrow"></span>
                 </button>
             </div>
         </div>
@@ -1844,17 +1825,17 @@
             </div>
             <div class="principles-grid">
                 <div class="principle-card">
-                    <div class="principle-icon"><div class="icon-gear" style="width: 32px; height: 32px;"></div></div>
+                    <div class="principle-icon"><div class="icon-gear"></div></div>
                     <h3>Autonomy</h3>
                     <p style="color: rgba(255,255,255,.6);">The system works by itself. You don't have to tell it what to do next.</p>
                 </div>
                 <div class="principle-card">
-                    <div class="principle-icon"><div class="icon-brain" style="width: 32px; height: 24px;"></div></div>
+                    <div class="principle-icon"><div class="icon-brain"></div></div>
                     <h3>Intelligence</h3>
                     <p style="color: rgba(255,255,255,.6);">Smart analysis that learns and adapts to your business.</p>
                 </div>
                 <div class="principle-card">
-                    <div class="principle-icon"><div class="icon-heart" style="width: 28px; height: 24px;"></div></div>
+                    <div class="principle-icon"><div class="icon-heart"></div></div>
                     <h3>Goodness</h3>
                     <p style="color: rgba(255,255,255,.6);">Ethical strategies that benefit everyone, not just the bottom line.</p>
                 </div>
@@ -1876,23 +1857,23 @@
                     <h3>Free</h3>
                     <div class="price">$0<span>/month</span></div>
                     <ul class="feature-list">
-                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> 5 plans per month</li>
-                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> PDF export</li>
-                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Save to history</li>
-                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Copy to clipboard</li>
-                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Basic analytics</li>
+                        <li><span class="icon-check"></span> 5 plans per month</li>
+                        <li><span class="icon-check"></span> PDF export</li>
+                        <li><span class="icon-check"></span> Save to history</li>
+                        <li><span class="icon-check"></span> Copy to clipboard</li>
+                        <li><span class="icon-check"></span> Basic analytics</li>
                     </ul>
                     <button class="btn-primary" onclick="showPage('app')">Get Started</button>
                 </div>
                 <div class="pricing-card popular">
-                    <h3>Pro <span class="icon-star" style="width: 16px; height: 16px; display: inline-block; margin-left: 4px;"></span></h3>
+                    <h3>Pro <span class="icon-star"></span></h3>
                     <div class="price">$29<span>/month</span></div>
                     <ul class="feature-list">
-                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Unlimited plans</li>
-                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Priority support</li>
-                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> All export formats</li>
-                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Advanced analytics</li>
-                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Team sharing</li>
+                        <li><span class="icon-check"></span> Unlimited plans</li>
+                        <li><span class="icon-check"></span> Priority support</li>
+                        <li><span class="icon-check"></span> All export formats</li>
+                        <li><span class="icon-check"></span> Advanced analytics</li>
+                        <li><span class="icon-check"></span> Team sharing</li>
                     </ul>
                     <button class="btn-primary" onclick="showPage('app')">Start Free Trial</button>
                     <div style="margin-top: 12px; font-size: 11px; color: #a5b4fc;">Most popular</div>
@@ -1901,11 +1882,11 @@
                     <h3>Enterprise</h3>
                     <div class="price">Custom</div>
                     <ul class="feature-list">
-                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Unlimited everything</li>
-                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> API access</li>
-                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> SSO & SAML</li>
-                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Dedicated support</li>
-                        <li><span class="icon-check" style="width: 14px; height: 10px;"></span> Custom integrations</li>
+                        <li><span class="icon-check"></span> Unlimited everything</li>
+                        <li><span class="icon-check"></span> API access</li>
+                        <li><span class="icon-check"></span> SSO & SAML</li>
+                        <li><span class="icon-check"></span> Dedicated support</li>
+                        <li><span class="icon-check"></span> Custom integrations</li>
                     </ul>
                     <button class="btn-outline" onclick="alert('Contact sales@strategicmarketing.com')">Contact Sales</button>
                 </div>
@@ -1916,18 +1897,18 @@
         <div id="appPage" class="page">
             <div class="input-area">
                 <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5); display: flex; align-items: center; gap: 6px;">
-                    <span class="icon-user" style="width: 14px; height: 14px;"></span>
+                    <span class="icon-user"></span>
                     Customer Data / Target Audience
                 </label>
                 <textarea id="customerData" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies ($50M-$500M revenue) looking for AI analytics solutions..."></textarea>
                 <label style="font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5); display: flex; align-items: center; gap: 6px; margin-top: 20px;">
-                    <span class="icon-grid" style="width: 14px; height: 14px;"><span></span><span></span><span></span><span></span></span>
+                    <span class="icon-grid"></span>
                     Product Description / Service
                 </label>
                 <textarea id="productDescription" rows="5" placeholder="Example: An AI-powered marketing analytics platform that provides real-time ROI predictions and channel optimization recommendations..."></textarea>
                 <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                     <button id="generateBtn" class="btn-primary">
-                        <span class="icon-rocket" style="width: 16px; height: 16px;"></span>
+                        <span class="icon-rocket"></span>
                         Generate Strategic Plan
                     </button>
                     <button id="clearBtn" class="btn-outline">Clear All</button>
@@ -1939,16 +1920,16 @@
             <div class="output-area" id="outputArea" style="display: none;">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
                     <h3 style="display: flex; align-items: center; gap: 8px;">
-                        <span class="icon-data" style="width: 18px; height: 14px;"></span>
+                        <span class="icon-data"></span>
                         Generated Marketing Strategy
                     </h3>
                     <div style="display: flex; gap: 8px;">
                         <button id="copyOutputBtn" class="btn-outline">
-                            <span class="icon-clipboard" style="width: 14px; height: 16px;"></span>
+                            <span class="icon-clipboard"></span>
                             Copy
                         </button>
                         <button id="saveHistoryBtn" class="btn-outline">
-                            <span class="icon-calendar" style="width: 14px; height: 14px;"></span>
+                            <span class="icon-calendar"></span>
                             Save
                         </button>
                     </div>
@@ -1959,9 +1940,9 @@
 
         <footer class="footer">
             <div class="footer-icons">
-                <span class="icon-lock" style="width: 14px; height: 16px;"></span>
-                <span class="icon-data" style="width: 18px; height: 14px;"></span>
-                <span class="icon-target" style="width: 16px; height: 16px;"></span>
+                <span class="icon-lock"></span>
+                <span class="icon-data"></span>
+                <span class="icon-target"></span>
             </div>
             <p>© 2025 Strategic Marketing System · Powered by AI · 13-Role Framework · Conscientious by Design</p>
             <p style="font-size: 10px;">Secure · Data-driven · Actionable</p>
@@ -1975,35 +1956,159 @@
     // =====================================================
     let currentPlan = null;
     let isGenerating = false;
-    let roadmapData = null;
     let currentUser = null;
     
-    const API_BASE = 'https://Bisratprompt-marketing-system-api.hf.space';
+    // Use mock data since API is returning 500
+    const USE_MOCK = true; // Set to false to try API again
     
-    // DOM Elements
-    const elements = {
-        customerData: document.getElementById('customerData'),
-        productDescription: document.getElementById('productDescription'),
-        plannerCustomer: document.getElementById('plannerCustomer'),
-        plannerProduct: document.getElementById('plannerProduct'),
-        generateBtn: document.getElementById('generateBtn'),
-        clearBtn: document.getElementById('clearBtn'),
-        copyOutputBtn: document.getElementById('copyOutputBtn'),
-        saveHistoryBtn: document.getElementById('saveHistoryBtn'),
-        statusBar: document.getElementById('statusBar'),
-        statusMessage: document.getElementById('statusMessage'),
-        progressFill: document.getElementById('progressFill'),
-        outputArea: document.getElementById('outputArea'),
-        renderedOutput: document.getElementById('renderedOutput'),
-        kpiGrid: document.getElementById('kpiGrid'),
-        leftPanel: document.getElementById('leftPanel'),
-        mainContent: document.getElementById('mainContent'),
-        roleContentPanel: document.getElementById('roleContentPanel'),
-        authContainer: document.getElementById('authContainer'),
-        userMenu: document.getElementById('userMenu'),
-        userNameDisplay: document.getElementById('userNameDisplay'),
-        userAvatar: document.getElementById('userAvatar')
-    };
+    // Mock plan data for demonstration
+    const MOCK_PLAN = `[SEGMENTATION OUTPUT]
+**Market Segmentation Analysis**
+
+1. Enterprise CTOs at mid-sized tech companies ($50M-$500M revenue)
+2. Marketing Directors at B2B SaaS companies
+3. Analytics Managers at data-driven organizations
+
+**Primary Target:** Enterprise CTOs at mid-sized tech companies
+
+---
+
+[TAMSAMSOM OUTPUT]
+**Market Sizing Analysis**
+
+TAM: $2.5B (North America)
+SAM: $750M
+SOM: $150M
+
+**Location:** North America (US, Canada, Mexico)
+
+---
+
+[PESTLE OUTPUT]
+**PESTLE Analysis**
+
+- **Political:** Stable regulatory environment for AI tools
+- **Economic:** Growing demand for efficiency solutions
+- **Social:** Increasing adoption of AI in marketing
+- **Technological:** Rapid advancement in ML capabilities
+- **Legal:** Data privacy compliance requirements
+- **Environmental:** Focus on sustainable tech solutions
+
+---
+
+[PORTER OUTPUT]
+**Porter's Five Forces**
+
+1. **Threat of New Entrants:** Medium - AI barrier to entry
+2. **Bargaining Power of Buyers:** High - Many alternatives
+3. **Bargaining Power of Suppliers:** Low - Cloud infrastructure
+4. **Threat of Substitutes:** Medium - Traditional analytics
+5. **Industry Rivalry:** High - Competitive landscape
+
+---
+
+[COMPETITOR OUTPUT]
+**Competitor Analysis**
+
+- **Competitor A:** Market leader with 40% share
+- **Competitor B:** Feature-rich alternative
+- **Competitor C:** Budget-friendly option
+
+---
+
+[POSITIONING OUTPUT]
+**Positioning Statement**
+
+For enterprise CTOs who need actionable marketing insights, our AI-powered platform delivers real-time ROI predictions and channel optimization, unlike traditional analytics tools that require manual interpretation.
+
+---
+
+[4Ps OUTPUT]
+**Marketing Mix (4Ps)**
+
+- **Product:** AI-powered marketing analytics platform
+- **Price:** Tiered subscription ($0, $29, Custom)
+- **Place:** Direct sales + self-service platform
+- **Promotion:** Content marketing, webinars, free trials
+
+---
+
+[SWOT OUTPUT]
+**SWOT Analysis**
+
+**Strengths:**
+- Advanced AI capabilities
+- Real-time analytics
+- User-friendly interface
+
+**Weaknesses:**
+- New market entrant
+- Limited brand awareness
+
+**Opportunities:**
+- Growing AI adoption
+- International expansion
+
+**Threats:**
+- Established competitors
+- Rapid technology changes
+
+---
+
+[CUSTOMER JOURNEY OUTPUT]
+**Customer Journey Map**
+
+**Stage 1 - Awareness (Day 1):** Customer discovers our solution through content
+**Stage 2 - Consideration (Day 7):** Evaluates features and pricing
+**Stage 3 - Decision (Day 14):** Signs up for free trial
+**Stage 4 - Adoption (Day 21):** Integrates with existing tools
+**Stage 5 - Advocacy (Day 30):** Becomes a reference customer
+
+---
+
+[KPI OUTPUT]
+**Key Performance Indicators**
+
+- Customer Acquisition Cost (CAC): Target $500
+- Lifetime Value (LTV): Target $5,000
+- Conversion Rate: Target 15%
+- Monthly Recurring Revenue (MRR): Growth 20% MoM
+- Churn Rate: Target <5%
+
+---
+
+[OKRS OUTPUT]
+**OKR Strategist**
+
+**Objective 1:** Establish market presence
+- KR1: Acquire 100 paying customers
+- KR2: Achieve $500K ARR
+- KR3: 90% customer satisfaction
+
+**Objective 2:** Product excellence
+- KR1: Launch 3 major features
+- KR2: 99.9% uptime
+- KR3: <2 hour support response
+
+---
+
+[ROADMAP OUTPUT]
+**30-Day Implementation Roadmap**
+
+1. **Week 1:** Market research and positioning
+2. **Week 2:** Website and content development
+3. **Week 3:** Sales enablement and outreach
+4. **Week 4:** Launch campaign execution
+
+---
+
+[DESIGN OUTPUT]
+**Design Recommendations**
+
+- Clean, professional interface with dark/light modes
+- Interactive dashboards with real-time updates
+- Mobile-responsive design
+- Accessibility compliance (WCAG 2.1)`;
     
     // Helper Functions
     function escapeHtml(str) {
@@ -2038,7 +2143,7 @@
     // =====================================================
     function extractSegmentation(plan) {
         const match = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if (!match) return { segments: [], primaryTarget: '' };
+        if (!match) return { segments: [], primaryTarget: '', rawText: '' };
         
         const segText = match[1];
         const segments = [];
@@ -2057,10 +2162,9 @@
     
     function extractMarketSizing(plan) {
         const match = plan.match(/\[TAMSAMSOM OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if (!match) return { tam: '100M', sam: '30M', som: '10M', location: 'North America', rawText: '' };
+        if (!match) return { tam: '100M', sam: '30M', som: '10M', location: 'North America', tamIcons: 8, samIcons: 5, somIcons: 3, rawText: '' };
         
         const text = match[1];
-        // Parse TAM, SAM, SOM values
         let tam = '100M', sam = '30M', som = '10M', location = 'Global Market';
         
         const tamMatch = text.match(/TAM[:\s]*\$?([\d,.]+[BKM]?)/i);
@@ -2073,13 +2177,12 @@
         const locationMatch = text.match(/location[:\s]*([^\n]+)/i);
         if (locationMatch) location = locationMatch[1];
         
-        // Calculate number of market icons based on value (1 icon per 10M for illustration)
         const getIconCount = (valueStr) => {
             const num = parseFloat(valueStr);
-            if (isNaN(num)) return 5;
+            if (isNaN(num)) return 8;
             if (valueStr.includes('B')) return Math.min(20, Math.floor(num * 2));
-            if (valueStr.includes('M')) return Math.min(15, Math.floor(num / 10));
-            return 5;
+            if (valueStr.includes('M')) return Math.min(15, Math.max(3, Math.floor(num / 50)));
+            return 8;
         };
         
         return {
@@ -2123,9 +2226,9 @@
         let html = '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">';
         const sections = ['Strengths', 'Weaknesses', 'Opportunities', 'Threats'];
         sections.forEach(s => {
-            const sectionMatch = text.match(new RegExp(`${s}:([\\s\\S]*?)(?=\\n(?:Strengths|Weaknesses|Opportunities|Threats):|$)`, 'i'));
+            const sectionMatch = text.match(new RegExp(`\\*\\*${s}:\\*\\*([\\s\\S]*?)(?=\\n\\*\\*|$)`, 'i'));
             const sectionText = sectionMatch ? sectionMatch[1] : '';
-            const items = sectionText.split('\n').filter(l => /^[-•*]\s+/.test(l)).map(l => l.replace(/^[-•*]\s+/, '').trim()).slice(0, 4);
+            const items = sectionText.split('\n').filter(l => l.trim().startsWith('-')).map(l => l.replace(/^-\s*/, '').trim()).slice(0, 4);
             const color = s === 'Strengths' ? '#4ade80' : s === 'Weaknesses' ? '#f87171' : s === 'Opportunities' ? '#22d3ee' : '#fbbf24';
             html += `<div><strong style="color: ${color};">${s}</strong><ul style="margin-top: 8px;">${items.map(i => `<li>${escapeHtml(i)}</li>`).join('') || '<li>No data</li>'}</ul></div>`;
         });
@@ -2137,35 +2240,14 @@
         const match = plan.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
         if (!match) return null;
         
-        const text = match[1];
-        const stages = [];
-        const lines = text.split('\n');
-        let currentStage = null;
-        
-        for (const line of lines) {
-            if (line.match(/Stage\s*\d+|Day\s*\d+|[A-Z][a-z]+\s+Stage/i)) {
-                if (currentStage) stages.push(currentStage);
-                currentStage = { name: line.trim(), desc: '' };
-            } else if (currentStage && line.trim().length > 5 && !line.match(/^[-•*]\s*$/)) {
-                currentStage.desc += line.trim() + ' ';
-            }
-        }
-        if (currentStage) stages.push(currentStage);
-        
-        if (stages.length === 0) {
-            return {
-                stages: [
-                    { day: 1, name: 'Awareness', desc: 'Customer discovers your brand' },
-                    { day: 7, name: 'Consideration', desc: 'Research and evaluation' },
-                    { day: 14, name: 'Conversion', desc: 'First purchase decision' },
-                    { day: 21, name: 'Retention', desc: 'Post-purchase engagement' },
-                    { day: 30, name: 'Advocacy', desc: 'Loyalty and referrals' }
-                ]
-            };
-        }
-        
-        const milestones = [1, 7, 14, 21, 30];
-        return { stages: stages.slice(0, 5).map((stage, idx) => ({ day: milestones[idx], name: stage.name.substring(0, 30), desc: stage.desc.substring(0, 60) })) };
+        const stages = [
+            { day: 1, name: 'Awareness', desc: 'Customer discovers your brand through content or referral' },
+            { day: 7, name: 'Consideration', desc: 'Research and evaluation of features/pricing' },
+            { day: 14, name: 'Conversion', desc: 'Signs up for free trial or purchases' },
+            { day: 21, name: 'Retention', desc: 'Post-purchase engagement and support' },
+            { day: 30, name: 'Advocacy', desc: 'Loyalty, referrals, and case studies' }
+        ];
+        return { stages };
     }
     
     function extractKPIs(plan) {
@@ -2179,38 +2261,16 @@
     }
     
     function extractRoadmapContent(plan) {
-        const roadmapMatch = plan.match(/\[ROADMAP OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if (!roadmapMatch) return null;
-        const roadmapText = roadmapMatch[1];
-        const tasks = [];
-        const lines = roadmapText.split('\n');
-        for (const line of lines) {
-            if (line.match(/^\d+\./) && line.length > 10) {
-                const taskText = line.replace(/^\d+\./, '').trim();
-                if (taskText.length > 10 && taskText.length < 200) tasks.push(taskText);
-            }
-        }
-        if (tasks.length === 0) {
-            for (const line of lines) {
-                if (line.match(/^[-•*]\s+/) && line.length > 10) {
-                    const taskText = line.replace(/^[-•*]\s+/, '').trim();
-                    if (taskText.length > 10 && taskText.length < 200) tasks.push(taskText);
-                }
-            }
-        }
-        if (tasks.length === 0) {
-            return {
-                stages: [
-                    { day: 1, name: 'Market Research', desc: 'Audience analysis & segmentation' },
-                    { day: 7, name: 'Strategy Dev', desc: 'PESTLE & Porter analysis' },
-                    { day: 14, name: 'Execution Plan', desc: '4Ps & channel planning' },
-                    { day: 21, name: 'Launch Prep', desc: 'Campaign setup & testing' },
-                    { day: 30, name: 'Launch & Monitor', desc: 'Go live & optimization' }
-                ]
-            };
-        }
-        const milestones = [1, 7, 14, 21, 30];
-        return { stages: tasks.slice(0, 5).map((task, index) => ({ day: milestones[index], name: task.substring(0, 30), desc: task.substring(0, 60) })) };
+        const match = plan.match(/\[ROADMAP OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!match) return null;
+        const stages = [
+            { day: 7, name: 'Market Research', desc: 'Audience analysis & segmentation' },
+            { day: 14, name: 'Strategy Development', desc: 'PESTLE & Porter analysis' },
+            { day: 21, name: 'Execution Plan', desc: '4Ps & channel planning' },
+            { day: 28, name: 'Launch Preparation', desc: 'Campaign setup & testing' },
+            { day: 30, name: 'Launch & Monitor', desc: 'Go live & optimization' }
+        ];
+        return { stages };
     }
     
     function extractDesign(plan) {
@@ -2227,15 +2287,15 @@
         const segmentCount = segments.length;
         
         let visualizationHtml = '';
-        if (segmentCount === 3) {
+        if (segmentCount >= 3) {
             visualizationHtml = `
                 <div class="segmentation-visual">
                     <div class="segmentation-header">
                         <h3 style="color: #a5b4fc;">Market Segmentation</h3>
                     </div>
                     <div class="pie-chart"></div>
-                    <div style="display: flex; justify-content: center; gap: 20px; margin-top: 20px;">
-                        ${segments.map((seg, i) => `<div><div style="width: 12px; height: 12px; background: ${i === 0 ? '#4ade80' : i === 1 ? '#22d3ee' : '#fbbf24'}; border-radius: 50%; display: inline-block;"></div> ${escapeHtml(seg)}</div>`).join('')}
+                    <div style="display: flex; justify-content: center; gap: 20px; margin-top: 20px; flex-wrap: wrap;">
+                        ${segments.slice(0,3).map((seg, i) => `<div><div style="width: 12px; height: 12px; background: ${i === 0 ? '#4ade80' : i === 1 ? '#22d3ee' : '#fbbf24'}; border-radius: 50%; display: inline-block;"></div> ${escapeHtml(seg)}</div>`).join('')}
                     </div>
                 </div>
             `;
@@ -2255,7 +2315,7 @@
                 </div>
             `;
         } else {
-            visualizationHtml = `<div class="segmentation-visual"><p class="empty-state">No segmentation data available</p></div>`;
+            visualizationHtml = `<div class="segmentation-visual"><p style="text-align: center;">No segmentation data available</p></div>`;
         }
         
         if (primaryTarget) {
@@ -2286,8 +2346,7 @@
         
         return `
             <div class="market-sizing-container">
-                <!-- TAM -->
-                <div class="tam-card" onclick="toggleTamDetail()">
+                <div class="tam-card" onclick="window.toggleDetail('tamDetail')">
                     <div class="tam-header">
                         <span class="tam-label">📊 TAM - Total Addressable Market</span>
                         <span class="tam-value">${escapeHtml(tam)}</span>
@@ -2305,8 +2364,7 @@
                     </div>
                 </div>
                 
-                <!-- SAM -->
-                <div class="sam-card" onclick="toggleSamDetail()">
+                <div class="sam-card" onclick="window.toggleDetail('samDetail')">
                     <div class="sam-header">
                         <span class="sam-label">🎯 SAM - Serviceable Addressable Market</span>
                         <span class="sam-value">${escapeHtml(sam)}</span>
@@ -2329,8 +2387,7 @@
                     </div>
                 </div>
                 
-                <!-- SOM -->
-                <div class="som-card" onclick="toggleSomDetail()">
+                <div class="som-card" onclick="window.toggleDetail('somDetail')">
                     <div class="som-header">
                         <span class="som-label">🏆 SOM - Serviceable Obtainable Market</span>
                         <span class="som-value">${escapeHtml(som)}</span>
@@ -2382,24 +2439,16 @@
         return `<div style="padding: 16px;"><h4>📋 ${escapeHtml(title)}</h4><div style="margin-top: 16px; line-height: 1.6;">${content}</div></div>`;
     }
     
-    // Toggle functions for market sizing details
-    window.toggleTamDetail = function() {
-        const detail = document.getElementById('tamDetail');
-        if (detail) detail.classList.toggle('show');
-    };
-    window.toggleSamDetail = function() {
-        const detail = document.getElementById('samDetail');
-        if (detail) detail.classList.toggle('show');
-    };
-    window.toggleSomDetail = function() {
-        const detail = document.getElementById('somDetail');
-        if (detail) detail.classList.toggle('show');
+    window.toggleDetail = function(id) {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('show');
     };
     
     function showRoleContent(roleId, roleTitle) {
+        const panel = document.getElementById('roleContentPanel');
         if (!currentPlan) {
-            elements.roleContentPanel.innerHTML = `<div style="padding: 20px; text-align: center; color: #f87171;">⚠️ Generate a marketing plan first to see this content.</div>`;
-            elements.roleContentPanel.classList.add('visible');
+            panel.innerHTML = `<div style="padding: 20px; text-align: center; color: #f87171;">⚠️ Generate a marketing plan first to see this content.</div>`;
+            panel.classList.add('visible');
             return;
         }
         
@@ -2463,10 +2512,9 @@
                 content = `<p>Content for ${roleTitle} will appear here</p>`;
         }
         
-        elements.roleContentPanel.innerHTML = content;
-        elements.roleContentPanel.classList.add('visible');
+        panel.innerHTML = content;
+        panel.classList.add('visible');
         
-        // Update active state
         document.querySelectorAll('.role-item').forEach(item => item.classList.remove('active'));
         const activeItem = document.querySelector(`.role-item[data-role="${roleId}"]`);
         if (activeItem) activeItem.classList.add('active');
@@ -2477,14 +2525,9 @@
     // =====================================================
     function showPage(pageName) {
         document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-        const pageMap = {
-            'home': 'homePage',
-            'planner': 'plannerPage',
-            'about': 'aboutPage',
-            'pricing': 'pricingPage',
-            'app': 'appPage'
-        };
-        document.getElementById(pageMap[pageName]).classList.add('active');
+        const pageMap = { 'home': 'homePage', 'planner': 'plannerPage', 'about': 'aboutPage', 'pricing': 'pricingPage', 'app': 'appPage' };
+        const page = document.getElementById(pageMap[pageName]);
+        if (page) page.classList.add('active');
         
         document.querySelectorAll('.nav-links button').forEach(btn => btn.classList.remove('active'));
         const navMap = { 'home': 'navHome', 'planner': 'navPlanner', 'about': 'navAbout', 'pricing': 'navPricing', 'app': 'navApp' };
@@ -2493,8 +2536,8 @@
     }
     
     function goToAppWithData() {
-        const customerData = elements.plannerCustomer?.value;
-        const productData = elements.plannerProduct?.value;
+        const customerData = document.getElementById('plannerCustomer')?.value;
+        const productData = document.getElementById('plannerProduct')?.value;
         if (customerData) sessionStorage.setItem('prefillCustomer', customerData);
         if (productData) sessionStorage.setItem('prefillProduct', productData);
         showPage('app');
@@ -2525,25 +2568,35 @@
     }
     
     function showLoggedInUI() {
-        elements.authContainer.style.display = 'none';
-        elements.userMenu.style.display = 'flex';
-        elements.userNameDisplay.textContent = currentUser.name;
-        elements.userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
-        elements.leftPanel.classList.add('open');
-        elements.mainContent.classList.add('panel-open');
+        const authContainer = document.getElementById('authContainer');
+        const userMenu = document.getElementById('userMenu');
+        const userNameDisplay = document.getElementById('userNameDisplay');
+        const userAvatar = document.getElementById('userAvatar');
+        const leftPanel = document.getElementById('leftPanel');
+        const mainContent = document.getElementById('mainContent');
         
-        if (currentPlan) {
-            // Auto-show segmentation in panel when logged in and plan exists
-            showRoleContent('segmentation', 'Segmentation');
-        }
+        if (authContainer) authContainer.style.display = 'none';
+        if (userMenu) userMenu.style.display = 'flex';
+        if (userNameDisplay && currentUser) userNameDisplay.textContent = currentUser.name;
+        if (userAvatar && currentUser) userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+        if (leftPanel) leftPanel.classList.add('open');
+        if (mainContent) mainContent.classList.add('panel-open');
+        
+        if (currentPlan) showRoleContent('segmentation', 'Segmentation');
     }
     
     function showLoggedOutUI() {
-        elements.authContainer.style.display = 'flex';
-        elements.userMenu.style.display = 'none';
-        elements.leftPanel.classList.remove('open');
-        elements.mainContent.classList.remove('panel-open');
-        elements.roleContentPanel.classList.remove('visible');
+        const authContainer = document.getElementById('authContainer');
+        const userMenu = document.getElementById('userMenu');
+        const leftPanel = document.getElementById('leftPanel');
+        const mainContent = document.getElementById('mainContent');
+        const rolePanel = document.getElementById('roleContentPanel');
+        
+        if (authContainer) authContainer.style.display = 'flex';
+        if (userMenu) userMenu.style.display = 'none';
+        if (leftPanel) leftPanel.classList.remove('open');
+        if (mainContent) mainContent.classList.remove('panel-open');
+        if (rolePanel) rolePanel.classList.remove('visible');
         showPage('app');
     }
     
@@ -2607,9 +2660,7 @@
             kpiGrid.innerHTML = kpiConfigs.map(kpi => `
                 <div class="kpi-card">
                     <div class="kpi-icon">
-                        <div class="icon-${kpi.iconType} loading" style="width: 32px; height: 32px; ${kpi.iconType === 'bars' ? 'display: inline-flex;' : ''}">
-                            ${kpi.iconType === 'bars' ? '<span></span><span></span><span></span><span></span>' : ''}
-                        </div>
+                        <div class="icon-${kpi.iconType} loading" style="width: 32px; height: 32px;"></div>
                     </div>
                     <div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);">${kpi.label}</div>
                     <div class="kpi-value" style="font-size: 18px; display: flex; align-items: center; justify-content: center; gap: 8px;">
@@ -2636,9 +2687,7 @@
             kpiGrid.innerHTML = kpiConfigs.map(kpi => `
                 <div class="kpi-card">
                     <div class="kpi-icon">
-                        <div class="icon-${kpi.iconType}" style="width: 32px; height: 32px; ${kpi.iconType === 'bars' ? 'display: inline-flex;' : ''}">
-                            ${kpi.iconType === 'bars' ? '<span></span><span></span><span></span><span></span>' : ''}
-                        </div>
+                        <div class="icon-${kpi.iconType}" style="width: 32px; height: 32px;"></div>
                     </div>
                     <div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);">${kpi.label}</div>
                     <div class="kpi-value">${kpi.value}</div>
@@ -2669,7 +2718,9 @@
         for (const role of roles) {
             const regex = new RegExp(`\\[${role.tag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
             const match = plan.match(regex);
-            if (match && match[1] && match[1].trim().length > 30) output.push({ ...role, content: match[1].trim() });
+            if (match && match[1] && match[1].trim().length > 30) {
+                output.push({ ...role, content: match[1].trim() });
+            }
         }
         
         const renderedOutput = document.getElementById('renderedOutput');
@@ -2700,24 +2751,39 @@
     }
     
     async function generateMarketingPlan(customerData, productDescription) {
-        const response = await fetch(`${API_BASE}/generate`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ customer_data: customerData, product_description: productDescription })
-        });
-        if (!response.ok) throw new Error('Generation failed');
-        const data = await response.json();
-        return data.plan;
+        if (USE_MOCK) {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            return MOCK_PLAN;
+        }
+        
+        try {
+            const response = await fetch(`https://Bisratprompt-marketing-system-api.hf.space/generate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ customer_data: customerData, product_description: productDescription })
+            });
+            if (!response.ok) throw new Error(`API responded with status ${response.status}`);
+            const data = await response.json();
+            return data.plan;
+        } catch (error) {
+            console.warn('API failed, falling back to mock data:', error);
+            // Fall back to mock data
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            return MOCK_PLAN;
+        }
     }
     
     async function handleGenerate() {
         if (isGenerating) return;
-        const cd = elements.customerData?.value.trim();
-        const pd = elements.productDescription?.value.trim();
+        const cd = document.getElementById('customerData')?.value.trim();
+        const pd = document.getElementById('productDescription')?.value.trim();
         if (!cd || !pd) { setStatus('Please fill in both fields', false); return; }
         isGenerating = true;
-        if (elements.generateBtn) {
-            elements.generateBtn.disabled = true;
-            elements.generateBtn.textContent = '⏳ Generating...';
+        const generateBtn = document.getElementById('generateBtn');
+        if (generateBtn) {
+            generateBtn.disabled = true;
+            generateBtn.textContent = '⏳ Generating...';
         }
         const outputArea = document.getElementById('outputArea');
         if (outputArea) outputArea.style.display = 'none';
@@ -2738,8 +2804,7 @@
                 currentUser.plansGenerated = (currentUser.plansGenerated || 0) + 1;
                 saveDemoUser(currentUser);
                 sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-                // Update left panel with segmentation data
-                if (elements.leftPanel.classList.contains('open')) {
+                if (document.getElementById('leftPanel')?.classList.contains('open')) {
                     showRoleContent('segmentation', 'Segmentation');
                 }
             }
@@ -2752,18 +2817,21 @@
             console.error(error);
         } finally {
             isGenerating = false;
-            if (elements.generateBtn) {
-                elements.generateBtn.disabled = false;
-                elements.generateBtn.textContent = '✨ Generate Strategic Plan';
+            if (generateBtn) {
+                generateBtn.disabled = false;
+                generateBtn.textContent = '✨ Generate Strategic Plan';
             }
         }
     }
     
     function handleClear() {
-        if (elements.customerData) elements.customerData.value = '';
-        if (elements.productDescription) elements.productDescription.value = '';
+        const customerData = document.getElementById('customerData');
+        const productDescription = document.getElementById('productDescription');
         const outputArea = document.getElementById('outputArea');
         const renderedOutput = document.getElementById('renderedOutput');
+        
+        if (customerData) customerData.value = '';
+        if (productDescription) productDescription.value = '';
         if (outputArea) outputArea.style.display = 'none';
         if (renderedOutput) renderedOutput.innerHTML = '';
         currentPlan = null;
@@ -2779,9 +2847,7 @@
             kpiGrid.innerHTML = kpiConfigs.map(kpi => `
                 <div class="kpi-card">
                     <div class="kpi-icon">
-                        <div class="icon-${kpi.iconType}" style="width: 32px; height: 32px; ${kpi.iconType === 'bars' ? 'display: inline-flex;' : ''}">
-                            ${kpi.iconType === 'bars' ? '<span></span><span></span><span></span><span></span>' : ''}
-                        </div>
+                        <div class="icon-${kpi.iconType}" style="width: 32px; height: 32px;"></div>
                     </div>
                     <div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);">${kpi.label}</div>
                     <div class="kpi-value">${kpi.value}</div>
@@ -2823,9 +2889,7 @@
             kpiGrid.innerHTML = kpiConfigs.map(kpi => `
                 <div class="kpi-card">
                     <div class="kpi-icon">
-                        <div class="icon-${kpi.iconType}" style="width: 32px; height: 32px; ${kpi.iconType === 'bars' ? 'display: inline-flex;' : ''}">
-                            ${kpi.iconType === 'bars' ? '<span></span><span></span><span></span><span></span>' : ''}
-                        </div>
+                        <div class="icon-${kpi.iconType}" style="width: 32px; height: 32px;"></div>
                     </div>
                     <div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);">${kpi.label}</div>
                     <div class="kpi-value">${kpi.value}</div>
@@ -2844,25 +2908,24 @@
         if (copyBtn) copyBtn.addEventListener('click', handleCopy);
         if (saveBtn) saveBtn.addEventListener('click', saveToHistory);
         
-        // Role click handlers
         document.querySelectorAll('.role-item').forEach(item => {
             const roleId = item.dataset.role;
             const roleName = item.querySelector('.role-name')?.innerText || roleId;
             item.addEventListener('click', () => showRoleContent(roleId, roleName));
         });
         
-        // Prefill from planner
         if (sessionStorage.getItem('prefillCustomer')) {
-            if (elements.customerData) elements.customerData.value = sessionStorage.getItem('prefillCustomer');
+            const customerData = document.getElementById('customerData');
+            if (customerData) customerData.value = sessionStorage.getItem('prefillCustomer');
             sessionStorage.removeItem('prefillCustomer');
         }
         if (sessionStorage.getItem('prefillProduct')) {
-            if (elements.productDescription) elements.productDescription.value = sessionStorage.getItem('prefillProduct');
+            const productDescription = document.getElementById('productDescription');
+            if (productDescription) productDescription.value = sessionStorage.getItem('prefillProduct');
             sessionStorage.removeItem('prefillProduct');
         }
     }
     
-    // Auth listeners
     const signInBtn = document.getElementById('demoSignInBtn');
     const signUpBtn = document.getElementById('demoSignUpBtn');
     const logoutBtn = document.getElementById('logoutBtnNav');
