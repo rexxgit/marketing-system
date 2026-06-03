@@ -7,7 +7,7 @@
     
     <style>
         /* =====================================================
-           GLOBAL STYLES
+           GLOBAL STYLES (keeping existing styles, adding new ones)
         ===================================================== */
         * {
             margin: 0;
@@ -29,10 +29,9 @@
         }
         
         /* =====================================================
-           CSS-ONLY ICONS LIBRARY
+           CSS-ONLY ICONS LIBRARY (keeping existing, adding new)
         ===================================================== */
         
-        /* Target/Bullseye Icon */
         .icon-target {
             width: 20px;
             height: 20px;
@@ -63,7 +62,6 @@
             background: currentColor;
         }
         
-        /* Rotating bar animation for segmentation icon */
         @keyframes rotateBar {
             from { transform: translateX(-50%) rotate(0deg); }
             to { transform: translateX(-50%) rotate(360deg); }
@@ -73,7 +71,6 @@
             transform-origin: 50% 0;
         }
         
-        /* Bar Chart Icon */
         .icon-bars {
             display: inline-flex;
             align-items: flex-end;
@@ -84,14 +81,12 @@
             width: 4px;
             background: currentColor;
             border-radius: 1px;
-            transition: height 0.2s ease;
         }
         .icon-bars span:nth-child(1) { height: 10px; }
         .icon-bars span:nth-child(2) { height: 16px; }
         .icon-bars span:nth-child(3) { height: 8px; }
         .icon-bars span:nth-child(4) { height: 14px; }
         
-        /* Ascending/descending animation for market size */
         @keyframes ascendDescend {
             0% { transform: translateY(0); }
             25% { transform: translateY(-4px); }
@@ -107,7 +102,6 @@
         .icon-bars.loading span:nth-child(3) { animation-delay: 0.3s; }
         .icon-bars.loading span:nth-child(4) { animation-delay: 0.45s; }
         
-        /* Bullseye/OKR Icon */
         .icon-bullseye {
             width: 18px;
             height: 18px;
@@ -128,7 +122,6 @@
             border-radius: 50%;
         }
         
-        /* Pulse animation for key metrics */
         @keyframes softPulse {
             0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
             50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.7; }
@@ -138,7 +131,6 @@
             animation: softPulse 1.5s ease-in-out infinite;
         }
         
-        /* Search/Competitors Icon */
         .icon-search {
             width: 16px;
             height: 16px;
@@ -158,7 +150,6 @@
             transform: rotate(45deg);
         }
         
-        /* Searching animation for competition */
         @keyframes searchMove {
             0% { transform: rotate(0deg); }
             25% { transform: rotate(10deg) translateX(2px); }
@@ -177,7 +168,6 @@
             animation: searchGlow 0.8s ease-in-out infinite;
         }
         
-        /* Lightning/PESTLE Icon */
         .icon-lightning {
             width: 0;
             height: 0;
@@ -199,7 +189,6 @@
             border-top: 12px solid currentColor;
         }
         
-        /* Building/Porter Icon */
         .icon-building {
             width: 18px;
             height: 18px;
@@ -226,7 +215,6 @@
             background: currentColor;
         }
         
-        /* Map Pin/Positioning Icon */
         .icon-pin {
             width: 14px;
             height: 20px;
@@ -247,7 +235,6 @@
             border-radius: 50%;
         }
         
-        /* Grid/4Ps Icon */
         .icon-grid {
             display: inline-grid;
             grid-template-columns: 1fr 1fr;
@@ -260,7 +247,6 @@
             border-radius: 2px;
         }
         
-        /* Diamond/SWOT Icon */
         .icon-diamond {
             width: 0;
             height: 0;
@@ -271,7 +257,6 @@
             display: inline-block;
         }
         
-        /* Journey Path Icon */
         .icon-path {
             width: 20px;
             height: 14px;
@@ -300,7 +285,6 @@
             border-radius: 50%;
         }
         
-        /* Line Chart/KPI Icon */
         .icon-linechart {
             width: 20px;
             height: 16px;
@@ -330,7 +314,6 @@
             clip-path: polygon(0% 100%, 100% 0%, 100% 100%);
         }
         
-        /* Calendar/Roadmap Icon */
         .icon-calendar {
             width: 18px;
             height: 18px;
@@ -360,7 +343,6 @@
             border-radius: 1px;
         }
         
-        /* Paintbrush/Design Icon */
         .icon-paintbrush {
             width: 16px;
             height: 16px;
@@ -379,7 +361,6 @@
             border-radius: 50% 0 50% 50%;
         }
         
-        /* Home Icon */
         .icon-home {
             width: 18px;
             height: 16px;
@@ -406,7 +387,6 @@
             background: currentColor;
         }
         
-        /* Clipboard/Planner Icon */
         .icon-clipboard {
             width: 16px;
             height: 18px;
@@ -426,7 +406,6 @@
             border-radius: 1px;
         }
         
-        /* Lightbulb/About Icon */
         .icon-lightbulb {
             width: 16px;
             height: 16px;
@@ -457,7 +436,6 @@
             background: currentColor;
         }
         
-        /* Dollar/Pricing Icon */
         .icon-dollar {
             width: 16px;
             height: 18px;
@@ -474,7 +452,6 @@
             color: currentColor;
         }
         
-        /* Rocket/Launch Icon */
         .icon-rocket {
             width: 18px;
             height: 18px;
@@ -502,7 +479,6 @@
             clip-path: polygon(50% 0%, 100% 40%, 70% 100%, 30% 100%, 0% 40%);
         }
         
-        /* User/Sign In Icon */
         .icon-user {
             width: 16px;
             height: 16px;
@@ -530,7 +506,6 @@
             clip-path: polygon(0% 0%, 100% 0%, 80% 100%, 20% 100%);
         }
         
-        /* Arrow Right */
         .icon-arrow {
             width: 14px;
             height: 10px;
@@ -558,7 +533,6 @@
             transform: rotate(45deg);
         }
         
-        /* Lock/Security Icon */
         .icon-lock {
             width: 12px;
             height: 14px;
@@ -578,7 +552,6 @@
             border-radius: 2px 2px 0 0;
         }
         
-        /* Data/Chart Icon */
         .icon-data {
             width: 18px;
             height: 14px;
@@ -604,7 +577,6 @@
             background: currentColor;
         }
         
-        /* Checkmark/Success Icon */
         .icon-check {
             width: 14px;
             height: 10px;
@@ -634,7 +606,6 @@
             transform-origin: left bottom;
         }
         
-        /* Star/Popular Icon */
         .icon-star {
             width: 16px;
             height: 16px;
@@ -663,7 +634,6 @@
             clip-path: polygon(50% 100%, 0% 40%, 100% 40%);
         }
         
-        /* Heart/Goodness Icon */
         .icon-heart {
             width: 16px;
             height: 14px;
@@ -693,7 +663,6 @@
             transform: rotate(45deg);
         }
         
-        /* Brain/Intelligence Icon */
         .icon-brain {
             width: 18px;
             height: 14px;
@@ -721,7 +690,6 @@
             border-radius: 0 50% 50% 50%;
         }
         
-        /* Gear/Settings Icon */
         .icon-gear {
             width: 16px;
             height: 16px;
@@ -741,11 +709,49 @@
             border-radius: 50%;
         }
         
+        /* Market Sizing Specific Icons */
+        .icon-hand {
+            width: 40px;
+            height: 40px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-hand::before {
+            content: '✋';
+            font-size: 40px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        .icon-hand-pointing {
+            width: 50px;
+            height: 50px;
+            position: relative;
+            display: inline-block;
+        }
+        .icon-hand-pointing::before {
+            content: '👉';
+            font-size: 50px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        .icon-building-small {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: currentColor;
+            clip-path: polygon(0% 100%, 0% 30%, 20% 30%, 20% 0%, 80% 0%, 80% 30%, 100% 30%, 100% 100%);
+            margin: 2px;
+        }
+        
         /* =====================================================
            LEFT PANEL - 13 ROLES
         ===================================================== */
         .left-panel {
-            width: 280px;
+            width: 360px;
             background: linear-gradient(180deg, #0c1120 0%, #050810 100%);
             border-right: 1px solid rgba(255,255,255,.08);
             padding: 24px 0;
@@ -828,6 +834,171 @@
             color: #4ade80;
         }
         
+        /* Role Content Area inside Left Panel */
+        .role-content-panel {
+            margin-top: 24px;
+            padding: 0 16px 16px 16px;
+            border-top: 1px solid rgba(255,255,255,.08);
+            display: none;
+        }
+        
+        .role-content-panel.visible {
+            display: block;
+        }
+        
+        .role-content-panel h4 {
+            color: #a5b4fc;
+            margin: 16px 0 12px 0;
+            font-size: 14px;
+        }
+        
+        /* Market Sizing Visualizations */
+        .market-sizing-container {
+            background: rgba(255,255,255,.03);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+        
+        .tam-card, .sam-card, .som-card {
+            background: rgba(255,255,255,.05);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(99,102,241,.2);
+        }
+        
+        .tam-card:hover, .sam-card:hover, .som-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(99,102,241,.5);
+            background: rgba(99,102,241,.05);
+        }
+        
+        .tam-header, .sam-header, .som-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .tam-label, .sam-label, .som-label {
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .tam-label { color: #4ade80; }
+        .sam-label { color: #22d3ee; }
+        .som-label { color: #fbbf24; }
+        
+        .tam-value, .sam-value, .som-value {
+            font-size: 36px;
+            font-weight: bold;
+        }
+        .tam-value { color: #4ade80; }
+        .sam-value { color: #22d3ee; }
+        .som-value { color: #fbbf24; }
+        
+        .tam-detail, .sam-detail, .som-detail {
+            display: none;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,.1);
+        }
+        
+        .tam-detail.show, .sam-detail.show, .som-detail.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .icon-grid-market {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+            justify-content: center;
+        }
+        
+        .sam-layout {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        
+        .hand-icon-left {
+            flex-shrink: 0;
+        }
+        
+        .sam-right-content {
+            flex: 1;
+            text-align: right;
+        }
+        
+        .som-center {
+            text-align: center;
+        }
+        
+        .big-hand {
+            font-size: 80px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
+        .click-hint {
+            font-size: 10px;
+            color: rgba(255,255,255,.3);
+            margin-top: 8px;
+            text-align: center;
+        }
+        
+        /* Journey Map inside panel */
+        .journey-map-panel {
+            background: rgba(255,255,255,.03);
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+        
+        .journey-stage-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,.05);
+        }
+        
+        .journey-stage-day {
+            width: 40px;
+            height: 40px;
+            background: rgba(99,102,241,.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: #a5b4fc;
+        }
+        
+        .journey-stage-info {
+            flex: 1;
+        }
+        
+        .journey-stage-name {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .journey-stage-desc {
+            font-size: 11px;
+            color: rgba(255,255,255,.5);
+        }
+        
         /* =====================================================
            MAIN CONTENT
         ===================================================== */
@@ -839,10 +1010,9 @@
         }
         
         .main-content.panel-open {
-            margin-left: 280px;
+            margin-left: 360px;
         }
         
-        /* Navigation */
         .nav {
             display: flex;
             justify-content: space-between;
@@ -878,7 +1048,7 @@
             cursor: pointer;
             font-size: 14px;
             padding: 8px 0;
-            transition: color 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transition: color 0.2s;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -905,7 +1075,6 @@
             padding: 8px 16px;
             cursor: pointer;
             font-size: 13px;
-            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -931,7 +1100,6 @@
             cursor: pointer;
             font-size: 13px;
             font-weight: 500;
-            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             display: flex;
             align-items: center;
             gap: 6px;
@@ -952,7 +1120,6 @@
             cursor: pointer;
             font-size: 13px;
             font-weight: 500;
-            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             display: flex;
             align-items: center;
             gap: 6px;
@@ -971,7 +1138,6 @@
             border-radius: 50px;
             padding: 6px 16px 6px 20px;
             cursor: pointer;
-            transition: all 0.2s ease;
         }
         
         .user-menu:hover {
@@ -1003,7 +1169,6 @@
             font-size: 12px;
             padding: 4px 8px;
             border-radius: 50px;
-            transition: all 0.2s ease;
         }
         
         .logout-btn:hover {
@@ -1011,10 +1176,9 @@
             background: rgba(248,113,113,.1);
         }
         
-        /* Pages */
         .page {
             display: none;
-            animation: fadeIn 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            animation: fadeIn 0.4s;
         }
         
         .page.active {
@@ -1026,7 +1190,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* Hero Section */
         .hero {
             text-align: center;
             padding: 60px 0;
@@ -1048,7 +1211,6 @@
             margin: 0 auto 30px;
         }
         
-        /* Steps */
         .steps {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -1062,7 +1224,6 @@
             border-radius: 20px;
             padding: 30px;
             text-align: center;
-            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1), border-color 0.2s;
         }
         
         .step-card:hover { 
@@ -1083,7 +1244,6 @@
             font-weight: bold;
         }
         
-        /* Roles Grid (Homepage) */
         .roles-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -1099,7 +1259,6 @@
             text-align: center;
             font-size: 12px;
             color: #a5b4fc;
-            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1111,15 +1270,6 @@
             transform: translateY(-2px);
         }
         
-        .role-badge .role-badge-icon {
-            width: 18px;
-            height: 18px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* Pricing */
         .pricing-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -1133,7 +1283,6 @@
             border-radius: 24px;
             padding: 32px;
             text-align: center;
-            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
         
         .pricing-card:hover { transform: translateY(-5px); }
@@ -1150,7 +1299,6 @@
             gap: 8px;
         }
         
-        /* About Page */
         .principles-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -1164,7 +1312,6 @@
             border-radius: 20px;
             padding: 30px;
             text-align: center;
-            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
         
         .principle-card:hover { transform: translateY(-5px); border-color: rgba(99,102,241,.2); }
@@ -1177,9 +1324,6 @@
             justify-content: center;
         }
         
-        /* =====================================================
-           SEGMENTATION VISUALIZATION
-        ===================================================== */
         .segmentation-visual {
             background: rgba(255,255,255,.03);
             border-radius: 24px;
@@ -1196,22 +1340,11 @@
             gap: 16px;
         }
         
-        .segmentation-chart {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 200px;
-        }
-        
         .pie-chart {
             width: 180px;
             height: 180px;
             border-radius: 50%;
-            background: conic-gradient(
-                #4ade80 0deg 120deg,
-                #22d3ee 120deg 240deg,
-                #fbbf24 240deg 360deg
-            );
+            background: conic-gradient(#4ade80 0deg 120deg, #22d3ee 120deg 240deg, #fbbf24 240deg 360deg);
             margin: 0 auto;
             transition: transform 0.3s ease;
             animation: subtlePulse 3s ease-in-out infinite;
@@ -1220,10 +1353,6 @@
         @keyframes subtlePulse {
             0%, 100% { transform: scale(1); opacity: 0.95; }
             50% { transform: scale(1.02); opacity: 1; }
-        }
-        
-        .pie-chart:hover {
-            transform: scale(1.05);
         }
         
         .single-segment-icon {
@@ -1241,10 +1370,6 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
-        .single-segment-icon .icon-target::before {
-            width: 20px;
-            height: 20px;
-        }
         
         .two-segments {
             display: flex;
@@ -1254,10 +1379,6 @@
         }
         .segment-icon {
             text-align: center;
-            transition: transform 0.3s ease;
-        }
-        .segment-icon:hover {
-            transform: translateY(-5px);
         }
         .segment-icon .icon-target {
             width: 60px;
@@ -1272,7 +1393,6 @@
             padding: 20px;
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
             margin-top: 24px;
         }
         
@@ -1283,13 +1403,6 @@
             right: -10px;
             font-size: 60px;
             opacity: 0.1;
-            pointer-events: none;
-        }
-        
-        .priority-card:hover {
-            transform: translateX(5px);
-            border-color: #4ade80;
-            box-shadow: 0 4px 20px rgba(74,222,128,.1);
         }
         
         .priority-badge {
@@ -1310,18 +1423,12 @@
             color: #4ade80;
         }
         
-        /* App Generator Area */
         .input-area {
             background: rgba(255,255,255,.05);
             border: 1px solid rgba(255,255,255,.1);
             border-radius: 24px;
             padding: 32px;
             margin-bottom: 30px;
-            transition: border-color 0.2s;
-        }
-        
-        .input-area:focus-within {
-            border-color: rgba(99,102,241,.3);
         }
         
         textarea {
@@ -1334,7 +1441,6 @@
             font-family: inherit;
             resize: vertical;
             margin: 15px 0;
-            transition: border-color 0.2s;
         }
         
         textarea:focus { outline: none; border-color: #6366f1; }
@@ -1369,7 +1475,7 @@
             width: 0%;
             height: 100%;
             background: linear-gradient(90deg, #6366f1, #ec4899);
-            transition: width 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transition: width 0.3s;
         }
         
         .kpi-grid {
@@ -1385,12 +1491,6 @@
             border-radius: 20px;
             padding: 20px;
             text-align: center;
-            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-        
-        .kpi-card:hover {
-            transform: translateY(-3px);
-            border-color: rgba(99,102,241,.3);
         }
         
         .kpi-icon {
@@ -1418,217 +1518,13 @@
             margin: 20px 0;
             opacity: 0;
             transform: translateY(20px);
-            transition: all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transition: all 0.5s;
         }
         
         .role-card.visible {
             opacity: 1;
             transform: translateY(0);
         }
-        
-        /* Dashboard Container */
-        .dashboard-container {
-            display: none;
-        }
-        
-        .dashboard-container.active {
-            display: block;
-        }
-        
-        /* Journey Map */
-        .journey-map-container {
-            background: rgba(255,255,255,.03);
-            border: 1px solid rgba(255,255,255,.08);
-            border-radius: 24px;
-            padding: 32px;
-            margin-top: 24px;
-        }
-        
-        .journey-title {
-            margin-bottom: 32px;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .journey-timeline {
-            position: relative;
-            padding: 20px 0;
-        }
-        
-        .journey-dotted-line {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: repeating-linear-gradient(90deg, #6366f1, #6366f1 10px, transparent 10px, transparent 20px);
-            transform: translateY(-50%);
-            z-index: 0;
-        }
-        
-        .journey-stages {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .journey-stage-node {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            flex: 1;
-            position: relative;
-            transition: transform 0.3s ease;
-        }
-        
-        .journey-stage-node:hover {
-            transform: translateY(-5px);
-        }
-        
-        .stage-dot {
-            width: 16px;
-            height: 16px;
-            background: #6366f1;
-            border-radius: 50%;
-            box-shadow: 0 0 0 4px rgba(99,102,241,.2);
-            transition: all 0.3s ease;
-        }
-        
-        .stage-dot.completed {
-            background: #4ade80;
-            box-shadow: 0 0 0 4px rgba(74,222,128,.2);
-        }
-        
-        .stage-date {
-            font-size: 11px;
-            color: rgba(255,255,255,.5);
-            text-align: center;
-        }
-        
-        .stage-name {
-            font-size: 12px;
-            font-weight: 600;
-            text-align: center;
-            color: #a5b4fc;
-        }
-        
-        .stage-desc {
-            font-size: 10px;
-            color: rgba(255,255,255,.4);
-            text-align: center;
-            max-width: 120px;
-        }
-        
-        .journey-start {
-            position: absolute;
-            left: -20px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 24px;
-        }
-        
-        .journey-end {
-            position: absolute;
-            right: -20px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 24px;
-        }
-        
-        /* Role Content Area */
-        .role-content-area {
-            display: none;
-            background: rgba(255,255,255,.03);
-            border: 1px solid rgba(255,255,255,.08);
-            border-radius: 24px;
-            padding: 32px;
-            margin-top: 24px;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .role-content-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        
-        .role-content-title {
-            font-size: 20px;
-            color: #a5b4fc;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .close-role-content {
-            background: transparent;
-            border: 1px solid rgba(99,102,241,.5);
-            border-radius: 50px;
-            padding: 6px 16px;
-            color: #a5b4fc;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.2s;
-        }
-        
-        .close-role-content:hover {
-            background: rgba(99,102,241,.1);
-        }
-        
-        .role-content-body {
-            line-height: 1.8;
-            color: rgba(255,255,255,.7);
-        }
-        
-        .role-content-body table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 16px 0;
-        }
-        
-        .role-content-body th {
-            background: rgba(99,102,241,.1);
-            padding: 10px;
-            text-align: left;
-            color: #a5b4fc;
-        }
-        
-        .role-content-body td {
-            padding: 10px;
-            border-bottom: 1px solid rgba(255,255,255,.1);
-        }
-        
-        .role-content-body ul {
-            margin: 8px 0;
-            padding-left: 20px;
-        }
-        
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 60px;
-            color: rgba(255,255,255,.4);
-        }
-        
-        .loader {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255,255,255,.3);
-            border-top-color: #6366f1;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-right: 8px;
-        }
-        
-        @keyframes spin { to { transform: rotate(360deg); } }
         
         .btn-primary {
             background: linear-gradient(135deg, #6366f1, #ec4899);
@@ -1638,7 +1534,6 @@
             color: white;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             display: inline-flex;
             align-items: center;
             gap: 8px;
@@ -1657,7 +1552,6 @@
             color: #a5b4fc;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             display: inline-flex;
             align-items: center;
             gap: 8px;
@@ -1686,34 +1580,33 @@
             margin-top: 60px;
             color: rgba(255,255,255,.5);
             font-size: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
         }
         
-        .footer-icons {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            margin-bottom: 8px;
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,.3);
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
         }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
         
         @media (max-width: 768px) {
-            .left-panel { width: 260px; }
-            .main-content.panel-open { margin-left: 260px; }
+            .left-panel { width: 320px; }
+            .main-content.panel-open { margin-left: 320px; }
             .steps, .pricing-grid, .principles-grid { grid-template-columns: 1fr; }
             .hero h1 { font-size: 32px; }
-            .journey-stages { flex-direction: column; gap: 24px; }
-            .journey-dotted-line { display: none; }
-            .nav-links button span:first-child { display: none; }
         }
     </style>
 </head>
 <body>
 
 <div class="app-wrapper">
-    <!-- LEFT PANEL - 13 ROLES with CSS Icons -->
+    <!-- LEFT PANEL - 13 ROLES -->
     <div class="left-panel" id="leftPanel">
         <div class="panel-logo">
             <h2>StratMark AI</h2>
@@ -1774,16 +1667,21 @@
                 <span class="role-name">OKRs</span>
                 <span class="role-status"></span>
             </div>
-            <div class="role-item active" data-role="roadmap">
+            <div class="role-item" data-role="roadmap">
                 <div class="role-icon"><div class="icon-calendar"></div></div>
                 <span class="role-name">Roadmap</span>
-                <span class="role-status" id="roadmapStatus">—</span>
+                <span class="role-status"></span>
             </div>
             <div class="role-item" data-role="design">
                 <div class="role-icon"><div class="icon-paintbrush"></div></div>
                 <span class="role-name">Design</span>
                 <span class="role-status"></span>
             </div>
+        </div>
+        
+        <!-- Dynamic Role Content Area -->
+        <div id="roleContentPanel" class="role-content-panel">
+            <!-- Content will be injected here when a role is clicked -->
         </div>
     </div>
 
@@ -1887,15 +1785,15 @@
                     <div>
                         <p>✅ <strong>June 2, 2025 - Full Launch</strong></p>
                         <p style="margin-left: 16px;">• 13-role AI marketing framework</p>
-                        <p style="margin-left: 16px;">• Real-time streaming output</p>
-                        <p style="margin-left: 16px;">• Interactive dashboard with journey map</p>
+                        <p style="margin-left: 16px;">• Interactive market sizing visualizations</p>
+                        <p style="margin-left: 16px;">• Click-to-reveal market icons</p>
                         <p style="margin-left: 16px;">• Dynamic segmentation visualization</p>
                     </div>
                 </details>
             </div>
         </div>
 
-        <!-- PLANNER PAGE -->
+        <!-- PLANNER PAGE (no journey map here anymore) -->
         <div id="plannerPage" class="page">
             <div class="hero" style="padding: 40px 0;">
                 <h1>Strategy Planner</h1>
@@ -2059,33 +1957,6 @@
             </div>
         </div>
 
-        <!-- DASHBOARD PAGE -->
-        <div id="dashboardPage" class="dashboard-container">
-            <div id="segmentationVisual" class="segmentation-visual"></div>
-            <div class="journey-map-container">
-                <h2 class="journey-title">
-                    <span class="icon-path" style="width: 24px; height: 16px;"></span>
-                    30-Day Customer Journey Map
-                </h2>
-                <div id="journeyMapContent">
-                    <div class="empty-state">
-                        <p>✨ Generate a marketing plan first</p>
-                        <p style="font-size: 12px; margin-top: 8px;">The roadmap will appear here after generation</p>
-                    </div>
-                </div>
-            </div>
-            <div id="roleContentArea" class="role-content-area">
-                <div class="role-content-header">
-                    <h3 id="roleContentTitle" class="role-content-title">
-                        <span class="icon-target" style="width: 20px; height: 20px;"></span>
-                        Role Title
-                    </h3>
-                    <button id="closeRoleContent" class="close-role-content">✕ Close</button>
-                </div>
-                <div id="roleContentBody" class="role-content-body"></div>
-            </div>
-        </div>
-
         <footer class="footer">
             <div class="footer-icons">
                 <span class="icon-lock" style="width: 14px; height: 16px;"></span>
@@ -2125,114 +1996,480 @@
         outputArea: document.getElementById('outputArea'),
         renderedOutput: document.getElementById('renderedOutput'),
         kpiGrid: document.getElementById('kpiGrid'),
-        dashboardPage: document.getElementById('dashboardPage'),
-        appPage: document.getElementById('appPage'),
-        journeyMapContent: document.getElementById('journeyMapContent'),
-        segmentationVisual: document.getElementById('segmentationVisual'),
-        roleContentArea: document.getElementById('roleContentArea'),
-        roleContentTitle: document.getElementById('roleContentTitle'),
-        roleContentBody: document.getElementById('roleContentBody'),
-        closeRoleContent: document.getElementById('closeRoleContent'),
         leftPanel: document.getElementById('leftPanel'),
         mainContent: document.getElementById('mainContent'),
+        roleContentPanel: document.getElementById('roleContentPanel'),
         authContainer: document.getElementById('authContainer'),
         userMenu: document.getElementById('userMenu'),
         userNameDisplay: document.getElementById('userNameDisplay'),
-        userAvatar: document.getElementById('userAvatar'),
-        roadmapStatus: document.getElementById('roadmapStatus')
+        userAvatar: document.getElementById('userAvatar')
     };
     
+    // Helper Functions
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+    }
+    
+    function formatContent(content) {
+        let html = content;
+        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/^[-•*]\s+(.*?)$/gm, '<li>$1</li>');
+        html = html.replace(/(<li>.*?<\/li>)+/gs, '<ul style="margin: 8px 0; padding-left: 20px;">$&</ul>');
+        html = html.replace(/\n/g, '<br>');
+        return html;
+    }
+    
+    function showToast(message) {
+        let toast = document.getElementById('dynamicToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'dynamicToast';
+            toast.style.cssText = 'position: fixed; bottom: 100px; right: 24px; background: #0c1120; border: 1px solid rgba(99,102,241,.3); border-radius: 12px; padding: 12px 20px; z-index: 2000; transform: translateX(400px); transition: transform 0.3s ease;';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = message;
+        toast.style.transform = 'translateX(0)';
+        setTimeout(() => { toast.style.transform = 'translateX(400px)'; }, 2500);
+    }
+    
     // =====================================================
-    // SEGMENTATION VISUALIZATION
+    // EXTRACT FUNCTIONS
     // =====================================================
-    function renderSegmentationVisualization(plan) {
-        if (!plan) {
-            elements.segmentationVisual.innerHTML = `<div class="empty-state"><p>✨ Generate a plan to see segmentation visualization</p></div>`;
-            return;
+    function extractSegmentation(plan) {
+        const match = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!match) return { segments: [], primaryTarget: '' };
+        
+        const segText = match[1];
+        const segments = [];
+        const lines = segText.split('\n');
+        for (const line of lines) {
+            if (line.match(/^\d+\.|^[-•*]\s+/) && line.length > 10) {
+                const segmentName = line.replace(/^\d+\.|^[-•*]\s+/, '').trim().substring(0, 50);
+                if (segmentName.length > 5) segments.push(segmentName);
+            }
+        }
+        const primaryMatch = plan.match(/Primary Target[:\s]*([^\n]+)/i);
+        const primaryTarget = primaryMatch ? primaryMatch[1].trim() : '';
+        
+        return { segments, primaryTarget, rawText: formatContent(segText) };
+    }
+    
+    function extractMarketSizing(plan) {
+        const match = plan.match(/\[TAMSAMSOM OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!match) return { tam: '100M', sam: '30M', som: '10M', location: 'North America', rawText: '' };
+        
+        const text = match[1];
+        // Parse TAM, SAM, SOM values
+        let tam = '100M', sam = '30M', som = '10M', location = 'Global Market';
+        
+        const tamMatch = text.match(/TAM[:\s]*\$?([\d,.]+[BKM]?)/i);
+        if (tamMatch) tam = tamMatch[1];
+        const samMatch = text.match(/SAM[:\s]*\$?([\d,.]+[BKM]?)/i);
+        if (samMatch) sam = samMatch[1];
+        const somMatch = text.match(/SOM[:\s]*\$?([\d,.]+[BKM]?)/i);
+        if (somMatch) som = somMatch[1];
+        
+        const locationMatch = text.match(/location[:\s]*([^\n]+)/i);
+        if (locationMatch) location = locationMatch[1];
+        
+        // Calculate number of market icons based on value (1 icon per 10M for illustration)
+        const getIconCount = (valueStr) => {
+            const num = parseFloat(valueStr);
+            if (isNaN(num)) return 5;
+            if (valueStr.includes('B')) return Math.min(20, Math.floor(num * 2));
+            if (valueStr.includes('M')) return Math.min(15, Math.floor(num / 10));
+            return 5;
+        };
+        
+        return {
+            tam, sam, som, location,
+            tamIcons: getIconCount(tam),
+            samIcons: getIconCount(sam),
+            somIcons: getIconCount(som),
+            rawText: formatContent(text)
+        };
+    }
+    
+    function extractPESTLE(plan) {
+        const match = plan.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        return match ? formatContent(match[1]) : '<p>No PESTLE analysis available</p>';
+    }
+    
+    function extractPorter(plan) {
+        const match = plan.match(/\[PORTER OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        return match ? formatContent(match[1]) : '<p>No Porter\'s Five Forces available</p>';
+    }
+    
+    function extractCompetitors(plan) {
+        const match = plan.match(/\[COMPETITOR OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        return match ? formatContent(match[1]) : '<p>No competitor analysis available</p>';
+    }
+    
+    function extractPositioning(plan) {
+        const match = plan.match(/\[POSITIONING OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        return match ? formatContent(match[1]) : '<p>No positioning statement available</p>';
+    }
+    
+    function extract4Ps(plan) {
+        const match = plan.match(/\[4Ps OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        return match ? formatContent(match[1]) : '<p>No marketing mix (4Ps) available</p>';
+    }
+    
+    function extractSWOT(plan) {
+        const match = plan.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!match) return '<p>No SWOT analysis available</p>';
+        const text = match[1];
+        let html = '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">';
+        const sections = ['Strengths', 'Weaknesses', 'Opportunities', 'Threats'];
+        sections.forEach(s => {
+            const sectionMatch = text.match(new RegExp(`${s}:([\\s\\S]*?)(?=\\n(?:Strengths|Weaknesses|Opportunities|Threats):|$)`, 'i'));
+            const sectionText = sectionMatch ? sectionMatch[1] : '';
+            const items = sectionText.split('\n').filter(l => /^[-•*]\s+/.test(l)).map(l => l.replace(/^[-•*]\s+/, '').trim()).slice(0, 4);
+            const color = s === 'Strengths' ? '#4ade80' : s === 'Weaknesses' ? '#f87171' : s === 'Opportunities' ? '#22d3ee' : '#fbbf24';
+            html += `<div><strong style="color: ${color};">${s}</strong><ul style="margin-top: 8px;">${items.map(i => `<li>${escapeHtml(i)}</li>`).join('') || '<li>No data</li>'}</ul></div>`;
+        });
+        html += '</div>';
+        return html;
+    }
+    
+    function extractJourney(plan) {
+        const match = plan.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!match) return null;
+        
+        const text = match[1];
+        const stages = [];
+        const lines = text.split('\n');
+        let currentStage = null;
+        
+        for (const line of lines) {
+            if (line.match(/Stage\s*\d+|Day\s*\d+|[A-Z][a-z]+\s+Stage/i)) {
+                if (currentStage) stages.push(currentStage);
+                currentStage = { name: line.trim(), desc: '' };
+            } else if (currentStage && line.trim().length > 5 && !line.match(/^[-•*]\s*$/)) {
+                currentStage.desc += line.trim() + ' ';
+            }
+        }
+        if (currentStage) stages.push(currentStage);
+        
+        if (stages.length === 0) {
+            return {
+                stages: [
+                    { day: 1, name: 'Awareness', desc: 'Customer discovers your brand' },
+                    { day: 7, name: 'Consideration', desc: 'Research and evaluation' },
+                    { day: 14, name: 'Conversion', desc: 'First purchase decision' },
+                    { day: 21, name: 'Retention', desc: 'Post-purchase engagement' },
+                    { day: 30, name: 'Advocacy', desc: 'Loyalty and referrals' }
+                ]
+            };
         }
         
-        const segmentationMatch = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        let segments = [];
-        let primaryTarget = '';
-        
-        if (segmentationMatch) {
-            const segText = segmentationMatch[1];
-            const segmentLines = segText.split('\n');
-            for (const line of segmentLines) {
-                if (line.match(/^\d+\.|^[-•*]\s+/) && line.length > 10) {
-                    const segmentName = line.replace(/^\d+\.|^[-•*]\s+/, '').trim().substring(0, 50);
-                    if (segmentName.length > 5) segments.push(segmentName);
+        const milestones = [1, 7, 14, 21, 30];
+        return { stages: stages.slice(0, 5).map((stage, idx) => ({ day: milestones[idx], name: stage.name.substring(0, 30), desc: stage.desc.substring(0, 60) })) };
+    }
+    
+    function extractKPIs(plan) {
+        const match = plan.match(/\[KPI OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        return match ? formatContent(match[1]) : '<p>No KPI data available</p>';
+    }
+    
+    function extractOKRs(plan) {
+        const match = plan.match(/\[OKRS OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        return match ? formatContent(match[1]) : '<p>No OKR data available</p>';
+    }
+    
+    function extractRoadmapContent(plan) {
+        const roadmapMatch = plan.match(/\[ROADMAP OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (!roadmapMatch) return null;
+        const roadmapText = roadmapMatch[1];
+        const tasks = [];
+        const lines = roadmapText.split('\n');
+        for (const line of lines) {
+            if (line.match(/^\d+\./) && line.length > 10) {
+                const taskText = line.replace(/^\d+\./, '').trim();
+                if (taskText.length > 10 && taskText.length < 200) tasks.push(taskText);
+            }
+        }
+        if (tasks.length === 0) {
+            for (const line of lines) {
+                if (line.match(/^[-•*]\s+/) && line.length > 10) {
+                    const taskText = line.replace(/^[-•*]\s+/, '').trim();
+                    if (taskText.length > 10 && taskText.length < 200) tasks.push(taskText);
                 }
             }
-            const primaryMatch = plan.match(/Primary Target[:\s]*([^\n]+)/i);
-            if (primaryMatch) primaryTarget = primaryMatch[1].trim();
         }
-        
+        if (tasks.length === 0) {
+            return {
+                stages: [
+                    { day: 1, name: 'Market Research', desc: 'Audience analysis & segmentation' },
+                    { day: 7, name: 'Strategy Dev', desc: 'PESTLE & Porter analysis' },
+                    { day: 14, name: 'Execution Plan', desc: '4Ps & channel planning' },
+                    { day: 21, name: 'Launch Prep', desc: 'Campaign setup & testing' },
+                    { day: 30, name: 'Launch & Monitor', desc: 'Go live & optimization' }
+                ]
+            };
+        }
+        const milestones = [1, 7, 14, 21, 30];
+        return { stages: tasks.slice(0, 5).map((task, index) => ({ day: milestones[index], name: task.substring(0, 30), desc: task.substring(0, 60) })) };
+    }
+    
+    function extractDesign(plan) {
+        const match = plan.match(/\[DESIGN OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        return match ? formatContent(match[1]) : '<p>No design recommendations available</p>';
+    }
+    
+    // =====================================================
+    // RENDER FUNCTIONS FOR LEFT PANEL
+    // =====================================================
+    
+    function renderSegmentationPanel(plan) {
+        const { segments, primaryTarget, rawText } = extractSegmentation(plan);
         const segmentCount = segments.length;
-        let visualizationHtml = '';
         
+        let visualizationHtml = '';
         if (segmentCount === 3) {
             visualizationHtml = `
-                <div class="segmentation-header">
-                    <h3 style="color: #a5b4fc; display: flex; align-items: center; gap: 8px;">
-                        <span class="icon-target" style="width: 20px; height: 20px;"></span>
-                        Market Segmentation
-                    </h3>
-                    <div class="priority-badge">Primary Target Identified</div>
-                </div>
-                <div class="segmentation-chart"><div class="pie-chart"></div></div>
-                <div style="display: flex; justify-content: center; gap: 30px; margin: 20px 0;">
-                    <div style="text-align: center;"><div style="width: 12px; height: 12px; background: #4ade80; border-radius: 50%; display: inline-block; margin-right: 6px;"></div><span style="font-size: 12px;">${escapeHtml(segments[0] || 'Segment 1')}</span></div>
-                    <div style="text-align: center;"><div style="width: 12px; height: 12px; background: #22d3ee; border-radius: 50%; display: inline-block; margin-right: 6px;"></div><span style="font-size: 12px;">${escapeHtml(segments[1] || 'Segment 2')}</span></div>
-                    <div style="text-align: center;"><div style="width: 12px; height: 12px; background: #fbbf24; border-radius: 50%; display: inline-block; margin-right: 6px;"></div><span style="font-size: 12px;">${escapeHtml(segments[2] || 'Segment 3')}</span></div>
+                <div class="segmentation-visual">
+                    <div class="segmentation-header">
+                        <h3 style="color: #a5b4fc;">Market Segmentation</h3>
+                    </div>
+                    <div class="pie-chart"></div>
+                    <div style="display: flex; justify-content: center; gap: 20px; margin-top: 20px;">
+                        ${segments.map((seg, i) => `<div><div style="width: 12px; height: 12px; background: ${i === 0 ? '#4ade80' : i === 1 ? '#22d3ee' : '#fbbf24'}; border-radius: 50%; display: inline-block;"></div> ${escapeHtml(seg)}</div>`).join('')}
+                    </div>
                 </div>
             `;
         } else if (segmentCount === 2) {
             visualizationHtml = `
-                <div class="segmentation-header">
-                    <h3 style="color: #a5b4fc; display: flex; align-items: center; gap: 8px;">
-                        <span class="icon-target" style="width: 20px; height: 20px;"></span>
-                        Market Segmentation
-                    </h3>
-                    <div class="priority-badge">Primary Target Identified</div>
-                </div>
-                <div class="two-segments">
-                    <div class="segment-icon"><div class="icon-target" style="width: 60px; height: 60px;"></div><div style="margin-top: 12px; font-size: 13px; font-weight: 500;">${escapeHtml(segments[0] || 'Segment A')}</div></div>
-                    <div class="segment-icon"><div class="icon-target" style="width: 60px; height: 60px;"></div><div style="margin-top: 12px; font-size: 13px; font-weight: 500;">${escapeHtml(segments[1] || 'Segment B')}</div></div>
+                <div class="segmentation-visual">
+                    <div class="two-segments">
+                        ${segments.map(seg => `<div class="segment-icon"><div class="icon-target" style="width: 60px; height: 60px;"></div><div>${escapeHtml(seg)}</div></div>`).join('')}
+                    </div>
                 </div>
             `;
         } else if (segmentCount === 1) {
             visualizationHtml = `
-                <div class="segmentation-header">
-                    <h3 style="color: #a5b4fc; display: flex; align-items: center; gap: 8px;">
-                        <span class="icon-target" style="width: 20px; height: 20px;"></span>
-                        Market Segmentation
-                    </h3>
-                    <div class="priority-badge">Single Segment Focus</div>
+                <div class="segmentation-visual">
+                    <div class="single-segment-icon"><div class="icon-target"></div></div>
+                    <div style="text-align: center; margin-top: 16px;"><strong>${escapeHtml(segments[0])}</strong></div>
                 </div>
-                <div class="single-segment-icon"><div class="icon-target"></div></div>
-                <div style="text-align: center; margin-top: 16px;"><div style="font-size: 16px; font-weight: 500;">${escapeHtml(segments[0] || 'Primary Segment')}</div></div>
             `;
         } else {
-            visualizationHtml = `<div class="segmentation-header"><h3 style="color: #a5b4fc; display: flex; align-items: center; gap: 8px;"><span class="icon-target" style="width: 20px; height: 20px;"></span>Market Segmentation</h3></div><div class="empty-state" style="padding: 40px;"><p>No segmentation data available yet</p><p style="font-size: 12px; margin-top: 8px;">Generate a plan to see segment visualization</p></div>`;
+            visualizationHtml = `<div class="segmentation-visual"><p class="empty-state">No segmentation data available</p></div>`;
         }
         
         if (primaryTarget) {
             visualizationHtml += `
                 <div class="priority-card">
-                    <div class="priority-badge">🏆 PRIMARY TARGET - #1 PRIORITY</div>
+                    <div class="priority-badge">🏆 PRIMARY TARGET</div>
                     <div class="priority-title">${escapeHtml(primaryTarget)}</div>
-                    <p style="font-size: 13px; color: rgba(255,255,255,.6); margin-top: 8px;">This segment represents the highest potential for growth and should be prioritized in all marketing efforts.</p>
+                    <p style="font-size: 13px;">This segment represents the highest potential for growth.</p>
                 </div>
             `;
         }
         
-        elements.segmentationVisual.innerHTML = visualizationHtml;
-        if (segmentCount === 1) {
-            const style = document.createElement('style');
-            style.textContent = `.single-segment-icon .icon-target { width: 100px; height: 100px; border-width: 4px; } .single-segment-icon .icon-target::before { width: 24px; height: 24px; }`;
-            document.head.appendChild(style);
+        visualizationHtml += `<div style="margin-top: 20px;"><h4>📊 Detailed Analysis</h4><div style="font-size: 13px; line-height: 1.6;">${rawText || '<p>No detailed analysis available</p>'}</div></div>`;
+        
+        return visualizationHtml;
+    }
+    
+    function renderMarketSizingPanel(plan) {
+        const { tam, sam, som, location, tamIcons, samIcons, somIcons, rawText } = extractMarketSizing(plan);
+        
+        const generateIconGrid = (count) => {
+            let icons = '';
+            for (let i = 0; i < Math.min(count, 20); i++) {
+                icons += '<div class="icon-building-small" style="color: currentColor;"></div>';
+            }
+            return icons;
+        };
+        
+        return `
+            <div class="market-sizing-container">
+                <!-- TAM -->
+                <div class="tam-card" onclick="toggleTamDetail()">
+                    <div class="tam-header">
+                        <span class="tam-label">📊 TAM - Total Addressable Market</span>
+                        <span class="tam-value">${escapeHtml(tam)}</span>
+                    </div>
+                    <div style="font-size: 12px; color: rgba(255,255,255,.5);">📍 ${escapeHtml(location)}</div>
+                    <div class="click-hint">▼ Click to see market breakdown</div>
+                    <div id="tamDetail" class="tam-detail">
+                        <div style="margin-top: 12px;">
+                            <strong>Market Distribution:</strong>
+                            <div class="icon-grid-market" style="color: #4ade80;">
+                                ${generateIconGrid(tamIcons)}
+                            </div>
+                            <p style="font-size: 11px; margin-top: 8px;">${tamIcons} market segments identified across ${escapeHtml(location)}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- SAM -->
+                <div class="sam-card" onclick="toggleSamDetail()">
+                    <div class="sam-header">
+                        <span class="sam-label">🎯 SAM - Serviceable Addressable Market</span>
+                        <span class="sam-value">${escapeHtml(sam)}</span>
+                    </div>
+                    <div class="sam-layout">
+                        <div class="hand-icon-left"><span style="font-size: 40px;">👉</span></div>
+                        <div class="sam-right-content">
+                            <div style="font-size: 14px;">Target segments we can reach</div>
+                        </div>
+                    </div>
+                    <div class="click-hint">▼ Click to see targetable segments</div>
+                    <div id="samDetail" class="sam-detail">
+                        <div style="margin-top: 12px;">
+                            <strong>Targetable Markets:</strong>
+                            <div class="icon-grid-market" style="color: #22d3ee;">
+                                ${generateIconGrid(samIcons)}
+                            </div>
+                            <p style="font-size: 11px; margin-top: 8px;">${samIcons} addressable segments with distribution reach</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- SOM -->
+                <div class="som-card" onclick="toggleSomDetail()">
+                    <div class="som-header">
+                        <span class="som-label">🏆 SOM - Serviceable Obtainable Market</span>
+                        <span class="som-value">${escapeHtml(som)}</span>
+                    </div>
+                    <div class="som-center">
+                        <div class="big-hand">✋</div>
+                        <div style="font-size: 14px;">Realistic achievable market share</div>
+                    </div>
+                    <div class="click-hint">▼ Click to see obtainable segments</div>
+                    <div id="somDetail" class="som-detail">
+                        <div style="margin-top: 12px;">
+                            <strong>Obtainable Market Segments:</strong>
+                            <div class="icon-grid-market" style="color: #fbbf24;">
+                                ${generateIconGrid(somIcons)}
+                            </div>
+                            <p style="font-size: 11px; margin-top: 8px;">${somIcons} high-priority segments with clear path to capture</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px;"><h4>📈 Market Sizing Analysis</h4><div style="font-size: 13px; line-height: 1.6;">${rawText || '<p>No detailed analysis available</p>'}</div></div>
+            </div>
+        `;
+    }
+    
+    function renderJourneyPanel(plan) {
+        const journeyData = extractJourney(plan);
+        if (!journeyData || !journeyData.stages) {
+            return `<div class="journey-map-panel"><p class="empty-state">No journey map data available</p></div>`;
         }
+        
+        let html = `<div class="journey-map-panel"><h4>🗺️ 30-Day Customer Journey</h4>`;
+        journeyData.stages.forEach(stage => {
+            html += `
+                <div class="journey-stage-item">
+                    <div class="journey-stage-day">Day ${stage.day}</div>
+                    <div class="journey-stage-info">
+                        <div class="journey-stage-name">${escapeHtml(stage.name)}</div>
+                        <div class="journey-stage-desc">${escapeHtml(stage.desc)}</div>
+                    </div>
+                </div>
+            `;
+        });
+        html += `</div>`;
+        return html;
+    }
+    
+    function renderGenericPanel(title, content) {
+        return `<div style="padding: 16px;"><h4>📋 ${escapeHtml(title)}</h4><div style="margin-top: 16px; line-height: 1.6;">${content}</div></div>`;
+    }
+    
+    // Toggle functions for market sizing details
+    window.toggleTamDetail = function() {
+        const detail = document.getElementById('tamDetail');
+        if (detail) detail.classList.toggle('show');
+    };
+    window.toggleSamDetail = function() {
+        const detail = document.getElementById('samDetail');
+        if (detail) detail.classList.toggle('show');
+    };
+    window.toggleSomDetail = function() {
+        const detail = document.getElementById('somDetail');
+        if (detail) detail.classList.toggle('show');
+    };
+    
+    function showRoleContent(roleId, roleTitle) {
+        if (!currentPlan) {
+            elements.roleContentPanel.innerHTML = `<div style="padding: 20px; text-align: center; color: #f87171;">⚠️ Generate a marketing plan first to see this content.</div>`;
+            elements.roleContentPanel.classList.add('visible');
+            return;
+        }
+        
+        let content = '';
+        switch(roleId) {
+            case 'segmentation':
+                content = renderSegmentationPanel(currentPlan);
+                break;
+            case 'marketsizing':
+                content = renderMarketSizingPanel(currentPlan);
+                break;
+            case 'journey':
+                content = renderJourneyPanel(currentPlan);
+                break;
+            case 'pestle':
+                content = renderGenericPanel('PESTLE Analysis', extractPESTLE(currentPlan));
+                break;
+            case 'porter':
+                content = renderGenericPanel("Porter's Five Forces", extractPorter(currentPlan));
+                break;
+            case 'competitors':
+                content = renderGenericPanel('Competitor Analysis', extractCompetitors(currentPlan));
+                break;
+            case 'positioning':
+                content = renderGenericPanel('Brand Positioning', extractPositioning(currentPlan));
+                break;
+            case '4ps':
+                content = renderGenericPanel('Marketing Mix (4Ps)', extract4Ps(currentPlan));
+                break;
+            case 'swot':
+                content = renderGenericPanel('SWOT Analysis', extractSWOT(currentPlan));
+                break;
+            case 'kpi':
+                content = renderGenericPanel('KPIs & Metrics', extractKPIs(currentPlan));
+                break;
+            case 'okrs':
+                content = renderGenericPanel('OKRs', extractOKRs(currentPlan));
+                break;
+            case 'roadmap':
+                const roadmap = extractRoadmapContent(currentPlan);
+                if (roadmap && roadmap.stages) {
+                    let roadmapHtml = `<div><h4>🗓️ 30-Day Implementation Roadmap</h4>`;
+                    roadmap.stages.forEach(stage => {
+                        roadmapHtml += `
+                            <div style="margin: 16px 0; padding: 12px; background: rgba(255,255,255,.03); border-radius: 12px;">
+                                <strong style="color: #a5b4fc;">Day ${stage.day}:</strong> ${escapeHtml(stage.name)}<br>
+                                <span style="font-size: 12px; color: rgba(255,255,255,.5);">${escapeHtml(stage.desc)}</span>
+                            </div>
+                        `;
+                    });
+                    roadmapHtml += `</div>`;
+                    content = renderGenericPanel('Roadmap', roadmapHtml);
+                } else {
+                    content = renderGenericPanel('Roadmap', '<p>No roadmap data available</p>');
+                }
+                break;
+            case 'design':
+                content = renderGenericPanel('Design Recommendations', extractDesign(currentPlan));
+                break;
+            default:
+                content = `<p>Content for ${roleTitle} will appear here</p>`;
+        }
+        
+        elements.roleContentPanel.innerHTML = content;
+        elements.roleContentPanel.classList.add('visible');
+        
+        // Update active state
+        document.querySelectorAll('.role-item').forEach(item => item.classList.remove('active'));
+        const activeItem = document.querySelector(`.role-item[data-role="${roleId}"]`);
+        if (activeItem) activeItem.classList.add('active');
     }
     
     // =====================================================
@@ -2276,7 +2513,6 @@
                 plan: 'free',
                 planStartDate: new Date().toISOString(),
                 plansGenerated: 0,
-                roadmapTasks: {},
                 createdAt: new Date().toISOString()
             };
             localStorage.setItem('demo_user', JSON.stringify(demoUser));
@@ -2295,14 +2531,10 @@
         elements.userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
         elements.leftPanel.classList.add('open');
         elements.mainContent.classList.add('panel-open');
-        elements.dashboardPage.classList.add('active');
+        
         if (currentPlan) {
-            const roadmap = extractRoadmapFromPlan(currentPlan);
-            if (roadmap) {
-                renderJourneyMap(roadmap);
-                roadmapData = roadmap;
-            }
-            renderSegmentationVisualization(currentPlan);
+            // Auto-show segmentation in panel when logged in and plan exists
+            showRoleContent('segmentation', 'Segmentation');
         }
     }
     
@@ -2311,8 +2543,7 @@
         elements.userMenu.style.display = 'none';
         elements.leftPanel.classList.remove('open');
         elements.mainContent.classList.remove('panel-open');
-        elements.dashboardPage.classList.remove('active');
-        elements.roleContentArea.style.display = 'none';
+        elements.roleContentPanel.classList.remove('visible');
         showPage('app');
     }
     
@@ -2331,7 +2562,6 @@
             plan: 'free',
             planStartDate: new Date().toISOString(),
             plansGenerated: 0,
-            roadmapTasks: {},
             createdAt: new Date().toISOString()
         };
         localStorage.setItem('demo_user', JSON.stringify(newDemoUser));
@@ -2349,239 +2579,73 @@
     }
     
     // =====================================================
-    // EXTRACT FUNCTIONS
-    // =====================================================
-    function extractRoadmapFromPlan(plan) {
-        const roadmapMatch = plan.match(/\[ROADMAP OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if (!roadmapMatch) return null;
-        const roadmapText = roadmapMatch[1];
-        const tasks = [];
-        const lines = roadmapText.split('\n');
-        for (const line of lines) {
-            if (line.match(/^\d+\./) && line.length > 10) {
-                const taskText = line.replace(/^\d+\./, '').trim();
-                if (taskText.length > 10 && taskText.length < 200) tasks.push(taskText);
-            }
-        }
-        if (tasks.length === 0) {
-            for (const line of lines) {
-                if (line.match(/^[-•*]\s+/) && line.length > 10) {
-                    const taskText = line.replace(/^[-•*]\s+/, '').trim();
-                    if (taskText.length > 10 && taskText.length < 200) tasks.push(taskText);
-                }
-            }
-        }
-        if (tasks.length === 0) {
-            return {
-                stages: [
-                    { day: 1, name: 'Market Research', desc: 'Audience analysis & segmentation' },
-                    { day: 7, name: 'Strategy Dev', desc: 'PESTLE & Porter analysis' },
-                    { day: 14, name: 'Execution Plan', desc: '4Ps & channel planning' },
-                    { day: 21, name: 'Launch Prep', desc: 'Campaign setup & testing' },
-                    { day: 30, name: 'Launch & Monitor', desc: 'Go live & optimization' }
-                ]
-            };
-        }
-        const milestones = [1, 7, 14, 21, 30];
-        return { stages: tasks.slice(0, 5).map((task, index) => ({ day: milestones[index], name: task.substring(0, 30), desc: task.substring(0, 60) })) };
-    }
-    
-    function renderJourneyMap(roadmap) {
-        if (!roadmap || !roadmap.stages || roadmap.stages.length === 0) {
-            elements.journeyMapContent.innerHTML = `<div class="empty-state"><p>✨ No roadmap data available</p><p style="font-size: 12px; margin-top: 8px;">Generate a plan to see your 30-day journey</p></div>`;
-            return;
-        }
-        const stages = roadmap.stages;
-        let html = `<div class="journey-timeline" style="position: relative; padding: 20px 0;"><div class="journey-start">🏁</div><div class="journey-dotted-line"></div><div class="journey-stages">`;
-        stages.forEach((stage) => {
-            html += `<div class="journey-stage-node"><div class="stage-dot completed"></div><div class="stage-date">Day ${stage.day}</div><div class="stage-name">${escapeHtml(stage.name)}</div><div class="stage-desc">${escapeHtml(stage.desc)}</div></div>`;
-        });
-        html += `</div><div class="journey-end">🎯</div></div><div style="margin-top: 32px; padding: 16px; background: rgba(99,102,241,.05); border-radius: 16px; text-align: center;"><span style="font-size: 12px; color: rgba(255,255,255,.5);">📅 30-Day Customer Journey · Milestones at Days 1, 7, 14, 21, 30</span></div>`;
-        elements.journeyMapContent.innerHTML = html;
-        if (elements.roadmapStatus) {
-            elements.roadmapStatus.textContent = `${stages.length} tasks`;
-            elements.roadmapStatus.classList.add('has-data');
-        }
-    }
-    
-    function formatContent(content) {
-        let html = content;
-        html = html.replace(/\n\|(.+)\|\n\|[-:\s|]+\|\n((?:\|.+\|\n?)+)/gm, (match, header, rows) => {
-            const headers = header.split('|').filter(h => h.trim()).map(h => `<th style="padding: 8px; text-align: left; background: rgba(99,102,241,.1);">${escapeHtml(h.trim())}</th>`).join('');
-            const bodyRows = rows.trim().split('\n').map(row => {
-                const cells = row.split('|').filter(c => c.trim()).map(c => `<td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,.1);">${escapeHtml(c.trim())}</td>`).join('');
-                return `<tr>${cells}</tr>`;
-            }).join('');
-            return `<table style="width: 100%; border-collapse: collapse; margin: 16px 0;">${headers ? `<thead><tr>${headers}</tr></thead>` : ''}<tbody>${bodyRows}</tbody>|`;
-        });
-        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        html = html.replace(/^[-•*]\s+(.*?)$/gm, '<li>$1</li>');
-        html = html.replace(/(<li>.*?<\/li>)+/gs, '<ul style="margin: 8px 0; padding-left: 20px;">$&</ul>');
-        html = html.replace(/\n/g, '<br>');
-        return html;
-    }
-    
-    function extractSegmentation(plan) {
-        const match = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        return match ? formatContent(match[1]) : '<p>No segmentation data available</p>';
-    }
-    function extractMarketSizing(plan) {
-        const match = plan.match(/\[TAMSAMSOM OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        return match ? formatContent(match[1]) : '<p>No market sizing data available</p>';
-    }
-    function extractPESTLE(plan) {
-        const match = plan.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        return match ? formatContent(match[1]) : '<p>No PESTLE analysis available</p>';
-    }
-    function extractPorter(plan) {
-        const match = plan.match(/\[PORTER OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        return match ? formatContent(match[1]) : '<p>No Porter\'s Five Forces available</p>';
-    }
-    function extractCompetitors(plan) {
-        const match = plan.match(/\[COMPETITOR OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        return match ? formatContent(match[1]) : '<p>No competitor analysis available</p>';
-    }
-    function extractPositioning(plan) {
-        const match = plan.match(/\[POSITIONING OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        return match ? formatContent(match[1]) : '<p>No positioning statement available</p>';
-    }
-    function extract4Ps(plan) {
-        const match = plan.match(/\[4Ps OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        return match ? formatContent(match[1]) : '<p>No marketing mix (4Ps) available</p>';
-    }
-    function extractSWOT(plan) {
-        const match = plan.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if (!match) return '<p>No SWOT analysis available</p>';
-        const text = match[1];
-        let html = '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">';
-        const sections = ['Strengths', 'Weaknesses', 'Opportunities', 'Threats'];
-        sections.forEach(s => {
-            const sectionMatch = text.match(new RegExp(`${s}:([\\s\\S]*?)(?=\\n(?:Strengths|Weaknesses|Opportunities|Threats):|$)`, 'i'));
-            const sectionText = sectionMatch ? sectionMatch[1] : '';
-            const items = sectionText.split('\n').filter(l => /^[-•*]\s+/.test(l)).map(l => l.replace(/^[-•*]\s+/, '').trim()).slice(0, 4);
-            const color = s === 'Strengths' ? '#4ade80' : s === 'Weaknesses' ? '#f87171' : s === 'Opportunities' ? '#22d3ee' : '#fbbf24';
-            html += `<div><strong style="color: ${color};">${s}</strong><ul style="margin-top: 8px;">${items.map(i => `<li>${escapeHtml(i)}</li>`).join('') || '<li>No data</li>'}</ul></div>`;
-        });
-        html += '</div>';
-        return html;
-    }
-    function extractJourney(plan) {
-        const match = plan.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        return match ? formatContent(match[1]) : '<p>No customer journey map available</p>';
-    }
-    function extractKPIs(plan) {
-        const match = plan.match(/\[KPI OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        return match ? formatContent(match[1]) : '<p>No KPI data available</p>';
-    }
-    function extractOKRs(plan) {
-        const match = plan.match(/\[OKRS OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        return match ? formatContent(match[1]) : '<p>No OKR data available</p>';
-    }
-    function extractRoadmapContent(plan) {
-        const roadmap = extractRoadmapFromPlan(plan);
-        if (!roadmap || !roadmap.stages) return '<p>No roadmap data available</p>';
-        let html = '<div style="display: flex; flex-direction: column; gap: 16px;">';
-        roadmap.stages.forEach(stage => {
-            html += `<div style="background: rgba(255,255,255,.03); border-radius: 16px; padding: 16px;"><div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;"><span style="background: #6366f1; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">${stage.day}</span><strong>Day ${stage.day}</strong></div><div style="margin-left: 40px;"><div style="font-weight: 600; margin-bottom: 4px;">${escapeHtml(stage.name)}</div><div style="font-size: 13px; color: rgba(255,255,255,.6);">${escapeHtml(stage.desc)}</div></div></div>`;
-        });
-        html += '</div>';
-        return html;
-    }
-    function extractDesign(plan) {
-        const match = plan.match(/\[DESIGN OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        return match ? formatContent(match[1]) : '<p>No design recommendations available</p>';
-    }
-    
-    function showRoleContent(roleId, roleTitle, contentGetter) {
-        if (!currentPlan) {
-            elements.roleContentBody.innerHTML = '<p style="color: #f87171;">⚠️ Generate a marketing plan first to see this content.</p>';
-            elements.roleContentTitle.innerHTML = roleTitle;
-            elements.roleContentArea.style.display = 'block';
-            return;
-        }
-        const content = contentGetter();
-        elements.roleContentBody.innerHTML = content;
-        elements.roleContentTitle.innerHTML = roleTitle;
-        elements.roleContentArea.style.display = 'block';
-        document.querySelectorAll('.role-item').forEach(item => item.classList.remove('active'));
-        const activeItem = document.querySelector(`.role-item[data-role="${roleId}"]`);
-        if (activeItem) activeItem.classList.add('active');
-    }
-    
-    // =====================================================
-    // APP GENERATOR FUNCTIONALITY
+    // GENERATOR FUNCTIONALITY
     // =====================================================
     function setStatus(message, isLoading = true) {
-        elements.statusMessage.textContent = message;
-        elements.statusBar.style.display = 'flex';
-        if (!isLoading) setTimeout(() => elements.statusBar.style.display = 'none', 3000);
+        const statusMessage = document.getElementById('statusMessage');
+        const statusBar = document.getElementById('statusBar');
+        if (statusMessage) statusMessage.textContent = message;
+        if (statusBar) statusBar.style.display = 'flex';
+        if (!isLoading) setTimeout(() => { if (statusBar) statusBar.style.display = 'none'; }, 3000);
     }
     
-    function updateProgress(percent) { elements.progressFill.style.width = percent + '%'; }
+    function updateProgress(percent) {
+        const fill = document.getElementById('progressFill');
+        if (fill) fill.style.width = percent + '%';
+    }
     
-    // Function to update KPI cards with loading state and animated icons
     function updateKPILoadingState() {
         const kpiConfigs = [
-            { id: 'segmentation', iconType: 'target', label: 'SEGMENTATION', source: 'Analyzing market segments...' },
-            { id: 'marketsize', iconType: 'bars', label: 'MARKET SIZE', source: 'Calculating TAM/SAM/SOM...' },
-            { id: 'keymetrics', iconType: 'bullseye', label: 'KEY METRICS', source: 'Identifying primary KPIs...' },
-            { id: 'competition', iconType: 'search', label: 'COMPETITION', source: 'Scanning competitor landscape...' }
+            { iconType: 'target', label: 'SEGMENTATION', source: 'Analyzing market segments...' },
+            { iconType: 'bars', label: 'MARKET SIZE', source: 'Calculating TAM/SAM/SOM...' },
+            { iconType: 'bullseye', label: 'KEY METRICS', source: 'Identifying primary KPIs...' },
+            { iconType: 'search', label: 'COMPETITION', source: 'Scanning competitor landscape...' }
         ];
         
-        elements.kpiGrid.innerHTML = kpiConfigs.map(kpi => `
-            <div class="kpi-card">
-                <div class="kpi-icon">
-                    <div class="icon-${kpi.iconType} loading" style="width: 32px; height: 32px; ${kpi.iconType === 'bars' ? 'display: inline-flex;' : ''}">
-                        ${kpi.iconType === 'bars' ? '<span></span><span></span><span></span><span></span>' : ''}
+        const kpiGrid = document.getElementById('kpiGrid');
+        if (kpiGrid) {
+            kpiGrid.innerHTML = kpiConfigs.map(kpi => `
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <div class="icon-${kpi.iconType} loading" style="width: 32px; height: 32px; ${kpi.iconType === 'bars' ? 'display: inline-flex;' : ''}">
+                            ${kpi.iconType === 'bars' ? '<span></span><span></span><span></span><span></span>' : ''}
+                        </div>
                     </div>
+                    <div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);">${kpi.label}</div>
+                    <div class="kpi-value" style="font-size: 18px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <span class="loader" style="width: 14px; height: 14px;"></span>
+                        <span style="font-size: 14px; font-weight: normal;">Analyzing...</span>
+                    </div>
+                    <div style="font-size: 10px; color: rgba(255,255,255,.4);">${kpi.source}</div>
                 </div>
-                <div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);">${kpi.label}</div>
-                <div class="kpi-value" style="font-size: 18px; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                    <span class="loader" style="width: 14px; height: 14px;"></span>
-                    <span style="font-size: 14px; font-weight: normal;">Analyzing...</span>
-                </div>
-                <div style="font-size: 10px; color: rgba(255,255,255,.4);">${kpi.source}</div>
-            </div>
-        `).join('');
+            `).join('');
+        }
     }
     
-    // Function to update KPI cards with actual data after generation
     function updateKPIWithData(plan) {
-        // Extract key metrics from the plan
-        let segmentationStatus = 'Complete';
-        let marketSizeValue = 'Ready';
-        let metricsValue = 'Ready';
-        let competitionValue = 'Ready';
-        
-        // Try to extract actual values from the plan
-        const tamMatch = plan.match(/TAM[:\s]*\$?([\d,.]+[BKM]?)/i);
-        if (tamMatch) marketSizeValue = tamMatch[1];
-        
-        const kpiMatch = plan.match(/KPI[:\s]*([^\n]+)/i);
-        if (kpiMatch) metricsValue = kpiMatch[1].substring(0, 20);
-        
-        const competitorMatch = plan.match(/Competitors?[:\s]*([^\n]+)/i);
-        if (competitorMatch) competitionValue = competitorMatch[1].substring(0, 15);
-        
+        const marketData = extractMarketSizing(plan);
         const kpiConfigs = [
-            { id: 'segmentation', iconType: 'target', label: 'SEGMENTATION', value: 'Complete', source: `${Math.floor(Math.random() * 3) + 2} segments identified` },
-            { id: 'marketsize', iconType: 'bars', label: 'MARKET SIZE', value: marketSizeValue !== 'Ready' ? marketSizeValue : '$2.5B', source: 'TAM · SAM · SOM' },
-            { id: 'keymetrics', iconType: 'bullseye', label: 'KEY METRICS', value: metricsValue !== 'Ready' ? metricsValue : '5 Core KPIs', source: 'Primary metrics defined' },
-            { id: 'competition', iconType: 'search', label: 'COMPETITION', value: competitionValue !== 'Ready' ? competitionValue : '3-5 Competitors', source: 'Competitive analysis' }
+            { iconType: 'target', label: 'SEGMENTATION', value: 'Complete', source: 'Segments identified' },
+            { iconType: 'bars', label: 'MARKET SIZE', value: marketData.tam, source: `TAM: ${marketData.tam} · SAM: ${marketData.sam} · SOM: ${marketData.som}` },
+            { iconType: 'bullseye', label: 'KEY METRICS', value: '5 Core KPIs', source: 'Primary metrics defined' },
+            { iconType: 'search', label: 'COMPETITION', value: '3-5 Competitors', source: 'Competitive analysis' }
         ];
         
-        elements.kpiGrid.innerHTML = kpiConfigs.map(kpi => `
-            <div class="kpi-card">
-                <div class="kpi-icon">
-                    <div class="icon-${kpi.iconType}" style="width: 32px; height: 32px; ${kpi.iconType === 'bars' ? 'display: inline-flex;' : ''}">
-                        ${kpi.iconType === 'bars' ? '<span></span><span></span><span></span><span></span>' : ''}
+        const kpiGrid = document.getElementById('kpiGrid');
+        if (kpiGrid) {
+            kpiGrid.innerHTML = kpiConfigs.map(kpi => `
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <div class="icon-${kpi.iconType}" style="width: 32px; height: 32px; ${kpi.iconType === 'bars' ? 'display: inline-flex;' : ''}">
+                            ${kpi.iconType === 'bars' ? '<span></span><span></span><span></span><span></span>' : ''}
+                        </div>
                     </div>
+                    <div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);">${kpi.label}</div>
+                    <div class="kpi-value">${kpi.value}</div>
+                    <div style="font-size: 10px; color: rgba(255,255,255,.4);">${kpi.source}</div>
                 </div>
-                <div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);">${kpi.label}</div>
-                <div class="kpi-value">${kpi.value}</div>
-                <div style="font-size: 10px; color: rgba(255,255,255,.4);">${kpi.source}</div>
-            </div>
-        `).join('');
+            `).join('');
+        }
     }
     
     async function streamRoles(plan) {
@@ -2600,23 +2664,29 @@
             { tag: 'ROADMAP OUTPUT', icon: 'calendar', title: '30-Day Roadmap' },
             { tag: 'DESIGN OUTPUT', icon: 'paintbrush', title: 'Design Recommendations' }
         ];
+        
         const output = [];
         for (const role of roles) {
             const regex = new RegExp(`\\[${role.tag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
             const match = plan.match(regex);
             if (match && match[1] && match[1].trim().length > 30) output.push({ ...role, content: match[1].trim() });
         }
+        
+        const renderedOutput = document.getElementById('renderedOutput');
+        if (!renderedOutput) return;
+        
         if (output.length === 0) {
-            elements.renderedOutput.innerHTML = `<div style="line-height: 1.8;">${escapeHtml(plan).replace(/\n/g, '<br>')}</div>`;
+            renderedOutput.innerHTML = `<div style="line-height: 1.8;">${escapeHtml(plan).replace(/\n/g, '<br>')}</div>`;
             return;
         }
-        elements.renderedOutput.innerHTML = '';
+        
+        renderedOutput.innerHTML = '';
         for (let i = 0; i < output.length; i++) {
             const role = output[i];
             const card = document.createElement('div');
             card.className = 'role-card';
-            card.innerHTML = `<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1);"><div style="font-size: 28px;"><div class="icon-${role.icon}" style="width: 28px; height: 28px; ${role.icon === 'bars' ? 'display: inline-flex;' : ''}">${role.icon === 'bars' ? '<span></span><span></span><span></span><span></span>' : ''}</div></div><div style="font-size: 18px; font-weight: bold; color: #a5b4fc;">${role.title}</div><div style="margin-left: auto; font-size: 11px; color: rgba(255,255,255,.4);">Role ${i+1}/${output.length}</div></div><div class="stream-loading" style="display: flex; gap: 8px; align-items: center;"><span class="loader"></span><span style="color: rgba(255,255,255,.5);">Loading...</span></div>`;
-            elements.renderedOutput.appendChild(card);
+            card.innerHTML = `<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1);"><div style="font-size: 28px;"><div class="icon-${role.icon}" style="width: 28px; height: 28px;"></div></div><div style="font-size: 18px; font-weight: bold; color: #a5b4fc;">${role.title}</div><div style="margin-left: auto; font-size: 11px; color: rgba(255,255,255,.4);">Role ${i+1}/${output.length}</div></div><div class="stream-loading" style="display: flex; gap: 8px; align-items: center;"><span class="loader"></span><span style="color: rgba(255,255,255,.5);">Loading...</span></div>`;
+            renderedOutput.appendChild(card);
             await new Promise(resolve => setTimeout(resolve, 300));
             const loading = card.querySelector('.stream-loading');
             if (loading) loading.remove();
@@ -2641,81 +2711,84 @@
     
     async function handleGenerate() {
         if (isGenerating) return;
-        const cd = elements.customerData.value.trim();
-        const pd = elements.productDescription.value.trim();
+        const cd = elements.customerData?.value.trim();
+        const pd = elements.productDescription?.value.trim();
         if (!cd || !pd) { setStatus('Please fill in both fields', false); return; }
         isGenerating = true;
-        elements.generateBtn.disabled = true;
-        elements.generateBtn.textContent = '⏳ Generating...';
-        elements.outputArea.style.display = 'none';
+        if (elements.generateBtn) {
+            elements.generateBtn.disabled = true;
+            elements.generateBtn.textContent = '⏳ Generating...';
+        }
+        const outputArea = document.getElementById('outputArea');
+        if (outputArea) outputArea.style.display = 'none';
         
-        // Set loading state for KPI cards
         updateKPILoadingState();
-        
         setStatus('🧠 AI is analyzing your market...', true);
         updateProgress(5);
+        
         try {
             const plan = await generateMarketingPlan(cd, pd);
             currentPlan = plan;
-            const roadmap = extractRoadmapFromPlan(plan);
-            roadmapData = roadmap;
-            elements.outputArea.style.display = 'block';
             
-            // Hide the output area content until streaming is done? No, streaming will populate it
-            
+            if (outputArea) outputArea.style.display = 'block';
             await streamRoles(plan);
-            
-            // Update KPI cards with actual data after generation
             updateKPIWithData(plan);
             
             if (currentUser) {
                 currentUser.plansGenerated = (currentUser.plansGenerated || 0) + 1;
                 saveDemoUser(currentUser);
                 sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-                if (elements.dashboardPage.classList.contains('active')) {
-                    renderJourneyMap(roadmap);
-                    renderSegmentationVisualization(plan);
+                // Update left panel with segmentation data
+                if (elements.leftPanel.classList.contains('open')) {
+                    showRoleContent('segmentation', 'Segmentation');
                 }
             }
             setStatus('✅ Strategy generated successfully!', false);
             updateProgress(100);
             setTimeout(() => updateProgress(0), 2000);
-            elements.outputArea.scrollIntoView({ behavior: 'smooth' });
+            if (outputArea) outputArea.scrollIntoView({ behavior: 'smooth' });
         } catch (error) {
             setStatus(`❌ Error: ${error.message}`, false);
             console.error(error);
         } finally {
             isGenerating = false;
-            elements.generateBtn.disabled = false;
-            elements.generateBtn.textContent = '✨ Generate Strategic Plan';
+            if (elements.generateBtn) {
+                elements.generateBtn.disabled = false;
+                elements.generateBtn.textContent = '✨ Generate Strategic Plan';
+            }
         }
     }
     
     function handleClear() {
-        elements.customerData.value = '';
-        elements.productDescription.value = '';
-        elements.outputArea.style.display = 'none';
-        elements.renderedOutput.innerHTML = '';
+        if (elements.customerData) elements.customerData.value = '';
+        if (elements.productDescription) elements.productDescription.value = '';
+        const outputArea = document.getElementById('outputArea');
+        const renderedOutput = document.getElementById('renderedOutput');
+        if (outputArea) outputArea.style.display = 'none';
+        if (renderedOutput) renderedOutput.innerHTML = '';
         currentPlan = null;
-        // Reset KPI cards to initial state
+        
         const kpiConfigs = [
-            { id: 'segmentation', iconType: 'target', label: 'SEGMENTATION', value: 'Ready', source: 'Click generate to start' },
-            { id: 'marketsize', iconType: 'bars', label: 'MARKET SIZE', value: 'Ready', source: 'TAM · SAM · SOM' },
-            { id: 'keymetrics', iconType: 'bullseye', label: 'KEY METRICS', value: 'Ready', source: 'Primary KPIs' },
-            { id: 'competition', iconType: 'search', label: 'COMPETITION', value: 'Ready', source: 'Competitor analysis' }
+            { iconType: 'target', label: 'SEGMENTATION', value: 'Ready', source: 'Click generate to start' },
+            { iconType: 'bars', label: 'MARKET SIZE', value: 'Ready', source: 'TAM · SAM · SOM' },
+            { iconType: 'bullseye', label: 'KEY METRICS', value: 'Ready', source: 'Primary KPIs' },
+            { iconType: 'search', label: 'COMPETITION', value: 'Ready', source: 'Competitor analysis' }
         ];
-        elements.kpiGrid.innerHTML = kpiConfigs.map(kpi => `
-            <div class="kpi-card">
-                <div class="kpi-icon">
-                    <div class="icon-${kpi.iconType}" style="width: 32px; height: 32px; ${kpi.iconType === 'bars' ? 'display: inline-flex;' : ''}">
-                        ${kpi.iconType === 'bars' ? '<span></span><span></span><span></span><span></span>' : ''}
+        const kpiGrid = document.getElementById('kpiGrid');
+        if (kpiGrid) {
+            kpiGrid.innerHTML = kpiConfigs.map(kpi => `
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <div class="icon-${kpi.iconType}" style="width: 32px; height: 32px; ${kpi.iconType === 'bars' ? 'display: inline-flex;' : ''}">
+                            ${kpi.iconType === 'bars' ? '<span></span><span></span><span></span><span></span>' : ''}
+                        </div>
                     </div>
+                    <div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);">${kpi.label}</div>
+                    <div class="kpi-value">${kpi.value}</div>
+                    <div style="font-size: 10px; color: rgba(255,255,255,.4);">${kpi.source}</div>
                 </div>
-                <div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);">${kpi.label}</div>
-                <div class="kpi-value">${kpi.value}</div>
-                <div style="font-size: 10px; color: rgba(255,255,255,.4);">${kpi.source}</div>
-            </div>
-        `).join('');
+            `).join('');
+        }
         setStatus('Cleared. Ready for new strategy.', false);
     }
     
@@ -2735,93 +2808,72 @@
         setStatus('✅ Saved to history!', false);
     }
     
-    function escapeHtml(str) {
-        if (!str) return '';
-        return String(str).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
-    }
-    
-    function showToast(message) {
-        let toast = document.getElementById('dynamicToast');
-        if (!toast) {
-            toast = document.createElement('div');
-            toast.id = 'dynamicToast';
-            toast.style.cssText = 'position: fixed; bottom: 100px; right: 24px; background: #0c1120; border: 1px solid rgba(99,102,241,.3); border-radius: 12px; padding: 12px 20px; z-index: 2000; transform: translateX(400px); transition: transform 0.3s ease;';
-            document.body.appendChild(toast);
-        }
-        toast.textContent = message;
-        toast.style.transform = 'translateX(0)';
-        setTimeout(() => { toast.style.transform = 'translateX(400px)'; }, 2500);
-    }
-    
+    // =====================================================
+    // INITIALIZATION
+    // =====================================================
     function initApp() {
-        // Set initial KPI cards
         const kpiConfigs = [
-            { id: 'segmentation', iconType: 'target', label: 'SEGMENTATION', value: 'Ready', source: 'Click generate to start' },
-            { id: 'marketsize', iconType: 'bars', label: 'MARKET SIZE', value: 'Ready', source: 'TAM · SAM · SOM' },
-            { id: 'keymetrics', iconType: 'bullseye', label: 'KEY METRICS', value: 'Ready', source: 'Primary KPIs' },
-            { id: 'competition', iconType: 'search', label: 'COMPETITION', value: 'Ready', source: 'Competitor analysis' }
+            { iconType: 'target', label: 'SEGMENTATION', value: 'Ready', source: 'Click generate to start' },
+            { iconType: 'bars', label: 'MARKET SIZE', value: 'Ready', source: 'TAM · SAM · SOM' },
+            { iconType: 'bullseye', label: 'KEY METRICS', value: 'Ready', source: 'Primary KPIs' },
+            { iconType: 'search', label: 'COMPETITION', value: 'Ready', source: 'Competitor analysis' }
         ];
-        elements.kpiGrid.innerHTML = kpiConfigs.map(kpi => `
-            <div class="kpi-card">
-                <div class="kpi-icon">
-                    <div class="icon-${kpi.iconType}" style="width: 32px; height: 32px; ${kpi.iconType === 'bars' ? 'display: inline-flex;' : ''}">
-                        ${kpi.iconType === 'bars' ? '<span></span><span></span><span></span><span></span>' : ''}
+        const kpiGrid = document.getElementById('kpiGrid');
+        if (kpiGrid) {
+            kpiGrid.innerHTML = kpiConfigs.map(kpi => `
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <div class="icon-${kpi.iconType}" style="width: 32px; height: 32px; ${kpi.iconType === 'bars' ? 'display: inline-flex;' : ''}">
+                            ${kpi.iconType === 'bars' ? '<span></span><span></span><span></span><span></span>' : ''}
+                        </div>
                     </div>
+                    <div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);">${kpi.label}</div>
+                    <div class="kpi-value">${kpi.value}</div>
+                    <div style="font-size: 10px; color: rgba(255,255,255,.4);">${kpi.source}</div>
                 </div>
-                <div class="kpi-label" style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,.5);">${kpi.label}</div>
-                <div class="kpi-value">${kpi.value}</div>
-                <div style="font-size: 10px; color: rgba(255,255,255,.4);">${kpi.source}</div>
-            </div>
-        `).join('');
+            `).join('');
+        }
         
-        elements.generateBtn.addEventListener('click', handleGenerate);
-        elements.clearBtn.addEventListener('click', handleClear);
-        if (elements.copyOutputBtn) elements.copyOutputBtn.addEventListener('click', handleCopy);
-        if (elements.saveHistoryBtn) elements.saveHistoryBtn.addEventListener('click', saveToHistory);
+        const generateBtn = document.getElementById('generateBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const copyBtn = document.getElementById('copyOutputBtn');
+        const saveBtn = document.getElementById('saveHistoryBtn');
         
+        if (generateBtn) generateBtn.addEventListener('click', handleGenerate);
+        if (clearBtn) clearBtn.addEventListener('click', handleClear);
+        if (copyBtn) copyBtn.addEventListener('click', handleCopy);
+        if (saveBtn) saveBtn.addEventListener('click', saveToHistory);
+        
+        // Role click handlers
         document.querySelectorAll('.role-item').forEach(item => {
             const roleId = item.dataset.role;
             const roleName = item.querySelector('.role-name')?.innerText || roleId;
-            let handler;
-            switch(roleId) {
-                case 'segmentation': handler = () => showRoleContent(roleId, roleName, () => extractSegmentation(currentPlan)); break;
-                case 'marketsizing': handler = () => showRoleContent(roleId, roleName, () => extractMarketSizing(currentPlan)); break;
-                case 'pestle': handler = () => showRoleContent(roleId, roleName, () => extractPESTLE(currentPlan)); break;
-                case 'porter': handler = () => showRoleContent(roleId, roleName, () => extractPorter(currentPlan)); break;
-                case 'competitors': handler = () => showRoleContent(roleId, roleName, () => extractCompetitors(currentPlan)); break;
-                case 'positioning': handler = () => showRoleContent(roleId, roleName, () => extractPositioning(currentPlan)); break;
-                case '4ps': handler = () => showRoleContent(roleId, roleName, () => extract4Ps(currentPlan)); break;
-                case 'swot': handler = () => showRoleContent(roleId, roleName, () => extractSWOT(currentPlan)); break;
-                case 'journey': handler = () => showRoleContent(roleId, roleName, () => extractJourney(currentPlan)); break;
-                case 'kpi': handler = () => showRoleContent(roleId, roleName, () => extractKPIs(currentPlan)); break;
-                case 'okrs': handler = () => showRoleContent(roleId, roleName, () => extractOKRs(currentPlan)); break;
-                case 'roadmap': handler = () => showRoleContent(roleId, roleName, () => extractRoadmapContent(currentPlan)); break;
-                case 'design': handler = () => showRoleContent(roleId, roleName, () => extractDesign(currentPlan)); break;
-                default: handler = () => {};
-            }
-            item.addEventListener('click', handler);
+            item.addEventListener('click', () => showRoleContent(roleId, roleName));
         });
-        elements.closeRoleContent.addEventListener('click', () => { elements.roleContentArea.style.display = 'none'; });
+        
+        // Prefill from planner
+        if (sessionStorage.getItem('prefillCustomer')) {
+            if (elements.customerData) elements.customerData.value = sessionStorage.getItem('prefillCustomer');
+            sessionStorage.removeItem('prefillCustomer');
+        }
+        if (sessionStorage.getItem('prefillProduct')) {
+            if (elements.productDescription) elements.productDescription.value = sessionStorage.getItem('prefillProduct');
+            sessionStorage.removeItem('prefillProduct');
+        }
     }
     
-    if (sessionStorage.getItem('prefillCustomer')) {
-        elements.customerData.value = sessionStorage.getItem('prefillCustomer');
-        sessionStorage.removeItem('prefillCustomer');
-    }
-    if (sessionStorage.getItem('prefillProduct')) {
-        elements.productDescription.value = sessionStorage.getItem('prefillProduct');
-        sessionStorage.removeItem('prefillProduct');
-    }
-    
-    document.getElementById('demoSignInBtn')?.addEventListener('click', demoSignIn);
-    document.getElementById('demoSignUpBtn')?.addEventListener('click', demoSignUp);
-    document.getElementById('logoutBtnNav')?.addEventListener('click', demoSignOut);
+    // Auth listeners
+    const signInBtn = document.getElementById('demoSignInBtn');
+    const signUpBtn = document.getElementById('demoSignUpBtn');
+    const logoutBtn = document.getElementById('logoutBtnNav');
+    if (signInBtn) signInBtn.addEventListener('click', demoSignIn);
+    if (signUpBtn) signUpBtn.addEventListener('click', demoSignUp);
+    if (logoutBtn) logoutBtn.addEventListener('click', demoSignOut);
     
     const savedUser = sessionStorage.getItem('currentUser');
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
         showLoggedInUI();
-        if (currentPlan) renderSegmentationVisualization(currentPlan);
     } else {
         showLoggedOutUI();
     }
