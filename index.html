@@ -7,7 +7,7 @@
     
     <style>
         /* =====================================================
-           GLOBAL STYLES (FULLY PRESERVED)
+           GLOBAL STYLES
         ===================================================== */
         * {
             margin: 0;
@@ -29,7 +29,7 @@
         }
         
         /* =====================================================
-           CSS-ONLY ICONS LIBRARY (FULLY PRESERVED)
+           CSS-ONLY ICONS LIBRARY
         ===================================================== */
         .icon-target {
             width: 20px;
@@ -657,9 +657,7 @@
             border-radius: 50%;
         }
         
-        /* =====================================================
-           MARKET SIZING STYLES (ADDED)
-        ===================================================== */
+        /* Market Sizing Styles */
         .market-sizing-panel {
             display: flex;
             flex-direction: column;
@@ -752,10 +750,6 @@
             margin-top: 24px;
             padding: 0 16px 20px;
             border-top: 1px solid rgba(255,255,255,.08);
-            display: none;
-        }
-        .role-content-panel.visible {
-            display: block;
         }
         
         .segmentation-visual-left {
@@ -810,9 +804,7 @@
             color: #0a0e1a;
         }
         
-        /* =====================================================
-           LEFT PANEL - 13 ROLES (PRESERVED)
-        ===================================================== */
+        /* Left Panel Base */
         .left-panel {
             width: 280px;
             background: linear-gradient(180deg, #0c1120 0%, #050810 100%);
@@ -897,9 +889,7 @@
             color: #4ade80;
         }
         
-        /* =====================================================
-           MAIN CONTENT (PRESERVED)
-        ===================================================== */
+        /* Main Content */
         .main-content {
             flex: 1;
             margin-left: 0;
@@ -946,7 +936,7 @@
             cursor: pointer;
             font-size: 14px;
             padding: 8px 0;
-            transition: color 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transition: color 0.2s;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -1076,7 +1066,7 @@
         
         .page {
             display: none;
-            animation: fadeIn 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            animation: fadeIn 0.4s;
         }
         
         .page.active {
@@ -1663,7 +1653,7 @@
             </div>
         </div>
 
-        <!-- APP PAGE (Generator) - ONLY PLAN TEXT HERE -->
+        <!-- APP PAGE (Generator) -->
         <div id="appPage" class="page">
             <div class="input-area">
                 <textarea id="customerData" rows="3" placeholder="Customer / audience: Enterprise CTOs at mid-sized tech companies..."></textarea>
@@ -2039,31 +2029,57 @@ Objective 1: Establish market presence
     function showRoleContent(roleId) {
         if (!currentPlan) {
             elements.roleContentPanel.innerHTML = '<div style="padding:20px; text-align:center; color:#f87171;">⚠️ Generate a marketing plan first</div>';
-            elements.roleContentPanel.classList.add('visible');
             return;
         }
         
         let content = '';
         switch(roleId) {
-            case 'segmentation': content = renderSegmentationPanel(); break;
-            case 'marketsizing': content = renderMarketSizingPanel(); break;
-            case 'journey': content = renderJourneyPanel(); break;
-            case 'pestle': content = renderGenericPanel('PESTLE Analysis', formatContent(currentPlan.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data')); break;
-            case 'porter': content = renderGenericPanel("Porter's Five Forces", formatContent(currentPlan.match(/\[PORTER OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data')); break;
-            case 'competitors': content = renderGenericPanel('Competitor Analysis', formatContent(currentPlan.match(/\[COMPETITOR OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data')); break;
-            case 'positioning': content = renderGenericPanel('Brand Positioning', formatContent(currentPlan.match(/\[POSITIONING OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data')); break;
-            case '4ps': content = renderGenericPanel('Marketing Mix (4Ps)', formatContent(currentPlan.match(/\[4Ps OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data')); break;
-            case 'swot': content = renderGenericPanel('SWOT Analysis', formatContent(currentPlan.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data')); break;
-            case 'kpi': content = renderGenericPanel('KPIs & Metrics', formatContent(currentPlan.match(/\[KPI OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data')); break;
-            case 'okrs': content = renderGenericPanel('OKRs', formatContent(currentPlan.match(/\[OKRS OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data')); break;
-            case 'roadmap': content = renderGenericPanel('30-Day Roadmap', formatContent(currentPlan.match(/\[ROADMAP OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data')); break;
-            case 'design': content = renderGenericPanel('Design Recommendations', formatContent(currentPlan.match(/\[DESIGN OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data')); break;
-            default: content = '<p>Select a role</p>';
+            case 'segmentation':
+                content = renderSegmentationPanel();
+                break;
+            case 'marketsizing':
+                content = renderMarketSizingPanel();
+                break;
+            case 'journey':
+                content = renderJourneyPanel();
+                break;
+            case 'pestle':
+                content = renderGenericPanel('PESTLE Analysis', formatContent(currentPlan.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data'));
+                break;
+            case 'porter':
+                content = renderGenericPanel("Porter's Five Forces", formatContent(currentPlan.match(/\[PORTER OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data'));
+                break;
+            case 'competitors':
+                content = renderGenericPanel('Competitor Analysis', formatContent(currentPlan.match(/\[COMPETITOR OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data'));
+                break;
+            case 'positioning':
+                content = renderGenericPanel('Brand Positioning', formatContent(currentPlan.match(/\[POSITIONING OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data'));
+                break;
+            case '4ps':
+                content = renderGenericPanel('Marketing Mix (4Ps)', formatContent(currentPlan.match(/\[4Ps OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data'));
+                break;
+            case 'swot':
+                content = renderGenericPanel('SWOT Analysis', formatContent(currentPlan.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data'));
+                break;
+            case 'kpi':
+                content = renderGenericPanel('KPIs & Metrics', formatContent(currentPlan.match(/\[KPI OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data'));
+                break;
+            case 'okrs':
+                content = renderGenericPanel('OKRs', formatContent(currentPlan.match(/\[OKRS OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data'));
+                break;
+            case 'roadmap':
+                content = renderGenericPanel('30-Day Roadmap', formatContent(currentPlan.match(/\[ROADMAP OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data'));
+                break;
+            case 'design':
+                content = renderGenericPanel('Design Recommendations', formatContent(currentPlan.match(/\[DESIGN OUTPUT\]([\s\S]*?)(?=\n\[|$)/)?.[1] || 'No data'));
+                break;
+            default:
+                content = '<p>Select a role</p>';
         }
         
         elements.roleContentPanel.innerHTML = content;
-        elements.roleContentPanel.classList.add('visible');
         
+        // Update active state
         document.querySelectorAll('.role-item').forEach(item => item.classList.remove('active'));
         const activeItem = document.querySelector(`.role-item[data-role="${roleId}"]`);
         if (activeItem) activeItem.classList.add('active');
@@ -2110,7 +2126,9 @@ Objective 1: Establish market presence
         elements.userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
         elements.leftPanel.classList.add('open');
         elements.mainContent.classList.add('panel-open');
-        if (currentPlan) showRoleContent('segmentation');
+        if (currentPlan) {
+            showRoleContent('segmentation');
+        }
     }
     
     function showLoggedOutUI() {
@@ -2118,7 +2136,7 @@ Objective 1: Establish market presence
         elements.userMenu.style.display = 'none';
         elements.leftPanel.classList.remove('open');
         elements.mainContent.classList.remove('panel-open');
-        elements.roleContentPanel.classList.remove('visible');
+        elements.roleContentPanel.innerHTML = '';
         showPage('app');
     }
     
@@ -2127,7 +2145,7 @@ Objective 1: Establish market presence
     function demoSignOut() { currentUser = null; sessionStorage.removeItem('currentUser'); showLoggedOutUI(); showToast('Signed out'); }
     
     // =====================================================
-    // GENERATOR FUNCTIONALITY (ONLY PLAN TEXT)
+    // GENERATOR FUNCTIONALITY
     // =====================================================
     function setStatus(message, isLoading = true) {
         if (elements.statusMessage) elements.statusMessage.textContent = message;
@@ -2285,7 +2303,7 @@ Objective 1: Establish market presence
         if (elements.outputArea) elements.outputArea.style.display = 'none';
         if (elements.renderedOutput) elements.renderedOutput.innerHTML = '';
         currentPlan = null;
-        if (elements.roleContentPanel) elements.roleContentPanel.classList.remove('visible');
+        elements.roleContentPanel.innerHTML = '';
         initKPICards();
         setStatus('Cleared. Ready for new strategy.', false);
     }
@@ -2313,9 +2331,16 @@ Objective 1: Establish market presence
         if (elements.copyOutputBtn) elements.copyOutputBtn.addEventListener('click', handleCopy);
         if (elements.saveHistoryBtn) elements.saveHistoryBtn.addEventListener('click', saveToHistory);
         
+        // Role click handlers
         document.querySelectorAll('.role-item').forEach(item => {
             const roleId = item.dataset.role;
-            item.addEventListener('click', () => showRoleContent(roleId));
+            item.addEventListener('click', () => {
+                if (currentPlan) {
+                    showRoleContent(roleId);
+                } else {
+                    showToast('Generate a plan first');
+                }
+            });
         });
         
         if (sessionStorage.getItem('prefillCustomer') && elements.customerData) {
