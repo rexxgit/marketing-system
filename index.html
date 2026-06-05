@@ -365,19 +365,71 @@
         document.getElementById('somBox')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('somBox').classList.toggle('clicked'); });
     }
 
-    function extractMarketSizing(plan) { if(!plan) return '<p>Generate a plan first</p>'; return elements.marketSizingVisual?.innerHTML || '<p>No data</p>'; }
-    function extractSegmentation(plan) { const m = plan?.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No segmentation data</p>'; }
-    function extractPESTLE(plan) { const m = plan?.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No PESTLE analysis</p>'; }
-    function extractPorter(plan) { const m = plan?.match(/\[PORTER OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No Porter analysis</p>'; }
-    function extractCompetitors(plan) { const m = plan?.match(/\[COMPETITOR OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No competitor analysis</p>'; }
-    function extractPositioning(plan) { const m = plan?.match(/\[POSITIONING OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No positioning data</p>'; }
-    function extract4Ps(plan) { const m = plan?.match(/\[4Ps OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No 4Ps data</p>'; }
-    function extractSWOT(plan) { const m = plan?.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No SWOT data</p>'; }
-    function extractJourney(plan) { const m = plan?.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No journey map</p>'; }
-    function extractKPIs(plan) { const m = plan?.match(/\[KPI OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No KPI data</p>'; }
-    function extractOKRs(plan) { const m = plan?.match(/\[OKRS OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No OKR data</p>'; }
-    function extractRoadmapContent(plan) { const r = extractRoadmapFromPlan(plan); if(!r?.stages) return '<p>No roadmap</p>'; let h='<div style="display:flex;flex-direction:column;gap:16px;">'; r.stages.forEach(s=>{ h+=`<div style="background:rgba(255,255,255,.03);border-radius:16px;padding:16px;"><div><strong style="color:#a5b4fc;">Day ${s.day}</strong></div><div>${escapeHtml(s.name)}</div><div style="font-size:13px;color:rgba(255,255,255,.6);">${escapeHtml(s.desc)}</div></div>`; }); h+='</div>'; return h; }
-    function extractDesign(plan) { const m = plan?.match(/\[DESIGN OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No design data</p>'; }
+    // PLAIN TEXT extractors for role content area - NO VISUALIZATIONS
+    function extractMarketSizingText(plan) {
+        if(!plan) return '<p>Generate a plan first to see market sizing data.</p>';
+        const match = plan.match(/\[TAMSAMSOM OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if(match && match[1]) {
+            return formatContent(match[1]);
+        }
+        return '<p>No market sizing data available in the generated plan.</p>';
+    }
+    
+    function extractSegmentationText(plan) { 
+        const m = plan?.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
+        return m ? formatContent(m[1]) : '<p>No segmentation data available</p>'; 
+    }
+    function extractPESTLEText(plan) { 
+        const m = plan?.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
+        return m ? formatContent(m[1]) : '<p>No PESTLE analysis available</p>'; 
+    }
+    function extractPorterText(plan) { 
+        const m = plan?.match(/\[PORTER OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
+        return m ? formatContent(m[1]) : '<p>No Porter\'s Five Forces analysis available</p>'; 
+    }
+    function extractCompetitorsText(plan) { 
+        const m = plan?.match(/\[COMPETITOR OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
+        return m ? formatContent(m[1]) : '<p>No competitor analysis available</p>'; 
+    }
+    function extractPositioningText(plan) { 
+        const m = plan?.match(/\[POSITIONING OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
+        return m ? formatContent(m[1]) : '<p>No positioning data available</p>'; 
+    }
+    function extract4PsText(plan) { 
+        const m = plan?.match(/\[4Ps OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
+        return m ? formatContent(m[1]) : '<p>No 4Ps data available</p>'; 
+    }
+    function extractSWOTText(plan) { 
+        const m = plan?.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
+        return m ? formatContent(m[1]) : '<p>No SWOT analysis available</p>'; 
+    }
+    function extractJourneyText(plan) { 
+        const m = plan?.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
+        return m ? formatContent(m[1]) : '<p>No customer journey map available</p>'; 
+    }
+    function extractKPIsText(plan) { 
+        const m = plan?.match(/\[KPI OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
+        return m ? formatContent(m[1]) : '<p>No KPI data available</p>'; 
+    }
+    function extractOKRsText(plan) { 
+        const m = plan?.match(/\[OKRS OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
+        return m ? formatContent(m[1]) : '<p>No OKR data available</p>'; 
+    }
+    function extractRoadmapText(plan) { 
+        const r = extractRoadmapFromPlan(plan); 
+        if(!r?.stages) return '<p>No roadmap available</p>'; 
+        let h='<div style="display:flex;flex-direction:column;gap:16px;">'; 
+        r.stages.forEach(s=>{ 
+            h+=`<div style="background:rgba(255,255,255,.03);border-radius:16px;padding:16px;"><div><strong style="color:#a5b4fc;">Day ${s.day}</strong></div><div>${escapeHtml(s.name)}</div><div style="font-size:13px;color:rgba(255,255,255,.6);">${escapeHtml(s.desc)}</div></div>`; 
+        }); 
+        h+='</div>'; 
+        return h; 
+    }
+    function extractDesignText(plan) { 
+        const m = plan?.match(/\[DESIGN OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
+        return m ? formatContent(m[1]) : '<p>No design recommendations available</p>'; 
+    }
+    
     function extractRoadmapFromPlan(plan) {
         const m = plan?.match(/\[ROADMAP OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
         if(!m) return { stages: [{ day:1, name:'Market Research', desc:'Analysis'},{ day:7, name:'Strategy', desc:'Planning'},{ day:14, name:'Execution', desc:'Launch'},{ day:21, name:'Optimize', desc:'Scale'},{ day:30, name:'Review', desc:'Results'}] };
@@ -385,17 +437,34 @@
         const days=[1,7,14,21,30];
         return { stages: tasks.map((t,i)=>({ day:days[i], name:t.substring(0,40), desc:t.substring(0,80) })) };
     }
-    function formatContent(c) { let h=c.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/^[-•*]\s+(.*)$/gm,'<li>$1</li>').replace(/(<li>.*?<\/li>)+/gs,'<ul style="margin:8px 0;padding-left:20px;">$&</ul>').replace(/\n/g,'<br>'); return h; }
+    
+    function formatContent(c) { 
+        let h = c.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                 .replace(/^[-•*]\s+(.*)$/gm, '<li>$1</li>')
+                 .replace(/(<li>.*?<\/li>)+/gs, '<ul style="margin:8px 0;padding-left:20px;">$&</ul>')
+                 .replace(/\|/g, '')
+                 .replace(/\n/g, '<br>'); 
+        return h; 
+    }
     function escapeHtml(s) { return String(s).replace(/[&<>]/g, m=> m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
 
-    function showRoleContent(roleId, title, getter) {
-        if(!currentPlan) { elements.roleContentBody.innerHTML = `<p style="color:#f87171;">⚠️ Generate a marketing plan first to see ${title} analysis.</p><p style="margin-top:12px;">Go to "Launch App" → fill in your business details → click "Generate Strategic Plan"</p>`; elements.roleContentTitle.innerHTML = title; elements.roleContentArea.style.display = 'block'; return; }
-        elements.roleContentBody.innerHTML = getter(currentPlan); elements.roleContentTitle.innerHTML = title; elements.roleContentArea.style.display = 'block';
-        document.querySelectorAll('.role-item').forEach(i=>i.classList.remove('active')); document.querySelector(`.role-item[data-role="${roleId}"]`)?.classList.add('active');
+    function showRoleContent(roleId, title, textGetter) {
+        if(!currentPlan) { 
+            elements.roleContentBody.innerHTML = `<p style="color:#f87171;">⚠️ Generate a marketing plan first to see ${title} analysis.</p><p style="margin-top:12px;">Go to "Launch App" → fill in your business details → click "Generate Strategic Plan"</p>`; 
+            elements.roleContentTitle.innerHTML = title; 
+            elements.roleContentArea.style.display = 'block'; 
+            return; 
+        }
+        elements.roleContentBody.innerHTML = textGetter(currentPlan); 
+        elements.roleContentTitle.innerHTML = title; 
+        elements.roleContentArea.style.display = 'block';
+        document.querySelectorAll('.role-item').forEach(i=>i.classList.remove('active')); 
+        document.querySelector(`.role-item[data-role="${roleId}"]`)?.classList.add('active');
     }
 
     function setStatus(msg, loading=true) { elements.statusMessage.textContent = msg; elements.statusBar.style.display = 'flex'; if(!loading) setTimeout(()=>elements.statusBar.style.display='none',3000); }
     function updateProgress(p) { elements.progressFill.style.width = p+'%'; }
+    
     async function streamRoles(plan) {
         const roles = [
             { tag:'SEGMENTATION OUTPUT', title:'Market Segmentation' }, { tag:'TAMSAMSOM OUTPUT', title:'Market Sizing' },
@@ -406,8 +475,15 @@
             { tag:'OKRS OUTPUT', title:'OKRs' }, { tag:'ROADMAP OUTPUT', title:'Roadmap' }, { tag:'DESIGN OUTPUT', title:'Design' }
         ];
         const out = [];
-        for(const r of roles) { const re = new RegExp(`\\[${r.tag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i'); const m = plan.match(re); if(m && m[1]?.trim().length>20) out.push({...r, content:m[1]}); }
-        if(!out.length) { elements.renderedOutput.innerHTML = `<div>${escapeHtml(plan).replace(/\n/g,'<br>')}</div>`; return; }
+        for(const r of roles) { 
+            const re = new RegExp(`\\[${r.tag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i'); 
+            const m = plan.match(re); 
+            if(m && m[1]?.trim().length>20) out.push({...r, content:m[1]}); 
+        }
+        if(!out.length) { 
+            elements.renderedOutput.innerHTML = `<div>${escapeHtml(plan).replace(/\n/g,'<br>')}</div>`; 
+            return; 
+        }
         elements.renderedOutput.innerHTML = '';
         for(let i=0;i<out.length;i++){
             const card = document.createElement('div'); card.className = 'role-card';
@@ -415,12 +491,25 @@
             elements.renderedOutput.appendChild(card);
             await new Promise(r=>setTimeout(r,180));
             card.querySelector('.stream-loading')?.remove();
-            const div = document.createElement('div'); div.innerHTML = formatContent(out[i].content); card.appendChild(div);
+            const div = document.createElement('div'); 
+            div.innerHTML = formatContent(out[i].content); 
+            card.appendChild(div);
             setTimeout(()=>card.classList.add('visible'),30);
             updateProgress(((i+1)/out.length)*100);
         }
     }
-    async function generateMarketingPlan(cd, pd) { const res = await fetch(`${API_BASE}/generate`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ customer_data:cd, product_description:pd }) }); if(!res.ok) throw new Error('Generation failed'); const data = await res.json(); return data.plan; }
+    
+    async function generateMarketingPlan(cd, pd) { 
+        const res = await fetch(`${API_BASE}/generate`, { 
+            method:'POST', 
+            headers:{'Content-Type':'application/json'}, 
+            body:JSON.stringify({ customer_data:cd, product_description:pd }) 
+        }); 
+        if(!res.ok) throw new Error('Generation failed'); 
+        const data = await res.json(); 
+        return data.plan; 
+    }
+    
     async function handleGenerate() {
         if(isGenerating) return;
         const cd = elements.customerData.value.trim(), pd = elements.productDescription.value.trim();
@@ -437,37 +526,70 @@
                 }
             }
             setStatus('✓ Strategy generated successfully!',false); updateProgress(100); setTimeout(()=>updateProgress(0),2000);
-        } catch(e){ setStatus(`✗ Error: ${e.message}`,false); } finally { isGenerating=false; elements.generateBtn.disabled=false; elements.generateBtn.textContent = 'Generate Strategic Plan'; }
+        } catch(e){ setStatus(`✗ Error: ${e.message}`,false); } 
+        finally { isGenerating=false; elements.generateBtn.disabled=false; elements.generateBtn.textContent = 'Generate Strategic Plan'; }
     }
-    function handleClear() { elements.customerData.value = ''; elements.productDescription.value = ''; elements.outputArea.style.display = 'none'; elements.renderedOutput.innerHTML = ''; currentPlan = null; setStatus('Cleared. Ready for new strategy.',false); if(elements.dashboardPage.classList.contains('active')){ renderSegmentation(null); renderMarketSizingFromPlan(null); } }
-    function handleCopy() { if(currentPlan) { navigator.clipboard.writeText(currentPlan); setStatus('✓ Copied to clipboard!',false); } else setStatus('No plan to copy',false); }
-    function saveToHistory() { if(currentPlan) { let h = JSON.parse(localStorage.getItem('marketing_history')||'[]'); h.unshift({id:Date.now(), plan:currentPlan}); if(h.length>10) h.pop(); localStorage.setItem('marketing_history',JSON.stringify(h)); setStatus('✓ Saved to history!',false); } else setStatus('No plan to save',false); }
+    
+    function handleClear() { 
+        elements.customerData.value = ''; 
+        elements.productDescription.value = ''; 
+        elements.outputArea.style.display = 'none'; 
+        elements.renderedOutput.innerHTML = ''; 
+        currentPlan = null; 
+        setStatus('Cleared. Ready for new strategy.',false); 
+        if(elements.dashboardPage.classList.contains('active')){ 
+            renderSegmentation(null); 
+            renderMarketSizingFromPlan(null); 
+        } 
+    }
+    
+    function handleCopy() { 
+        if(currentPlan) { 
+            navigator.clipboard.writeText(currentPlan); 
+            setStatus('✓ Copied to clipboard!',false); 
+        } else setStatus('No plan to copy',false); 
+    }
+    
+    function saveToHistory() { 
+        if(currentPlan) { 
+            let h = JSON.parse(localStorage.getItem('marketing_history')||'[]'); 
+            h.unshift({id:Date.now(), plan:currentPlan}); 
+            if(h.length>10) h.pop(); 
+            localStorage.setItem('marketing_history',JSON.stringify(h)); 
+            setStatus('✓ Saved to history!',false); 
+        } else setStatus('No plan to save',false); 
+    }
 
     function initApp() {
-        elements.generateBtn.addEventListener('click', handleGenerate); elements.clearBtn.addEventListener('click', handleClear);
-        elements.copyOutputBtn?.addEventListener('click', handleCopy); elements.saveHistoryBtn?.addEventListener('click', saveToHistory);
+        elements.generateBtn.addEventListener('click', handleGenerate); 
+        elements.clearBtn.addEventListener('click', handleClear);
+        elements.copyOutputBtn?.addEventListener('click', handleCopy); 
+        elements.saveHistoryBtn?.addEventListener('click', saveToHistory);
+        
         document.querySelectorAll('.role-item').forEach(item => {
             const id = item.dataset.role, name = item.querySelector('.role-name')?.innerText || id;
             let handler; 
             switch(id){
-                case 'segmentation': handler=()=>showRoleContent(id,name,extractSegmentation); break;
-                case 'marketsizing': handler=()=>showRoleContent(id,name,extractMarketSizing); break;
-                case 'pestle': handler=()=>showRoleContent(id,name,extractPESTLE); break;
-                case 'porter': handler=()=>showRoleContent(id,name,extractPorter); break;
-                case 'competitors': handler=()=>showRoleContent(id,name,extractCompetitors); break;
-                case 'positioning': handler=()=>showRoleContent(id,name,extractPositioning); break;
-                case '4ps': handler=()=>showRoleContent(id,name,extract4Ps); break;
-                case 'swot': handler=()=>showRoleContent(id,name,extractSWOT); break;
-                case 'journey': handler=()=>showRoleContent(id,name,extractJourney); break;
-                case 'kpi': handler=()=>showRoleContent(id,name,extractKPIs); break;
-                case 'okrs': handler=()=>showRoleContent(id,name,extractOKRs); break;
-                case 'roadmap': handler=()=>showRoleContent(id,name,extractRoadmapContent); break;
-                case 'design': handler=()=>showRoleContent(id,name,extractDesign); break;
+                case 'segmentation': handler=()=>showRoleContent(id,name,extractSegmentationText); break;
+                case 'marketsizing': handler=()=>showRoleContent(id,name,extractMarketSizingText); break;
+                case 'pestle': handler=()=>showRoleContent(id,name,extractPESTLEText); break;
+                case 'porter': handler=()=>showRoleContent(id,name,extractPorterText); break;
+                case 'competitors': handler=()=>showRoleContent(id,name,extractCompetitorsText); break;
+                case 'positioning': handler=()=>showRoleContent(id,name,extractPositioningText); break;
+                case '4ps': handler=()=>showRoleContent(id,name,extract4PsText); break;
+                case 'swot': handler=()=>showRoleContent(id,name,extractSWOTText); break;
+                case 'journey': handler=()=>showRoleContent(id,name,extractJourneyText); break;
+                case 'kpi': handler=()=>showRoleContent(id,name,extractKPIsText); break;
+                case 'okrs': handler=()=>showRoleContent(id,name,extractOKRsText); break;
+                case 'roadmap': handler=()=>showRoleContent(id,name,extractRoadmapText); break;
+                case 'design': handler=()=>showRoleContent(id,name,extractDesignText); break;
                 default: handler=()=>{};
             }
             item.addEventListener('click', handler);
         });
+        
         elements.closeRoleContent.addEventListener('click', ()=> elements.roleContentArea.style.display = 'none');
+        
         const pricingGrid = document.getElementById('pricingGrid');
         if(pricingGrid) pricingGrid.innerHTML = `<div class="pricing-card"><h3>Free</h3><div class="price">$0<span>/month</span></div><ul class="feature-list"><li>5 plans/month</li><li>PDF export</li><li>Save to history</li></ul><button class="btn-primary" onclick="showPage('app')">Get Started</button></div><div class="pricing-card popular"><h3>Pro</h3><div class="price">$29<span>/month</span></div><ul class="feature-list"><li>Unlimited plans</li><li>Priority support</li><li>Advanced analytics</li></ul><button class="btn-primary" onclick="showPage('app')">Start Free Trial</button><div style="margin-top:8px;font-size:11px;color:#a5b4fc;">Most popular</div></div><div class="pricing-card"><h3>Enterprise</h3><div class="price">Custom</div><ul class="feature-list"><li>Unlimited everything</li><li>API access</li><li>Dedicated support</li></ul><button class="btn-outline" onclick="alert('Contact sales@strategicmarketing.com')">Contact Sales</button></div>`;
     }
