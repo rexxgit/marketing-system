@@ -187,9 +187,10 @@
         .progress-bar { background: rgba(255,255,255,.1); border-radius: 10px; height: 4px; margin: 20px 0; overflow: hidden; }
         .progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #6366f1, #ec4899); transition: width 0.3s; }
         
-        .btn-primary { background: linear-gradient(135deg, #6366f1, #ec4899); border: none; border-radius: 50px; padding: 12px 28px; color: white; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.2s; }
+        .btn-primary { background: linear-gradient(135deg, #6366f1, #ec4899); border: none; border-radius: 50px; padding: 12px 28px; color: white; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.2s, box-shadow 0.2s; }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99,102,241,.3); }
-        .btn-outline { background: transparent; border: 1px solid rgba(99,102,241,.5); border-radius: 50px; padding: 12px 28px; color: #a5b4fc; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-outline { background: transparent; border: 1px solid rgba(99,102,241,.5); border-radius: 50px; padding: 12px 28px; color: #a5b4fc; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
+        .btn-outline:hover { background: rgba(99,102,241,.1); transform: translateY(-2px); }
         
         .footer { text-align: center; padding: 40px; border-top: 1px solid rgba(255,255,255,.1); margin-top: 60px; color: rgba(255,255,255,.5); font-size: 12px; }
         
@@ -224,7 +225,154 @@
         .role-content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
         .close-role-content { background: rgba(99,102,241,.2); border: 1px solid rgba(99,102,241,.4); border-radius: 50px; padding: 6px 16px; color: #a5b4fc; cursor: pointer; font-size: 12px; }
         
-        @media (max-width: 768px) { .left-panel { width: 280px; } .main-content.panel-open { margin-left: 280px; } .steps { grid-template-columns: 1fr; } }
+        /* Enhanced Pricing Section Styles */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin: 60px 0 40px;
+            padding: 0 16px;
+        }
+        
+        .pricing-card {
+            background: linear-gradient(145deg, rgba(20, 25, 45, 0.9) 0%, rgba(10, 15, 30, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 32px;
+            padding: 32px 28px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #6366f1, #ec4899, #6366f1);
+            transform: scaleX(0);
+            transition: transform 0.5s ease;
+        }
+        
+        .pricing-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-12px);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 25px 40px -15px rgba(99, 102, 241, 0.3);
+        }
+        
+        .pricing-card.popular {
+            border: 1px solid rgba(99, 102, 241, 0.6);
+            background: linear-gradient(145deg, rgba(30, 35, 60, 0.95) 0%, rgba(15, 20, 40, 0.98) 100%);
+            transform: scale(1.02);
+        }
+        
+        .pricing-card.popular:hover {
+            transform: translateY(-12px) scale(1.02);
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+        
+        .pricing-card h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .price {
+            font-size: 52px;
+            font-weight: 800;
+            margin: 24px 0 16px;
+            color: #a5b4fc;
+            display: inline-flex;
+            align-items: baseline;
+            gap: 4px;
+        }
+        
+        .price span {
+            font-size: 18px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .price-period {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin: 30px 0 32px;
+            text-align: left;
+        }
+        
+        .feature-list li {
+            padding: 12px 0;
+            color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-list .icon-check {
+            color: #4ade80;
+            flex-shrink: 0;
+        }
+        
+        .pricing-card .btn-primary {
+            width: 100%;
+            justify-content: center;
+            padding: 14px 28px;
+            font-size: 15px;
+        }
+        
+        .pricing-card .btn-outline {
+            width: 100%;
+            justify-content: center;
+            padding: 14px 28px;
+            font-size: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .left-panel { width: 280px; }
+            .main-content.panel-open { margin-left: 280px; }
+            .steps { grid-template-columns: 1fr; }
+            .pricing-grid { grid-template-columns: 1fr; gap: 24px; }
+            .pricing-card.popular { transform: scale(1); }
+            .pricing-card.popular:hover { transform: translateY(-8px); }
+        }
     </style>
 </head>
 <body>
@@ -309,39 +457,15 @@
 
     function getDemoUser() { let u = localStorage.getItem('demo_user'); if(!u) { u = { id: Date.now(), name: 'Demo User', email: 'demo@strategicmarketing.com', plan: 'free', plansGenerated: 0 }; localStorage.setItem('demo_user', JSON.stringify(u)); } return JSON.parse(u); }
     function saveDemoUser(u) { localStorage.setItem('demo_user', JSON.stringify(u)); }
-    function showLoggedInUI() { 
-        elements.authContainer.style.display = 'none'; 
-        elements.userMenu.style.display = 'flex'; 
-        elements.userNameDisplay.textContent = currentUser.name; 
-        elements.userAvatar.textContent = currentUser.name.charAt(0); 
-        elements.leftPanel.classList.add('open'); 
-        elements.mainContent.classList.add('panel-open'); 
-        elements.dashboardPage.classList.add('active'); 
-    }
-    function showLoggedOutUI() { 
-        elements.authContainer.style.display = 'flex'; 
-        elements.userMenu.style.display = 'none'; 
-        elements.leftPanel.classList.remove('open'); 
-        elements.mainContent.classList.remove('panel-open'); 
-        elements.dashboardPage.classList.remove('active'); 
-        elements.roleContentArea.style.display = 'none'; 
-        showPage('app'); 
-    }
+    function showLoggedInUI() { elements.authContainer.style.display = 'none'; elements.userMenu.style.display = 'flex'; elements.userNameDisplay.textContent = currentUser.name; elements.userAvatar.textContent = currentUser.name.charAt(0); elements.leftPanel.classList.add('open'); elements.mainContent.classList.add('panel-open'); elements.dashboardPage.classList.add('active'); }
+    function showLoggedOutUI() { elements.authContainer.style.display = 'flex'; elements.userMenu.style.display = 'none'; elements.leftPanel.classList.remove('open'); elements.mainContent.classList.remove('panel-open'); elements.dashboardPage.classList.remove('active'); elements.roleContentArea.style.display = 'none'; showPage('app'); }
     function demoSignIn() { currentUser = getDemoUser(); sessionStorage.setItem('currentUser', JSON.stringify(currentUser)); showLoggedInUI(); }
     function demoSignOut() { currentUser = null; sessionStorage.removeItem('currentUser'); showLoggedOutUI(); }
 
-    // =====================================================
-    // VISUAL RENDERERS FOR ROLE CONTENT AREA
-    // =====================================================
-    
     function renderSegmentationVisual(plan) {
-        if(!plan) {
-            return '<div class="empty-state">✨ Generate a plan first to see segmentation visualization</div>';
-        }
+        if(!plan) return '<div class="empty-state">✨ Generate a plan first to see segmentation visualization</div>';
         const match = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        let segments = [];
-        let primaryTarget = '';
-        
+        let segments = [], primaryTarget = '';
         if(match) {
             const segText = match[1];
             const segmentLines = segText.split('\n');
@@ -354,42 +478,14 @@
             const primaryMatch = plan.match(/Primary Target[:\s]*([^\n]+)/i);
             if(primaryMatch) primaryTarget = primaryMatch[1].trim();
         }
-        
-        if(segments.length === 0) {
-            segments = ['Real-Estate Agencies', 'Retail & Service Outlets', 'Professional Service Firms'];
-        }
-        if(!primaryTarget) {
-            primaryTarget = 'Urban Young Professionals – largest segment in Addis Ababa, high trial propensity for new convenience drinks';
-        }
-        
+        if(segments.length === 0) segments = ['Real-Estate Agencies', 'Retail & Service Outlets', 'Professional Service Firms'];
+        if(!primaryTarget) primaryTarget = 'Urban Young Professionals – largest segment in Addis Ababa, high trial propensity for new convenience drinks';
         const segmentColors = ['#4ade80', '#22d3ee', '#fbbf24'];
-        let html = `
-            <div style="text-align: center; margin-bottom: 24px;">
-                <h2 style="color: #a5b4fc; margin-bottom: 20px;">Market Segmentation</h2>
-                <div style="position: relative; width: 200px; height: 200px; margin: 0 auto 24px;">
-                    <div style="width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(
-                        ${segmentColors[0]} 0deg 120deg,
-                        ${segmentColors[1]} 120deg 240deg,
-                        ${segmentColors[2]} 240deg 360deg
-                    ); transition: transform 0.3s;"></div>
-                </div>
-                <div style="display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 24px;">
-                    ${segments.map((seg, i) => `<div style="display: flex; align-items: center; gap: 8px;"><div style="width: 12px; height: 12px; background: ${segmentColors[i]}; border-radius: 50%;"></div><span style="font-size: 14px;">${escapeHtml(seg)}</span></div>`).join('')}
-                </div>
-                <div class="priority-card" style="background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(236,72,153,.1)); border: 1px solid rgba(99,102,241,.4); border-radius: 20px; padding: 20px; text-align: left;">
-                    <div style="display: inline-block; background: #4ade80; color: #000; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 12px;">🏆 PRIMARY TARGET</div>
-                    <div style="font-size: 16px; font-weight: 600; color: #4ade80;">${escapeHtml(primaryTarget)}</div>
-                    <p style="font-size: 13px; color: rgba(255,255,255,.6); margin-top: 12px;">This segment represents the highest potential for growth and should be prioritized in all marketing efforts.</p>
-                </div>
-            </div>
-        `;
-        return html;
+        return `<div style="text-align: center; margin-bottom: 24px;"><h2 style="color: #a5b4fc; margin-bottom: 20px;">Market Segmentation</h2><div style="position: relative; width: 200px; height: 200px; margin: 0 auto 24px;"><div style="width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(${segmentColors[0]} 0deg 120deg, ${segmentColors[1]} 120deg 240deg, ${segmentColors[2]} 240deg 360deg); transition: transform 0.3s;"></div></div><div style="display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 24px;">${segments.map((seg, i) => `<div style="display: flex; align-items: center; gap: 8px;"><div style="width: 12px; height: 12px; background: ${segmentColors[i]}; border-radius: 50%;"></div><span style="font-size: 14px;">${escapeHtml(seg)}</span></div>`).join('')}</div><div class="priority-card" style="background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(236,72,153,.1)); border: 1px solid rgba(99,102,241,.4); border-radius: 20px; padding: 20px; text-align: left;"><div style="display: inline-block; background: #4ade80; color: #000; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 12px;">🏆 PRIMARY TARGET</div><div style="font-size: 16px; font-weight: 600; color: #4ade80;">${escapeHtml(primaryTarget)}</div><p style="font-size: 13px; color: rgba(255,255,255,.6); margin-top: 12px;">This segment represents the highest potential for growth and should be prioritized in all marketing efforts.</p></div></div>`;
     }
     
     function renderMarketSizingVisual(plan) {
-        if(!plan) {
-            return '<div class="empty-state">📊 Generate a plan first to see market sizing visualization</div>';
-        }
+        if(!plan) return '<div class="empty-state">📊 Generate a plan first to see market sizing visualization</div>';
         const tamMatch = plan.match(/\[TAMSAMSOM OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
         let tam=1500000000, sam=450000000, som=22500000;
         if(tamMatch){
@@ -407,102 +503,20 @@
         const tamIcons = Math.min(Math.floor(parseFloat(tamB) * 2), 25);
         const samIcons = Math.min(Math.floor(parseInt(samM) / 30) + 1, 18);
         const somIcons = Math.min(Math.floor(parseInt(somM) / 3) + 1, 12);
-        
-        let html = `
-            <div style="text-align: center;">
-                <h2 style="color: #a5b4fc; margin-bottom: 20px;">Market Sizing (TAM / SAM / SOM)</h2>
-                <div class="market-sizing-container" style="background: transparent; padding: 0;">
-                    <div class="tam-box" id="tamBox" style="cursor: pointer;">
-                        <div class="tam-region">🌍 Aetheria Economic Region (Illustrative Market)</div>
-                        <div class="tam-value">ETB ${tamB} B</div>
-                        <div class="hidden-detail">
-                            <div class="icon-grid-small">${Array(tamIcons).fill('<div class="market-icon">🏢</div>').join('')}</div>
-                            <p style="margin-top:12px; font-size:12px; color:#a5b4fc;">Total Addressable Market · ${tamIcons} market sectors</p>
-                            <p style="font-size:11px;">~10,000 potential enterprise clients</p>
-                        </div>
-                        <div class="click-hint">▼ Click to explore</div>
-                    </div>
-                    <div class="sam-box" id="samBox" style="cursor: pointer;">
-                        <div class="sam-layout">
-                            <div class="sam-hand">🖐️🤝</div>
-                            <div class="sam-value-right"><div class="sam-value">ETB ${samM} M</div></div>
-                        </div>
-                        <div class="hidden-detail">
-                            <div class="icon-grid-small">${Array(samIcons).fill('<div class="market-icon">🏪</div>').join('')}</div>
-                            <p style="margin-top:12px; font-size:12px; color:#a5b4fc;">Serviceable Available Market · ${samIcons} reachable segments</p>
-                            <p style="font-size:11px;">~3,000 firms in real-estate, retail & professional services</p>
-                        </div>
-                        <div class="click-hint">▼ Click to explore</div>
-                    </div>
-                    <div class="som-box" id="somBox" style="cursor: pointer;">
-                        <div class="som-center">
-                            <div class="hand-icon-large">🖐️🎯</div>
-                            <div class="som-value">ETB ${somM} M</div>
-                        </div>
-                        <div class="hidden-detail">
-                            <div class="icon-grid-small">${Array(somIcons).fill('<div class="market-icon">🚀</div>').join('')}</div>
-                            <p style="margin-top:12px; font-size:12px; color:#a5b4fc;">Serviceable Obtainable Market · ${somIcons} achievable segments</p>
-                            <p style="font-size:11px;">~150 early-adopter real-estate firms in Year 1</p>
-                        </div>
-                        <div class="click-hint">▼ Click to explore</div>
-                    </div>
-                </div>
-            </div>
-        `;
-        return html;
+        return `<div style="text-align: center;"><h2 style="color: #a5b4fc; margin-bottom: 20px;">Market Sizing (TAM / SAM / SOM)</h2><div class="market-sizing-container" style="background: transparent; padding: 0;"><div class="tam-box" id="tamBox" style="cursor: pointer;"><div class="tam-region">🌍 Aetheria Economic Region (Illustrative Market)</div><div class="tam-value">ETB ${tamB} B</div><div class="hidden-detail"><div class="icon-grid-small">${Array(tamIcons).fill('<div class="market-icon">🏢</div>').join('')}</div><p style="margin-top:12px; font-size:12px; color:#a5b4fc;">Total Addressable Market · ${tamIcons} market sectors</p><p style="font-size:11px;">~10,000 potential enterprise clients</p></div><div class="click-hint">▼ Click to explore</div></div><div class="sam-box" id="samBox" style="cursor: pointer;"><div class="sam-layout"><div class="sam-hand">🖐️🤝</div><div class="sam-value-right"><div class="sam-value">ETB ${samM} M</div></div></div><div class="hidden-detail"><div class="icon-grid-small">${Array(samIcons).fill('<div class="market-icon">🏪</div>').join('')}</div><p style="margin-top:12px; font-size:12px; color:#a5b4fc;">Serviceable Available Market · ${samIcons} reachable segments</p><p style="font-size:11px;">~3,000 firms in real-estate, retail & professional services</p></div><div class="click-hint">▼ Click to explore</div></div><div class="som-box" id="somBox" style="cursor: pointer;"><div class="som-center"><div class="hand-icon-large">🖐️🎯</div><div class="som-value">ETB ${somM} M</div></div><div class="hidden-detail"><div class="icon-grid-small">${Array(somIcons).fill('<div class="market-icon">🚀</div>').join('')}</div><p style="margin-top:12px; font-size:12px; color:#a5b4fc;">Serviceable Obtainable Market · ${somIcons} achievable segments</p><p style="font-size:11px;">~150 early-adopter real-estate firms in Year 1</p></div><div class="click-hint">▼ Click to explore</div></div></div></div>`;
     }
     
-    // Plain text extractors for other roles (PESTLE, Porter, etc.)
-    function extractPESTLEText(plan) { 
-        const m = plan?.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
-        return m ? formatContent(m[1]) : '<p>No PESTLE analysis available</p>'; 
-    }
-    function extractPorterText(plan) { 
-        const m = plan?.match(/\[PORTER OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
-        return m ? formatContent(m[1]) : '<p>No Porter\'s Five Forces analysis available</p>'; 
-    }
-    function extractCompetitorsText(plan) { 
-        const m = plan?.match(/\[COMPETITOR OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
-        return m ? formatContent(m[1]) : '<p>No competitor analysis available</p>'; 
-    }
-    function extractPositioningText(plan) { 
-        const m = plan?.match(/\[POSITIONING OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
-        return m ? formatContent(m[1]) : '<p>No positioning data available</p>'; 
-    }
-    function extract4PsText(plan) { 
-        const m = plan?.match(/\[4Ps OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
-        return m ? formatContent(m[1]) : '<p>No 4Ps data available</p>'; 
-    }
-    function extractSWOTText(plan) { 
-        const m = plan?.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
-        return m ? formatContent(m[1]) : '<p>No SWOT analysis available</p>'; 
-    }
-    function extractJourneyText(plan) { 
-        const m = plan?.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
-        return m ? formatContent(m[1]) : '<p>No customer journey map available</p>'; 
-    }
-    function extractKPIsText(plan) { 
-        const m = plan?.match(/\[KPI OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
-        return m ? formatContent(m[1]) : '<p>No KPI data available</p>'; 
-    }
-    function extractOKRsText(plan) { 
-        const m = plan?.match(/\[OKRS OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
-        return m ? formatContent(m[1]) : '<p>No OKR data available</p>'; 
-    }
-    function extractRoadmapText(plan) { 
-        const r = extractRoadmapFromPlan(plan); 
-        if(!r?.stages) return '<p>No roadmap available</p>'; 
-        let h='<div style="display:flex;flex-direction:column;gap:16px;">'; 
-        r.stages.forEach(s=>{ 
-            h+=`<div style="background:rgba(255,255,255,.03);border-radius:16px;padding:16px;"><div><strong style="color:#a5b4fc;">Day ${s.day}</strong></div><div>${escapeHtml(s.name)}</div><div style="font-size:13px;color:rgba(255,255,255,.6);">${escapeHtml(s.desc)}</div></div>`; 
-        }); 
-        h+='</div>'; 
-        return h; 
-    }
-    function extractDesignText(plan) { 
-        const m = plan?.match(/\[DESIGN OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); 
-        return m ? formatContent(m[1]) : '<p>No design recommendations available</p>'; 
-    }
+    function extractPESTLEText(plan) { const m = plan?.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No PESTLE analysis available</p>'; }
+    function extractPorterText(plan) { const m = plan?.match(/\[PORTER OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No Porter\'s Five Forces analysis available</p>'; }
+    function extractCompetitorsText(plan) { const m = plan?.match(/\[COMPETITOR OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No competitor analysis available</p>'; }
+    function extractPositioningText(plan) { const m = plan?.match(/\[POSITIONING OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No positioning data available</p>'; }
+    function extract4PsText(plan) { const m = plan?.match(/\[4Ps OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No 4Ps data available</p>'; }
+    function extractSWOTText(plan) { const m = plan?.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No SWOT analysis available</p>'; }
+    function extractJourneyText(plan) { const m = plan?.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No customer journey map available</p>'; }
+    function extractKPIsText(plan) { const m = plan?.match(/\[KPI OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No KPI data available</p>'; }
+    function extractOKRsText(plan) { const m = plan?.match(/\[OKRS OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No OKR data available</p>'; }
+    function extractRoadmapText(plan) { const r = extractRoadmapFromPlan(plan); if(!r?.stages) return '<p>No roadmap available</p>'; let h='<div style="display:flex;flex-direction:column;gap:16px;">'; r.stages.forEach(s=>{ h+=`<div style="background:rgba(255,255,255,.03);border-radius:16px;padding:16px;"><div><strong style="color:#a5b4fc;">Day ${s.day}</strong></div><div>${escapeHtml(s.name)}</div><div style="font-size:13px;color:rgba(255,255,255,.6);">${escapeHtml(s.desc)}</div></div>`; }); h+='</div>'; return h; }
+    function extractDesignText(plan) { const m = plan?.match(/\[DESIGN OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No design recommendations available</p>'; }
     
     function extractRoadmapFromPlan(plan) {
         const m = plan?.match(/\[ROADMAP OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
@@ -512,30 +526,13 @@
         return { stages: tasks.map((t,i)=>({ day:days[i], name:t.substring(0,40), desc:t.substring(0,80) })) };
     }
     
-    function formatContent(c) { 
-        let h = c.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                 .replace(/^[-•*]\s+(.*)$/gm, '<li>$1</li>')
-                 .replace(/(<li>.*?<\/li>)+/gs, '<ul style="margin:8px 0;padding-left:20px;">$&</ul>')
-                 .replace(/\|/g, '')
-                 .replace(/\n/g, '<br>'); 
-        return h; 
-    }
+    function formatContent(c) { let h = c.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/^[-•*]\s+(.*)$/gm, '<li>$1</li>').replace(/(<li>.*?<\/li>)+/gs, '<ul style="margin:8px 0;padding-left:20px;">$&</ul>').replace(/\|/g, '').replace(/\n/g, '<br>'); return h; }
     function escapeHtml(s) { return String(s).replace(/[&<>]/g, m=> m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
 
     function showRoleContent(roleId, title, contentGetter) {
-        if(!currentPlan) { 
-            elements.roleContentBody.innerHTML = `<p style="color:#f87171;">⚠️ Generate a marketing plan first to see ${title} analysis.</p><p style="margin-top:12px;">Go to "Launch App" → fill in your business details → click "Generate Strategic Plan"</p>`; 
-            elements.roleContentTitle.innerHTML = title; 
-            elements.roleContentArea.style.display = 'block'; 
-            return; 
-        }
-        elements.roleContentBody.innerHTML = contentGetter(currentPlan); 
-        elements.roleContentTitle.innerHTML = title; 
-        elements.roleContentArea.style.display = 'block';
-        document.querySelectorAll('.role-item').forEach(i=>i.classList.remove('active')); 
-        document.querySelector(`.role-item[data-role="${roleId}"]`)?.classList.add('active');
-        
-        // Attach click handlers for market sizing boxes if they exist in the DOM
+        if(!currentPlan) { elements.roleContentBody.innerHTML = `<p style="color:#f87171;">⚠️ Generate a marketing plan first to see ${title} analysis.</p><p style="margin-top:12px;">Go to "Launch App" → fill in your business details → click "Generate Strategic Plan"</p>`; elements.roleContentTitle.innerHTML = title; elements.roleContentArea.style.display = 'block'; return; }
+        elements.roleContentBody.innerHTML = contentGetter(currentPlan); elements.roleContentTitle.innerHTML = title; elements.roleContentArea.style.display = 'block';
+        document.querySelectorAll('.role-item').forEach(i=>i.classList.remove('active')); document.querySelector(`.role-item[data-role="${roleId}"]`)?.classList.add('active');
         if(roleId === 'marketsizing') {
             setTimeout(() => {
                 document.getElementById('tamBox')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('tamBox').classList.toggle('clicked'); });
@@ -558,15 +555,8 @@
             { tag:'OKRS OUTPUT', title:'OKRs' }, { tag:'ROADMAP OUTPUT', title:'Roadmap' }, { tag:'DESIGN OUTPUT', title:'Design' }
         ];
         const out = [];
-        for(const r of roles) { 
-            const re = new RegExp(`\\[${r.tag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i'); 
-            const m = plan.match(re); 
-            if(m && m[1]?.trim().length>20) out.push({...r, content:m[1]}); 
-        }
-        if(!out.length) { 
-            elements.renderedOutput.innerHTML = `<div>${escapeHtml(plan).replace(/\n/g,'<br>')}</div>`; 
-            return; 
-        }
+        for(const r of roles) { const re = new RegExp(`\\[${r.tag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i'); const m = plan.match(re); if(m && m[1]?.trim().length>20) out.push({...r, content:m[1]}); }
+        if(!out.length) { elements.renderedOutput.innerHTML = `<div>${escapeHtml(plan).replace(/\n/g,'<br>')}</div>`; return; }
         elements.renderedOutput.innerHTML = '';
         for(let i=0;i<out.length;i++){
             const card = document.createElement('div'); card.className = 'role-card';
@@ -574,24 +564,13 @@
             elements.renderedOutput.appendChild(card);
             await new Promise(r=>setTimeout(r,180));
             card.querySelector('.stream-loading')?.remove();
-            const div = document.createElement('div'); 
-            div.innerHTML = formatContent(out[i].content); 
-            card.appendChild(div);
+            const div = document.createElement('div'); div.innerHTML = formatContent(out[i].content); card.appendChild(div);
             setTimeout(()=>card.classList.add('visible'),30);
             updateProgress(((i+1)/out.length)*100);
         }
     }
     
-    async function generateMarketingPlan(cd, pd) { 
-        const res = await fetch(`${API_BASE}/generate`, { 
-            method:'POST', 
-            headers:{'Content-Type':'application/json'}, 
-            body:JSON.stringify({ customer_data:cd, product_description:pd }) 
-        }); 
-        if(!res.ok) throw new Error('Generation failed'); 
-        const data = await res.json(); 
-        return data.plan; 
-    }
+    async function generateMarketingPlan(cd, pd) { const res = await fetch(`${API_BASE}/generate`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ customer_data:cd, product_description:pd }) }); if(!res.ok) throw new Error('Generation failed'); const data = await res.json(); return data.plan; }
     
     async function handleGenerate() {
         if(isGenerating) return;
@@ -602,45 +581,18 @@
         try{
             const plan = await generateMarketingPlan(cd, pd); currentPlan = plan;
             elements.outputArea.style.display = 'block'; await streamRoles(plan);
-            if(currentUser){
-                currentUser.plansGenerated = (currentUser.plansGenerated||0)+1; saveDemoUser(currentUser);
-            }
+            if(currentUser){ currentUser.plansGenerated = (currentUser.plansGenerated||0)+1; saveDemoUser(currentUser); }
             setStatus('✓ Strategy generated successfully!',false); updateProgress(100); setTimeout(()=>updateProgress(0),2000);
-        } catch(e){ setStatus(`✗ Error: ${e.message}`,false); } 
-        finally { isGenerating=false; elements.generateBtn.disabled=false; elements.generateBtn.textContent = 'Generate Strategic Plan'; }
+        } catch(e){ setStatus(`✗ Error: ${e.message}`,false); } finally { isGenerating=false; elements.generateBtn.disabled=false; elements.generateBtn.textContent = 'Generate Strategic Plan'; }
     }
     
-    function handleClear() { 
-        elements.customerData.value = ''; 
-        elements.productDescription.value = ''; 
-        elements.outputArea.style.display = 'none'; 
-        elements.renderedOutput.innerHTML = ''; 
-        currentPlan = null; 
-        setStatus('Cleared. Ready for new strategy.',false); 
-    }
-    
-    function handleCopy() { 
-        if(currentPlan) { 
-            navigator.clipboard.writeText(currentPlan); 
-            setStatus('✓ Copied to clipboard!',false); 
-        } else setStatus('No plan to copy',false); 
-    }
-    
-    function saveToHistory() { 
-        if(currentPlan) { 
-            let h = JSON.parse(localStorage.getItem('marketing_history')||'[]'); 
-            h.unshift({id:Date.now(), plan:currentPlan}); 
-            if(h.length>10) h.pop(); 
-            localStorage.setItem('marketing_history',JSON.stringify(h)); 
-            setStatus('✓ Saved to history!',false); 
-        } else setStatus('No plan to save',false); 
-    }
+    function handleClear() { elements.customerData.value = ''; elements.productDescription.value = ''; elements.outputArea.style.display = 'none'; elements.renderedOutput.innerHTML = ''; currentPlan = null; setStatus('Cleared. Ready for new strategy.',false); }
+    function handleCopy() { if(currentPlan) { navigator.clipboard.writeText(currentPlan); setStatus('✓ Copied to clipboard!',false); } else setStatus('No plan to copy',false); }
+    function saveToHistory() { if(currentPlan) { let h = JSON.parse(localStorage.getItem('marketing_history')||'[]'); h.unshift({id:Date.now(), plan:currentPlan}); if(h.length>10) h.pop(); localStorage.setItem('marketing_history',JSON.stringify(h)); setStatus('✓ Saved to history!',false); } else setStatus('No plan to save',false); }
 
     function initApp() {
-        elements.generateBtn.addEventListener('click', handleGenerate); 
-        elements.clearBtn.addEventListener('click', handleClear);
-        elements.copyOutputBtn?.addEventListener('click', handleCopy); 
-        elements.saveHistoryBtn?.addEventListener('click', saveToHistory);
+        elements.generateBtn.addEventListener('click', handleGenerate); elements.clearBtn.addEventListener('click', handleClear);
+        elements.copyOutputBtn?.addEventListener('click', handleCopy); elements.saveHistoryBtn?.addEventListener('click', saveToHistory);
         
         document.querySelectorAll('.role-item').forEach(item => {
             const id = item.dataset.role, name = item.querySelector('.role-name')?.innerText || id;
@@ -667,7 +619,48 @@
         elements.closeRoleContent.addEventListener('click', ()=> elements.roleContentArea.style.display = 'none');
         
         const pricingGrid = document.getElementById('pricingGrid');
-        if(pricingGrid) pricingGrid.innerHTML = `<div class="pricing-card"><h3>Free</h3><div class="price">$0<span>/month</span></div><ul class="feature-list"><li>5 plans/month</li><li>PDF export</li><li>Save to history</li></ul><button class="btn-primary" onclick="showPage('app')">Get Started</button></div><div class="pricing-card popular"><h3>Pro</h3><div class="price">$29<span>/month</span></div><ul class="feature-list"><li>Unlimited plans</li><li>Priority support</li><li>Advanced analytics</li></ul><button class="btn-primary" onclick="showPage('app')">Start Free Trial</button><div style="margin-top:8px;font-size:11px;color:#a5b4fc;">Most popular</div></div><div class="pricing-card"><h3>Enterprise</h3><div class="price">Custom</div><ul class="feature-list"><li>Unlimited everything</li><li>API access</li><li>Dedicated support</li></ul><button class="btn-outline" onclick="alert('Contact sales@strategicmarketing.com')">Contact Sales</button></div>`;
+        if(pricingGrid) pricingGrid.innerHTML = `
+            <div class="pricing-card">
+                <h3>Free</h3>
+                <div class="price">$0<span>/month</span></div>
+                <div class="price-period">Perfect for getting started</div>
+                <ul class="feature-list">
+                    <li><span class="icon-check"></span> 5 strategic plans per month</li>
+                    <li><span class="icon-check"></span> PDF export capability</li>
+                    <li><span class="icon-check"></span> Save to history</li>
+                    <li><span class="icon-check"></span> Copy to clipboard</li>
+                    <li><span class="icon-check"></span> Basic analytics dashboard</li>
+                </ul>
+                <button class="btn-primary" onclick="showPage('app')">Get Started →</button>
+            </div>
+            <div class="pricing-card popular">
+                <div class="popular-badge">⭐ MOST POPULAR</div>
+                <h3>Pro</h3>
+                <div class="price">$29<span>/month</span></div>
+                <div class="price-period">For growing marketing teams</div>
+                <ul class="feature-list">
+                    <li><span class="icon-check"></span> Unlimited strategic plans</li>
+                    <li><span class="icon-check"></span> Priority support 24/7</li>
+                    <li><span class="icon-check"></span> All export formats (PDF, DOC, CSV)</li>
+                    <li><span class="icon-check"></span> Advanced analytics & insights</li>
+                    <li><span class="icon-check"></span> Team collaboration sharing</li>
+                </ul>
+                <button class="btn-primary" onclick="showPage('app')">Start Free Trial →</button>
+            </div>
+            <div class="pricing-card">
+                <h3>Enterprise</h3>
+                <div class="price">Custom</div>
+                <div class="price-period">Tailored for large organizations</div>
+                <ul class="feature-list">
+                    <li><span class="icon-check"></span> Unlimited everything</li>
+                    <li><span class="icon-check"></span> Full REST API access</li>
+                    <li><span class="icon-check"></span> SSO & SAML authentication</li>
+                    <li><span class="icon-check"></span> Dedicated account manager</li>
+                    <li><span class="icon-check"></span> Custom integrations & SLA</li>
+                </ul>
+                <button class="btn-outline" onclick="alert('Contact sales@strategicmarketing.com')">Contact Sales →</button>
+            </div>
+        `;
     }
 
     if(sessionStorage.getItem('prefillCustomer')){ elements.customerData.value = sessionStorage.getItem('prefillCustomer'); sessionStorage.removeItem('prefillCustomer'); }
@@ -682,4 +675,3 @@
 </script>
 </body>
 </html>
-```
