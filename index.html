@@ -26,7 +26,7 @@
         }
 
         /* CSS Icons Library */
-        .icon-target, .icon-bars, .icon-lightning, .icon-building, .icon-search, .icon-pin, .icon-grid, .icon-diamond, .icon-path, .icon-linechart, .icon-bullseye, .icon-calendar, .icon-paintbrush, .icon-home, .icon-clipboard, .icon-lightbulb, .icon-dollar, .icon-rocket, .icon-user, .icon-arrow, .icon-lock, .icon-data, .icon-check, .icon-star, .icon-heart, .icon-brain, .icon-gear, .icon-political, .icon-economic, .icon-social, .icon-tech, .icon-legal, .icon-environment {
+        .icon-target, .icon-bars, .icon-lightning, .icon-building, .icon-search, .icon-pin, .icon-grid, .icon-diamond, .icon-path, .icon-linechart, .icon-bullseye, .icon-calendar, .icon-paintbrush, .icon-home, .icon-clipboard, .icon-lightbulb, .icon-dollar, .icon-rocket, .icon-user, .icon-arrow, .icon-lock, .icon-data, .icon-check, .icon-star, .icon-heart, .icon-brain, .icon-gear {
             display: inline-block;
         }
         .icon-target { width: 20px; height: 20px; border: 2px solid currentColor; border-radius: 50%; position: relative; }
@@ -114,6 +114,18 @@
         .icon-legal::after { content: ''; position: absolute; bottom: 30%; left: 20%; width: 60%; height: 2px; background: currentColor; }
         .icon-environment { width: 18px; height: 18px; position: relative; border-radius: 50%; border: 2px solid currentColor; }
         .icon-environment::before { content: ''; position: absolute; top: 25%; left: 25%; width: 50%; height: 50%; background: currentColor; border-radius: 50%; }
+        
+        /* Porter's Forces Icons */
+        .icon-new-entrants { width: 18px; height: 18px; position: relative; }
+        .icon-new-entrants::before { content: '🚪'; position: absolute; top: 0; left: 0; font-size: 18px; }
+        .icon-buyer-power { width: 18px; height: 18px; position: relative; }
+        .icon-buyer-power::before { content: '🛒'; position: absolute; top: 0; left: 0; font-size: 18px; }
+        .icon-supplier-power { width: 18px; height: 18px; position: relative; }
+        .icon-supplier-power::before { content: '🏭'; position: absolute; top: 0; left: 0; font-size: 18px; }
+        .icon-substitutes { width: 18px; height: 18px; position: relative; }
+        .icon-substitutes::before { content: '🔄'; position: absolute; top: 0; left: 0; font-size: 18px; }
+        .icon-rivalry { width: 18px; height: 18px; position: relative; }
+        .icon-rivalry::before { content: '⚔️'; position: absolute; top: 0; left: 0; font-size: 18px; }
         
         .left-panel {
             width: 300px;
@@ -208,6 +220,78 @@
         
         .footer { text-align: center; padding: 40px; border-top: 1px solid rgba(255,255,255,.1); margin-top: 60px; color: rgba(255,255,255,.5); font-size: 12px; }
         
+        /* Pricing Section Styles */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin: 60px 0 40px;
+            padding: 0 16px;
+        }
+        
+        .pricing-card {
+            background: linear-gradient(145deg, rgba(20, 25, 45, 0.9) 0%, rgba(10, 15, 30, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 32px;
+            padding: 32px 28px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #6366f1, #ec4899, #6366f1);
+            transform: scaleX(0);
+            transition: transform 0.5s ease;
+        }
+        
+        .pricing-card:hover::before { transform: scaleX(1); }
+        .pricing-card:hover { transform: translateY(-12px); border-color: rgba(99, 102, 241, 0.5); box-shadow: 0 25px 40px -15px rgba(99, 102, 241, 0.3); }
+        .pricing-card.popular { border: 1px solid rgba(99, 102, 241, 0.6); background: linear-gradient(145deg, rgba(30, 35, 60, 0.95) 0%, rgba(15, 20, 40, 0.98) 100%); transform: scale(1.02); }
+        .pricing-card.popular:hover { transform: translateY(-12px) scale(1.02); }
+        .popular-badge { position: absolute; top: 20px; right: 20px; background: linear-gradient(135deg, #6366f1, #ec4899); padding: 6px 14px; border-radius: 30px; font-size: 11px; font-weight: 600; color: white; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4); }
+        .pricing-card h3 { font-size: 28px; font-weight: 700; margin-bottom: 16px; background: linear-gradient(135deg, #fff, #a5b4fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .price { font-size: 52px; font-weight: 800; margin: 24px 0 16px; color: #a5b4fc; display: inline-flex; align-items: baseline; gap: 4px; }
+        .price span { font-size: 18px; font-weight: 400; color: rgba(255, 255, 255, 0.5); }
+        .price-period { font-size: 14px; color: rgba(255, 255, 255, 0.4); margin-top: -10px; margin-bottom: 20px; }
+        .feature-list { list-style: none; margin: 30px 0 32px; text-align: left; }
+        .feature-list li { padding: 12px 0; color: rgba(255, 255, 255, 0.8); display: flex; align-items: center; gap: 12px; font-size: 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .feature-list li:last-child { border-bottom: none; }
+        .feature-list .icon-check { color: #4ade80; flex-shrink: 0; }
+        .pricing-card .btn-primary, .pricing-card .btn-outline { width: 100%; justify-content: center; padding: 14px 28px; font-size: 15px; }
+        
+        /* About Page Principles */
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 40px 0;
+        }
+        .principle-card {
+            background: linear-gradient(145deg, rgba(20, 25, 45, 0.8), rgba(10, 15, 30, 0.9));
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 24px;
+            padding: 32px 24px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            cursor: pointer;
+        }
+        .principle-card:hover { transform: translateY(-8px); border-color: rgba(99, 102, 241, 0.5); box-shadow: 0 20px 35px -12px rgba(99, 102, 241, 0.2); }
+        .principle-icon { width: 64px; height: 64px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; background: rgba(99, 102, 241, 0.15); border-radius: 20px; transition: transform 0.3s; }
+        .principle-card:hover .principle-icon { transform: scale(1.1) rotate(5deg); }
+        .principle-card h3 { font-size: 22px; margin-bottom: 12px; background: linear-gradient(135deg, #fff, #a5b4fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .principle-desc { font-size: 13px; color: rgba(255, 255, 255, 0.7); line-height: 1.5; max-width: 200px; margin: 0 auto; }
+        
+        /* Market Sizing */
         .market-sizing-container { background: rgba(255,255,255,.03); border-radius: 20px; padding: 20px; margin-bottom: 24px; }
         .tam-box, .sam-box, .som-box { background: rgba(255,255,255,.05); border-radius: 16px; padding: 20px; margin-bottom: 20px; cursor: pointer; transition: all 0.3s ease; border: 1px solid rgba(99,102,241,.2); }
         .tam-box:hover, .sam-box:hover, .som-box:hover { border-color: #6366f1; background: rgba(99,102,241,.08); transform: translateX(5px); }
@@ -269,36 +353,15 @@
             transition: transform 0.4s ease;
         }
         .pestle-card:hover::before { transform: scaleX(1); }
-        .pestle-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(99,102,241,.4);
-            box-shadow: 0 12px 28px -8px rgba(0,0,0,.4);
-        }
+        .pestle-card:hover { transform: translateY(-6px); border-color: rgba(99,102,241,.4); box-shadow: 0 12px 28px -8px rgba(0,0,0,.4); }
         .pestle-card.political::before { background: linear-gradient(90deg, #6366f1, #818cf8); }
         .pestle-card.economic::before { background: linear-gradient(90deg, #10b981, #34d399); }
         .pestle-card.social::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
         .pestle-card.technological::before { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
         .pestle-card.legal::before { background: linear-gradient(90deg, #ef4444, #f87171); }
         .pestle-card.environmental::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
-        
-        .pestle-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255,255,255,.1);
-        }
-        .pestle-icon {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            border-radius: 12px;
-            transition: transform 0.3s ease;
-        }
+        .pestle-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1); }
+        .pestle-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 24px; border-radius: 12px; transition: transform 0.3s ease; }
         .pestle-card:hover .pestle-icon { transform: scale(1.1) rotate(5deg); }
         .pestle-icon.political { background: rgba(99,102,241,.2); color: #818cf8; }
         .pestle-icon.economic { background: rgba(16,185,129,.2); color: #34d399; }
@@ -306,54 +369,83 @@
         .pestle-icon.technological { background: rgba(6,182,212,.2); color: #22d3ee; }
         .pestle-icon.legal { background: rgba(239,68,68,.2); color: #f87171; }
         .pestle-icon.environmental { background: rgba(139,92,246,.2); color: #a78bfa; }
-        
-        .pestle-title {
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-        }
+        .pestle-title { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
         .pestle-card.political .pestle-title { color: #818cf8; }
         .pestle-card.economic .pestle-title { color: #34d399; }
         .pestle-card.social .pestle-title { color: #fbbf24; }
         .pestle-card.technological .pestle-title { color: #22d3ee; }
         .pestle-card.legal .pestle-title { color: #f87171; }
         .pestle-card.environmental .pestle-title { color: #a78bfa; }
-        
-        .pestle-insight {
-            font-size: 14px;
-            color: rgba(255,255,255,.8);
-            line-height: 1.5;
-            margin-bottom: 16px;
-        }
-        .impact-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        .pestle-insight { font-size: 14px; color: rgba(255,255,255,.8); line-height: 1.5; margin-bottom: 16px; }
+        .impact-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
         .impact-high { background: rgba(239,68,68,.2); color: #f87171; border: 1px solid rgba(239,68,68,.3); }
         .impact-medium { background: rgba(245,158,11,.2); color: #fbbf24; border: 1px solid rgba(245,158,11,.3); }
         .impact-low { background: rgba(16,185,129,.2); color: #34d399; border: 1px solid rgba(16,185,129,.3); }
+        .pestle-footer { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.05); font-size: 12px; color: rgba(255,255,255,.5); display: flex; align-items: center; gap: 8px; }
         
-        .pestle-footer {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid rgba(255,255,255,.05);
-            font-size: 12px;
-            color: rgba(255,255,255,.5);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        /* Porter's Forces Styles */
+        .porters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 16px;
         }
+        .porter-card {
+            background: linear-gradient(145deg, rgba(20, 25, 45, 0.8), rgba(10, 15, 30, 0.9));
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(255,255,255,.08);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .porter-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        .porter-card:hover::before { transform: scaleX(1); }
+        .porter-card:hover { transform: translateY(-6px); border-color: rgba(99,102,241,.4); box-shadow: 0 12px 28px -8px rgba(0,0,0,.4); }
+        .porter-card.new-entrants::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+        .porter-card.buyer-power::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .porter-card.supplier-power::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+        .porter-card.substitutes::before { background: linear-gradient(90deg, #ef4444, #f87171); }
+        .porter-card.rivalry::before { background: linear-gradient(90deg, #ec4899, #f472b6); }
+        .porter-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1); }
+        .porter-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 24px; border-radius: 12px; transition: transform 0.3s ease; }
+        .porter-card:hover .porter-icon { transform: scale(1.1) rotate(5deg); }
+        .porter-icon.new-entrants { background: rgba(139,92,246,.2); color: #a78bfa; }
+        .porter-icon.buyer-power { background: rgba(245,158,11,.2); color: #fbbf24; }
+        .porter-icon.supplier-power { background: rgba(59,130,246,.2); color: #60a5fa; }
+        .porter-icon.substitutes { background: rgba(239,68,68,.2); color: #f87171; }
+        .porter-icon.rivalry { background: rgba(236,72,153,.2); color: #f472b6; }
+        .porter-title { font-size: 16px; font-weight: 700; }
+        .porter-card.new-entrants .porter-title { color: #a78bfa; }
+        .porter-card.buyer-power .porter-title { color: #fbbf24; }
+        .porter-card.supplier-power .porter-title { color: #60a5fa; }
+        .porter-card.substitutes .porter-title { color: #f87171; }
+        .porter-card.rivalry .porter-title { color: #f472b6; }
+        .porter-rating { margin: 12px 0; }
+        .rating-bar { height: 8px; background: rgba(255,255,255,.1); border-radius: 4px; overflow: hidden; margin-top: 8px; }
+        .rating-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+        .rating-fill.high { background: linear-gradient(90deg, #ef4444, #f87171); width: 85%; }
+        .rating-fill.medium { background: linear-gradient(90deg, #f59e0b, #fbbf24); width: 55%; }
+        .rating-fill.low { background: linear-gradient(90deg, #10b981, #34d399); width: 25%; }
+        .porter-insight { font-size: 13px; color: rgba(255,255,255,.7); margin-top: 12px; line-height: 1.4; }
         
         @media (max-width: 768px) {
             .left-panel { width: 280px; }
             .main-content.panel-open { margin-left: 280px; }
-            .steps { grid-template-columns: 1fr; }
-            .pestle-grid { grid-template-columns: 1fr; }
+            .steps, .principles-grid, .pricing-grid { grid-template-columns: 1fr; }
+            .pricing-card.popular { transform: scale(1); }
+            .pricing-card.popular:hover { transform: translateY(-8px); }
         }
     </style>
 </head>
@@ -399,9 +491,38 @@
 
         <div id="plannerPage" class="page"><div class="hero" style="padding:40px 0;"><h1>Strategy Planner</h1><p>Fill in your business details and let our AI do the rest</p></div><div class="input-area"><label>Customer Data / Target Audience</label><textarea id="plannerCustomer" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies..."></textarea><label>Product Description / Service</label><textarea id="plannerProduct" rows="4" placeholder="Example: An AI-powered marketing analytics platform..."></textarea><button class="btn-primary" onclick="goToAppWithData()"><span class="icon-rocket"></span>Generate Strategic Plan</button></div></div>
 
-        <div id="aboutPage" class="page"><div class="hero" style="padding:40px 0;"><h1>Built on <span style="color:#6366f1;">Conscientiousness</span></h1><p>We believe marketing strategy should be disciplined, not chaotic. 13 roles. One clear output. Every time.</p></div></div>
+        <div id="aboutPage" class="page">
+            <div class="hero" style="padding:40px 0;">
+                <h1>Built on <span style="color:#6366f1;">Conscientiousness</span></h1>
+                <p>We believe marketing strategy should be disciplined, not chaotic. 13 roles. One clear output. Every time.</p>
+            </div>
+            <div class="principles-grid">
+                <div class="principle-card">
+                    <div class="principle-icon"><div class="icon-gear" style="width: 32px; height: 32px; color: #a5b4fc;"></div></div>
+                    <h3>Autonomy</h3>
+                    <p class="principle-desc">System works independently. No need to instruct next steps.</p>
+                </div>
+                <div class="principle-card">
+                    <div class="principle-icon"><div class="icon-brain" style="width: 32px; height: 24px; color: #a5b4fc;"></div></div>
+                    <h3>Intelligence</h3>
+                    <p class="principle-desc">Smart analysis that learns and adapts to your business.</p>
+                </div>
+                <div class="principle-card">
+                    <div class="principle-icon"><div class="icon-heart" style="width: 28px; height: 24px; color: #a5b4fc;"></div></div>
+                    <h3>Goodness</h3>
+                    <p class="principle-desc">Ethical strategies benefiting everyone, not just bottom line.</p>
+                </div>
+            </div>
+            <div style="background: rgba(99,102,241,.08); border-radius: 24px; padding: 32px; text-align: center;">
+                <h3>Our Mission</h3>
+                <p style="color: rgba(255,255,255,.7); max-width: 600px; margin: 16px auto 0;">To democratize strategic marketing by making professional-grade planning accessible, understandable, and actionable for everyone.</p>
+            </div>
+        </div>
 
-        <div id="pricingPage" class="page"><div class="hero" style="padding:40px 0;"><h1>Simple, Transparent Pricing</h1><p>No hidden fees. Cancel anytime.</p></div><div class="pricing-grid" id="pricingGrid"></div></div>
+        <div id="pricingPage" class="page">
+            <div class="hero" style="padding:40px 0;"><h1>Simple, Transparent Pricing</h1><p>No hidden fees. Cancel anytime.</p></div>
+            <div class="pricing-grid" id="pricingGrid"></div>
+        </div>
 
         <div id="appPage" class="page"><div class="input-area"><label>Customer Data / Target Audience</label><textarea id="customerData" rows="3" placeholder="Example: Enterprise CTOs..."></textarea><label>Product Description / Service</label><textarea id="productDescription" rows="5" placeholder="Example: An AI-powered marketing analytics platform..."></textarea><div style="display:flex;gap:12px;"><button id="generateBtn" class="btn-primary"><span class="icon-rocket"></span>Generate Strategic Plan</button><button id="clearBtn" class="btn-outline">Clear All</button></div></div><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div><div class="status-bar" id="statusBar"><span class="loader"></span><span id="statusMessage">Ready to generate</span></div><div class="output-area" id="outputArea"><div style="display:flex;justify-content:space-between;margin-bottom:20px;"><h3>Generated Marketing Strategy</h3><div><button id="copyOutputBtn" class="btn-outline">Copy</button><button id="saveHistoryBtn" class="btn-outline">Save</button></div></div><div id="renderedOutput"></div></div></div>
 
@@ -488,20 +609,17 @@
         return `<div style="text-align: center;"><h2 style="color: #a5b4fc; margin-bottom: 20px;">Market Sizing (TAM / SAM / SOM)</h2><div class="market-sizing-container" style="background: transparent; padding: 0;"><div class="tam-box" id="tamBox" style="cursor: pointer;"><div class="tam-region">🌍 Aetheria Economic Region (Illustrative Market)</div><div class="tam-value">ETB ${tamB} B</div><div class="hidden-detail"><div class="icon-grid-small">${Array(tamIcons).fill('<div class="market-icon">🏢</div>').join('')}</div><p style="margin-top:12px; font-size:12px; color:#a5b4fc;">Total Addressable Market · ${tamIcons} market sectors</p><p style="font-size:11px;">~10,000 potential enterprise clients</p></div><div class="click-hint">▼ Click to explore</div></div><div class="sam-box" id="samBox" style="cursor: pointer;"><div class="sam-layout"><div class="sam-hand">🖐️🤝</div><div class="sam-value-right"><div class="sam-value">ETB ${samM} M</div></div></div><div class="hidden-detail"><div class="icon-grid-small">${Array(samIcons).fill('<div class="market-icon">🏪</div>').join('')}</div><p style="margin-top:12px; font-size:12px; color:#a5b4fc;">Serviceable Available Market · ${samIcons} reachable segments</p><p style="font-size:11px;">~3,000 firms in real-estate, retail & professional services</p></div><div class="click-hint">▼ Click to explore</div></div><div class="som-box" id="somBox" style="cursor: pointer;"><div class="som-center"><div class="hand-icon-large">🖐️🎯</div><div class="som-value">ETB ${somM} M</div></div><div class="hidden-detail"><div class="icon-grid-small">${Array(somIcons).fill('<div class="market-icon">🚀</div>').join('')}</div><p style="margin-top:12px; font-size:12px; color:#a5b4fc;">Serviceable Obtainable Market · ${somIcons} achievable segments</p><p style="font-size:11px;">~150 early-adopter real-estate firms in Year 1</p></div><div class="click-hint">▼ Click to explore</div></div></div></div>`;
     }
     
-    // Enhanced PESTLE Visual Renderer
     function renderPESTLEVisual(plan) {
         if(!plan) return '<div class="empty-state">🔍 Generate a plan first to see PESTLE analysis</div>';
-        
         const match = plan.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
         let pestleData = {
-            political: { insight: '', impact: 'medium' },
-            economic: { insight: '', impact: 'medium' },
-            social: { insight: '', impact: 'medium' },
-            technological: { insight: '', impact: 'medium' },
-            legal: { insight: '', impact: 'medium' },
-            environmental: { insight: '', impact: 'medium' }
+            political: { insight: 'Government digital transformation incentives create opportunities.', impact: 'high' },
+            economic: { insight: '7% GDP growth drives demand for automation services.', impact: 'high' },
+            social: { insight: '85% mobile penetration with expectation for instant replies.', impact: 'high' },
+            technological: { insight: '4G/5G rollout enabling real-time AI responses.', impact: 'medium' },
+            legal: { insight: 'Data protection law requires compliance and local storage.', impact: 'high' },
+            environmental: { insight: 'ESG reporting gaining traction among enterprises.', impact: 'low' }
         };
-        
         if(match && match[1]) {
             const text = match[1];
             const sections = {
@@ -512,73 +630,43 @@
                 legal: text.match(/Legal[:\s]*\n?([\s\S]*?)(?=\n\n|\nPolitical|\nEconomic|\nSocial|\nTechnological|\nEnvironmental|$)/i),
                 environmental: text.match(/Environmental[:\s]*\n?([\s\S]*?)(?=\n\n|\nPolitical|\nEconomic|\nSocial|\nTechnological|\nLegal|$)/i)
             };
-            
             for(const [key, section] of Object.entries(sections)) {
                 if(section && section[1]) {
-                    let insight = section[1].trim().substring(0, 180);
+                    let insight = section[1].trim().substring(0, 120);
                     insight = insight.replace(/\|/g, '').replace(/\n/g, ' ');
                     pestleData[key].insight = insight;
-                    
                     if(insight.match(/high|significant|major|strong/i)) pestleData[key].impact = 'high';
                     else if(insight.match(/low|minor|weak|negligible/i)) pestleData[key].impact = 'low';
                     else pestleData[key].impact = 'medium';
                 }
             }
         }
-        
-        if(!pestleData.political.insight) {
-            pestleData = {
-                political: { insight: 'Government incentives for digital transformation in the service sector.', impact: 'high' },
-                economic: { insight: 'Rapid GDP growth (+7% YoY) fuels demand for faster service.', impact: 'high' },
-                social: { insight: 'High mobile penetration (85%) with expectation for instant replies.', impact: 'high' },
-                technological: { insight: '4G/5G rollout expanding broadband across urban centers.', impact: 'medium' },
-                legal: { insight: 'Data protection law (2022) requires consent & local storage.', impact: 'high' },
-                environmental: { insight: 'ESG reporting gaining traction among enterprise clients.', impact: 'low' }
-            };
+        const icons = { political: '🏛️', economic: '📈', social: '👥', technological: '💻', legal: '⚖️', environmental: '🌿' };
+        const titles = { political: 'Political', economic: 'Economic', social: 'Social', technological: 'Technological', legal: 'Legal', environmental: 'Environmental' };
+        return `<div style="text-align: center; margin-bottom: 24px;"><h2 style="color: #a5b4fc; margin-bottom: 8px;">PESTLE Analysis</h2><p style="color: rgba(255,255,255,.5); font-size: 13px; margin-bottom: 24px;">Macro-environmental factors affecting your market</p></div><div class="pestle-grid">${Object.entries(pestleData).map(([key, data]) => `<div class="pestle-card ${key}"><div class="pestle-header"><div class="pestle-icon ${key}">${icons[key]}</div><div class="pestle-title">${titles[key]}</div></div><div class="pestle-insight">${escapeHtml(data.insight)}</div><div class="pestle-footer"><span class="impact-badge impact-${data.impact}">${data.impact.toUpperCase()} IMPACT</span><span style="margin-left: auto;">▼ Click for details</span></div></div>`).join('')}</div><div style="margin-top: 20px; padding: 12px; background: rgba(99,102,241,.08); border-radius: 12px; text-align: center; font-size: 12px; color: rgba(255,255,255,.5);">💡 Strategic Insight: Political and Economic factors present the strongest opportunities for market entry.</div>`;
+    }
+    
+    function renderPortersVisual(plan) {
+        if(!plan) return '<div class="empty-state">⚔️ Generate a plan first to see Porter\'s Five Forces analysis</div>';
+        const match = plan.match(/\[PORTER OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        let forces = {
+            newEntrants: { name: 'Threat of New Entrants', rating: 'medium', insight: 'Moderate barriers due to technical expertise requirements.' },
+            buyerPower: { name: 'Bargaining Power of Buyers', rating: 'high', insight: 'Buyers can easily compare and switch between vendors.' },
+            supplierPower: { name: 'Bargaining Power of Suppliers', rating: 'low', insight: 'Cloud infrastructure providers are commoditized.' },
+            substitutes: { name: 'Threat of Substitutes', rating: 'medium', insight: 'Manual WhatsApp handling and FAQ bots exist as alternatives.' },
+            rivalry: { name: 'Industry Rivalry', rating: 'high', insight: 'Multiple players competing for market share.' }
+        };
+        if(match && match[1]) {
+            const text = match[1];
+            if(text.match(/New Entrants|new entrants/i)) forces.newEntrants.insight = text.match(/New Entrants[:\s]*([^\n]+)/i)?.[1]?.trim().substring(0, 100) || forces.newEntrants.insight;
+            if(text.match(/Buyer|buyer power/i)) forces.buyerPower.insight = text.match(/Buyer[:\s]*([^\n]+)/i)?.[1]?.trim().substring(0, 100) || forces.buyerPower.insight;
+            if(text.match(/Supplier|supplier power/i)) forces.supplierPower.insight = text.match(/Supplier[:\s]*([^\n]+)/i)?.[1]?.trim().substring(0, 100) || forces.supplierPower.insight;
+            if(text.match(/Substitutes|substitute/i)) forces.substitutes.insight = text.match(/Substitutes[:\s]*([^\n]+)/i)?.[1]?.trim().substring(0, 100) || forces.substitutes.insight;
+            if(text.match(/Rivalry|industry rivalry/i)) forces.rivalry.insight = text.match(/Rivalry[:\s]*([^\n]+)/i)?.[1]?.trim().substring(0, 100) || forces.rivalry.insight;
         }
-        
-        const icons = {
-            political: '🏛️',
-            economic: '📈',
-            social: '👥',
-            technological: '💻',
-            legal: '⚖️',
-            environmental: '🌿'
-        };
-        
-        const titles = {
-            political: 'Political',
-            economic: 'Economic',
-            social: 'Social',
-            technological: 'Technological',
-            legal: 'Legal',
-            environmental: 'Environmental'
-        };
-        
-        return `
-            <div style="text-align: center; margin-bottom: 24px;">
-                <h2 style="color: #a5b4fc; margin-bottom: 8px;">PESTLE Analysis</h2>
-                <p style="color: rgba(255,255,255,.5); font-size: 13px; margin-bottom: 24px;">Macro-environmental factors affecting your market</p>
-            </div>
-            <div class="pestle-grid">
-                ${Object.entries(pestleData).map(([key, data]) => `
-                    <div class="pestle-card ${key}">
-                        <div class="pestle-header">
-                            <div class="pestle-icon ${key}">${icons[key]}</div>
-                            <div class="pestle-title">${titles[key]}</div>
-                        </div>
-                        <div class="pestle-insight">${escapeHtml(data.insight)}</div>
-                        <div class="pestle-footer">
-                            <span class="impact-badge impact-${data.impact}">${data.impact.toUpperCase()} IMPACT</span>
-                            <span style="margin-left: auto;">▼ Click for details</span>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-            <div style="margin-top: 20px; padding: 12px; background: rgba(99,102,241,.08); border-radius: 12px; text-align: center; font-size: 12px; color: rgba(255,255,255,.5);">
-                💡 Strategic Insight: ${pestleData.political.impact === 'high' ? 'Political and Economic factors present the strongest opportunities.' : 'Monitor regulatory and technological changes for competitive advantage.'}
-            </div>
-        `;
+        const icons = { newEntrants: '🚪', buyerPower: '🛒', supplierPower: '🏭', substitutes: '🔄', rivalry: '⚔️' };
+        const classes = { newEntrants: 'new-entrants', buyerPower: 'buyer-power', supplierPower: 'supplier-power', substitutes: 'substitutes', rivalry: 'rivalry' };
+        return `<div style="text-align: center; margin-bottom: 24px;"><h2 style="color: #a5b4fc; margin-bottom: 8px;">Porter's Five Forces</h2><p style="color: rgba(255,255,255,.5); font-size: 13px; margin-bottom: 24px;">Industry competition and profitability analysis</p></div><div class="porters-grid">${Object.entries(forces).map(([key, force]) => `<div class="porter-card ${classes[key]}"><div class="porter-header"><div class="porter-icon ${classes[key]}">${icons[key]}</div><div class="porter-title">${force.name}</div></div><div class="porter-rating"><span style="font-size: 12px; color: rgba(255,255,255,.6);">${force.rating.toUpperCase()} THREAT</span><div class="rating-bar"><div class="rating-fill ${force.rating}"></div></div></div><div class="porter-insight">${escapeHtml(force.insight)}</div><div class="pestle-footer" style="margin-top: 12px;"><span>▼ Click for details</span></div></div>`).join('')}</div><div style="margin-top: 20px; padding: 12px; background: rgba(99,102,241,.08); border-radius: 12px; text-align: center; font-size: 12px; color: rgba(255,255,255,.5);">💡 Strategic Insight: High buyer power and rivalry require strong differentiation and customer loyalty programs.</div>`;
     }
     
     function extractPESTLEText(plan) { const m = plan?.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No PESTLE analysis available</p>'; }
@@ -676,7 +764,7 @@
                 case 'segmentation': handler=()=>showRoleContent(id,name,renderSegmentationVisual); break;
                 case 'marketsizing': handler=()=>showRoleContent(id,name,renderMarketSizingVisual); break;
                 case 'pestle': handler=()=>showRoleContent(id,name,renderPESTLEVisual); break;
-                case 'porter': handler=()=>showRoleContent(id,name,extractPorterText); break;
+                case 'porter': handler=()=>showRoleContent(id,name,renderPortersVisual); break;
                 case 'competitors': handler=()=>showRoleContent(id,name,extractCompetitorsText); break;
                 case 'positioning': handler=()=>showRoleContent(id,name,extractPositioningText); break;
                 case '4ps': handler=()=>showRoleContent(id,name,extract4PsText); break;
@@ -713,4 +801,3 @@
 </script>
 </body>
 </html>
-```
