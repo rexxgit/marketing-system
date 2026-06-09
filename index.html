@@ -115,18 +115,6 @@
         .icon-environment { width: 18px; height: 18px; position: relative; border-radius: 50%; border: 2px solid currentColor; }
         .icon-environment::before { content: ''; position: absolute; top: 25%; left: 25%; width: 50%; height: 50%; background: currentColor; border-radius: 50%; }
         
-        /* Porter's Forces Icons */
-        .icon-new-entrants { width: 18px; height: 18px; position: relative; }
-        .icon-new-entrants::before { content: '🚪'; position: absolute; top: 0; left: 0; font-size: 18px; }
-        .icon-buyer-power { width: 18px; height: 18px; position: relative; }
-        .icon-buyer-power::before { content: '🛒'; position: absolute; top: 0; left: 0; font-size: 18px; }
-        .icon-supplier-power { width: 18px; height: 18px; position: relative; }
-        .icon-supplier-power::before { content: '🏭'; position: absolute; top: 0; left: 0; font-size: 18px; }
-        .icon-substitutes { width: 18px; height: 18px; position: relative; }
-        .icon-substitutes::before { content: '🔄'; position: absolute; top: 0; left: 0; font-size: 18px; }
-        .icon-rivalry { width: 18px; height: 18px; position: relative; }
-        .icon-rivalry::before { content: '⚔️'; position: absolute; top: 0; left: 0; font-size: 18px; }
-        
         .left-panel {
             width: 300px;
             background: linear-gradient(180deg, #0c1120 0%, #050810 100%);
@@ -440,12 +428,66 @@
         .rating-fill.low { background: linear-gradient(90deg, #10b981, #34d399); width: 25%; }
         .porter-insight { font-size: 13px; color: rgba(255,255,255,.7); margin-top: 12px; line-height: 1.4; }
         
+        /* Competitors Analysis Styles */
+        .competitors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+        .competitor-card {
+            background: linear-gradient(145deg, rgba(20, 25, 45, 0.85), rgba(10, 15, 30, 0.95));
+            border-radius: 24px;
+            padding: 24px;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(255,255,255,.08);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .competitor-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        .competitor-card:hover::before { transform: scaleX(1); }
+        .competitor-card:hover { transform: translateY(-8px); border-color: rgba(99,102,241,.5); box-shadow: 0 20px 35px -12px rgba(0,0,0,.5); }
+        .competitor-card.threat-high::before { background: linear-gradient(90deg, #ef4444, #f87171); }
+        .competitor-card.threat-medium::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .competitor-card.threat-low::before { background: linear-gradient(90deg, #10b981, #34d399); }
+        .competitor-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1); }
+        .competitor-name { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, #fff, #a5b4fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .threat-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .threat-high { background: rgba(239,68,68,.2); color: #f87171; border: 1px solid rgba(239,68,68,.3); }
+        .threat-medium { background: rgba(245,158,11,.2); color: #fbbf24; border: 1px solid rgba(245,158,11,.3); }
+        .threat-low { background: rgba(16,185,129,.2); color: #34d399; border: 1px solid rgba(16,185,129,.3); }
+        .competitor-offering { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding: 10px 12px; background: rgba(99,102,241,.1); border-radius: 12px; }
+        .offering-icon { font-size: 20px; }
+        .offering-text { font-size: 13px; color: rgba(255,255,255,.8); }
+        .strengths-weaknesses { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+        .strengths-list, .weaknesses-list { background: rgba(255,255,255,.03); border-radius: 12px; padding: 12px; }
+        .strengths-list h4, .weaknesses-list h4 { font-size: 12px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .strengths-list h4 { color: #4ade80; }
+        .weaknesses-list h4 { color: #f87171; }
+        .strengths-list ul, .weaknesses-list ul { list-style: none; padding-left: 0; }
+        .strengths-list li, .weaknesses-list li { font-size: 11px; color: rgba(255,255,255,.7); padding: 4px 0; display: flex; align-items: center; gap: 6px; }
+        .position-tag { display: inline-block; background: rgba(99,102,241,.2); padding: 4px 10px; border-radius: 15px; font-size: 10px; color: #a5b4fc; margin-top: 8px; }
+        .differentiation-box { margin-top: 16px; padding: 12px; background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(236,72,153,.1)); border-radius: 12px; border-left: 3px solid #4ade80; }
+        .differentiation-box p { font-size: 12px; color: rgba(255,255,255,.8); line-height: 1.4; }
+        
         @media (max-width: 768px) {
             .left-panel { width: 280px; }
             .main-content.panel-open { margin-left: 280px; }
-            .steps, .principles-grid, .pricing-grid { grid-template-columns: 1fr; }
+            .steps, .principles-grid, .pricing-grid, .competitors-grid { grid-template-columns: 1fr; }
             .pricing-card.popular { transform: scale(1); }
             .pricing-card.popular:hover { transform: translateY(-8px); }
+            .strengths-weaknesses { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -669,6 +711,37 @@
         return `<div style="text-align: center; margin-bottom: 24px;"><h2 style="color: #a5b4fc; margin-bottom: 8px;">Porter's Five Forces</h2><p style="color: rgba(255,255,255,.5); font-size: 13px; margin-bottom: 24px;">Industry competition and profitability analysis</p></div><div class="porters-grid">${Object.entries(forces).map(([key, force]) => `<div class="porter-card ${classes[key]}"><div class="porter-header"><div class="porter-icon ${classes[key]}">${icons[key]}</div><div class="porter-title">${force.name}</div></div><div class="porter-rating"><span style="font-size: 12px; color: rgba(255,255,255,.6);">${force.rating.toUpperCase()} THREAT</span><div class="rating-bar"><div class="rating-fill ${force.rating}"></div></div></div><div class="porter-insight">${escapeHtml(force.insight)}</div><div class="pestle-footer" style="margin-top: 12px;"><span>▼ Click for details</span></div></div>`).join('')}</div><div style="margin-top: 20px; padding: 12px; background: rgba(99,102,241,.08); border-radius: 12px; text-align: center; font-size: 12px; color: rgba(255,255,255,.5);">💡 Strategic Insight: High buyer power and rivalry require strong differentiation and customer loyalty programs.</div>`;
     }
     
+    function renderCompetitorsVisual(plan) {
+        if(!plan) return '<div class="empty-state">🔍 Generate a plan first to see competitor analysis</div>';
+        const match = plan.match(/\[COMPETITOR OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        
+        let competitors = [
+            { name: 'ManyChat Ethiopia', threat: 'high', offering: 'Drag-and-drop bot builder, $30/mo subscription', strengths: ['Large ecosystem', 'Strong brand awareness', 'Easy integration'], weaknesses: ['Limited Amharic support', 'No compliance features'], position: 'Mass market automation', differentiation: 'Local compliance + bilingual AI' },
+            { name: 'Abyssinia Bot', threat: 'medium', offering: 'WhatsApp-only, per-session pricing', strengths: ['Native Amharic NLP', 'Local support team'], weaknesses: ['Limited AI depth', 'Basic analytics'], position: 'Local language specialist', differentiation: 'Human-like conversation + legal compliance' },
+            { name: 'Zendesk Answer Bot', threat: 'medium', offering: 'AI-augmented ticketing, enterprise contracts', strengths: ['Deep analytics', 'Omnichannel suite'], weaknesses: ['Expensive', 'Complex setup'], position: 'Enterprise customer service', differentiation: 'Affordable + local edge servers' }
+        ];
+        
+        if(match && match[1]) {
+            const text = match[1];
+            if(text.match(/ManyChat/i)) {
+                const insight = text.match(/ManyChat[:\s]*([^\n]+)/i)?.[1];
+                if(insight) competitors[0].offering = insight.substring(0, 80);
+            }
+            if(text.match(/Abyssinia/i)) {
+                const insight = text.match(/Abyssinia[:\s]*([^\n]+)/i)?.[1];
+                if(insight) competitors[1].offering = insight.substring(0, 80);
+            }
+            if(text.match(/Zendesk/i)) {
+                const insight = text.match(/Zendesk[:\s]*([^\n]+)/i)?.[1];
+                if(insight) competitors[2].offering = insight.substring(0, 80);
+            }
+        }
+        
+        const threatIcons = { high: '🔴', medium: '🟡', low: '🟢' };
+        
+        return `<div style="text-align: center; margin-bottom: 24px;"><h2 style="color: #a5b4fc; margin-bottom: 8px;">Competitor Analysis</h2><p style="color: rgba(255,255,255,.5); font-size: 13px; margin-bottom: 24px;">Strategic positioning and market intelligence</p></div><div class="competitors-grid">${competitors.map(comp => `<div class="competitor-card threat-${comp.threat}"><div class="competitor-header"><span class="competitor-name">${escapeHtml(comp.name)}</span><span class="threat-badge threat-${comp.threat}">${threatIcons[comp.threat]} ${comp.threat.toUpperCase()} THREAT</span></div><div class="competitor-offering"><span class="offering-icon">📦</span><span class="offering-text">${escapeHtml(comp.offering)}</span></div><div class="strengths-weaknesses"><div class="strengths-list"><h4>✓ Strengths</h4><ul>${comp.strengths.map(s => `<li>• ${escapeHtml(s)}</li>`).join('')}</ul></div><div class="weaknesses-list"><h4>⚠ Weaknesses</h4><ul>${comp.weaknesses.map(w => `<li>• ${escapeHtml(w)}</li>`).join('')}</ul></div></div><div class="position-tag">🎯 ${escapeHtml(comp.position)}</div><div class="differentiation-box"><p><strong>💡 Differentiation Opportunity:</strong> ${escapeHtml(comp.differentiation)}</p></div><div class="pestle-footer" style="margin-top: 12px;"><span>▼ Click for details</span></div></div>`).join('')}</div><div style="margin-top: 20px; padding: 12px; background: rgba(99,102,241,.08); border-radius: 12px; text-align: center; font-size: 12px; color: rgba(255,255,255,.5);">💡 Strategic Insight: Differentiate through bilingual compliance, human-like conversation, and local edge server latency advantages.</div>`;
+    }
+    
     function extractPESTLEText(plan) { const m = plan?.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No PESTLE analysis available</p>'; }
     function extractPorterText(plan) { const m = plan?.match(/\[PORTER OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No Porter\'s Five Forces analysis available</p>'; }
     function extractCompetitorsText(plan) { const m = plan?.match(/\[COMPETITOR OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No competitor analysis available</p>'; }
@@ -765,7 +838,7 @@
                 case 'marketsizing': handler=()=>showRoleContent(id,name,renderMarketSizingVisual); break;
                 case 'pestle': handler=()=>showRoleContent(id,name,renderPESTLEVisual); break;
                 case 'porter': handler=()=>showRoleContent(id,name,renderPortersVisual); break;
-                case 'competitors': handler=()=>showRoleContent(id,name,extractCompetitorsText); break;
+                case 'competitors': handler=()=>showRoleContent(id,name,renderCompetitorsVisual); break;
                 case 'positioning': handler=()=>showRoleContent(id,name,extractPositioningText); break;
                 case '4ps': handler=()=>showRoleContent(id,name,extract4PsText); break;
                 case 'swot': handler=()=>showRoleContent(id,name,extractSWOTText); break;
