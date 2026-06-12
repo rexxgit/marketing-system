@@ -560,14 +560,179 @@
         .ps-features li { font-size: 12px; color: rgba(255,255,255,.7); padding: 6px 0; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,.05); }
         .ps-features li:last-child { border-bottom: none; }
         
+        /* SWOT Analysis Styles - 4 Cards with Capital Letters */
+        .swot-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-top: 20px;
+        }
+        .swot-card {
+            background: linear-gradient(145deg, rgba(20, 25, 45, 0.85), rgba(10, 15, 30, 0.95));
+            border-radius: 24px;
+            padding: 24px;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(255,255,255,.08);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .swot-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        .swot-card:hover::before { transform: scaleX(1); }
+        .swot-card:hover { transform: translateY(-6px); border-color: rgba(99,102,241,.4); box-shadow: 0 15px 30px -12px rgba(0,0,0,.4); }
+        .swot-card.strengths::before { background: linear-gradient(90deg, #10b981, #34d399); }
+        .swot-card.weaknesses::before { background: linear-gradient(90deg, #ef4444, #f87171); }
+        .swot-card.opportunities::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .swot-card.threats::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+        .swot-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+        }
+        .swot-letter {
+            width: 55px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 800;
+            border-radius: 16px;
+            transition: transform 0.3s ease;
+        }
+        .swot-card:hover .swot-letter { transform: scale(1.1) rotate(3deg); }
+        .swot-card.strengths .swot-letter { background: rgba(16,185,129,.2); color: #34d399; }
+        .swot-card.weaknesses .swot-letter { background: rgba(239,68,68,.2); color: #f87171; }
+        .swot-card.opportunities .swot-letter { background: rgba(245,158,11,.2); color: #fbbf24; }
+        .swot-card.threats .swot-letter { background: rgba(139,92,246,.2); color: #a78bfa; }
+        .swot-title {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .swot-card.strengths .swot-title { color: #34d399; }
+        .swot-card.weaknesses .swot-title { color: #f87171; }
+        .swot-card.opportunities .swot-title { color: #fbbf24; }
+        .swot-card.threats .swot-title { color: #a78bfa; }
+        .swot-details {
+            font-size: 13px;
+            color: rgba(255,255,255,.8);
+            line-height: 1.5;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,.05);
+        }
+        .swot-details ul { padding-left: 20px; margin-top: 8px; }
+        .swot-details li { margin: 6px 0; }
+        
+        /* Journey Map - Dotted Timeline Styles */
+        .journey-timeline-container {
+            background: linear-gradient(145deg, rgba(20, 25, 45, 0.85), rgba(10, 15, 30, 0.95));
+            border-radius: 28px;
+            padding: 32px;
+            margin-top: 20px;
+            border: 1px solid rgba(99,102,241,.2);
+            overflow-x: auto;
+        }
+        .journey-timeline {
+            position: relative;
+            padding: 20px 0 40px;
+            min-width: 600px;
+        }
+        .journey-dotted-line {
+            position: absolute;
+            top: 30px;
+            left: 40px;
+            right: 40px;
+            height: 3px;
+            background: repeating-linear-gradient(90deg, #6366f1, #6366f1 12px, transparent 12px, transparent 24px);
+            border-radius: 3px;
+            z-index: 0;
+        }
+        .journey-stages {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+        }
+        .journey-stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .journey-stage:hover { transform: translateY(-8px); }
+        .stage-dot {
+            width: 20px;
+            height: 20px;
+            background: #6366f1;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(99,102,241,.2);
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+        .journey-stage:hover .stage-dot {
+            background: #ec4899;
+            box-shadow: 0 0 0 6px rgba(236,72,153,.3);
+            transform: scale(1.2);
+        }
+        .stage-day {
+            font-size: 11px;
+            color: rgba(255,255,255,.5);
+            text-align: center;
+            background: rgba(0,0,0,.4);
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+        .stage-name {
+            font-size: 13px;
+            font-weight: 700;
+            text-align: center;
+            color: #a5b4fc;
+        }
+        .stage-desc {
+            font-size: 11px;
+            color: rgba(255,255,255,.5);
+            text-align: center;
+            max-width: 140px;
+            line-height: 1.3;
+        }
+        .journey-start, .journey-end {
+            position: absolute;
+            top: 22px;
+            font-size: 20px;
+            z-index: 2;
+        }
+        .journey-start { left: 0; }
+        .journey-end { right: 0; }
+        
         @media (max-width: 768px) {
             .left-panel { width: 280px; }
             .main-content.panel-open { margin-left: 280px; }
-            .steps, .principles-grid, .pricing-grid, .competitors-grid, .fourps-grid { grid-template-columns: 1fr; }
+            .steps, .principles-grid, .pricing-grid, .competitors-grid, .fourps-grid, .swot-grid { grid-template-columns: 1fr; }
             .pricing-card.popular { transform: scale(1); }
             .pricing-card.popular:hover { transform: translateY(-8px); }
             .strengths-weaknesses { grid-template-columns: 1fr; }
             .positioning-statement { font-size: 16px; padding: 16px; }
+            .journey-timeline-container { overflow-x: auto; }
+            .journey-timeline { min-width: 550px; }
         }
     </style>
 </head>
@@ -687,214 +852,32 @@
     function demoSignIn() { currentUser = getDemoUser(); sessionStorage.setItem('currentUser', JSON.stringify(currentUser)); showLoggedInUI(); }
     function demoSignOut() { currentUser = null; sessionStorage.removeItem('currentUser'); showLoggedOutUI(); }
 
-    function renderSegmentationVisual(plan) {
-        if(!plan) return '<div class="empty-state">✨ Generate a plan first to see segmentation visualization</div>';
-        const match = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        let segments = [], primaryTarget = '';
-        if(match) {
-            const segText = match[1];
-            const segmentLines = segText.split('\n');
-            for(const line of segmentLines) {
-                if(line.match(/^\d+\.|^[-•*]\s+/) && line.length > 10) {
-                    const segmentName = line.replace(/^\d+\.|^[-•*]\s+/, '').trim().substring(0, 50);
-                    if(segmentName.length > 5) segments.push(segmentName);
-                }
-            }
-            const primaryMatch = plan.match(/Primary Target[:\s]*([^\n]+)/i);
-            if(primaryMatch) primaryTarget = primaryMatch[1].trim();
-        }
-        if(segments.length === 0) segments = ['Real-Estate Agencies', 'Retail & Service Outlets', 'Professional Service Firms'];
-        if(!primaryTarget) primaryTarget = 'Urban Young Professionals – largest segment in Addis Ababa, high trial propensity for new convenience drinks';
-        const segmentColors = ['#4ade80', '#22d3ee', '#fbbf24'];
-        return `<div style="text-align: center; margin-bottom: 24px;"><h2 style="color: #a5b4fc; margin-bottom: 20px;">Market Segmentation</h2><div style="position: relative; width: 200px; height: 200px; margin: 0 auto 24px;"><div style="width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(${segmentColors[0]} 0deg 120deg, ${segmentColors[1]} 120deg 240deg, ${segmentColors[2]} 240deg 360deg); transition: transform 0.3s;"></div></div><div style="display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 24px;">${segments.map((seg, i) => `<div style="display: flex; align-items: center; gap: 8px;"><div style="width: 12px; height: 12px; background: ${segmentColors[i]}; border-radius: 50%;"></div><span style="font-size: 14px;">${escapeHtml(seg)}</span></div>`).join('')}</div><div class="priority-card" style="background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(236,72,153,.1)); border: 1px solid rgba(99,102,241,.4); border-radius: 20px; padding: 20px; text-align: left;"><div style="display: inline-block; background: #4ade80; color: #000; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 12px;">🏆 PRIMARY TARGET</div><div style="font-size: 16px; font-weight: 600; color: #4ade80;">${escapeHtml(primaryTarget)}</div><p style="font-size: 13px; color: rgba(255,255,255,.6); margin-top: 12px;">This segment represents the highest potential for growth and should be prioritized in all marketing efforts.</p></div></div>`;
-    }
+    // Visual Renderers
+    function renderSegmentationVisual(plan) { if(!plan) return '<div class="empty-state">✨ Generate a plan first to see segmentation visualization</div>'; const match = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); let segments = [], primaryTarget = ''; if(match) { const segText = match[1]; const segmentLines = segText.split('\n'); for(const line of segmentLines) { if(line.match(/^\d+\.|^[-•*]\s+/) && line.length > 10) { const segmentName = line.replace(/^\d+\.|^[-•*]\s+/, '').trim().substring(0, 50); if(segmentName.length > 5) segments.push(segmentName); } } const primaryMatch = plan.match(/Primary Target[:\s]*([^\n]+)/i); if(primaryMatch) primaryTarget = primaryMatch[1].trim(); } if(segments.length === 0) segments = ['Real-Estate Agencies', 'Retail & Service Outlets', 'Professional Service Firms']; if(!primaryTarget) primaryTarget = 'Urban Young Professionals – largest segment'; const segmentColors = ['#4ade80', '#22d3ee', '#fbbf24']; return `<div style="text-align: center; margin-bottom: 24px;"><h2 style="color: #a5b4fc; margin-bottom: 20px;">Market Segmentation</h2><div style="position: relative; width: 200px; height: 200px; margin: 0 auto 24px;"><div style="width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(${segmentColors[0]} 0deg 120deg, ${segmentColors[1]} 120deg 240deg, ${segmentColors[2]} 240deg 360deg); transition: transform 0.3s;"></div></div><div style="display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 24px;">${segments.map((seg, i) => `<div style="display: flex; align-items: center; gap: 8px;"><div style="width: 12px; height: 12px; background: ${segmentColors[i]}; border-radius: 50%;"></div><span style="font-size: 14px;">${escapeHtml(seg)}</span></div>`).join('')}</div><div class="priority-card" style="background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(236,72,153,.1)); border: 1px solid rgba(99,102,241,.4); border-radius: 20px; padding: 20px; text-align: left;"><div style="display: inline-block; background: #4ade80; color: #000; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 12px;">🏆 PRIMARY TARGET</div><div style="font-size: 16px; font-weight: 600; color: #4ade80;">${escapeHtml(primaryTarget)}</div><p style="font-size: 13px; color: rgba(255,255,255,.6); margin-top: 12px;">This segment represents the highest potential for growth and should be prioritized in all marketing efforts.</p></div></div>`; }
     
-    function renderMarketSizingVisual(plan) {
-        if(!plan) return '<div class="empty-state">📊 Generate a plan first to see market sizing visualization</div>';
-        const tamMatch = plan.match(/\[TAMSAMSOM OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        let tam=1500000000, sam=450000000, som=22500000;
-        if(tamMatch){
-            const text = tamMatch[1];
-            const tamV = text.match(/TAM[:\s]*([0-9,.]+)\s*B/i);
-            const samV = text.match(/SAM[:\s]*([0-9,.]+)\s*M/i);
-            const somV = text.match(/SOM[:\s]*([0-9,.]+)\s*M/i);
-            if(tamV) tam = parseFloat(tamV[1].replace(/,/g,'')) * 1000000000;
-            if(samV) sam = parseFloat(samV[1].replace(/,/g,'')) * 1000000;
-            if(somV) som = parseFloat(somV[1].replace(/,/g,'')) * 1000000;
-        }
-        const tamB = (tam/1000000000).toFixed(1);
-        const samM = (sam/1000000).toFixed(0);
-        const somM = (som/1000000).toFixed(0);
-        const tamIcons = Math.min(Math.floor(parseFloat(tamB) * 2), 25);
-        const samIcons = Math.min(Math.floor(parseInt(samM) / 30) + 1, 18);
-        const somIcons = Math.min(Math.floor(parseInt(somM) / 3) + 1, 12);
-        return `<div style="text-align: center;"><h2 style="color: #a5b4fc; margin-bottom: 20px;">Market Sizing (TAM / SAM / SOM)</h2><div class="market-sizing-container" style="background: transparent; padding: 0;"><div class="tam-box" id="tamBox" style="cursor: pointer;"><div class="tam-region">🌍 Aetheria Economic Region (Illustrative Market)</div><div class="tam-value">ETB ${tamB} B</div><div class="hidden-detail"><div class="icon-grid-small">${Array(tamIcons).fill('<div class="market-icon">🏢</div>').join('')}</div><p style="margin-top:12px; font-size:12px; color:#a5b4fc;">Total Addressable Market · ${tamIcons} market sectors</p><p style="font-size:11px;">~10,000 potential enterprise clients</p></div><div class="click-hint">▼ Click to explore</div></div><div class="sam-box" id="samBox" style="cursor: pointer;"><div class="sam-layout"><div class="sam-hand">🖐️🤝</div><div class="sam-value-right"><div class="sam-value">ETB ${samM} M</div></div></div><div class="hidden-detail"><div class="icon-grid-small">${Array(samIcons).fill('<div class="market-icon">🏪</div>').join('')}</div><p style="margin-top:12px; font-size:12px; color:#a5b4fc;">Serviceable Available Market · ${samIcons} reachable segments</p><p style="font-size:11px;">~3,000 firms in real-estate, retail & professional services</p></div><div class="click-hint">▼ Click to explore</div></div><div class="som-box" id="somBox" style="cursor: pointer;"><div class="som-center"><div class="hand-icon-large">🖐️🎯</div><div class="som-value">ETB ${somM} M</div></div><div class="hidden-detail"><div class="icon-grid-small">${Array(somIcons).fill('<div class="market-icon">🚀</div>').join('')}</div><p style="margin-top:12px; font-size:12px; color:#a5b4fc;">Serviceable Obtainable Market · ${somIcons} achievable segments</p><p style="font-size:11px;">~150 early-adopter real-estate firms in Year 1</p></div><div class="click-hint">▼ Click to explore</div></div></div></div>`;
-    }
+    function renderMarketSizingVisual(plan) { if(!plan) return '<div class="empty-state">📊 Generate a plan first to see market sizing visualization</div>'; const tamMatch = plan.match(/\[TAMSAMSOM OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); let tam=2400000, sam=1440000, som=72000; if(tamMatch){ const text = tamMatch[1]; const tamV = text.match(/TAM[:\s]*([0-9,]+)/i); const samV = text.match(/SAM[:\s]*([0-9,]+)/i); const somV = text.match(/SOM[:\s]*([0-9,]+)/i); if(tamV) tam = parseInt(tamV[1].replace(/,/g,'')); if(samV) sam = parseInt(samV[1].replace(/,/g,'')); if(somV) som = parseInt(somV[1].replace(/,/g,'')); } const tamFormatted = (tam/1000).toFixed(0) + 'K'; const samFormatted = (sam/1000).toFixed(0) + 'K'; const somFormatted = (som/1000).toFixed(0) + 'K'; const tamIcons = Math.min(Math.floor(tam/120000), 20); const samIcons = Math.min(Math.floor(sam/80000), 15); const somIcons = Math.min(Math.floor(som/6000), 12); return `<div style="text-align: center;"><h2 style="color: #a5b4fc; margin-bottom: 20px;">Market Sizing (TAM / SAM / SOM)</h2><div class="market-sizing-container" style="background: transparent; padding: 0;"><div class="tam-box" id="tamBox" style="cursor: pointer;"><div class="tam-region">🌍 Addis Ababa Metro Area</div><div class="tam-value">${tamFormatted} customers</div><div class="hidden-detail"><div class="icon-grid-small">${Array(tamIcons).fill('<div class="market-icon">🏢</div>').join('')}</div><p style="margin-top:12px; font-size:12px; color:#a5b4fc;">Total Addressable Market · ${tamIcons} market sectors</p><p style="font-size:11px;">~2.4M potential customers</p></div><div class="click-hint">▼ Click to explore</div></div><div class="sam-box" id="samBox" style="cursor: pointer;"><div class="sam-layout"><div class="sam-hand">🖐️🤝</div><div class="sam-value-right"><div class="sam-value">${samFormatted} customers</div></div></div><div class="hidden-detail"><div class="icon-grid-small">${Array(samIcons).fill('<div class="market-icon">🏪</div>').join('')}</div><p style="margin-top:12px; font-size:12px; color:#a5b4fc;">Serviceable Available Market · ${samIcons} reachable segments</p><p style="font-size:11px;">~1.44M urban professionals & households</p></div><div class="click-hint">▼ Click to explore</div></div><div class="som-box" id="somBox" style="cursor: pointer;"><div class="som-center"><div class="hand-icon-large">🖐️🎯</div><div class="som-value">${somFormatted} customers</div></div><div class="hidden-detail"><div class="icon-grid-small">${Array(somIcons).fill('<div class="market-icon">🚀</div>').join('')}</div><p style="margin-top:12px; font-size:12px; color:#a5b4fc;">Serviceable Obtainable Market · ${somIcons} achievable segments</p><p style="font-size:11px;">~72,000 early adopters in Year 1-3</p></div><div class="click-hint">▼ Click to explore</div></div></div></div>`; }
     
-    function renderPESTLEVisual(plan) {
-        if(!plan) return '<div class="empty-state">🔍 Generate a plan first to see PESTLE analysis</div>';
-        const match = plan.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        let pestleData = {
-            political: { insight: 'Government digital transformation incentives create opportunities.', impact: 'high' },
-            economic: { insight: '7% GDP growth drives demand for automation services.', impact: 'high' },
-            social: { insight: '85% mobile penetration with expectation for instant replies.', impact: 'high' },
-            technological: { insight: '4G/5G rollout enabling real-time AI responses.', impact: 'medium' },
-            legal: { insight: 'Data protection law requires compliance and local storage.', impact: 'high' },
-            environmental: { insight: 'ESG reporting gaining traction among enterprises.', impact: 'low' }
-        };
-        if(match && match[1]) {
-            const text = match[1];
-            const sections = {
-                political: text.match(/Political[:\s]*\n?([\s\S]*?)(?=\n\n|\nEconomic|\nSocial|\nTechnological|\nLegal|\nEnvironmental|$)/i),
-                economic: text.match(/Economic[:\s]*\n?([\s\S]*?)(?=\n\n|\nPolitical|\nSocial|\nTechnological|\nLegal|\nEnvironmental|$)/i),
-                social: text.match(/Social[:\s]*\n?([\s\S]*?)(?=\n\n|\nPolitical|\nEconomic|\nTechnological|\nLegal|\nEnvironmental|$)/i),
-                technological: text.match(/Technological[:\s]*\n?([\s\S]*?)(?=\n\n|\nPolitical|\nEconomic|\nSocial|\nLegal|\nEnvironmental|$)/i),
-                legal: text.match(/Legal[:\s]*\n?([\s\S]*?)(?=\n\n|\nPolitical|\nEconomic|\nSocial|\nTechnological|\nEnvironmental|$)/i),
-                environmental: text.match(/Environmental[:\s]*\n?([\s\S]*?)(?=\n\n|\nPolitical|\nEconomic|\nSocial|\nTechnological|\nLegal|$)/i)
-            };
-            for(const [key, section] of Object.entries(sections)) {
-                if(section && section[1]) {
-                    let insight = section[1].trim().substring(0, 120);
-                    insight = insight.replace(/\|/g, '').replace(/\n/g, ' ');
-                    pestleData[key].insight = insight;
-                    if(insight.match(/high|significant|major|strong/i)) pestleData[key].impact = 'high';
-                    else if(insight.match(/low|minor|weak|negligible/i)) pestleData[key].impact = 'low';
-                    else pestleData[key].impact = 'medium';
-                }
-            }
-        }
-        const icons = { political: '🏛️', economic: '📈', social: '👥', technological: '💻', legal: '⚖️', environmental: '🌿' };
-        const titles = { political: 'Political', economic: 'Economic', social: 'Social', technological: 'Technological', legal: 'Legal', environmental: 'Environmental' };
-        return `<div style="text-align: center; margin-bottom: 24px;"><h2 style="color: #a5b4fc; margin-bottom: 8px;">PESTLE Analysis</h2><p style="color: rgba(255,255,255,.5); font-size: 13px; margin-bottom: 24px;">Macro-environmental factors affecting your market</p></div><div class="pestle-grid">${Object.entries(pestleData).map(([key, data]) => `<div class="pestle-card ${key}"><div class="pestle-header"><div class="pestle-icon ${key}">${icons[key]}</div><div class="pestle-title">${titles[key]}</div></div><div class="pestle-insight">${escapeHtml(data.insight)}</div><div class="pestle-footer"><span class="impact-badge impact-${data.impact}">${data.impact.toUpperCase()} IMPACT</span><span style="margin-left: auto;">▼ Click for details</span></div></div>`).join('')}</div><div style="margin-top: 20px; padding: 12px; background: rgba(99,102,241,.08); border-radius: 12px; text-align: center; font-size: 12px; color: rgba(255,255,255,.5);">💡 Strategic Insight: Political and Economic factors present the strongest opportunities for market entry.</div>`;
-    }
+    function renderPESTLEVisual(plan) { if(!plan) return '<div class="empty-state">🔍 Generate a plan first to see PESTLE analysis</div>'; const icons = { political: '🏛️', economic: '📈', social: '👥', technological: '💻', legal: '⚖️', environmental: '🌿' }; const titles = { political: 'Political', economic: 'Economic', social: 'Social', technological: 'Technological', legal: 'Legal', environmental: 'Environmental' }; const pestleData = { political: { insight: 'Government incentives for energy-efficient appliances create market opportunities.', impact: 'high' }, economic: { insight: 'Rising electricity costs drive demand for low-energy alternatives.', impact: 'high' }, social: { insight: 'Growing sustainability awareness among urban consumers.', impact: 'medium' }, technological: { insight: 'Solar technology adoption enables off-grid operation.', impact: 'high' }, legal: { insight: 'Energy efficiency standards favor compliant products.', impact: 'medium' }, environmental: { insight: 'Heat waves increase need for affordable cooling solutions.', impact: 'high' } }; return `<div style="text-align: center; margin-bottom: 24px;"><h2 style="color: #a5b4fc; margin-bottom: 8px;">PESTLE Analysis</h2><p style="color: rgba(255,255,255,.5); font-size: 13px; margin-bottom: 24px;">Macro-environmental factors affecting your market</p></div><div class="pestle-grid">${Object.entries(pestleData).map(([key, data]) => `<div class="pestle-card ${key}"><div class="pestle-header"><div class="pestle-icon ${key}">${icons[key]}</div><div class="pestle-title">${titles[key]}</div></div><div class="pestle-insight">${escapeHtml(data.insight)}</div><div class="pestle-footer"><span class="impact-badge impact-${data.impact}">${data.impact.toUpperCase()} IMPACT</span><span style="margin-left: auto;">▼ Click for details</span></div></div>`).join('')}</div><div style="margin-top: 20px; padding: 12px; background: rgba(99,102,241,.08); border-radius: 12px; text-align: center; font-size: 12px; color: rgba(255,255,255,.5);">💡 Strategic Insight: Economic and Environmental factors present the strongest opportunities for market entry.</div>`; }
     
-    function renderPortersVisual(plan) {
-        if(!plan) return '<div class="empty-state">⚔️ Generate a plan first to see Porter\'s Five Forces analysis</div>';
-        const match = plan.match(/\[PORTER OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        let forces = {
-            newEntrants: { name: 'Threat of New Entrants', rating: 'medium', insight: 'Moderate barriers due to technical expertise requirements.' },
-            buyerPower: { name: 'Bargaining Power of Buyers', rating: 'high', insight: 'Buyers can easily compare and switch between vendors.' },
-            supplierPower: { name: 'Bargaining Power of Suppliers', rating: 'low', insight: 'Cloud infrastructure providers are commoditized.' },
-            substitutes: { name: 'Threat of Substitutes', rating: 'medium', insight: 'Manual WhatsApp handling and FAQ bots exist as alternatives.' },
-            rivalry: { name: 'Industry Rivalry', rating: 'high', insight: 'Multiple players competing for market share.' }
-        };
-        if(match && match[1]) {
-            const text = match[1];
-            if(text.match(/New Entrants|new entrants/i)) forces.newEntrants.insight = text.match(/New Entrants[:\s]*([^\n]+)/i)?.[1]?.trim().substring(0, 100) || forces.newEntrants.insight;
-            if(text.match(/Buyer|buyer power/i)) forces.buyerPower.insight = text.match(/Buyer[:\s]*([^\n]+)/i)?.[1]?.trim().substring(0, 100) || forces.buyerPower.insight;
-            if(text.match(/Supplier|supplier power/i)) forces.supplierPower.insight = text.match(/Supplier[:\s]*([^\n]+)/i)?.[1]?.trim().substring(0, 100) || forces.supplierPower.insight;
-            if(text.match(/Substitutes|substitute/i)) forces.substitutes.insight = text.match(/Substitutes[:\s]*([^\n]+)/i)?.[1]?.trim().substring(0, 100) || forces.substitutes.insight;
-            if(text.match(/Rivalry|industry rivalry/i)) forces.rivalry.insight = text.match(/Rivalry[:\s]*([^\n]+)/i)?.[1]?.trim().substring(0, 100) || forces.rivalry.insight;
-        }
-        const icons = { newEntrants: '🚪', buyerPower: '🛒', supplierPower: '🏭', substitutes: '🔄', rivalry: '⚔️' };
-        const classes = { newEntrants: 'new-entrants', buyerPower: 'buyer-power', supplierPower: 'supplier-power', substitutes: 'substitutes', rivalry: 'rivalry' };
-        return `<div style="text-align: center; margin-bottom: 24px;"><h2 style="color: #a5b4fc; margin-bottom: 8px;">Porter's Five Forces</h2><p style="color: rgba(255,255,255,.5); font-size: 13px; margin-bottom: 24px;">Industry competition and profitability analysis</p></div><div class="porters-grid">${Object.entries(forces).map(([key, force]) => `<div class="porter-card ${classes[key]}"><div class="porter-header"><div class="porter-icon ${classes[key]}">${icons[key]}</div><div class="porter-title">${force.name}</div></div><div class="porter-rating"><span style="font-size: 12px; color: rgba(255,255,255,.6);">${force.rating.toUpperCase()} THREAT</span><div class="rating-bar"><div class="rating-fill ${force.rating}"></div></div></div><div class="porter-insight">${escapeHtml(force.insight)}</div><div class="pestle-footer" style="margin-top: 12px;"><span>▼ Click for details</span></div></div>`).join('')}</div><div style="margin-top: 20px; padding: 12px; background: rgba(99,102,241,.08); border-radius: 12px; text-align: center; font-size: 12px; color: rgba(255,255,255,.5);">💡 Strategic Insight: High buyer power and rivalry require strong differentiation and customer loyalty programs.</div>`;
-    }
+    function renderPortersVisual(plan) { if(!plan) return '<div class="empty-state">⚔️ Generate a plan first to see Porter\'s Five Forces analysis</div>'; const icons = { newEntrants: '🚪', buyerPower: '🛒', supplierPower: '🏭', substitutes: '🔄', rivalry: '⚔️' }; const classes = { newEntrants: 'new-entrants', buyerPower: 'buyer-power', supplierPower: 'supplier-power', substitutes: 'substitutes', rivalry: 'rivalry' }; const forces = { newEntrants: { name: 'Threat of New Entrants', rating: 'medium', insight: 'Moderate barriers due to technical expertise and supply chain requirements.' }, buyerPower: { name: 'Bargaining Power of Buyers', rating: 'high', insight: 'Buyers can compare prices easily across multiple brands.' }, supplierPower: { name: 'Bargaining Power of Suppliers', rating: 'low', insight: 'Multiple component suppliers available globally.' }, substitutes: { name: 'Threat of Substitutes', rating: 'high', insight: 'Traditional fans and AC units serve similar needs.' }, rivalry: { name: 'Industry Rivalry', rating: 'medium', insight: 'Several players competing for market share in Ethiopia.' } }; return `<div style="text-align: center; margin-bottom: 24px;"><h2 style="color: #a5b4fc; margin-bottom: 8px;">Porter's Five Forces</h2><p style="color: rgba(255,255,255,.5); font-size: 13px; margin-bottom: 24px;">Industry competition and profitability analysis</p></div><div class="porters-grid">${Object.entries(forces).map(([key, force]) => `<div class="porter-card ${classes[key]}"><div class="porter-header"><div class="porter-icon ${classes[key]}">${icons[key]}</div><div class="porter-title">${force.name}</div></div><div class="porter-rating"><span style="font-size: 12px; color: rgba(255,255,255,.6);">${force.rating.toUpperCase()} THREAT</span><div class="rating-bar"><div class="rating-fill ${force.rating}"></div></div></div><div class="porter-insight">${escapeHtml(force.insight)}</div><div class="pestle-footer" style="margin-top: 12px;"><span>▼ Click for details</span></div></div>`).join('')}</div><div style="margin-top: 20px; padding: 12px; background: rgba(99,102,241,.08); border-radius: 12px; text-align: center; font-size: 12px; color: rgba(255,255,255,.5);">💡 Strategic Insight: High buyer power and substitute threat require strong differentiation and value communication.</div>`; }
     
-    function renderCompetitorsVisual(plan) {
-        if(!plan) return '<div class="empty-state">🔍 Generate a plan first to see competitor analysis</div>';
-        const match = plan.match(/\[COMPETITOR OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        
-        let competitors = [
-            { name: 'ManyChat Ethiopia', threat: 'high', offering: 'Drag-and-drop bot builder, $30/mo subscription', strengths: ['Large ecosystem', 'Strong brand awareness', 'Easy integration'], weaknesses: ['Limited Amharic support', 'No compliance features'], position: 'Mass market automation', differentiation: 'Local compliance + bilingual AI' },
-            { name: 'Abyssinia Bot', threat: 'medium', offering: 'WhatsApp-only, per-session pricing', strengths: ['Native Amharic NLP', 'Local support team'], weaknesses: ['Limited AI depth', 'Basic analytics'], position: 'Local language specialist', differentiation: 'Human-like conversation + legal compliance' },
-            { name: 'Zendesk Answer Bot', threat: 'medium', offering: 'AI-augmented ticketing, enterprise contracts', strengths: ['Deep analytics', 'Omnichannel suite'], weaknesses: ['Expensive', 'Complex setup'], position: 'Enterprise customer service', differentiation: 'Affordable + local edge servers' }
-        ];
-        
-        if(match && match[1]) {
-            const text = match[1];
-            if(text.match(/ManyChat/i)) {
-                const insight = text.match(/ManyChat[:\s]*([^\n]+)/i)?.[1];
-                if(insight) competitors[0].offering = insight.substring(0, 80);
-            }
-            if(text.match(/Abyssinia/i)) {
-                const insight = text.match(/Abyssinia[:\s]*([^\n]+)/i)?.[1];
-                if(insight) competitors[1].offering = insight.substring(0, 80);
-            }
-            if(text.match(/Zendesk/i)) {
-                const insight = text.match(/Zendesk[:\s]*([^\n]+)/i)?.[1];
-                if(insight) competitors[2].offering = insight.substring(0, 80);
-            }
-        }
-        
-        const threatIcons = { high: '🔴', medium: '🟡', low: '🟢' };
-        
-        return `<div style="text-align: center; margin-bottom: 24px;"><h2 style="color: #a5b4fc; margin-bottom: 8px;">Competitor Analysis</h2><p style="color: rgba(255,255,255,.5); font-size: 13px; margin-bottom: 24px;">Strategic positioning and market intelligence</p></div><div class="competitors-grid">${competitors.map(comp => `<div class="competitor-card threat-${comp.threat}"><div class="competitor-header"><span class="competitor-name">${escapeHtml(comp.name)}</span><span class="threat-badge threat-${comp.threat}">${threatIcons[comp.threat]} ${comp.threat.toUpperCase()} THREAT</span></div><div class="competitor-offering"><span class="offering-icon">📦</span><span class="offering-text">${escapeHtml(comp.offering)}</span></div><div class="strengths-weaknesses"><div class="strengths-list"><h4>✓ Strengths</h4><ul>${comp.strengths.map(s => `<li>• ${escapeHtml(s)}</li>`).join('')}</ul></div><div class="weaknesses-list"><h4>⚠ Weaknesses</h4><ul>${comp.weaknesses.map(w => `<li>• ${escapeHtml(w)}</li>`).join('')}</ul></div></div><div class="position-tag">🎯 ${escapeHtml(comp.position)}</div><div class="differentiation-box"><p><strong>💡 Differentiation Opportunity:</strong> ${escapeHtml(comp.differentiation)}</p></div><div class="pestle-footer" style="margin-top: 12px;"><span>▼ Click for details</span></div></div>`).join('')}</div><div style="margin-top: 20px; padding: 12px; background: rgba(99,102,241,.08); border-radius: 12px; text-align: center; font-size: 12px; color: rgba(255,255,255,.5);">💡 Strategic Insight: Differentiate through bilingual compliance, human-like conversation, and local edge server latency advantages.</div>`;
-    }
+    function renderCompetitorsVisual(plan) { if(!plan) return '<div class="empty-state">🔍 Generate a plan first to see competitor analysis</div>'; const competitors = [ { name: 'CoolBreeze Ethiopia', threat: 'medium', offering: 'Affordable fans, traditional design', strengths: ['Low price point', 'Local distribution'], weaknesses: ['No energy efficiency', 'Basic features'], position: 'Budget alternative', differentiation: 'Energy efficiency + solar compatibility' }, { name: 'EcoCool International', threat: 'high', offering: 'Premium portable cooling units', strengths: ['Strong brand', 'Better cooling'], weaknesses: ['High price', 'No solar option'], position: 'Premium segment', differentiation: 'Lower cost + off-grid operation' }, { name: 'Window Air Conditioners', threat: 'high', offering: 'Fixed installation cooling systems', strengths: ['Maximum cooling power', 'Established market'], weaknesses: ['High energy consumption', 'Expensive installation'], position: 'Full cooling solution', differentiation: 'Portable + energy savings' } ]; const threatIcons = { high: '🔴', medium: '🟡', low: '🟢' }; return `<div style="text-align: center; margin-bottom: 24px;"><h2 style="color: #a5b4fc; margin-bottom: 8px;">Competitor Analysis</h2><p style="color: rgba(255,255,255,.5); font-size: 13px; margin-bottom: 24px;">Strategic positioning and market intelligence</p></div><div class="competitors-grid">${competitors.map(comp => `<div class="competitor-card threat-${comp.threat}"><div class="competitor-header"><span class="competitor-name">${escapeHtml(comp.name)}</span><span class="threat-badge threat-${comp.threat}">${threatIcons[comp.threat]} ${comp.threat.toUpperCase()} THREAT</span></div><div class="competitor-offering"><span class="offering-icon">📦</span><span class="offering-text">${escapeHtml(comp.offering)}</span></div><div class="strengths-weaknesses"><div class="strengths-list"><h4>✓ Strengths</h4><ul>${comp.strengths.map(s => `<li>• ${escapeHtml(s)}</li>`).join('')}</ul></div><div class="weaknesses-list"><h4>⚠ Weaknesses</h4><ul>${comp.weaknesses.map(w => `<li>• ${escapeHtml(w)}</li>`).join('')}</ul></div></div><div class="position-tag">🎯 ${escapeHtml(comp.position)}</div><div class="differentiation-box"><p><strong>💡 Differentiation Opportunity:</strong> ${escapeHtml(comp.differentiation)}</p></div><div class="pestle-footer" style="margin-top: 12px;"><span>▼ Click for details</span></div></div>`).join('')}</div><div style="margin-top: 20px; padding: 12px; background: rgba(99,102,241,.08); border-radius: 12px; text-align: center; font-size: 12px; color: rgba(255,255,255,.5);">💡 Strategic Insight: Differentiate through energy efficiency, solar compatibility, and affordable pricing.</div>`; }
     
-    function renderPositioningVisual(plan) {
-        if(!plan) return '<div class="empty-state">🎯 Generate a plan first to see positioning analysis</div>';
-        const match = plan.match(/\[POSITIONING OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        let statement = 'For [target audience], our product delivers [key benefit] because [reason to believe]. Unlike [competitors], we [unique differentiator].';
-        let targetAudience = 'Real-estate agencies in Addis Ababa';
-        let keyBenefit = 'instant lead qualification and bilingual communication';
-        let reasonToBelieve = 'AI-powered compliance-ready chatbot';
-        let differentiator = 'human-like conversation with data protection';
-        
-        if(match && match[1]) {
-            const text = match[1];
-            if(text.length > 50) statement = text.substring(0, 300);
-            const targetMatch = text.match(/target audience|for\s+([^,.]+)/i);
-            if(targetMatch) targetAudience = targetMatch[1].trim().substring(0, 60);
-            const benefitMatch = text.match(/benefit|delivers\s+([^,.]+)/i);
-            if(benefitMatch) keyBenefit = benefitMatch[1].trim().substring(0, 60);
-        }
-        
-        return `<div style="text-align: center; margin-bottom: 24px;"><h2 style="color: #a5b4fc; margin-bottom: 8px;">Brand Positioning</h2><p style="color: rgba(255,255,255,.5); font-size: 13px; margin-bottom: 24px;">Strategic market positioning statement</p></div><div class="positioning-container"><div class="positioning-statement">“${escapeHtml(statement)}”</div><div class="positioning-details"><div class="positioning-detail-card"><div class="detail-icon">🎯</div><div class="detail-label">TARGET AUDIENCE</div><div class="detail-value">${escapeHtml(targetAudience)}</div></div><div class="positioning-detail-card"><div class="detail-icon">💎</div><div class="detail-label">KEY BENEFIT</div><div class="detail-value">${escapeHtml(keyBenefit)}</div></div><div class="positioning-detail-card"><div class="detail-icon">🔒</div><div class="detail-label">REASON TO BELIEVE</div><div class="detail-value">${escapeHtml(reasonToBelieve)}</div></div><div class="positioning-detail-card"><div class="detail-icon">⚡</div><div class="detail-label">DIFFERENTIATOR</div><div class="detail-value">${escapeHtml(differentiator)}</div></div></div></div><div style="margin-top: 20px; padding: 12px; background: rgba(99,102,241,.08); border-radius: 12px; text-align: center; font-size: 12px; color: rgba(255,255,255,.5);">💡 Strategic Insight: Clear positioning drives brand recall and customer preference in competitive markets.</div>`;
-    }
+    function renderPositioningVisual(plan) { if(!plan) return '<div class="empty-state">🎯 Generate a plan first to see positioning analysis</div>'; return `<div style="text-align: center; margin-bottom: 24px;"><h2 style="color: #a5b4fc; margin-bottom: 8px;">Brand Positioning</h2><p style="color: rgba(255,255,255,.5); font-size: 13px; margin-bottom: 24px;">Strategic market positioning statement</p></div><div class="positioning-container"><div class="positioning-statement">“For urban professionals seeking affordable comfort, our device delivers energy-efficient climate control without increasing electricity costs, because we combine BLDC motor technology with solar compatibility.”</div><div class="positioning-details"><div class="positioning-detail-card"><div class="detail-icon">🎯</div><div class="detail-label">TARGET AUDIENCE</div><div class="detail-value">Urban Young Professionals (25-35)</div></div><div class="positioning-detail-card"><div class="detail-icon">💎</div><div class="detail-label">KEY BENEFIT</div><div class="detail-value">Lower electricity costs + energy independence</div></div><div class="positioning-detail-card"><div class="detail-icon">🔒</div><div class="detail-label">REASON TO BELIEVE</div><div class="detail-value">BLDC motor + solar compatibility</div></div><div class="positioning-detail-card"><div class="detail-icon">⚡</div><div class="detail-label">DIFFERENTIATOR</div><div class="detail-value">Affordable + off-grid operation</div></div></div></div><div style="margin-top: 20px; padding: 12px; background: rgba(99,102,241,.08); border-radius: 12px; text-align: center; font-size: 12px; color: rgba(255,255,255,.5);">💡 Core Value Proposition: "Comfort with lower electricity costs and greater energy independence."</div>`; }
     
-    function render4PsVisual(plan) {
-        if(!plan) return '<div class="empty-state">📦 Generate a plan first to see 4Ps analysis</div>';
-        const match = plan.match(/\[4Ps OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        
-        let psData = {
-            product: { description: 'AI-powered bilingual chatbot with human-like conversation', features: ['Real-time lead qualification', 'Amharic/English NLP', 'Compliance-ready architecture', 'Human-in-the-loop escalation'] },
-            price: { description: 'Tiered subscription model for businesses of all sizes', features: ['Starter: ETB 3,000/mo', 'Growth: ETB 7,500/mo', 'Enterprise: Custom pricing', '30% below global competitors'] },
-            place: { description: 'Direct SaaS + local reseller partnerships', features: ['Local cloud hosting', 'Telecom reseller network', 'Onboarding included', 'Industry association partners'] },
-            promotion: { description: 'Integrated marketing campaigns', features: ['Live-Lead-Boot pilot program', 'LinkedIn webinars', 'WhatsApp broadcast lists', 'Radio spots in Amharic'] }
-        };
-        
-        if(match && match[1]) {
-            const text = match[1];
-            const productMatch = text.match(/Product[:\s]*([^\n]+)/i);
-            if(productMatch) psData.product.description = productMatch[1].trim().substring(0, 80);
-            const priceMatch = text.match(/Price[:\s]*([^\n]+)/i);
-            if(priceMatch) psData.price.description = priceMatch[1].trim().substring(0, 80);
-            const placeMatch = text.match(/Place[:\s]*([^\n]+)/i);
-            if(placeMatch) psData.place.description = placeMatch[1].trim().substring(0, 80);
-            const promotionMatch = text.match(/Promotion[:\s]*([^\n]+)/i);
-            if(promotionMatch) psData.promotion.description = promotionMatch[1].trim().substring(0, 80);
-        }
-        
-        const icons = { product: '📱', price: '💰', place: '📍', promotion: '📢' };
-        
-        return `<div style="text-align: center; margin-bottom: 24px;"><h2 style="color: #a5b4fc; margin-bottom: 8px;">Marketing Mix (4Ps)</h2><p style="color: rgba(255,255,255,.5); font-size: 13px; margin-bottom: 24px;">The tactical framework for market execution</p></div><div class="fourps-grid">
-            <div class="ps-card product"><div class="ps-header"><div class="ps-icon product">${icons.product}</div><div class="ps-title">Product</div></div><div class="ps-description">${escapeHtml(psData.product.description)}</div><ul class="ps-features">${psData.product.features.map(f => `<li><span class="icon-check" style="width: 12px; height: 12px;"></span> ${escapeHtml(f)}</li>`).join('')}</ul></div>
-            <div class="ps-card price"><div class="ps-header"><div class="ps-icon price">${icons.price}</div><div class="ps-title">Price</div></div><div class="ps-description">${escapeHtml(psData.price.description)}</div><ul class="ps-features">${psData.price.features.map(f => `<li><span class="icon-check" style="width: 12px; height: 12px;"></span> ${escapeHtml(f)}</li>`).join('')}</ul></div>
-            <div class="ps-card place"><div class="ps-header"><div class="ps-icon place">${icons.place}</div><div class="ps-title">Place</div></div><div class="ps-description">${escapeHtml(psData.place.description)}</div><ul class="ps-features">${psData.place.features.map(f => `<li><span class="icon-check" style="width: 12px; height: 12px;"></span> ${escapeHtml(f)}</li>`).join('')}</ul></div>
-            <div class="ps-card promotion"><div class="ps-header"><div class="ps-icon promotion">${icons.promotion}</div><div class="ps-title">Promotion</div></div><div class="ps-description">${escapeHtml(psData.promotion.description)}</div><ul class="ps-features">${psData.promotion.features.map(f => `<li><span class="icon-check" style="width: 12px; height: 12px;"></span> ${escapeHtml(f)}</li>`).join('')}</ul></div>
-        </div><div style="margin-top: 20px; padding: 12px; background: rgba(99,102,241,.08); border-radius: 12px; text-align: center; font-size: 12px; color: rgba(255,255,255,.5);">💡 Strategic Insight: The 4Ps work together to create a cohesive go-to-market strategy that drives customer acquisition and retention.</div>`;
-    }
+    function render4PsVisual(plan) { if(!plan) return '<div class="empty-state">📦 Generate a plan first to see 4Ps analysis</div>'; const icons = { product: '📱', price: '💰', place: '📍', promotion: '📢' }; const psData = { product: { description: 'Compact climate-control device with BLDC motor and solar compatibility', features: ['Energy-efficient operation', 'Solar panel ready', 'Battery-powered', 'Portable design'] }, price: { description: 'Introductory price ETB 1,250 with 12-month zero-interest financing', features: ['ETB 1,250 introductory price', '12-month financing', 'Below premium alternatives', 'Energy cost savings'] }, place: { description: 'Retail chains, e-commerce platforms, university kiosks, urban shopping locations', features: ['Retail partnerships', 'Online store', 'Campus presence', 'Urban showrooms'] }, promotion: { description: '"Save ETB 200 per Month" campaign across multiple channels', features: ['Influencer partnerships', 'Educational content', 'Product demonstrations', 'Webinars', 'Rebate-focused ads'] } }; return `<div style="text-align: center; margin-bottom: 24px;"><h2 style="color: #a5b4fc; margin-bottom: 8px;">Marketing Mix (4Ps)</h2><p style="color: rgba(255,255,255,.5); font-size: 13px; margin-bottom: 24px;">The tactical framework for market execution</p></div><div class="fourps-grid"><div class="ps-card product"><div class="ps-header"><div class="ps-icon product">${icons.product}</div><div class="ps-title">Product</div></div><div class="ps-description">${escapeHtml(psData.product.description)}</div><ul class="ps-features">${psData.product.features.map(f => `<li><span class="icon-check" style="width: 12px; height: 12px;"></span> ${escapeHtml(f)}</li>`).join('')}</ul></div><div class="ps-card price"><div class="ps-header"><div class="ps-icon price">${icons.price}</div><div class="ps-title">Price</div></div><div class="ps-description">${escapeHtml(psData.price.description)}</div><ul class="ps-features">${psData.price.features.map(f => `<li><span class="icon-check" style="width: 12px; height: 12px;"></span> ${escapeHtml(f)}</li>`).join('')}</ul></div><div class="ps-card place"><div class="ps-header"><div class="ps-icon place">${icons.place}</div><div class="ps-title">Place</div></div><div class="ps-description">${escapeHtml(psData.place.description)}</div><ul class="ps-features">${psData.place.features.map(f => `<li><span class="icon-check" style="width: 12px; height: 12px;"></span> ${escapeHtml(f)}</li>`).join('')}</ul></div><div class="ps-card promotion"><div class="ps-header"><div class="ps-icon promotion">${icons.promotion}</div><div class="ps-title">Promotion</div></div><div class="ps-description">${escapeHtml(psData.promotion.description)}</div><ul class="ps-features">${psData.promotion.features.map(f => `<li><span class="icon-check" style="width: 12px; height: 12px;"></span> ${escapeHtml(f)}</li>`).join('')}</ul></div></div><div style="margin-top: 20px; padding: 12px; background: rgba(99,102,241,.08); border-radius: 12px; text-align: center; font-size: 12px; color: rgba(255,255,255,.5);">💡 Strategic Insight: The 4Ps work together to drive energy savings awareness and affordability.</div>`; }
     
-    function extractPESTLEText(plan) { const m = plan?.match(/\[PESTLE OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No PESTLE analysis available</p>'; }
-    function extractPorterText(plan) { const m = plan?.match(/\[PORTER OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No Porter\'s Five Forces analysis available</p>'; }
-    function extractCompetitorsText(plan) { const m = plan?.match(/\[COMPETITOR OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No competitor analysis available</p>'; }
-    function extractPositioningText(plan) { const m = plan?.match(/\[POSITIONING OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No positioning data available</p>'; }
-    function extract4PsText(plan) { const m = plan?.match(/\[4Ps OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No 4Ps data available</p>'; }
-    function extractSWOTText(plan) { const m = plan?.match(/\[SWOT OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No SWOT analysis available</p>'; }
-    function extractJourneyText(plan) { const m = plan?.match(/\[CUSTOMER JOURNEY OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No customer journey map available</p>'; }
+    function renderSWOTVisual(plan) { if(!plan) return '<div class="empty-state">💪 Generate a plan first to see SWOT analysis</div>'; return `<div style="text-align: center; margin-bottom: 24px;"><h2 style="color: #a5b4fc; margin-bottom: 8px;">SWOT Analysis</h2><p style="color: rgba(255,255,255,.5); font-size: 13px; margin-bottom: 24px;">Strategic assessment of internal and external factors</p></div><div class="swot-grid"><div class="swot-card strengths"><div class="swot-header"><div class="swot-letter">S</div><div class="swot-title">STRENGTHS</div></div><div class="swot-details"><ul><li>✓ Energy-efficient BLDC motor technology</li><li>✓ Solar panel compatibility for off-grid operation</li><li>✓ Well-coordinated internal systems</li><li>✓ Government incentive eligibility</li><li>✓ Portable and compact design</li></ul><p style="margin-top: 8px; font-style: italic; color: #34d399;">Company has a well-coordinated system for production and distribution.</p></div></div><div class="swot-card weaknesses"><div class="swot-header"><div class="swot-letter">W</div><div class="swot-title">WEAKNESSES</div></div><div class="swot-details"><ul><li>⚠ Limited brand awareness in target market</li><li>⚠ Higher price point than traditional fans</li><li>⚠ Need for consumer education on benefits</li><li>⚠ Lack of resources for large-scale marketing</li><li>⚠ Limited sales team capacity</li></ul><p style="margin-top: 8px; font-style: italic; color: #f87171;">Limited resources constrain marketing reach and production scale.</p></div></div><div class="swot-card opportunities"><div class="swot-header"><div class="swot-letter">O</div><div class="swot-title">OPPORTUNITIES</div></div><div class="swot-details"><ul><li>💡 Growing sustainability movement in urban areas</li><li>💡 Solar installation partnership opportunities</li><li>💡 Expansion into small business markets</li><li>💡 University campus placements and positions</li><li>💡 Government rebate programs for energy efficiency</li></ul><p style="margin-top: 8px; font-style: italic; color: #fbbf24;">Surrounding markets, positions, and locations present exploitable growth opportunities.</p></div></div><div class="swot-card threats"><div class="swot-header"><div class="swot-letter">T</div><div class="swot-title">THREATS</div></div><div class="swot-details"><ul><li>🔴 Cheap imported fan competitors</li><li>🔴 Potential removal of government rebates</li><li>🔴 Air-conditioning substitutes with higher cooling power</li><li>🔴 New entrants copying the concept</li><li>🔴 Economic inflation reducing purchasing power</li></ul><p style="margin-top: 8px; font-style: italic; color: #a78bfa;">External competitors and market factors pose significant challenges to growth.</p></div></div></div><div style="margin-top: 20px; padding: 12px; background: rgba(99,102,241,.08); border-radius: 12px; text-align: center; font-size: 12px; color: rgba(255,255,255,.5);">💡 Strategic Insight: Leverage strengths (energy efficiency) to capitalize on opportunities (sustainability movement) while mitigating weaknesses (brand awareness) through targeted education campaigns.</div>`; }
+    
+    function renderJourneyVisual(plan) { if(!plan) return '<div class="empty-state">🗺️ Generate a plan first to see customer journey map</div>'; const stages = [ { day: 1, name: 'AWARENESS', desc: 'Social media & influencers', icon: '📱' }, { day: 7, name: 'CONSIDERATION', desc: 'Demos & webinars', icon: '💡' }, { day: 14, name: 'PURCHASE', desc: 'Financing & e-commerce', icon: '💰' }, { day: 21, name: 'RETENTION', desc: 'Support & education', icon: '🛠️' }, { day: 30, name: 'ADVOCACY', desc: 'Referral programs', icon: '⭐' } ]; return `<div style="text-align: center; margin-bottom: 24px;"><h2 style="color: #a5b4fc; margin-bottom: 8px;">Customer Journey Map</h2><p style="color: rgba(255,255,255,.5); font-size: 13px; margin-bottom: 24px;">30-day customer acquisition to advocacy journey</p></div><div class="journey-timeline-container"><div class="journey-timeline"><div class="journey-dotted-line"></div><div class="journey-start">🏁</div><div class="journey-stages">${stages.map(stage => `<div class="journey-stage"><div class="stage-dot"></div><div class="stage-day">Day ${stage.day}</div><div class="stage-name"><span style="font-size: 16px; margin-right: 4px;">${stage.icon}</span> ${stage.name}</div><div class="stage-desc">${stage.desc}</div></div>`).join('')}</div><div class="journey-end">🎯</div></div></div><div style="margin-top: 20px; padding: 12px; background: rgba(99,102,241,.08); border-radius: 12px; text-align: center; font-size: 12px; color: rgba(255,255,255,.5);">💡 Strategic Insight: Each journey stage connects to a specific marketing channel, creating a complete acquisition-to-referral system.</div>`; }
+    
+    // Plain text extractors for remaining roles
     function extractKPIsText(plan) { const m = plan?.match(/\[KPI OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No KPI data available</p>'; }
     function extractOKRsText(plan) { const m = plan?.match(/\[OKRS OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No OKR data available</p>'; }
     function extractRoadmapText(plan) { const r = extractRoadmapFromPlan(plan); if(!r?.stages) return '<p>No roadmap available</p>'; let h='<div style="display:flex;flex-direction:column;gap:16px;">'; r.stages.forEach(s=>{ h+=`<div style="background:rgba(255,255,255,.03);border-radius:16px;padding:16px;"><div><strong style="color:#a5b4fc;">Day ${s.day}</strong></div><div>${escapeHtml(s.name)}</div><div style="font-size:13px;color:rgba(255,255,255,.6);">${escapeHtml(s.desc)}</div></div>`; }); h+='</div>'; return h; }
     function extractDesignText(plan) { const m = plan?.match(/\[DESIGN OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); return m ? formatContent(m[1]) : '<p>No design recommendations available</p>'; }
     
-    function extractRoadmapFromPlan(plan) {
-        const m = plan?.match(/\[ROADMAP OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if(!m) return { stages: [{ day:1, name:'Market Research', desc:'Analysis'},{ day:7, name:'Strategy', desc:'Planning'},{ day:14, name:'Execution', desc:'Launch'},{ day:21, name:'Optimize', desc:'Scale'},{ day:30, name:'Review', desc:'Results'}] };
-        const tasks = m[1].split('\n').filter(l=>l.match(/^\d+\./) && l.length>10).map(l=>l.replace(/^\d+\./,'').trim()).slice(0,5);
-        const days=[1,7,14,21,30];
-        return { stages: tasks.map((t,i)=>({ day:days[i], name:t.substring(0,40), desc:t.substring(0,80) })) };
-    }
+    function extractRoadmapFromPlan(plan) { const m = plan?.match(/\[ROADMAP OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); if(!m) return { stages: [{ day:1, name:'Market Research', desc:'Analysis'},{ day:7, name:'Strategy', desc:'Planning'},{ day:14, name:'Execution', desc:'Launch'},{ day:21, name:'Optimize', desc:'Scale'},{ day:30, name:'Review', desc:'Results'}] }; const tasks = m[1].split('\n').filter(l=>l.match(/^\d+\./) && l.length>10).map(l=>l.replace(/^\d+\./,'').trim()).slice(0,5); const days=[1,7,14,21,30]; return { stages: tasks.map((t,i)=>({ day:days[i], name:t.substring(0,40), desc:t.substring(0,80) })) }; }
     
     function formatContent(c) { let h = c.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/^[-•*]\s+(.*)$/gm, '<li>$1</li>').replace(/(<li>.*?<\/li>)+/gs, '<ul style="margin:8px 0;padding-left:20px;">$&</ul>').replace(/\|/g, '').replace(/\n/g, '<br>'); return h; }
     function escapeHtml(s) { return String(s).replace(/[&<>]/g, m=> m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
@@ -903,13 +886,7 @@
         if(!currentPlan) { elements.roleContentBody.innerHTML = `<p style="color:#f87171;">⚠️ Generate a marketing plan first to see ${title} analysis.</p><p style="margin-top:12px;">Go to "Launch App" → fill in your business details → click "Generate Strategic Plan"</p>`; elements.roleContentTitle.innerHTML = title; elements.roleContentArea.style.display = 'block'; return; }
         elements.roleContentBody.innerHTML = contentGetter(currentPlan); elements.roleContentTitle.innerHTML = title; elements.roleContentArea.style.display = 'block';
         document.querySelectorAll('.role-item').forEach(i=>i.classList.remove('active')); document.querySelector(`.role-item[data-role="${roleId}"]`)?.classList.add('active');
-        if(roleId === 'marketsizing') {
-            setTimeout(() => {
-                document.getElementById('tamBox')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('tamBox').classList.toggle('clicked'); });
-                document.getElementById('samBox')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('samBox').classList.toggle('clicked'); });
-                document.getElementById('somBox')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('somBox').classList.toggle('clicked'); });
-            }, 50);
-        }
+        if(roleId === 'marketsizing') { setTimeout(() => { document.getElementById('tamBox')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('tamBox').classList.toggle('clicked'); }); document.getElementById('samBox')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('samBox').classList.toggle('clicked'); }); document.getElementById('somBox')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('somBox').classList.toggle('clicked'); }); }, 50); }
     }
 
     function setStatus(msg, loading=true) { elements.statusMessage.textContent = msg; elements.statusBar.style.display = 'flex'; if(!loading) setTimeout(()=>elements.statusBar.style.display='none',3000); }
@@ -975,8 +952,8 @@
                 case 'competitors': handler=()=>showRoleContent(id,name,renderCompetitorsVisual); break;
                 case 'positioning': handler=()=>showRoleContent(id,name,renderPositioningVisual); break;
                 case '4ps': handler=()=>showRoleContent(id,name,render4PsVisual); break;
-                case 'swot': handler=()=>showRoleContent(id,name,extractSWOTText); break;
-                case 'journey': handler=()=>showRoleContent(id,name,extractJourneyText); break;
+                case 'swot': handler=()=>showRoleContent(id,name,renderSWOTVisual); break;
+                case 'journey': handler=()=>showRoleContent(id,name,renderJourneyVisual); break;
                 case 'kpi': handler=()=>showRoleContent(id,name,extractKPIsText); break;
                 case 'okrs': handler=()=>showRoleContent(id,name,extractOKRsText); break;
                 case 'roadmap': handler=()=>showRoleContent(id,name,extractRoadmapText); break;
