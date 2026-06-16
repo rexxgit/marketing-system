@@ -183,7 +183,7 @@
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* AUTH OVERLAY - FIXED */
+        /* AUTH OVERLAY */
         .auth-overlay {
             position: fixed;
             top: 0;
@@ -2216,11 +2216,44 @@ function initApp() {
     
     // Pricing grid
     const pricingGrid = document.getElementById('pricingGrid');
-    if(pricingGrid) pricingGrid.innerHTML = `
-        <div class="pricing-card"><h3>Free</h3><div class="price">$0<span>/month</span></div><div class="price-period">Perfect for getting started</div><ul class="feature-list"><li><span class="icon-check"></span> 5 plans/month</li><li><span class="icon-check"></span> PDF export</li><li><span class="icon-check"></span> Save to history</li></ul><button class="btn-primary" onclick="showPage('app')">Get Started →</button></div>
-        <div class="pricing-card popular"><div class="popular-badge">⭐ MOST POPULAR</div><h3>Pro</h3><div class="price">$29<span>/month</span></div><div class="price-period">For growing teams</div><ul class="feature-list"><li><span class="icon-check"></span> Unlimited plans</li><li><span class="icon-check"></span> Priority support</li><li><span class="icon-check"></span> Advanced analytics</li></ul><button class="btn-primary" onclick="showPage('app')">Start Free Trial →</button></div>
-        <div class="pricing-card"><h3>Enterprise</h3><div class="price">Custom</div><div class="price-period">For large organizations</div><ul class="feature-list"><li><span class="icon-check"></span> Unlimited everything</li><li><span class="icon-check"></span> API access</li><li><span class="icon-check"></span> Dedicated support</li></ul><button class="btn-outline" onclick="alert('Contact sales@strategicmarketing.com')">Contact Sales →</button></div>
-    `;
+    if(pricingGrid) {
+        pricingGrid.innerHTML = `
+            <div class="pricing-card">
+                <h3>Free</h3>
+                <div class="price">$0<span>/month</span></div>
+                <div class="price-period">Perfect for getting started</div>
+                <ul class="feature-list">
+                    <li><span class="icon-check"></span> 5 plans/month</li>
+                    <li><span class="icon-check"></span> PDF export</li>
+                    <li><span class="icon-check"></span> Save to history</li>
+                </ul>
+                <button class="btn-primary" onclick="showPage('app')">Get Started →</button>
+            </div>
+            <div class="pricing-card popular">
+                <div class="popular-badge">⭐ MOST POPULAR</div>
+                <h3>Pro</h3>
+                <div class="price">$29<span>/month</span></div>
+                <div class="price-period">For growing teams</div>
+                <ul class="feature-list">
+                    <li><span class="icon-check"></span> Unlimited plans</li>
+                    <li><span class="icon-check"></span> Priority support</li>
+                    <li><span class="icon-check"></span> Advanced analytics</li>
+                </ul>
+                <button class="btn-primary" onclick="showPage('app')">Start Free Trial →</button>
+            </div>
+            <div class="pricing-card">
+                <h3>Enterprise</h3>
+                <div class="price">Custom</div>
+                <div class="price-period">For large organizations</div>
+                <ul class="feature-list">
+                    <li><span class="icon-check"></span> Unlimited everything</li>
+                    <li><span class="icon-check"></span> API access</li>
+                    <li><span class="icon-check"></span> Dedicated support</li>
+                </ul>
+                <button class="btn-outline" onclick="alert('Contact sales@strategicmarketing.com')">Contact Sales →</button>
+            </div>
+        `;
+    }
     
     // Prefill from session
     if(sessionStorage.getItem('prefillCustomer')) {
