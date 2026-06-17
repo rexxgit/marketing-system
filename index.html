@@ -6,14 +6,26 @@
     <title>Strategic Marketing System | AI-Powered Marketing Plan Generator</title>
     
     <style>
-        /* ============================================================
-           ALL STYLES PRESERVED - Same as your original
-           ============================================================ */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0e1a; color: #ffffff; line-height: 1.6; min-height: 100vh; }
-        .app-wrapper { display: flex; min-height: 100vh; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e1a;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .app-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
 
-        /* PDF Export Styles */
+        /* PDF Export Styles - Triggered when printing */
         @media print {
             body { background: white; color: black; }
             .left-panel, .nav, .nav-right, .footer, .lang-selector, .auth-buttons, .user-menu, .btn-primary, .btn-outline, .status-bar, .progress-bar, .close-role-content { display: none !important; }
@@ -24,9 +36,12 @@
             a, button { display: none; }
             .output-area h3 { color: #2c3e50; }
         }
-
+        
         /* CSS Icons Library - Complete */
-        .icon-target, .icon-bars, .icon-lightning, .icon-building, .icon-search, .icon-pin, .icon-grid, .icon-diamond, .icon-path, .icon-linechart, .icon-bullseye, .icon-calendar, .icon-paintbrush, .icon-home, .icon-clipboard, .icon-lightbulb, .icon-dollar, .icon-rocket, .icon-user, .icon-arrow, .icon-lock, .icon-data, .icon-check, .icon-star, .icon-heart, .icon-brain, .icon-gear { display: inline-block; }
+        .icon-target, .icon-bars, .icon-lightning, .icon-building, .icon-search, .icon-pin, .icon-grid, .icon-diamond, .icon-path, .icon-linechart, .icon-bullseye, .icon-calendar, .icon-paintbrush, .icon-home, .icon-clipboard, .icon-lightbulb, .icon-dollar, .icon-rocket, .icon-user, .icon-arrow, .icon-lock, .icon-data, .icon-check, .icon-star, .icon-heart, .icon-brain, .icon-gear {
+            display: inline-block;
+        }
+        /* All icon styles preserved */
         .icon-target { width: 20px; height: 20px; border: 2px solid currentColor; border-radius: 50%; position: relative; }
         .icon-target::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 6px; height: 6px; background: currentColor; border-radius: 50%; }
         .icon-target::after { content: ''; position: absolute; top: -4px; left: 50%; transform: translateX(-50%); width: 2px; height: 6px; background: currentColor; }
@@ -99,23 +114,53 @@
         .icon-brain::after { content: ''; position: absolute; top: 0; right: 0; width: 8px; height: 10px; background: currentColor; border-radius: 0 50% 50% 50%; }
         .icon-gear { width: 16px; height: 16px; border: 2px solid currentColor; border-radius: 50%; position: relative; }
         .icon-gear::before { content: ''; position: absolute; top: 5px; left: 5px; right: 5px; bottom: 5px; background: currentColor; border-radius: 50%; }
-
-        .left-panel { width: 300px; background: linear-gradient(180deg, #0c1120 0%, #050810 100%); border-right: 1px solid rgba(255,255,255,.08); padding: 24px 0; position: fixed; height: 100vh; overflow-y: auto; z-index: 50; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1); }
+        
+        .left-panel {
+            width: 300px;
+            background: linear-gradient(180deg, #0c1120 0%, #050810 100%);
+            border-right: 1px solid rgba(255,255,255,.08);
+            padding: 24px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 50;
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        
         .left-panel.open { transform: translateX(0); }
+        
         .panel-logo { padding: 0 20px 24px; border-bottom: 1px solid rgba(255,255,255,.08); margin-bottom: 24px; }
         .panel-logo h2 { font-size: 18px; background: linear-gradient(135deg, #fff, #a5b4fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        
         .roles-list { display: flex; flex-direction: column; gap: 4px; }
-        .role-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; margin: 0 8px; border-radius: 12px; cursor: pointer; transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1); color: rgba(255,255,255,.6); }
+        
+        .role-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            margin: 0 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            color: rgba(255,255,255,.6);
+        }
         .role-item:hover { background: rgba(99,102,241,.1); color: #a5b4fc; transform: translateX(4px); }
         .role-item.active { background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(236,72,153,.1)); color: #a5b4fc; border-left: 3px solid #6366f1; }
         .role-icon { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; }
         .role-name { font-size: 13px; font-weight: 500; flex: 1; }
         .role-status { font-size: 10px; color: rgba(255,255,255,.3); }
         .role-status.has-data { color: #4ade80; }
-
-        .main-content { flex: 1; margin-left: 0; padding: 24px 32px; transition: margin-left 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1); }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 0;
+            padding: 24px 32px;
+            transition: margin-left 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
         .main-content.panel-open { margin-left: 300px; }
-
+        
         .nav { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,.1); flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
         .logo { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #6366f1, #ec4899); -webkit-background-clip: text; background-clip: text; color: transparent; cursor: pointer; }
         .nav-links { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
@@ -131,80 +176,28 @@
         .user-name { font-size: 13px; font-weight: 500; color: #a5b4fc; }
         .user-avatar { width: 32px; height: 32px; background: linear-gradient(135deg, #6366f1, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
         .logout-btn { background: none; border: none; color: rgba(255,255,255,.5); cursor: pointer; font-size: 12px; padding: 4px 8px; border-radius: 50px; }
-        .logout-btn:hover { color: #f87171; background: rgba(248,113,113,.1); }
-
+        
         .page { display: none; animation: fadeIn 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1); }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* ============================================================
-           AUTH MODAL STYLES
-           ============================================================ */
-        .auth-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,.7);
-            backdrop-filter: blur(12px);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-        .auth-overlay.active { display: flex !important; }
-
-        .auth-modal {
-            position: relative;
-            background: linear-gradient(145deg, #1a1f3a, #0f1528);
-            border-radius: 32px;
-            padding: 40px;
-            max-width: 440px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 1px solid rgba(99,102,241,.3);
-            box-shadow: 0 25px 60px rgba(0,0,0,.6);
-            animation: slideUp 0.3s ease;
-        }
-        @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .auth-modal h2 { font-size: 28px; font-weight: 700; margin-bottom: 8px; background: linear-gradient(135deg, #fff, #a5b4fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .auth-modal .subtitle { color: rgba(255,255,255,.5); font-size: 14px; margin-bottom: 24px; }
-        .auth-modal .form-group { margin-bottom: 18px; }
-        .auth-modal label { display: block; font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5); letter-spacing: 0.5px; margin-bottom: 6px; font-weight: 600; }
-        .auth-modal input { width: 100%; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 14px 16px; color: white; font-size: 15px; transition: border-color 0.2s; }
-        .auth-modal input:focus { outline: none; border-color: #6366f1; }
-        .auth-modal input::placeholder { color: rgba(255,255,255,.3); }
-        .auth-modal .btn-primary { width: 100%; justify-content: center; padding: 14px; font-size: 16px; margin-top: 8px; }
-        .auth-modal .auth-switch { text-align: center; margin-top: 20px; font-size: 14px; color: rgba(255,255,255,.5); }
-        .auth-modal .auth-switch a { color: #a5b4fc; cursor: pointer; text-decoration: none; font-weight: 600; }
-        .auth-modal .auth-switch a:hover { text-decoration: underline; }
-        .auth-modal .error-msg { background: rgba(239,68,68,.15); border: 1px solid rgba(239,68,68,.3); color: #f87171; padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 16px; display: none; }
-        .auth-modal .error-msg.show { display: block; }
-        .auth-modal .success-msg { background: rgba(16,185,129,.15); border: 1px solid rgba(16,185,129,.3); color: #34d399; padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 16px; display: none; }
-        .auth-modal .success-msg.show { display: block; }
-        .close-auth { position: absolute; top: 16px; right: 20px; background: none; border: none; color: rgba(255,255,255,.4); font-size: 24px; cursor: pointer; transition: color 0.2s; }
-        .close-auth:hover { color: white; }
-        .auth-footer { margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.05); text-align: center; font-size: 12px; color: rgba(255,255,255,.3); }
-        .auth-modal .password-hint { font-size: 12px; color: rgba(255,255,255,.4); margin-top: 4px; }
-
+        
         .hero { text-align: center; padding: 60px 0; }
         .hero h1 { font-size: 48px; margin-bottom: 20px; background: linear-gradient(135deg, #fff, #a5b4fc, #ec4899); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .hero p { font-size: 18px; color: rgba(255,255,255,.7); max-width: 600px; margin: 0 auto 30px; }
-
+        
         .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 60px 0; }
         .step-card { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 20px; padding: 30px; text-align: center; transition: transform 0.3s; }
         .step-card:hover { transform: translateY(-5px); border-color: rgba(99,102,241,.3); }
         .step-number { width: 40px; height: 40px; background: linear-gradient(135deg, #6366f1, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 18px; font-weight: bold; }
-
+        
+        .roles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 40px 0; }
+        .role-badge { background: rgba(99,102,241,.1); border: 1px solid rgba(99,102,241,.3); border-radius: 100px; padding: 10px 16px; text-align: center; font-size: 12px; color: #a5b4fc; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        
         .input-area { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 24px; padding: 32px; margin-bottom: 30px; }
         textarea { width: 100%; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.1); border-radius: 16px; padding: 16px; color: white; font-family: inherit; resize: vertical; margin: 15px 0; }
         textarea:focus { outline: none; border-color: #6366f1; }
-
+        
+        /* ENHANCED OUTPUT AREA - PROFESSIONAL & PDF READY */
         .output-area {
             background: rgba(255,255,255,.05);
             border: 1px solid rgba(255,255,255,.1);
@@ -216,7 +209,13 @@
             line-height: 1.6;
             color: #e2e8f0;
         }
-        .output-area h1, .output-area h2, .output-area h3 { color: #a5b4fc; margin-top: 1.5em; margin-bottom: 0.75em; font-weight: 600; }
+        
+        .output-area h1, .output-area h2, .output-area h3 {
+            color: #a5b4fc;
+            margin-top: 1.5em;
+            margin-bottom: 0.75em;
+            font-weight: 600;
+        }
         .output-area h1 { font-size: 28px; border-bottom: 2px solid rgba(99,102,241,.3); padding-bottom: 8px; }
         .output-area h2 { font-size: 22px; }
         .output-area h3 { font-size: 18px; }
@@ -232,7 +231,7 @@
         .output-area blockquote { border-left: 4px solid #6366f1; padding-left: 1.5em; margin: 1em 0; color: #94a3b8; font-style: italic; }
         .output-area hr { border: none; height: 1px; background: linear-gradient(90deg, transparent, rgba(99,102,241,.3), transparent); margin: 2em 0; }
         .output-area strong { color: #a5b4fc; font-weight: 600; }
-
+        
         .role-card {
             background: rgba(255,255,255,.03);
             border: 1px solid rgba(255,255,255,.08);
@@ -244,21 +243,38 @@
             transition: all 0.5s;
         }
         .role-card.visible { opacity: 1; transform: translateY(0); }
-
+        
         .status-bar { background: rgba(99,102,241,.1); border: 1px solid rgba(99,102,241,.3); border-radius: 12px; padding: 12px 20px; margin: 20px 0; display: none; }
         .progress-bar { background: rgba(255,255,255,.1); border-radius: 10px; height: 4px; margin: 20px 0; overflow: hidden; }
         .progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #6366f1, #ec4899); transition: width 0.3s; }
-
+        
         .btn-primary { background: linear-gradient(135deg, #6366f1, #ec4899); border: none; border-radius: 50px; padding: 12px 28px; color: white; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.2s, box-shadow 0.2s; }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99,102,241,.3); }
         .btn-outline { background: transparent; border: 1px solid rgba(99,102,241,.5); border-radius: 50px; padding: 12px 28px; color: #a5b4fc; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
         .btn-outline:hover { background: rgba(99,102,241,.1); transform: translateY(-2px); }
-
+        
         .footer { text-align: center; padding: 40px; border-top: 1px solid rgba(255,255,255,.1); margin-top: 60px; color: rgba(255,255,255,.5); font-size: 12px; }
-
-        /* Pricing Section */
-        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin: 60px 0 40px; padding: 0 16px; }
-        .pricing-card { background: linear-gradient(145deg, rgba(20, 25, 45, 0.9) 0%, rgba(10, 15, 30, 0.95) 100%); backdrop-filter: blur(10px); border-radius: 32px; padding: 32px 28px; text-align: center; transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1); border: 1px solid rgba(99, 102, 241, 0.2); position: relative; overflow: hidden; cursor: pointer; }
+        
+        /* Pricing Section Styles */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin: 60px 0 40px;
+            padding: 0 16px;
+        }
+        .pricing-card {
+            background: linear-gradient(145deg, rgba(20, 25, 45, 0.9) 0%, rgba(10, 15, 30, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 32px;
+            padding: 32px 28px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
         .pricing-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #6366f1, #ec4899, #6366f1); transform: scaleX(0); transition: transform 0.5s ease; }
         .pricing-card:hover::before { transform: scaleX(1); }
         .pricing-card:hover { transform: translateY(-12px); border-color: rgba(99, 102, 241, 0.5); box-shadow: 0 25px 40px -15px rgba(99, 102, 241, 0.3); }
@@ -274,16 +290,29 @@
         .feature-list li:last-child { border-bottom: none; }
         .feature-list .icon-check { color: #4ade80; flex-shrink: 0; }
         .pricing-card .btn-primary, .pricing-card .btn-outline { width: 100%; justify-content: center; padding: 14px 28px; font-size: 15px; }
-
-        /* About Page */
-        .principles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 40px 0; }
-        .principle-card { background: linear-gradient(145deg, rgba(20, 25, 45, 0.8), rgba(10, 15, 30, 0.9)); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 24px; padding: 32px 24px; text-align: center; transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1); cursor: pointer; }
+        
+        /* About Page Principles */
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 40px 0;
+        }
+        .principle-card {
+            background: linear-gradient(145deg, rgba(20, 25, 45, 0.8), rgba(10, 15, 30, 0.9));
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 24px;
+            padding: 32px 24px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            cursor: pointer;
+        }
         .principle-card:hover { transform: translateY(-8px); border-color: rgba(99, 102, 241, 0.5); box-shadow: 0 20px 35px -12px rgba(99, 102, 241, 0.2); }
         .principle-icon { width: 64px; height: 64px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; background: rgba(99, 102, 241, 0.15); border-radius: 20px; transition: transform 0.3s; }
         .principle-card:hover .principle-icon { transform: scale(1.1) rotate(5deg); }
         .principle-card h3 { font-size: 22px; margin-bottom: 12px; background: linear-gradient(135deg, #fff, #a5b4fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .principle-desc { font-size: 13px; color: rgba(255, 255, 255, 0.7); line-height: 1.5; max-width: 200px; margin: 0 auto; }
-
+        
         /* Market Sizing */
         .market-sizing-container { background: rgba(255,255,255,.03); border-radius: 20px; padding: 20px; margin-bottom: 24px; }
         .tam-box, .sam-box, .som-box { background: rgba(255,255,255,.05); border-radius: 16px; padding: 20px; margin-bottom: 20px; cursor: pointer; transition: all 0.3s ease; border: 1px solid rgba(99,102,241,.2); }
@@ -300,21 +329,38 @@
         .hidden-detail { display: none; margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.1); }
         .tam-box.clicked .hidden-detail, .sam-box.clicked .hidden-detail, .som-box.clicked .hidden-detail { display: block; }
         .click-hint { text-align: center; font-size: 11px; color: rgba(255,255,255,.4); margin-top: 8px; }
-
+        
         .dashboard-container { display: none; }
         .dashboard-container.active { display: block; }
+        .segmentation-visual { background: rgba(255,255,255,.03); border-radius: 24px; padding: 24px; margin-bottom: 24px; }
+        .pie-chart { width: 180px; height: 180px; border-radius: 50%; margin: 0 auto; transition: transform 0.3s; }
+        .priority-card { background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(236,72,153,.1)); border: 1px solid rgba(99,102,241,.4); border-radius: 20px; padding: 20px; margin-top: 24px; }
         .empty-state { text-align: center; padding: 40px; color: rgba(255,255,255,.4); }
         .loader { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,.3); border-top-color: #6366f1; border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px; }
         @keyframes spin { to { transform: rotate(360deg); } }
-
+        
         .role-content-area { background: rgba(255,255,255,.03); border-radius: 24px; padding: 24px; margin-top: 24px; }
         .role-content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
         .close-role-content { background: rgba(99,102,241,.2); border: 1px solid rgba(99,102,241,.4); border-radius: 50px; padding: 6px 16px; color: #a5b4fc; cursor: pointer; font-size: 12px; transition: all 0.2s; }
         .close-role-content:hover { background: rgba(99,102,241,.4); transform: translateX(2px); }
-
-        /* PESTLE */
-        .pestle-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 16px; }
-        .pestle-card { background: linear-gradient(145deg, rgba(20, 25, 45, 0.8), rgba(10, 15, 30, 0.9)); border-radius: 20px; padding: 20px; transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1); border: 1px solid rgba(255,255,255,.08); cursor: pointer; position: relative; overflow: hidden; }
+        
+        /* PESTLE Card Styles */
+        .pestle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 16px;
+        }
+        .pestle-card {
+            background: linear-gradient(145deg, rgba(20, 25, 45, 0.8), rgba(10, 15, 30, 0.9));
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(255,255,255,.08);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
         .pestle-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
         .pestle-card:hover::before { transform: scaleX(1); }
         .pestle-card:hover { transform: translateY(-6px); border-color: rgba(99,102,241,.4); box-shadow: 0 12px 28px -8px rgba(0,0,0,.4); }
@@ -346,10 +392,24 @@
         .impact-medium { background: rgba(245,158,11,.2); color: #fbbf24; border: 1px solid rgba(245,158,11,.3); }
         .impact-low { background: rgba(16,185,129,.2); color: #34d399; border: 1px solid rgba(16,185,129,.3); }
         .pestle-footer { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.05); font-size: 12px; color: rgba(255,255,255,.5); display: flex; align-items: center; gap: 8px; }
-
-        /* Porter's */
-        .porters-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 16px; }
-        .porter-card { background: linear-gradient(145deg, rgba(20, 25, 45, 0.8), rgba(10, 15, 30, 0.9)); border-radius: 20px; padding: 20px; transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1); border: 1px solid rgba(255,255,255,.08); cursor: pointer; position: relative; overflow: hidden; }
+        
+        /* Porter's Forces Styles */
+        .porters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 16px;
+        }
+        .porter-card {
+            background: linear-gradient(145deg, rgba(20, 25, 45, 0.8), rgba(10, 15, 30, 0.9));
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(255,255,255,.08);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
         .porter-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
         .porter-card:hover::before { transform: scaleX(1); }
         .porter-card:hover { transform: translateY(-6px); border-color: rgba(99,102,241,.4); box-shadow: 0 12px 28px -8px rgba(0,0,0,.4); }
@@ -379,10 +439,24 @@
         .rating-fill.medium { background: linear-gradient(90deg, #f59e0b, #fbbf24); width: 55%; }
         .rating-fill.low { background: linear-gradient(90deg, #10b981, #34d399); width: 25%; }
         .porter-insight { font-size: 13px; color: rgba(255,255,255,.7); margin-top: 12px; line-height: 1.4; }
-
-        /* Competitors */
-        .competitors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-top: 20px; }
-        .competitor-card { background: linear-gradient(145deg, rgba(20, 25, 45, 0.85), rgba(10, 15, 30, 0.95)); border-radius: 24px; padding: 24px; transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1); border: 1px solid rgba(255,255,255,.08); cursor: pointer; position: relative; overflow: hidden; }
+        
+        /* Competitors Analysis Styles */
+        .competitors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+        .competitor-card {
+            background: linear-gradient(145deg, rgba(20, 25, 45, 0.85), rgba(10, 15, 30, 0.95));
+            border-radius: 24px;
+            padding: 24px;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(255,255,255,.08);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
         .competitor-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
         .competitor-card:hover::before { transform: scaleX(1); }
         .competitor-card:hover { transform: translateY(-8px); border-color: rgba(99,102,241,.5); box-shadow: 0 20px 35px -12px rgba(0,0,0,.5); }
@@ -408,9 +482,16 @@
         .position-tag { display: inline-block; background: rgba(99,102,241,.2); padding: 4px 10px; border-radius: 15px; font-size: 10px; color: #a5b4fc; margin-top: 8px; }
         .differentiation-box { margin-top: 16px; padding: 12px; background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(236,72,153,.1)); border-radius: 12px; border-left: 3px solid #4ade80; }
         .differentiation-box p { font-size: 12px; color: rgba(255,255,255,.8); line-height: 1.4; }
-
-        /* Positioning */
-        .positioning-container { background: linear-gradient(145deg, rgba(20, 25, 45, 0.9), rgba(10, 15, 30, 0.95)); border-radius: 28px; padding: 32px; margin-top: 16px; border: 1px solid rgba(99,102,241,.3); transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1); }
+        
+        /* Positioning Statement Styles */
+        .positioning-container {
+            background: linear-gradient(145deg, rgba(20, 25, 45, 0.9), rgba(10, 15, 30, 0.95));
+            border-radius: 28px;
+            padding: 32px;
+            margin-top: 16px;
+            border: 1px solid rgba(99,102,241,.3);
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
         .positioning-container:hover { transform: translateY(-5px); border-color: rgba(99,102,241,.6); box-shadow: 0 20px 35px -12px rgba(99,102,241,.2); }
         .positioning-statement { font-size: 20px; font-weight: 600; line-height: 1.5; text-align: center; padding: 24px; background: rgba(99,102,241,.08); border-radius: 20px; margin-bottom: 24px; color: #a5b4fc; border-left: 4px solid #6366f1; border-right: 4px solid #ec4899; }
         .positioning-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
@@ -419,10 +500,24 @@
         .detail-icon { font-size: 32px; margin-bottom: 12px; }
         .detail-label { font-size: 11px; text-transform: uppercase; color: #a5b4fc; letter-spacing: 1px; margin-bottom: 8px; }
         .detail-value { font-size: 14px; font-weight: 500; color: rgba(255,255,255,.9); }
-
-        /* 4Ps */
-        .fourps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 20px; }
-        .ps-card { background: linear-gradient(145deg, rgba(20, 25, 45, 0.85), rgba(10, 15, 30, 0.95)); border-radius: 24px; padding: 24px; transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1); border: 1px solid rgba(255,255,255,.08); cursor: pointer; position: relative; overflow: hidden; }
+        
+        /* 4Ps Marketing Mix Styles */
+        .fourps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+        .ps-card {
+            background: linear-gradient(145deg, rgba(20, 25, 45, 0.85), rgba(10, 15, 30, 0.95));
+            border-radius: 24px;
+            padding: 24px;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(255,255,255,.08);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
         .ps-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
         .ps-card:hover::before { transform: scaleX(1); }
         .ps-card:hover { transform: translateY(-8px); border-color: rgba(99,102,241,.5); box-shadow: 0 20px 35px -12px rgba(0,0,0,.5); }
@@ -446,10 +541,24 @@
         .ps-features { list-style: none; padding-left: 0; margin-top: 16px; }
         .ps-features li { font-size: 12px; color: rgba(255,255,255,.7); padding: 6px 0; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,.05); }
         .ps-features li:last-child { border-bottom: none; }
-
-        /* SWOT */
-        .swot-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 20px; }
-        .swot-card { background: linear-gradient(145deg, rgba(20, 25, 45, 0.85), rgba(10, 15, 30, 0.95)); border-radius: 24px; padding: 24px; transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1); border: 1px solid rgba(255,255,255,.08); cursor: pointer; position: relative; overflow: hidden; }
+        
+        /* SWOT Analysis Styles - 4 Cards with Capital Letters */
+        .swot-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-top: 20px;
+        }
+        .swot-card {
+            background: linear-gradient(145deg, rgba(20, 25, 45, 0.85), rgba(10, 15, 30, 0.95));
+            border-radius: 24px;
+            padding: 24px;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(255,255,255,.08);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
         .swot-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
         .swot-card:hover::before { transform: scaleX(1); }
         .swot-card:hover { transform: translateY(-6px); border-color: rgba(99,102,241,.4); box-shadow: 0 15px 30px -12px rgba(0,0,0,.4); }
@@ -457,7 +566,14 @@
         .swot-card.weaknesses::before { background: linear-gradient(90deg, #ef4444, #f87171); }
         .swot-card.opportunities::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
         .swot-card.threats::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
-        .swot-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1); }
+        .swot-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+        }
         .swot-letter { width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; border-radius: 16px; transition: transform 0.3s ease; }
         .swot-card:hover .swot-letter { transform: scale(1.1) rotate(3deg); }
         .swot-card.strengths .swot-letter { background: rgba(16,185,129,.2); color: #34d399; }
@@ -472,13 +588,47 @@
         .swot-details { font-size: 13px; color: rgba(255,255,255,.8); line-height: 1.5; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.05); }
         .swot-details ul { padding-left: 20px; margin-top: 8px; }
         .swot-details li { margin: 6px 0; }
-
-        /* Journey Map */
-        .journey-timeline-container { background: linear-gradient(145deg, rgba(20, 25, 45, 0.85), rgba(10, 15, 30, 0.95)); border-radius: 28px; padding: 32px; margin-top: 20px; border: 1px solid rgba(99,102,241,.2); overflow-x: auto; }
-        .journey-timeline { position: relative; padding: 20px 0 40px; min-width: 600px; }
-        .journey-dotted-line { position: absolute; top: 30px; left: 40px; right: 40px; height: 3px; background: repeating-linear-gradient(90deg, #6366f1, #6366f1 12px, transparent 12px, transparent 24px); border-radius: 3px; z-index: 0; }
-        .journey-stages { display: flex; justify-content: space-between; position: relative; z-index: 1; }
-        .journey-stage { display: flex; flex-direction: column; align-items: center; gap: 12px; flex: 1; position: relative; transition: all 0.3s ease; cursor: pointer; }
+        
+        /* Journey Map - Dotted Timeline Styles */
+        .journey-timeline-container {
+            background: linear-gradient(145deg, rgba(20, 25, 45, 0.85), rgba(10, 15, 30, 0.95));
+            border-radius: 28px;
+            padding: 32px;
+            margin-top: 20px;
+            border: 1px solid rgba(99,102,241,.2);
+            overflow-x: auto;
+        }
+        .journey-timeline {
+            position: relative;
+            padding: 20px 0 40px;
+            min-width: 600px;
+        }
+        .journey-dotted-line {
+            position: absolute;
+            top: 30px;
+            left: 40px;
+            right: 40px;
+            height: 3px;
+            background: repeating-linear-gradient(90deg, #6366f1, #6366f1 12px, transparent 12px, transparent 24px);
+            border-radius: 3px;
+            z-index: 0;
+        }
+        .journey-stages {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+        }
+        .journey-stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
         .journey-stage:hover { transform: translateY(-8px); }
         .stage-dot { width: 20px; height: 20px; background: #6366f1; border-radius: 50%; box-shadow: 0 0 0 4px rgba(99,102,241,.2); transition: all 0.3s ease; z-index: 2; }
         .journey-stage:hover .stage-dot { background: #ec4899; box-shadow: 0 0 0 6px rgba(236,72,153,.3); transform: scale(1.2); }
@@ -488,35 +638,69 @@
         .journey-start, .journey-end { position: absolute; top: 22px; font-size: 20px; z-index: 2; }
         .journey-start { left: 0; }
         .journey-end { right: 0; }
-
-        /* KPI */
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 20px; }
-        .kpi-card { background: linear-gradient(145deg, rgba(20, 25, 45, 0.85), rgba(10, 15, 30, 0.95)); border-radius: 20px; padding: 20px; transition: all 0.3s ease; border: 1px solid rgba(99,102,241,.2); text-align: center; }
+        
+        /* KPI Cards Styles */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .kpi-card {
+            background: linear-gradient(145deg, rgba(20, 25, 45, 0.85), rgba(10, 15, 30, 0.95));
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(99,102,241,.2);
+            text-align: center;
+        }
         .kpi-card:hover { transform: translateY(-5px); border-color: #6366f1; }
         .kpi-value { font-size: 36px; font-weight: 800; color: #a5b4fc; margin: 10px 0; }
         .kpi-label { font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5); letter-spacing: 1px; }
         .kpi-target { font-size: 11px; color: #4ade80; margin-top: 8px; }
-
-        /* OKR */
-        .okr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 20px; }
-        .okr-card { background: linear-gradient(145deg, rgba(20, 25, 45, 0.85), rgba(10, 15, 30, 0.95)); border-radius: 24px; padding: 24px; transition: all 0.3s ease; border: 1px solid rgba(99,102,241,.2); }
+        
+        /* OKR Cards Styles */
+        .okr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+        .okr-card {
+            background: linear-gradient(145deg, rgba(20, 25, 45, 0.85), rgba(10, 15, 30, 0.95));
+            border-radius: 24px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(99,102,241,.2);
+        }
         .okr-card:hover { transform: translateY(-5px); border-color: #6366f1; }
         .okr-title { font-size: 18px; font-weight: 700; color: #a5b4fc; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1); }
         .kr-item { margin: 16px 0; }
         .kr-name { font-size: 13px; font-weight: 500; margin-bottom: 6px; display: flex; justify-content: space-between; }
         .kr-progress-bar { height: 6px; background: rgba(255,255,255,.1); border-radius: 3px; overflow: hidden; }
         .kr-progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #4ade80, #22d3ee); transition: width 0.5s ease; }
-
-        /* Roadmap */
-        .roadmap-grid { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
-        .roadmap-phase { background: linear-gradient(145deg, rgba(20, 25, 45, 0.85), rgba(10, 15, 30, 0.95)); border-radius: 16px; padding: 20px; transition: all 0.3s ease; border-left: 4px solid #6366f1; }
+        
+        /* Roadmap Timeline Styles */
+        .roadmap-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .roadmap-phase {
+            background: linear-gradient(145deg, rgba(20, 25, 45, 0.85), rgba(10, 15, 30, 0.95));
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border-left: 4px solid #6366f1;
+        }
         .roadmap-phase:hover { transform: translateX(8px); border-left-color: #ec4899; }
         .phase-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
         .phase-title { font-size: 16px; font-weight: 700; color: #a5b4fc; }
         .phase-days { font-size: 11px; color: rgba(255,255,255,.5); background: rgba(0,0,0,.3); padding: 2px 10px; border-radius: 20px; }
         .phase-items { list-style: none; padding-left: 20px; }
         .phase-items li { font-size: 13px; color: rgba(255,255,255,.7); padding: 4px 0; display: flex; align-items: center; gap: 8px; }
-
+        
         @media (max-width: 768px) {
             .left-panel { width: 280px; }
             .main-content.panel-open { margin-left: 280px; }
@@ -547,6 +731,7 @@
             <div class="role-item" data-role="kpi"><div class="role-icon"><div class="icon-linechart"></div></div><span class="role-name">KPIs</span><span class="role-status"></span></div>
             <div class="role-item" data-role="okrs"><div class="role-icon"><div class="icon-bullseye"></div></div><span class="role-name">OKRs</span><span class="role-status"></span></div>
             <div class="role-item" data-role="roadmap"><div class="role-icon"><div class="icon-calendar"></div></div><span class="role-name">Roadmap</span><span class="role-status"></span></div>
+            <!-- Design role removed -->
         </div>
     </div>
 
@@ -562,42 +747,14 @@
             </div>
             <div class="nav-right">
                 <div class="lang-selector" id="langSelector"><span class="icon-gear"></span><span>English</span></div>
-                <div id="authContainer" class="auth-buttons">
-                    <button class="btn-signin" id="openLoginBtn"><span class="icon-user"></span><span>Sign In</span></button>
-                    <button class="btn-signup" id="openSignUpBtn"><span class="icon-user"></span><span>Sign Up</span></button>
-                </div>
-                <div id="userMenu" class="user-menu" style="display:none;">
-                    <span class="user-name" id="userNameDisplay">User</span>
-                    <div class="user-avatar" id="userAvatar">U</div>
-                    <button class="logout-btn" id="logoutBtnNav">Sign Out</button>
-                </div>
+                <div id="authContainer" class="auth-buttons"><button class="btn-signin" id="demoSignInBtn"><span class="icon-user"></span><span>Sign In</span></button><button class="btn-signup" id="demoSignUpBtn"><span class="icon-user"></span><span>Sign Up</span></button></div>
+                <div id="userMenu" class="user-menu" style="display:none;"><span class="user-name" id="userNameDisplay">Demo User</span><div class="user-avatar" id="userAvatar">D</div><button class="logout-btn" id="logoutBtnNav">Sign Out</button></div>
             </div>
         </nav>
 
-        <div id="homePage" class="page active">
-            <div class="hero">
-                <h1>Stop second-guessing.<br>Start executing.</h1>
-                <p>A conscientious marketing system that delivers 13 disciplined roles—executed in precise sequence—so you get clarity, not confusion.</p>
-                <button class="btn-primary" onclick="showPage('app')"><span class="icon-rocket"></span>Start Your Free Plan</button>
-            </div>
-            <h2 style="text-align:center;margin-bottom:40px;">How it works</h2>
-            <div class="steps">
-                <div class="step-card"><div class="step-number">1</div><h3>Describe your audience</h3><p>Tell us who you want to sell to</p></div>
-                <div class="step-card"><div class="step-number">2</div><h3>Describe your product</h3><p>Tell us what you're selling</p></div>
-                <div class="step-card"><div class="step-number">3</div><h3>Get your full plan</h3><p>Receive 13 roles of strategic analysis</p></div>
-            </div>
-        </div>
+        <div id="homePage" class="page active"><div class="hero"><h1>Stop second-guessing.<br>Start executing.</h1><p>A conscientious marketing system that delivers 13 disciplined roles—executed in precise sequence—so you get clarity, not confusion.</p><button class="btn-primary" onclick="showPage('app')"><span class="icon-rocket"></span>Start Your Free Plan</button></div><h2 style="text-align:center;margin-bottom:40px;">How it works</h2><div class="steps"><div class="step-card"><div class="step-number">1</div><h3>Describe your audience</h3><p>Tell us who you want to sell to</p></div><div class="step-card"><div class="step-number">2</div><h3>Describe your product</h3><p>Tell us what you're selling</p></div><div class="step-card"><div class="step-number">3</div><h3>Get your full plan</h3><p>Receive 13 roles of strategic analysis</p></div></div></div>
 
-        <div id="plannerPage" class="page">
-            <div class="hero" style="padding:40px 0;"><h1>Strategy Planner</h1><p>Fill in your business details and let our AI do the rest</p></div>
-            <div class="input-area">
-                <label>Customer Data / Target Audience</label>
-                <textarea id="plannerCustomer" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies..."></textarea>
-                <label>Product Description / Service</label>
-                <textarea id="plannerProduct" rows="4" placeholder="Example: An AI-powered marketing analytics platform..."></textarea>
-                <button class="btn-primary" onclick="goToAppWithData()"><span class="icon-rocket"></span>Generate Strategic Plan</button>
-            </div>
-        </div>
+        <div id="plannerPage" class="page"><div class="hero" style="padding:40px 0;"><h1>Strategy Planner</h1><p>Fill in your business details and let our AI do the rest</p></div><div class="input-area"><label>Customer Data / Target Audience</label><textarea id="plannerCustomer" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies..."></textarea><label>Product Description / Service</label><textarea id="plannerProduct" rows="4" placeholder="Example: An AI-powered marketing analytics platform..."></textarea><button class="btn-primary" onclick="goToAppWithData()"><span class="icon-rocket"></span>Generate Strategic Plan</button></div></div>
 
         <div id="aboutPage" class="page">
             <div class="hero" style="padding:40px 0;">
@@ -605,9 +762,21 @@
                 <p>We believe marketing strategy should be disciplined, not chaotic. 13 roles. One clear output. Every time.</p>
             </div>
             <div class="principles-grid">
-                <div class="principle-card"><div class="principle-icon"><div class="icon-gear" style="width:32px;height:32px;color:#a5b4fc;"></div></div><h3>Autonomy</h3><p class="principle-desc">System works independently. No need to instruct next steps.</p></div>
-                <div class="principle-card"><div class="principle-icon"><div class="icon-brain" style="width:32px;height:24px;color:#a5b4fc;"></div></div><h3>Intelligence</h3><p class="principle-desc">Smart analysis that learns and adapts to your business.</p></div>
-                <div class="principle-card"><div class="principle-icon"><div class="icon-heart" style="width:28px;height:24px;color:#a5b4fc;"></div></div><h3>Goodness</h3><p class="principle-desc">Ethical strategies benefiting everyone, not just bottom line.</p></div>
+                <div class="principle-card">
+                    <div class="principle-icon"><div class="icon-gear" style="width: 32px; height: 32px; color: #a5b4fc;"></div></div>
+                    <h3>Autonomy</h3>
+                    <p class="principle-desc">System works independently. No need to instruct next steps.</p>
+                </div>
+                <div class="principle-card">
+                    <div class="principle-icon"><div class="icon-brain" style="width: 32px; height: 24px; color: #a5b4fc;"></div></div>
+                    <h3>Intelligence</h3>
+                    <p class="principle-desc">Smart analysis that learns and adapts to your business.</p>
+                </div>
+                <div class="principle-card">
+                    <div class="principle-icon"><div class="icon-heart" style="width: 28px; height: 24px; color: #a5b4fc;"></div></div>
+                    <h3>Goodness</h3>
+                    <p class="principle-desc">Ethical strategies benefiting everyone, not just bottom line.</p>
+                </div>
             </div>
             <div style="background: rgba(99,102,241,.08); border-radius: 24px; padding: 32px; text-align: center;">
                 <h3>Our Mission</h3>
@@ -620,31 +789,7 @@
             <div class="pricing-grid" id="pricingGrid"></div>
         </div>
 
-        <div id="appPage" class="page">
-            <div class="input-area">
-                <label>Customer Data / Target Audience</label>
-                <textarea id="customerData" rows="3" placeholder="Example: Enterprise CTOs..."></textarea>
-                <label>Product Description / Service</label>
-                <textarea id="productDescription" rows="5" placeholder="Example: An AI-powered marketing analytics platform..."></textarea>
-                <div style="display:flex;gap:12px;flex-wrap:wrap;">
-                    <button id="generateBtn" class="btn-primary"><span class="icon-rocket"></span>Generate Strategic Plan</button>
-                    <button id="clearBtn" class="btn-outline">Clear All</button>
-                    <button id="pdfExportBtn" class="btn-outline" style="background: rgba(16,185,129,.1); border-color: rgba(16,185,129,.5);"><span class="icon-data"></span>Export as PDF</button>
-                </div>
-            </div>
-            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-            <div class="status-bar" id="statusBar"><span class="loader"></span><span id="statusMessage">Ready to generate</span></div>
-            <div class="output-area" id="outputArea">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
-                    <h3 style="margin:0;">Generated Marketing Strategy</h3>
-                    <div>
-                        <button id="copyOutputBtn" class="btn-outline"><span class="icon-clipboard"></span>Copy All</button>
-                        <button id="saveHistoryBtn" class="btn-outline"><span class="icon-calendar"></span>Save</button>
-                    </div>
-                </div>
-                <div id="renderedOutput"></div>
-            </div>
-        </div>
+        <div id="appPage" class="page"><div class="input-area"><label>Customer Data / Target Audience</label><textarea id="customerData" rows="3" placeholder="Example: Enterprise CTOs..."></textarea><label>Product Description / Service</label><textarea id="productDescription" rows="5" placeholder="Example: An AI-powered marketing analytics platform..."></textarea><div style="display:flex;gap:12px;"><button id="generateBtn" class="btn-primary"><span class="icon-rocket"></span>Generate Strategic Plan</button><button id="clearBtn" class="btn-outline">Clear All</button><button id="pdfExportBtn" class="btn-outline" style="background: rgba(16,185,129,.1); border-color: rgba(16,185,129,.5);"><span class="icon-data"></span>Export as PDF</button></div></div><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div><div class="status-bar" id="statusBar"><span class="loader"></span><span id="statusMessage">Ready to generate</span></div><div class="output-area" id="outputArea"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;"><h3 style="margin:0;">Generated Marketing Strategy</h3><div><button id="copyOutputBtn" class="btn-outline"><span class="icon-clipboard"></span>Copy All</button><button id="saveHistoryBtn" class="btn-outline"><span class="icon-calendar"></span>Save</button></div></div><div id="renderedOutput"></div></div></div>
 
         <div id="dashboardPage" class="dashboard-container">
             <div id="roleContentArea" class="role-content-area" style="display:none;">
@@ -657,1418 +802,908 @@
     </div>
 </div>
 
-<!-- ============================================================
-     AUTH MODAL
-     ============================================================ -->
-<div class="auth-overlay" id="authOverlay">
-    <div class="auth-modal">
-        <button class="close-auth" id="closeAuthModal">✕</button>
-        
-        <!-- SIGN IN FORM -->
-        <div id="signInForm">
-            <h2>Welcome Back</h2>
-            <p class="subtitle">Log in to access your saved strategies</p>
-            <div class="error-msg" id="signInError"></div>
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" id="signInEmail" placeholder="you@example.com">
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="signInPassword" placeholder="Enter your password">
-            </div>
-            <button class="btn-primary" id="signInBtn">Log In</button>
-            <div class="auth-switch">
-                Don't have an account? <a id="switchToSignUp">Sign Up</a>
-            </div>
-            <div class="auth-switch">
-                <a id="switchToForgotPassword">Forgot password?</a>
-            </div>
-        </div>
-        
-        <!-- SIGN UP FORM -->
-        <div id="signUpForm" style="display:none;">
-            <h2>Create Account</h2>
-            <p class="subtitle">Start generating strategic marketing plans</p>
-            <div class="error-msg" id="signUpError"></div>
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" id="signUpName" placeholder="John Doe">
-            </div>
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" id="signUpEmail" placeholder="you@example.com">
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="signUpPassword" placeholder="Min 8 characters">
-                <p class="password-hint">Must be at least 8 characters</p>
-            </div>
-            <button class="btn-primary" id="signUpBtn">Sign Up</button>
-            <div class="auth-switch">
-                Already have an account? <a id="switchToSignIn">Log In</a>
-            </div>
-        </div>
-        
-        <!-- FORGOT PASSWORD FORM -->
-        <div id="forgotPasswordForm" style="display:none;">
-            <h2>Reset Password</h2>
-            <p class="subtitle">Enter your email to receive a reset link</p>
-            <div class="error-msg" id="resetError"></div>
-            <div class="success-msg" id="resetSuccess"></div>
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" id="resetEmail" placeholder="you@example.com">
-            </div>
-            <button class="btn-primary" id="resetPasswordBtn">Send Reset Link</button>
-            <div class="auth-switch">
-                <a id="switchToSignInFromReset">Back to Log In</a>
-            </div>
-        </div>
-        
-        <div class="auth-footer">
-            <p>🔒 Your data is encrypted and secure</p>
-        </div>
-    </div>
-</div>
-
 <script>
-// ============================================================
-// 🔐 PURE LOCALSTORAGE AUTHENTICATION - NO SUPABASE
-// ============================================================
-
-// ----- AUTH STATE -----
-let currentUser = null;
-let currentPlan = null;
-let isGenerating = false;
-
-// ----- DOM ELEMENTS -----
-const elements = {
-    customerData: document.getElementById('customerData'),
-    productDescription: document.getElementById('productDescription'),
-    plannerCustomer: document.getElementById('plannerCustomer'),
-    plannerProduct: document.getElementById('plannerProduct'),
-    generateBtn: document.getElementById('generateBtn'),
-    clearBtn: document.getElementById('clearBtn'),
-    copyOutputBtn: document.getElementById('copyOutputBtn'),
-    saveHistoryBtn: document.getElementById('saveHistoryBtn'),
-    pdfExportBtn: document.getElementById('pdfExportBtn'),
-    statusBar: document.getElementById('statusBar'),
-    statusMessage: document.getElementById('statusMessage'),
-    progressFill: document.getElementById('progressFill'),
-    outputArea: document.getElementById('outputArea'),
-    renderedOutput: document.getElementById('renderedOutput'),
-    dashboardPage: document.getElementById('dashboardPage'),
-    roleContentArea: document.getElementById('roleContentArea'),
-    roleContentTitle: document.getElementById('roleContentTitle'),
-    roleContentBody: document.getElementById('roleContentBody'),
-    closeRoleContent: document.getElementById('closeRoleContent'),
-    leftPanel: document.getElementById('leftPanel'),
-    mainContent: document.getElementById('mainContent'),
-    authContainer: document.getElementById('authContainer'),
-    userMenu: document.getElementById('userMenu'),
-    userNameDisplay: document.getElementById('userNameDisplay'),
-    userAvatar: document.getElementById('userAvatar')
-};
-
-// ============================================================
-// AUTH UTILITY FUNCTIONS - JWT-STYLE TOKENS
-// ============================================================
-
-function generateToken(user) {
-    const payload = {
-        email: user.email,
-        name: user.name,
-        exp: Date.now() + 7 * 24 * 60 * 60 * 1000 // 7 days
+    let currentPlan = null, isGenerating = false, currentUser = null;
+    const API_BASE = 'https://Bisratprompt-marketing-system-api.hf.space';
+    const elements = {
+        customerData: document.getElementById('customerData'), productDescription: document.getElementById('productDescription'),
+        plannerCustomer: document.getElementById('plannerCustomer'), plannerProduct: document.getElementById('plannerProduct'),
+        generateBtn: document.getElementById('generateBtn'), clearBtn: document.getElementById('clearBtn'),
+        copyOutputBtn: document.getElementById('copyOutputBtn'), saveHistoryBtn: document.getElementById('saveHistoryBtn'),
+        pdfExportBtn: document.getElementById('pdfExportBtn'),
+        statusBar: document.getElementById('statusBar'), statusMessage: document.getElementById('statusMessage'),
+        progressFill: document.getElementById('progressFill'), outputArea: document.getElementById('outputArea'),
+        renderedOutput: document.getElementById('renderedOutput'), dashboardPage: document.getElementById('dashboardPage'),
+        roleContentArea: document.getElementById('roleContentArea'), roleContentTitle: document.getElementById('roleContentTitle'),
+        roleContentBody: document.getElementById('roleContentBody'), closeRoleContent: document.getElementById('closeRoleContent'),
+        leftPanel: document.getElementById('leftPanel'), mainContent: document.getElementById('mainContent'),
+        authContainer: document.getElementById('authContainer'), userMenu: document.getElementById('userMenu'),
+        userNameDisplay: document.getElementById('userNameDisplay'), userAvatar: document.getElementById('userAvatar')
     };
-    return btoa(JSON.stringify(payload));
-}
 
-function decodeToken(token) {
-    try {
-        const payload = JSON.parse(atob(token));
-        if (payload.exp < Date.now()) {
-            return null; // Token expired
-        }
-        return payload;
-    } catch (e) {
-        return null;
+    function showPage(pageName) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(pageName + 'Page').classList.add('active'); document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active')); document.getElementById('nav' + pageName.charAt(0).toUpperCase() + pageName.slice(1)).classList.add('active'); }
+    function goToAppWithData() { if(elements.plannerCustomer.value) sessionStorage.setItem('prefillCustomer', elements.plannerCustomer.value); if(elements.plannerProduct.value) sessionStorage.setItem('prefillProduct', elements.plannerProduct.value); showPage('app'); }
+
+    function getDemoUser() { let u = localStorage.getItem('demo_user'); if(!u) { u = { id: Date.now(), name: 'Demo User', email: 'demo@strategicmarketing.com', plan: 'free', plansGenerated: 0 }; localStorage.setItem('demo_user', JSON.stringify(u)); } return JSON.parse(u); }
+    function saveDemoUser(u) { localStorage.setItem('demo_user', JSON.stringify(u)); }
+    function showLoggedInUI() { elements.authContainer.style.display = 'none'; elements.userMenu.style.display = 'flex'; elements.userNameDisplay.textContent = currentUser.name; elements.userAvatar.textContent = currentUser.name.charAt(0); elements.leftPanel.classList.add('open'); elements.mainContent.classList.add('panel-open'); elements.dashboardPage.classList.add('active'); }
+    function showLoggedOutUI() { elements.authContainer.style.display = 'flex'; elements.userMenu.style.display = 'none'; elements.leftPanel.classList.remove('open'); elements.mainContent.classList.remove('panel-open'); elements.dashboardPage.classList.remove('active'); elements.roleContentArea.style.display = 'none'; showPage('app'); }
+    function demoSignIn() { currentUser = getDemoUser(); sessionStorage.setItem('currentUser', JSON.stringify(currentUser)); showLoggedInUI(); }
+    function demoSignOut() { currentUser = null; sessionStorage.removeItem('currentUser'); showLoggedOutUI(); }
+
+    // ============================================================
+    // DYNAMIC VISUAL RENDERERS - EXTRACT FROM PLAN
+    // ============================================================
+    
+    function extractTagContent(plan, tagName) {
+        if (!plan) return null;
+        const regex = new RegExp(`\\[${tagName}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
+        const match = plan.match(regex);
+        return match ? match[1].trim() : null;
     }
-}
-
-function getUsers() {
-    try {
-        return JSON.parse(localStorage.getItem('auth_users') || '{}');
-    } catch (e) {
-        return {};
+    
+    function formatContent(c) { 
+        if (!c) return '';
+        let h = c.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                 .replace(/^[-•*]\s+(.*)$/gm, '<li>$1</li>')
+                 .replace(/(<li>.*?<\/li>)+/gs, '<ul style="margin:8px 0;padding-left:20px;">$&</ul>')
+                 .replace(/\n/g, '<br>');
+        return h; 
     }
-}
+    
+    function escapeHtml(s) { return String(s).replace(/[&<>]/g, m=> m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
 
-function setUsers(users) {
-    localStorage.setItem('auth_users', JSON.stringify(users));
-}
-
-function getCurrentSession() {
-    try {
-        const session = JSON.parse(localStorage.getItem('auth_session'));
-        if (session && session.token) {
-            const payload = decodeToken(session.token);
-            if (payload) {
-                return { ...session, user: payload };
+    // ============================================================
+    // DYNAMIC RENDERERS - Parse from plan, fallback to plan data
+    // ============================================================
+    
+    function renderSWOTVisual(plan) {
+        if (!plan) return '<div class="empty-state">💪 Generate a plan first</div>';
+        const content = extractTagContent(plan, 'SWOT OUTPUT');
+        if (!content) return '<div class="empty-state">No SWOT data in generated plan</div>';
+        
+        // Parse the SWOT content into sections
+        let sections = { Strengths: [], Weaknesses: [], Opportunities: [], Threats: [] };
+        const sectionNames = ['Strengths', 'Weaknesses', 'Opportunities', 'Threats'];
+        const lines = content.split('\n');
+        let currentSection = null;
+        
+        for (const line of lines) {
+            const trimmed = line.trim();
+            for (const name of sectionNames) {
+                if (trimmed.match(new RegExp(`^${name}[:\\s]*`, 'i'))) {
+                    currentSection = name;
+                    const rest = trimmed.replace(new RegExp(`^${name}[:\\s]*`, 'i'), '');
+                    if (rest.length > 2) sections[name].push(rest);
+                    break;
+                }
+            }
+            if (currentSection && trimmed.match(/^[-•*]\s+/) && trimmed.length > 3) {
+                const item = trimmed.replace(/^[-•*]\s+/, '').trim();
+                if (item.length > 2) sections[currentSection].push(item);
             }
         }
-    } catch (e) {}
-    return null;
-}
-
-function setCurrentSession(user) {
-    const token = generateToken(user);
-    const session = {
-        token: token,
-        user: user,
-        loginTime: Date.now()
-    };
-    localStorage.setItem('auth_session', JSON.stringify(session));
-}
-
-function clearSession() {
-    localStorage.removeItem('auth_session');
-}
-
-// ============================================================
-// AUTH UI FUNCTIONS
-// ============================================================
-
-function updateAuthUI() {
-    if (currentUser) {
-        elements.authContainer.style.display = 'none';
-        elements.userMenu.style.display = 'flex';
-        elements.userNameDisplay.textContent = currentUser.name || 'User';
-        elements.userAvatar.textContent = (currentUser.name || 'U').charAt(0).toUpperCase();
-        elements.leftPanel.classList.add('open');
-        elements.mainContent.classList.add('panel-open');
-        elements.dashboardPage.classList.add('active');
         
-        if (!window._authNotified) {
-            window._authNotified = true;
-            setTimeout(() => showToast('👋 Welcome, ' + currentUser.name + '!'), 300);
-        }
-    } else {
-        elements.authContainer.style.display = 'flex';
-        elements.userMenu.style.display = 'none';
-        elements.leftPanel.classList.remove('open');
-        elements.mainContent.classList.remove('panel-open');
-        elements.dashboardPage.classList.remove('active');
-        elements.roleContentArea.style.display = 'none';
-        window._authNotified = false;
-    }
-}
-
-function showToast(message, isError = false) {
-    let toast = document.getElementById('dynamicToast');
-    if (!toast) {
-        toast = document.createElement('div');
-        toast.id = 'dynamicToast';
-        toast.style.cssText = `
-            position: fixed;
-            bottom: 100px;
-            right: 24px;
-            background: ${isError ? '#1a0a0a' : '#0c1120'};
-            border: 1px solid ${isError ? 'rgba(239,68,68,.4)' : 'rgba(99,102,241,.3)'};
-            border-radius: 12px;
-            padding: 14px 24px;
-            z-index: 2000;
-            transform: translateX(400px);
-            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            color: ${isError ? '#f87171' : '#e2e8f0'};
-            font-size: 14px;
-            max-width: 400px;
-            box-shadow: 0 10px 40px rgba(0,0,0,.4);
-            backdrop-filter: blur(10px);
-        `;
-        document.body.appendChild(toast);
-    }
-    toast.textContent = message;
-    toast.style.transform = 'translateX(0)';
-    clearTimeout(toast._hideTimeout);
-    toast._hideTimeout = setTimeout(() => {
-        toast.style.transform = 'translateX(400px)';
-    }, 3500);
-}
-
-// ============================================================
-// AUTH MODAL CONTROLS
-// ============================================================
-
-function openAuthModal(formId) {
-    document.getElementById('authOverlay').classList.add('active');
-    showAuthForm(formId || 'signInForm');
-}
-
-function closeAuthModal() {
-    document.getElementById('authOverlay').classList.remove('active');
-    document.querySelectorAll('.error-msg, .success-msg').forEach(el => {
-        el.classList.remove('show');
-        el.textContent = '';
-    });
-}
-
-function showAuthForm(formId) {
-    document.querySelectorAll('#signInForm, #signUpForm, #forgotPasswordForm').forEach(f => f.style.display = 'none');
-    document.getElementById(formId).style.display = 'block';
-}
-
-function showAuthError(elementId, message) {
-    const el = document.getElementById(elementId);
-    if (el) {
-        el.textContent = message;
-        el.classList.add('show');
-        setTimeout(() => { 
-            el.classList.remove('show');
-            el.textContent = '';
-        }, 5000);
-    }
-}
-
-function showAuthSuccess(elementId, message) {
-    const el = document.getElementById(elementId);
-    if (el) {
-        el.textContent = message;
-        el.classList.add('show');
-        setTimeout(() => { 
-            el.classList.remove('show');
-            el.textContent = '';
-        }, 5000);
-    }
-}
-
-// ============================================================
-// AUTH EVENT LISTENERS
-// ============================================================
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Check for existing session
-    const session = getCurrentSession();
-    if (session && session.user) {
-        currentUser = session.user;
-        updateAuthUI();
-    }
-    
-    // Auth modal triggers
-    const openLoginBtn = document.getElementById('openLoginBtn');
-    const openSignUpBtn = document.getElementById('openSignUpBtn');
-    const closeAuthModalBtn = document.getElementById('closeAuthModal');
-    const authOverlay = document.getElementById('authOverlay');
-    
-    if (openLoginBtn) {
-        openLoginBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            openAuthModal('signInForm');
-        });
-    }
-    
-    if (openSignUpBtn) {
-        openSignUpBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            openAuthModal('signUpForm');
-        });
-    }
-    
-    if (closeAuthModalBtn) {
-        closeAuthModalBtn.addEventListener('click', closeAuthModal);
-    }
-    
-    if (authOverlay) {
-        authOverlay.addEventListener('click', function(e) {
-            if (e.target === this) closeAuthModal();
-        });
-    }
-    
-    // Form switchers
-    const switchToSignUp = document.getElementById('switchToSignUp');
-    const switchToSignIn = document.getElementById('switchToSignIn');
-    const switchToSignInFromReset = document.getElementById('switchToSignInFromReset');
-    const switchToForgotPassword = document.getElementById('switchToForgotPassword');
-    
-    if (switchToSignUp) switchToSignUp.addEventListener('click', function(e) {
-        e.preventDefault();
-        showAuthForm('signUpForm');
-    });
-    
-    if (switchToSignIn) switchToSignIn.addEventListener('click', function(e) {
-        e.preventDefault();
-        showAuthForm('signInForm');
-    });
-    
-    if (switchToSignInFromReset) switchToSignInFromReset.addEventListener('click', function(e) {
-        e.preventDefault();
-        showAuthForm('signInForm');
-    });
-    
-    if (switchToForgotPassword) switchToForgotPassword.addEventListener('click', function(e) {
-        e.preventDefault();
-        showAuthForm('forgotPasswordForm');
-    });
-});
-
-// ============================================================
-// SIGN UP
-// ============================================================
-
-document.getElementById('signUpBtn').addEventListener('click', function() {
-    const name = document.getElementById('signUpName').value.trim();
-    const email = document.getElementById('signUpEmail').value.trim().toLowerCase();
-    const password = document.getElementById('signUpPassword').value;
-    
-    if (!name) { showAuthError('signUpError', 'Please enter your full name'); return; }
-    if (!email) { showAuthError('signUpError', 'Please enter your email address'); return; }
-    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) { 
-        showAuthError('signUpError', 'Please enter a valid email address'); 
-        return; 
-    }
-    if (password.length < 8) { 
-        showAuthError('signUpError', 'Password must be at least 8 characters'); 
-        return; 
-    }
-    
-    const users = getUsers();
-    if (users[email]) {
-        showAuthError('signUpError', 'This email is already registered. Please log in.');
-        return;
-    }
-    
-    users[email] = { 
-        name: name, 
-        password: btoa(password), // Simple encoding for demo
-        verified: true,
-        created: Date.now(),
-        lastLogin: Date.now()
-    };
-    setUsers(users);
-    
-    showToast('✅ Account created successfully! Please log in.');
-    showAuthForm('signInForm');
-    
-    document.getElementById('signUpEmail').value = '';
-    document.getElementById('signUpPassword').value = '';
-    document.getElementById('signUpName').value = '';
-});
-
-// ============================================================
-// LOG IN
-// ============================================================
-
-document.getElementById('signInBtn').addEventListener('click', function() {
-    const email = document.getElementById('signInEmail').value.trim().toLowerCase();
-    const password = document.getElementById('signInPassword').value;
-    
-    if (!email) { showAuthError('signInError', 'Please enter your email'); return; }
-    if (!password) { showAuthError('signInError', 'Please enter your password'); return; }
-    
-    const users = getUsers();
-    const user = users[email];
-    
-    if (!user) {
-        showAuthError('signInError', 'No account found with this email');
-        return;
-    }
-    
-    if (btoa(password) !== user.password) {
-        showAuthError('signInError', 'Invalid email or password');
-        return;
-    }
-    
-    user.lastLogin = Date.now();
-    users[email] = user;
-    setUsers(users);
-    
-    currentUser = { name: user.name, email: email };
-    setCurrentSession(currentUser);
-    window._authNotified = true;
-    updateAuthUI();
-    closeAuthModal();
-    showToast('👋 Welcome back, ' + user.name + '!');
-    
-    document.getElementById('signInEmail').value = '';
-    document.getElementById('signInPassword').value = '';
-});
-
-// ============================================================
-// FORGOT PASSWORD
-// ============================================================
-
-document.getElementById('resetPasswordBtn').addEventListener('click', function() {
-    const email = document.getElementById('resetEmail').value.trim().toLowerCase();
-    
-    if (!email) { 
-        showAuthError('resetError', 'Please enter your email address'); 
-        return; 
-    }
-    
-    const users = getUsers();
-    if (!users[email]) {
-        showAuthError('resetError', 'No account found with this email');
-        return;
-    }
-    
-    const resetToken = btoa(email + ':' + Date.now());
-    users[email].resetToken = resetToken;
-    users[email].resetTokenExpiry = Date.now() + 3600000;
-    setUsers(users);
-    
-    showAuthSuccess('resetSuccess', '✅ Password reset link sent to your email! (Demo mode)');
-    showToast('📧 Reset link generated for: ' + email);
-    
-    console.log('Reset token for ' + email + ':', resetToken);
-    
-    document.getElementById('resetEmail').value = '';
-});
-
-// ============================================================
-// SIGN OUT
-// ============================================================
-
-document.getElementById('logoutBtnNav').addEventListener('click', function() {
-    currentUser = null;
-    clearSession();
-    window._authNotified = false;
-    updateAuthUI();
-    showToast('👋 Signed out successfully');
-});
-
-// ============================================================
-// KEYBOARD SHORTCUTS
-// ============================================================
-
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeAuthModal();
-    }
-    if (e.key === 'Enter') {
-        const activeForm = document.querySelector('.auth-modal [style*="display: block"]');
-        if (activeForm) {
-            const signInBtn = document.getElementById('signInBtn');
-            const signUpBtn = document.getElementById('signUpBtn');
-            const resetBtn = document.getElementById('resetPasswordBtn');
-            
-            if (activeForm.id === 'signInForm' && signInBtn) {
-                signInBtn.click();
-            } else if (activeForm.id === 'signUpForm' && signUpBtn) {
-                signUpBtn.click();
-            } else if (activeForm.id === 'forgotPasswordForm' && resetBtn) {
-                resetBtn.click();
+        // If no structured data, try to extract bullet points
+        if (!sections.Strengths.length && !sections.Weaknesses.length) {
+            const lines2 = content.split('\n');
+            const allItems = [];
+            for (const line of lines2) {
+                if (line.match(/^[-•*]\s+/) && line.length > 5) {
+                    allItems.push(line.replace(/^[-•*]\s+/, '').trim());
+                }
+            }
+            if (allItems.length > 0) {
+                const mid = Math.floor(allItems.length / 2);
+                sections.Strengths = allItems.slice(0, mid);
+                sections.Weaknesses = allItems.slice(mid);
             }
         }
-    }
-});
-
-console.log('🔐 Authentication system initialized successfully!');
-
-// ============================================================
-// APP FUNCTIONS
-// ============================================================
-
-function showPage(pageName) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(pageName + 'Page').classList.add('active');
-    document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
-    const navMap = {
-        'home': 'navHome',
-        'planner': 'navPlanner',
-        'about': 'navAbout',
-        'pricing': 'navPricing',
-        'app': 'navApp'
-    };
-    const navId = navMap[pageName];
-    if (navId) document.getElementById(navId).classList.add('active');
-}
-
-function goToAppWithData() {
-    if (elements.plannerCustomer.value) sessionStorage.setItem('prefillCustomer', elements.plannerCustomer.value);
-    if (elements.plannerProduct.value) sessionStorage.setItem('prefillProduct', elements.plannerProduct.value);
-    showPage('app');
-}
-
-// ============================================================
-// RENDER FUNCTIONS
-// ============================================================
-
-function extractTagContent(plan, tagName) {
-    if (!plan) return null;
-    const regex = new RegExp(`\\[${tagName}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
-    const match = plan.match(regex);
-    return match ? match[1].trim() : null;
-}
-
-function formatContent(c) {
-    if (!c) return '';
-    let h = c.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-             .replace(/^[-•*]\s+(.*)$/gm, '<li>$1</li>')
-             .replace(/(<li>.*?<\/li>)+/gs, '<ul style="margin:8px 0;padding-left:20px;">$&</ul>')
-             .replace(/\n/g, '<br>');
-    return h;
-}
-
-function escapeHtml(s) { return String(s).replace(/[&<>]/g, m=> m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
-
-// ============================================================
-// ALL 13 ROLE RENDERERS
-// ============================================================
-
-function renderSegmentationVisual(plan) {
-    if (!plan) return '<div class="empty-state">✨ Generate a plan first</div>';
-    const content = extractTagContent(plan, 'SEGMENTATION OUTPUT');
-    if (!content) return '<div class="empty-state">No segmentation data in generated plan</div>';
-    
-    const segments = [];
-    const lines = content.split('\n');
-    for (const line of lines) {
-        if (line.match(/^\d+\.|^[-•*]\s+/) && line.length > 10 && line.length < 100) {
-            let seg = line.replace(/^\d+\.|^[-•*]\s+/, '').trim();
-            if (seg.length > 5 && seg.length < 80) segments.push(seg);
+        
+        // Fallback if still empty
+        if (!sections.Strengths.length && !sections.Weaknesses.length && !sections.Opportunities.length && !sections.Threats.length) {
+            return `<div class="empty-state">No structured SWOT data found in plan</div>`;
         }
+        
+        const colors = ['#34d399', '#f87171', '#fbbf24', '#a78bfa'];
+        const bgColors = ['rgba(16,185,129,.2)', 'rgba(239,68,68,.2)', 'rgba(245,158,11,.2)', 'rgba(139,92,246,.2)'];
+        
+        return `<div style="text-align:center;"><h2 style="color:#a5b4fc;">SWOT Analysis</h2><div class="swot-grid">
+            ${sectionNames.map((name, idx) => {
+                const items = sections[name] || [];
+                const icon = ['S', 'W', 'O', 'T'][idx];
+                return `<div class="swot-card ${name.toLowerCase()}">
+                    <div class="swot-header"><div class="swot-letter" style="background:${bgColors[idx]};color:${colors[idx]};">${icon}</div>
+                    <div class="swot-title" style="color:${colors[idx]};">${name.toUpperCase()}</div></div>
+                    <div class="swot-details"><ul>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
+                    ${items.length === 0 ? '<p style="color:rgba(255,255,255,.5);">No items</p>' : ''}
+                    </div></div>`;
+            }).join('')}
+        </div></div>`;
     }
-    if (segments.length === 0) segments = ['Segment 1', 'Segment 2', 'Segment 3'];
     
-    let primaryTarget = '';
-    const primaryMatch = content.match(/primary target|Primary Target[:\s]*([^\n]+)/i);
-    if (primaryMatch) primaryTarget = primaryMatch[1].trim();
-    
-    const segmentColors = ['#4ade80', '#22d3ee', '#fbbf24'];
-    
-    return `<div style="text-align: center;">
-        <h2 style="color: #a5b4fc; margin-bottom: 20px;">Market Segmentation</h2>
-        <div style="width: 200px; height: 200px; margin: 0 auto 24px;">
-            <div style="width:100%;height:100%;border-radius:50%;background:conic-gradient(${segmentColors[0]} 0deg 120deg, ${segmentColors[1]} 120deg 240deg, ${segmentColors[2]} 240deg 360deg);"></div>
-        </div>
-        <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:24px;">
-            ${segments.slice(0,3).map((seg,i) => `<div style="display:flex;align-items:center;gap:8px;"><div style="width:12px;height:12px;background:${segmentColors[i]};border-radius:50%;"></div><span style="font-size:14px;">${escapeHtml(seg)}</span></div>`).join('')}
-        </div>
-        ${primaryTarget ? `<div class="priority-card" style="padding:20px;border-radius:20px;background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(236,72,153,.1));"><div style="background:#4ade80;color:#000;display:inline-block;padding:4px 12px;border-radius:20px;">🏆 PRIMARY TARGET</div><div style="margin-top:12px;font-size:16px;font-weight:600;color:#4ade80;">${escapeHtml(primaryTarget)}</div></div>` : ''}
-    </div>`;
-}
-
-function renderMarketSizingVisual(plan) {
-    if (!plan) return '<div class="empty-state">📊 Generate a plan first</div>';
-    const content = extractTagContent(plan, 'TAMSAMSOM OUTPUT');
-    if (!content) return '<div class="empty-state">No market sizing data in generated plan</div>';
-    
-    let tam = '', sam = '', som = '';
-    const tamMatch = content.match(/TAM[:\s]*([0-9,]+)/i);
-    const samMatch = content.match(/SAM[:\s]*([0-9,]+)/i);
-    const somMatch = content.match(/SOM[:\s]*([0-9,]+)/i);
-    if (tamMatch) tam = tamMatch[1];
-    if (samMatch) sam = samMatch[1];
-    if (somMatch) som = somMatch[1];
-    
-    if (!tam && !sam && !som) return '<div class="empty-state">No market sizing numbers found in plan</div>';
-    
-    const tamVal = parseInt(String(tam).replace(/,/g, '')) || 1000000;
-    const samVal = parseInt(String(sam).replace(/,/g, '')) || 500000;
-    const somVal = parseInt(String(som).replace(/,/g, '')) || 50000;
-    
-    const tamFormatted = tamVal >= 1000000 ? (tamVal/1000000).toFixed(1) + 'M' : (tamVal/1000).toFixed(0) + 'K';
-    const samFormatted = samVal >= 1000000 ? (samVal/1000000).toFixed(1) + 'M' : (samVal/1000).toFixed(0) + 'K';
-    const somFormatted = somVal >= 1000000 ? (somVal/1000000).toFixed(1) + 'M' : (somVal/1000).toFixed(0) + 'K';
-    
-    const tamIcons = Math.min(Math.floor(tamVal / 50000), 20);
-    const samIcons = Math.min(Math.floor(samVal / 30000), 15);
-    const somIcons = Math.min(Math.floor(somVal / 4000), 12);
-    
-    return `<div style="text-align:center;">
-        <h2 style="color:#a5b4fc;">Market Sizing (TAM / SAM / SOM)</h2>
-        <div class="market-sizing-container" style="background:transparent;padding:0;">
-            <div class="tam-box" id="tamBox"><div class="tam-region">🌍 Target Market Region</div><div class="tam-value">${tamFormatted}</div><div class="hidden-detail"><div class="icon-grid-small">${Array(Math.min(tamIcons,20)).fill('<div class="market-icon">🏢</div>').join('')}</div><p style="margin-top:12px;font-size:12px;">Total Addressable Market</p></div><div class="click-hint">▼ Click to explore</div></div>
-            <div class="sam-box" id="samBox"><div class="sam-layout"><div class="sam-hand">🖐️🤝</div><div class="sam-value-right"><div class="sam-value">${samFormatted}</div></div></div><div class="hidden-detail"><div class="icon-grid-small">${Array(Math.min(samIcons,15)).fill('<div class="market-icon">🏪</div>').join('')}</div><p style="margin-top:12px;font-size:12px;">Serviceable Available Market</p></div><div class="click-hint">▼ Click to explore</div></div>
-            <div class="som-box" id="somBox"><div class="som-center"><div class="hand-icon-large">🖐️🎯</div><div class="som-value">${somFormatted}</div></div><div class="hidden-detail"><div class="icon-grid-small">${Array(Math.min(somIcons,12)).fill('<div class="market-icon">🚀</div>').join('')}</div><p style="margin-top:12px;font-size:12px;">Serviceable Obtainable Market</p></div><div class="click-hint">▼ Click to explore</div></div>
-        </div>
-    </div>`;
-}
-
-function renderPESTLEVisual(plan) {
-    if (!plan) return '<div class="empty-state">🔍 Generate a plan first</div>';
-    const content = extractTagContent(plan, 'PESTLE OUTPUT');
-    if (!content) return '<div class="empty-state">No PESTLE data in generated plan</div>';
-    
-    const factors = ['Political', 'Economic', 'Social', 'Technological', 'Legal', 'Environmental'];
-    const icons = { political: '🏛️', economic: '📈', social: '👥', technological: '💻', legal: '⚖️', environmental: '🌿' };
-    const classes = { political: 'political', economic: 'economic', social: 'social', technological: 'technological', legal: 'legal', environmental: 'environmental' };
-    
-    let html = `<div style="text-align:center;"><h2 style="color:#a5b4fc;">PESTLE Analysis</h2><div class="pestle-grid">`;
-    
-    for (const factor of factors) {
-        const factorLower = factor.toLowerCase();
-        let insight = '';
-        const regex = new RegExp(`${factor}[:\s]*([^\n]+)`, 'i');
-        const match = content.match(regex);
-        if (match) insight = match[1].trim().substring(0, 120);
-        if (!insight) insight = `${factor} analysis from your plan.`;
+    function renderJourneyVisual(plan) {
+        if (!plan) return '<div class="empty-state">🗺️ Generate a plan first</div>';
+        const content = extractTagContent(plan, 'CUSTOMER JOURNEY OUTPUT');
+        if (!content) return '<div class="empty-state">No journey data in generated plan</div>';
         
-        let impact = 'medium';
-        if (insight.match(/high|significant|major|strong/i)) impact = 'high';
-        else if (insight.match(/low|minor|weak|negligible/i)) impact = 'low';
+        const stages = [];
+        const lines = content.split('\n');
+        const stageNames = ['AWARENESS', 'CONSIDERATION', 'PURCHASE', 'RETENTION', 'ADVOCACY'];
+        let foundStages = [];
         
-        html += `<div class="pestle-card ${classes[factorLower]}"><div class="pestle-header"><div class="pestle-icon ${classes[factorLower]}">${icons[factorLower]}</div><div class="pestle-title">${factor}</div></div><div class="pestle-insight">${escapeHtml(insight)}</div><div class="pestle-footer"><span class="impact-badge impact-${impact}">${impact.toUpperCase()} IMPACT</span></div></div>`;
-    }
-    html += `</div></div>`;
-    return html;
-}
-
-function renderPortersVisual(plan) {
-    if (!plan) return '<div class="empty-state">⚔️ Generate a plan first</div>';
-    const content = extractTagContent(plan, 'PORTER OUTPUT');
-    if (!content) return '<div class="empty-state">No Porter\'s data in generated plan</div>';
-    
-    const forces = ['Threat of New Entrants', 'Bargaining Power of Buyers', 'Bargaining Power of Suppliers', 'Threat of Substitutes', 'Industry Rivalry'];
-    const icons = { newEntrants: '🚪', buyerPower: '🛒', supplierPower: '🏭', substitutes: '🔄', rivalry: '⚔️' };
-    const classes = { newEntrants: 'new-entrants', buyerPower: 'buyer-power', supplierPower: 'supplier-power', substitutes: 'substitutes', rivalry: 'rivalry' };
-    const forceKeys = ['newEntrants', 'buyerPower', 'supplierPower', 'substitutes', 'rivalry'];
-    
-    let html = `<div style="text-align:center;"><h2 style="color:#a5b4fc;">Porter's Five Forces</h2><div class="porters-grid">`;
-    
-    for (let i = 0; i < forces.length; i++) {
-        let insight = '';
-        const regex = new RegExp(`${forces[i]}[:\s]*([^\n]+)`, 'i');
-        const match = content.match(regex);
-        if (match) insight = match[1].trim().substring(0, 100);
-        if (!insight) insight = `${forces[i]} analysis from your plan.`;
-        
-        let rating = 'medium';
-        if (insight.match(/high|strong|significant/i)) rating = 'high';
-        else if (insight.match(/low|weak|minor/i)) rating = 'low';
-        
-        html += `<div class="porter-card ${classes[forceKeys[i]]}"><div class="porter-header"><div class="porter-icon ${classes[forceKeys[i]]}">${icons[forceKeys[i]]}</div><div class="porter-title">${forces[i]}</div></div><div class="porter-rating"><span>${rating.toUpperCase()} THREAT</span><div class="rating-bar"><div class="rating-fill ${rating}"></div></div></div><div class="porter-insight">${escapeHtml(insight)}</div></div>`;
-    }
-    html += `</div></div>`;
-    return html;
-}
-
-function renderCompetitorsVisual(plan) {
-    if (!plan) return '<div class="empty-state">🔍 Generate a plan first</div>';
-    const content = extractTagContent(plan, 'COMPETITOR OUTPUT');
-    if (!content) return '<div class="empty-state">No competitor data in generated plan</div>';
-    
-    const competitorMatches = content.match(/\|([^|]+)\|([^|]+)\|([^|]+)\|/g);
-    let competitors = [];
-    if (competitorMatches) {
-        for (let i = 0; i < Math.min(competitorMatches.length, 4); i++) {
-            const parts = competitorMatches[i].split('|').filter(p => p.trim());
-            if (parts.length >= 3) {
-                competitors.push({
-                    name: parts[0].trim(),
-                    positioning: parts[1].trim(),
-                    threat: parts[2].trim().toLowerCase().includes('high') ? 'high' : (parts[2].trim().toLowerCase().includes('medium') ? 'medium' : 'low'),
-                    offering: 'Competitor offering',
-                    strengths: ['Market presence'],
-                    weaknesses: ['Limited data'],
-                    position: parts[1].trim(),
-                    differentiation: 'Analyze gaps'
-                });
+        for (const line of lines) {
+            const trimmed = line.trim();
+            for (const name of stageNames) {
+                if (trimmed.toUpperCase().includes(name)) {
+                    const desc = trimmed.replace(new RegExp(name, 'i'), '').replace(/^[-•*]\s*/, '').trim();
+                    const cleanName = name.charAt(0) + name.slice(1).toLowerCase();
+                    if (!foundStages.find(s => s.name === cleanName)) {
+                        foundStages.push({ 
+                            day: foundStages.length * 7 + 1, 
+                            name: cleanName, 
+                            desc: desc || `${cleanName} stage`,
+                            icon: ['📱', '💡', '💰', '🛠️', '⭐'][foundStages.length] || '📌'
+                        });
+                    }
+                }
+            }
+            // Also check for numbered stages
+            if (trimmed.match(/^\d+\./)) {
+                const parts = trimmed.replace(/^\d+\./, '').trim().split('→');
+                if (parts.length >= 2) {
+                    const name = parts[0].trim().toUpperCase();
+                    const desc = parts[1].trim();
+                    if (!foundStages.find(s => s.name === name) && foundStages.length < 5) {
+                        foundStages.push({
+                            day: foundStages.length * 7 + 1,
+                            name: name,
+                            desc: desc || `${name} stage`,
+                            icon: ['📱', '💡', '💰', '🛠️', '⭐'][foundStages.length] || '📌'
+                        });
+                    }
+                }
             }
         }
+        
+        if (foundStages.length === 0) {
+            // Fallback - try to extract from text
+            const words = content.split(/\s+/);
+            for (let i = 0; i < words.length; i++) {
+                for (const name of stageNames) {
+                    if (words[i].toUpperCase().includes(name)) {
+                        const cleanName = name.charAt(0) + name.slice(1).toLowerCase();
+                        if (!foundStages.find(s => s.name === cleanName) && foundStages.length < 5) {
+                            const desc = words.slice(i, i + 6).join(' ').substring(0, 60);
+                            foundStages.push({
+                                day: foundStages.length * 7 + 1,
+                                name: cleanName,
+                                desc: desc || `${cleanName} stage`,
+                                icon: ['📱', '💡', '💰', '🛠️', '⭐'][foundStages.length] || '📌'
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        
+        // If still no stages, use default with extracted content
+        if (foundStages.length === 0) {
+            const defaultStages = ['Awareness', 'Consideration', 'Purchase', 'Retention', 'Advocacy'];
+            const descs = content.split('\n').filter(l => l.trim().length > 10).slice(0, 5);
+            foundStages = defaultStages.map((name, i) => ({
+                day: i * 7 + 1,
+                name: name,
+                desc: descs[i] ? descs[i].trim().substring(0, 60) : `${name} stage`,
+                icon: ['📱', '💡', '💰', '🛠️', '⭐'][i]
+            }));
+        }
+        
+        return `<div style="text-align:center;"><h2 style="color:#a5b4fc;">Customer Journey Map</h2>
+            <div class="journey-timeline-container"><div class="journey-timeline">
+            <div class="journey-dotted-line"></div>
+            <div class="journey-start">🏁</div>
+            <div class="journey-stages">
+                ${foundStages.slice(0,5).map(s => `
+                    <div class="journey-stage"><div class="stage-dot"></div>
+                    <div class="stage-day">Day ${s.day}</div>
+                    <div class="stage-name"><span>${s.icon}</span> ${s.name}</div>
+                    <div class="stage-desc">${escapeHtml(s.desc)}</div></div>
+                `).join('')}
+            </div>
+            <div class="journey-end">🎯</div>
+            </div></div></div>`;
     }
     
-    if (competitors.length === 0) {
+    function renderKPIVisual(plan) {
+        if (!plan) return '<div class="empty-state">📊 Generate a plan first</div>';
+        const content = extractTagContent(plan, 'KPI OUTPUT');
+        if (!content) return '<div class="empty-state">No KPI data in generated plan</div>';
+        
+        const kpis = [];
+        const lines = content.split('\n');
+        
+        // Try to extract primary KPI
+        const primaryMatch = content.match(/Primary KPI[:\s]*([^\n]+)/i);
+        if (primaryMatch) {
+            kpis.push({ label: 'Primary KPI', value: primaryMatch[1].trim().substring(0, 40), target: 'Target' });
+        }
+        
+        // Extract table data if present
+        const tableMatch = content.match(/\|([^|]+)\|([^|]+)\|/g);
+        if (tableMatch && tableMatch.length > 1) {
+            for (let i = 1; i < Math.min(tableMatch.length, 5); i++) {
+                const parts = tableMatch[i].split('|').filter(p => p.trim());
+                if (parts.length >= 2) {
+                    kpis.push({ 
+                        label: parts[0].trim().substring(0, 25), 
+                        value: parts[1].trim().substring(0, 30),
+                        target: 'Target'
+                    });
+                }
+            }
+        }
+        
+        // If no KPIs extracted, try to find bullet points
+        if (kpis.length === 0) {
+            const items = [];
+            for (const line of lines) {
+                if (line.match(/^[-•*]\s+/) && line.length > 10) {
+                    items.push(line.replace(/^[-•*]\s+/, '').trim());
+                }
+            }
+            for (let i = 0; i < Math.min(items.length, 4); i++) {
+                const parts = items[i].split(/[:–-]/);
+                if (parts.length >= 2) {
+                    kpis.push({ label: parts[0].trim().substring(0, 25), value: parts.slice(1).join(' ').trim().substring(0, 30), target: 'Target' });
+                } else {
+                    kpis.push({ label: `KPI ${i+1}`, value: items[i].substring(0, 40), target: 'Target' });
+                }
+            }
+        }
+        
+        // Fallback
+        if (kpis.length === 0) {
+            return `<div class="empty-state">No KPI data found in plan</div>`;
+        }
+        
+        return `<div style="text-align:center;"><h2 style="color:#a5b4fc;">Key Performance Indicators</h2>
+            <div class="kpi-grid">${kpis.slice(0,4).map(k => `
+                <div class="kpi-card"><div class="kpi-value">${escapeHtml(k.value)}</div>
+                <div class="kpi-label">${escapeHtml(k.label)}</div>
+                <div class="kpi-target">🎯 ${escapeHtml(k.target)}</div></div>
+            `).join('')}</div></div>`;
+    }
+    
+    function renderOKRVisual(plan) {
+        if (!plan) return '<div class="empty-state">🎯 Generate a plan first</div>';
+        const content = extractTagContent(plan, 'OKRS OUTPUT');
+        if (!content) return '<div class="empty-state">No OKR data in generated plan</div>';
+        
+        const objectives = [];
+        const lines = content.split('\n');
+        let currentObj = null;
+        
+        for (const line of lines) {
+            const trimmed = line.trim();
+            if (trimmed.match(/^Objective[:\s]*/i) || trimmed.match(/^O[0-9][.:\s]+/i)) {
+                const title = trimmed.replace(/^Objective[:\s]*/i, '').replace(/^O[0-9][.:\s]+/, '').trim();
+                if (title.length > 3) {
+                    if (currentObj) objectives.push(currentObj);
+                    currentObj = { objective: title, krs: [] };
+                }
+            } else if (trimmed.match(/^[-•*]\s+KR[:\s]*/i) || trimmed.match(/^[-•*]\s+Key Result[:\s]*/i) || trimmed.match(/^KR[0-9][:\s]*/i)) {
+                const krText = trimmed.replace(/^[-•*]\s+KR[:\s]*/i, '').replace(/^[-•*]\s+Key Result[:\s]*/i, '').replace(/^KR[0-9][:\s]*/, '').trim();
+                if (krText.length > 3 && currentObj) {
+                    currentObj.krs.push({ name: krText.substring(0, 60), progress: 0 });
+                }
+            } else if (trimmed.match(/^[-•*]\s+/) && trimmed.length > 10 && currentObj) {
+                const krText = trimmed.replace(/^[-•*]\s+/, '').trim();
+                if (krText.length > 5 && currentObj.krs.length < 3) {
+                    currentObj.krs.push({ name: krText.substring(0, 60), progress: 0 });
+                }
+            }
+        }
+        if (currentObj && currentObj.krs.length > 0) objectives.push(currentObj);
+        
+        if (objectives.length === 0) {
+            // Fallback - split content into blocks
+            const blocks = content.split(/\n\s*\n/);
+            for (const block of blocks) {
+                if (block.length > 30) {
+                    const lines2 = block.split('\n');
+                    const title = lines2[0].replace(/^[-•*]\s*/, '').trim().substring(0, 50);
+                    if (title.length > 5 && objectives.length < 3) {
+                        const krs = [];
+                        for (let i = 1; i < Math.min(lines2.length, 4); i++) {
+                            const kr = lines2[i].replace(/^[-•*]\s*/, '').trim();
+                            if (kr.length > 5) krs.push({ name: kr.substring(0, 60), progress: 0 });
+                        }
+                        if (krs.length > 0) objectives.push({ objective: title, krs: krs });
+                    }
+                }
+            }
+        }
+        
+        if (objectives.length === 0) {
+            return `<div class="empty-state">No OKR data found in plan</div>`;
+        }
+        
+        return `<div style="text-align:center;"><h2 style="color:#a5b4fc;">Objectives & Key Results</h2>
+            <div class="okr-grid">${objectives.slice(0,2).map(o => `
+                <div class="okr-card"><div class="okr-title">📌 ${escapeHtml(o.objective)}</div>
+                ${o.krs.map(k => `
+                    <div class="kr-item"><div class="kr-name"><span>${escapeHtml(k.name)}</span><span>0%</span></div>
+                    <div class="kr-progress-bar"><div class="kr-progress-fill" style="width:0%"></div></div></div>
+                `).join('')}</div>
+            `).join('')}</div></div>`;
+    }
+    
+    function renderRoadmapVisual(plan) {
+        if (!plan) return '<div class="empty-state">🗺️ Generate a plan first</div>';
+        const content = extractTagContent(plan, 'ROADMAP OUTPUT');
+        if (!content) return '<div class="empty-state">No roadmap data in generated plan</div>';
+        
+        const phases = [];
+        const lines = content.split('\n');
+        let currentPhase = null;
+        
+        for (const line of lines) {
+            const trimmed = line.trim();
+            if (trimmed.match(/^Phase\s*\d+[.:\s]+/i) || trimmed.match(/^Day\s*\d+[.:\s]+/i) || trimmed.match(/^\*\*Phase/)) {
+                const title = trimmed.replace(/^Phase\s*\d+[.:\s]+/i, '').replace(/^Day\s*\d+[.:\s]+/i, '').replace(/^\*\*Phase/, '').trim();
+                if (title.length > 3) {
+                    if (currentPhase && currentPhase.items.length > 0) phases.push(currentPhase);
+                    const daysMatch = trimmed.match(/\d+\s*[-–]\s*\d+/);
+                    currentPhase = { 
+                        title: title.substring(0, 40), 
+                        days: daysMatch ? daysMatch[0] : `Phase ${phases.length + 1}`,
+                        items: []
+                    };
+                }
+            } else if (trimmed.match(/^[-•*]\s+/) && trimmed.length > 5 && currentPhase) {
+                const item = trimmed.replace(/^[-•*]\s+/, '').trim();
+                if (item.length > 3) currentPhase.items.push(item.substring(0, 60));
+            } else if (trimmed.match(/^\d+\.\s+/) && currentPhase) {
+                const item = trimmed.replace(/^\d+\.\s+/, '').trim();
+                if (item.length > 3) currentPhase.items.push(item.substring(0, 60));
+            }
+        }
+        if (currentPhase && currentPhase.items.length > 0) phases.push(currentPhase);
+        
+        // Fallback - try to extract without phase headers
+        if (phases.length === 0) {
+            const items = [];
+            for (const line of lines) {
+                if (line.match(/^[-•*]\s+/) && line.length > 10) {
+                    items.push(line.replace(/^[-•*]\s+/, '').trim());
+                }
+            }
+            if (items.length > 0) {
+                const chunkSize = Math.ceil(items.length / 4);
+                const phaseNames = ['Foundation', 'Awareness', 'Conversion', 'Retention'];
+                for (let i = 0; i < Math.min(4, Math.ceil(items.length / chunkSize)); i++) {
+                    const phaseItems = items.slice(i * chunkSize, (i + 1) * chunkSize);
+                    if (phaseItems.length > 0) {
+                        phases.push({
+                            title: phaseNames[i] || `Phase ${i+1}`,
+                            days: `Days ${i*7+1}-${Math.min((i+1)*7, 30)}`,
+                            items: phaseItems
+                        });
+                    }
+                }
+            }
+        }
+        
+        if (phases.length === 0) {
+            return `<div class="empty-state">No roadmap data found in plan</div>`;
+        }
+        
+        return `<div style="text-align:center;"><h2 style="color:#a5b4fc;">30-Day Roadmap</h2>
+            <div class="roadmap-grid">${phases.slice(0,4).map(p => `
+                <div class="roadmap-phase"><div class="phase-header"><span class="phase-title">📋 ${escapeHtml(p.title)}</span>
+                <span class="phase-days">${escapeHtml(p.days)}</span></div>
+                <ul class="phase-items">${p.items.map(i => `<li><span class="icon-check"></span> ${escapeHtml(i)}</li>`).join('')}</ul></div>
+            `).join('')}</div></div>`;
+    }
+    
+    // ============================================================
+    // EXISTING RENDERERS (Segmentation, Market Sizing, PESTLE, Porter's, Competitors, Positioning, 4Ps)
+    // ============================================================
+    
+    function renderSegmentationVisual(plan) {
+        if (!plan) return '<div class="empty-state">✨ Generate a plan first</div>';
+        const content = extractTagContent(plan, 'SEGMENTATION OUTPUT');
+        if (!content) return '<div class="empty-state">No segmentation data in generated plan</div>';
+        
+        // Extract segments
+        const segments = [];
         const lines = content.split('\n');
         for (const line of lines) {
-            if (line.match(/^[-•*]\s+/) && line.length > 10) {
-                const parts = line.replace(/^[-•*]\s+/, '').split(/[–-]/);
-                if (parts.length >= 2) {
+            if (line.match(/^\d+\.|^[-•*]\s+/) && line.length > 10 && line.length < 100) {
+                let seg = line.replace(/^\d+\.|^[-•*]\s+/, '').trim();
+                if (seg.length > 5 && seg.length < 80) segments.push(seg);
+            }
+        }
+        if (segments.length === 0) segments = ['Segment 1', 'Segment 2', 'Segment 3'];
+        
+        // Extract primary target
+        let primaryTarget = '';
+        const primaryMatch = content.match(/primary target|Primary Target[:\s]*([^\n]+)/i);
+        if (primaryMatch) primaryTarget = primaryMatch[1].trim();
+        
+        const segmentColors = ['#4ade80', '#22d3ee', '#fbbf24'];
+        
+        return `<div style="text-align: center;">
+            <h2 style="color: #a5b4fc; margin-bottom: 20px;">Market Segmentation</h2>
+            <div style="width: 200px; height: 200px; margin: 0 auto 24px;">
+                <div style="width:100%;height:100%;border-radius:50%;background:conic-gradient(${segmentColors[0]} 0deg 120deg, ${segmentColors[1]} 120deg 240deg, ${segmentColors[2]} 240deg 360deg);"></div>
+            </div>
+            <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:24px;">
+                ${segments.slice(0,3).map((seg,i) => `<div style="display:flex;align-items:center;gap:8px;"><div style="width:12px;height:12px;background:${segmentColors[i]};border-radius:50%;"></div><span style="font-size:14px;">${escapeHtml(seg)}</span></div>`).join('')}
+            </div>
+            ${primaryTarget ? `<div class="priority-card" style="padding:20px;border-radius:20px;background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(236,72,153,.1));"><div style="background:#4ade80;color:#000;display:inline-block;padding:4px 12px;border-radius:20px;">🏆 PRIMARY TARGET</div><div style="margin-top:12px;font-size:16px;font-weight:600;color:#4ade80;">${escapeHtml(primaryTarget)}</div></div>` : ''}
+        </div>`;
+    }
+    
+    function renderMarketSizingVisual(plan) {
+        if (!plan) return '<div class="empty-state">📊 Generate a plan first</div>';
+        const content = extractTagContent(plan, 'TAMSAMSOM OUTPUT');
+        if (!content) return '<div class="empty-state">No market sizing data in generated plan</div>';
+        
+        let tam = '', sam = '', som = '';
+        const tamMatch = content.match(/TAM[:\s]*([0-9,]+)/i);
+        const samMatch = content.match(/SAM[:\s]*([0-9,]+)/i);
+        const somMatch = content.match(/SOM[:\s]*([0-9,]+)/i);
+        if (tamMatch) tam = tamMatch[1];
+        if (samMatch) sam = samMatch[1];
+        if (somMatch) som = somMatch[1];
+        
+        if (!tam && !sam && !som) return '<div class="empty-state">No market sizing numbers found in plan</div>';
+        
+        const tamVal = parseInt(String(tam).replace(/,/g, '')) || 1000000;
+        const samVal = parseInt(String(sam).replace(/,/g, '')) || 500000;
+        const somVal = parseInt(String(som).replace(/,/g, '')) || 50000;
+        
+        const tamFormatted = tamVal >= 1000000 ? (tamVal/1000000).toFixed(1) + 'M' : (tamVal/1000).toFixed(0) + 'K';
+        const samFormatted = samVal >= 1000000 ? (samVal/1000000).toFixed(1) + 'M' : (samVal/1000).toFixed(0) + 'K';
+        const somFormatted = somVal >= 1000000 ? (somVal/1000000).toFixed(1) + 'M' : (somVal/1000).toFixed(0) + 'K';
+        
+        const tamIcons = Math.min(Math.floor(tamVal / 50000), 20);
+        const samIcons = Math.min(Math.floor(samVal / 30000), 15);
+        const somIcons = Math.min(Math.floor(somVal / 4000), 12);
+        
+        return `<div style="text-align:center;">
+            <h2 style="color:#a5b4fc;">Market Sizing (TAM / SAM / SOM)</h2>
+            <div class="market-sizing-container" style="background:transparent;padding:0;">
+                <div class="tam-box" id="tamBox"><div class="tam-region">🌍 Target Market Region</div><div class="tam-value">${tamFormatted}</div><div class="hidden-detail"><div class="icon-grid-small">${Array(Math.min(tamIcons,20)).fill('<div class="market-icon">🏢</div>').join('')}</div><p style="margin-top:12px;font-size:12px;">Total Addressable Market</p></div><div class="click-hint">▼ Click to explore</div></div>
+                <div class="sam-box" id="samBox"><div class="sam-layout"><div class="sam-hand">🖐️🤝</div><div class="sam-value-right"><div class="sam-value">${samFormatted}</div></div></div><div class="hidden-detail"><div class="icon-grid-small">${Array(Math.min(samIcons,15)).fill('<div class="market-icon">🏪</div>').join('')}</div><p style="margin-top:12px;font-size:12px;">Serviceable Available Market</p></div><div class="click-hint">▼ Click to explore</div></div>
+                <div class="som-box" id="somBox"><div class="som-center"><div class="hand-icon-large">🖐️🎯</div><div class="som-value">${somFormatted}</div></div><div class="hidden-detail"><div class="icon-grid-small">${Array(Math.min(somIcons,12)).fill('<div class="market-icon">🚀</div>').join('')}</div><p style="margin-top:12px;font-size:12px;">Serviceable Obtainable Market</p></div><div class="click-hint">▼ Click to explore</div></div>
+            </div>
+        </div>`;
+    }
+    
+    function renderPESTLEVisual(plan) {
+        if (!plan) return '<div class="empty-state">🔍 Generate a plan first</div>';
+        const content = extractTagContent(plan, 'PESTLE OUTPUT');
+        if (!content) return '<div class="empty-state">No PESTLE data in generated plan</div>';
+        
+        const factors = ['Political', 'Economic', 'Social', 'Technological', 'Legal', 'Environmental'];
+        const icons = { political: '🏛️', economic: '📈', social: '👥', technological: '💻', legal: '⚖️', environmental: '🌿' };
+        const classes = { political: 'political', economic: 'economic', social: 'social', technological: 'technological', legal: 'legal', environmental: 'environmental' };
+        
+        let html = `<div style="text-align:center;"><h2 style="color:#a5b4fc;">PESTLE Analysis</h2><div class="pestle-grid">`;
+        
+        for (const factor of factors) {
+            const factorLower = factor.toLowerCase();
+            let insight = '';
+            const regex = new RegExp(`${factor}[:\s]*([^\n]+)`, 'i');
+            const match = content.match(regex);
+            if (match) insight = match[1].trim().substring(0, 120);
+            if (!insight) insight = `${factor} analysis from your plan.`;
+            
+            let impact = 'medium';
+            if (insight.match(/high|significant|major|strong/i)) impact = 'high';
+            else if (insight.match(/low|minor|weak|negligible/i)) impact = 'low';
+            
+            html += `<div class="pestle-card ${classes[factorLower]}"><div class="pestle-header"><div class="pestle-icon ${classes[factorLower]}">${icons[factorLower]}</div><div class="pestle-title">${factor}</div></div><div class="pestle-insight">${escapeHtml(insight)}</div><div class="pestle-footer"><span class="impact-badge impact-${impact}">${impact.toUpperCase()} IMPACT</span></div></div>`;
+        }
+        html += `</div></div>`;
+        return html;
+    }
+    
+    function renderPortersVisual(plan) {
+        if (!plan) return '<div class="empty-state">⚔️ Generate a plan first</div>';
+        const content = extractTagContent(plan, 'PORTER OUTPUT');
+        if (!content) return '<div class="empty-state">No Porter\'s data in generated plan</div>';
+        
+        const forces = ['Threat of New Entrants', 'Bargaining Power of Buyers', 'Bargaining Power of Suppliers', 'Threat of Substitutes', 'Industry Rivalry'];
+        const icons = { newEntrants: '🚪', buyerPower: '🛒', supplierPower: '🏭', substitutes: '🔄', rivalry: '⚔️' };
+        const classes = { newEntrants: 'new-entrants', buyerPower: 'buyer-power', supplierPower: 'supplier-power', substitutes: 'substitutes', rivalry: 'rivalry' };
+        const forceKeys = ['newEntrants', 'buyerPower', 'supplierPower', 'substitutes', 'rivalry'];
+        
+        let html = `<div style="text-align:center;"><h2 style="color:#a5b4fc;">Porter's Five Forces</h2><div class="porters-grid">`;
+        
+        for (let i = 0; i < forces.length; i++) {
+            let insight = '';
+            const regex = new RegExp(`${forces[i]}[:\s]*([^\n]+)`, 'i');
+            const match = content.match(regex);
+            if (match) insight = match[1].trim().substring(0, 100);
+            if (!insight) insight = `${forces[i]} analysis from your plan.`;
+            
+            let rating = 'medium';
+            if (insight.match(/high|strong|significant/i)) rating = 'high';
+            else if (insight.match(/low|weak|minor/i)) rating = 'low';
+            
+            html += `<div class="porter-card ${classes[forceKeys[i]]}"><div class="porter-header"><div class="porter-icon ${classes[forceKeys[i]]}">${icons[forceKeys[i]]}</div><div class="porter-title">${forces[i]}</div></div><div class="porter-rating"><span>${rating.toUpperCase()} THREAT</span><div class="rating-bar"><div class="rating-fill ${rating}"></div></div></div><div class="porter-insight">${escapeHtml(insight)}</div></div>`;
+        }
+        html += `</div></div>`;
+        return html;
+    }
+    
+    function renderCompetitorsVisual(plan) {
+        if (!plan) return '<div class="empty-state">🔍 Generate a plan first</div>';
+        const content = extractTagContent(plan, 'COMPETITOR OUTPUT');
+        if (!content) return '<div class="empty-state">No competitor data in generated plan</div>';
+        
+        const competitorMatches = content.match(/\|([^|]+)\|([^|]+)\|([^|]+)\|/g);
+        let competitors = [];
+        if (competitorMatches) {
+            for (let i = 0; i < Math.min(competitorMatches.length, 4); i++) {
+                const parts = competitorMatches[i].split('|').filter(p => p.trim());
+                if (parts.length >= 3) {
                     competitors.push({
-                        name: parts[0].trim().substring(0, 30),
-                        threat: 'medium',
-                        offering: parts[1].trim().substring(0, 40) || 'Competitor',
+                        name: parts[0].trim(),
+                        positioning: parts[1].trim(),
+                        threat: parts[2].trim().toLowerCase().includes('high') ? 'high' : (parts[2].trim().toLowerCase().includes('medium') ? 'medium' : 'low'),
+                        offering: 'Competitor offering',
                         strengths: ['Market presence'],
                         weaknesses: ['Limited data'],
-                        position: 'Competitor',
-                        differentiation: 'Differentiate'
+                        position: parts[1].trim(),
+                        differentiation: 'Analyze gaps'
                     });
                 }
             }
-        }
-    }
-    
-    if (competitors.length === 0) {
-        return `<div class="empty-state">No competitor data found in plan</div>`;
-    }
-    
-    const threatIcons = { high: '🔴', medium: '🟡', low: '🟢' };
-    
-    return `<div style="text-align:center;"><h2 style="color:#a5b4fc;">Competitor Analysis</h2><div class="competitors-grid">${competitors.slice(0,3).map(comp => `<div class="competitor-card threat-${comp.threat}"><div class="competitor-header"><span class="competitor-name">${escapeHtml(comp.name)}</span><span class="threat-badge threat-${comp.threat}">${threatIcons[comp.threat]} ${comp.threat.toUpperCase()}</span></div><div class="competitor-offering"><span>📦</span><span>${escapeHtml(comp.offering)}</span></div><div class="strengths-weaknesses"><div class="strengths-list"><h4>✓ Strengths</h4><ul>${comp.strengths.map(s=>`<li>• ${escapeHtml(s)}</li>`).join('')}</ul></div><div class="weaknesses-list"><h4>⚠ Weaknesses</h4><ul>${comp.weaknesses.map(w=>`<li>• ${escapeHtml(w)}</li>`).join('')}</ul></div></div><div class="position-tag">🎯 ${escapeHtml(comp.position)}</div><div class="differentiation-box"><p><strong>💡 Differentiation:</strong> ${escapeHtml(comp.differentiation)}</p></div></div>`).join('')}</div></div>`;
-}
-
-function renderPositioningVisual(plan) {
-    if (!plan) return '<div class="empty-state">🎯 Generate a plan first</div>';
-    const content = extractTagContent(plan, 'POSITIONING OUTPUT');
-    if (!content) return '<div class="empty-state">No positioning data in generated plan</div>';
-    
-    let statement = content.substring(0, 200);
-    if (statement.length < 20) statement = "Positioning statement will appear here.";
-    
-    return `<div style="text-align:center;"><h2 style="color:#a5b4fc;">Brand Positioning</h2><div class="positioning-container"><div class="positioning-statement">${escapeHtml(statement)}</div></div></div>`;
-}
-
-function render4PsVisual(plan) {
-    if (!plan) return '<div class="empty-state">📦 Generate a plan first</div>';
-    const content = extractTagContent(plan, '4Ps OUTPUT');
-    if (!content) return '<div class="empty-state">No 4Ps data in generated plan</div>';
-    
-    const icons = { product: '📱', price: '💰', place: '📍', promotion: '📢' };
-    const ps = ['Product', 'Price', 'Place', 'Promotion'];
-    let html = `<div style="text-align:center;"><h2 style="color:#a5b4fc;">Marketing Mix (4Ps)</h2><div class="fourps-grid">`;
-    
-    for (const p of ps) {
-        let desc = '';
-        const regex = new RegExp(`${p}[:\s]*([^\n]+)`, 'i');
-        const match = content.match(regex);
-        if (match) desc = match[1].trim().substring(0, 100);
-        if (!desc) desc = `${p} strategy from your plan.`;
-        
-        const pLower = p.toLowerCase();
-        const features = [];
-        const lines = content.split('\n');
-        let found = false;
-        for (const line of lines) {
-            if (line.trim().match(new RegExp(`^${p}[:\\s]*`, 'i'))) { found = true; continue; }
-            if (found && line.match(/^[-•*]\s+/) && line.length > 5) {
-                features.push(line.replace(/^[-•*]\s+/, '').trim().substring(0, 40));
-            }
-            if (found && line.trim().length > 0 && !line.match(/^[-•*]\s+/) && !line.match(/^[A-Z]/)) break;
         }
         
-        html += `<div class="ps-card ${pLower}"><div class="ps-header"><div class="ps-icon ${pLower}">${icons[pLower]}</div><div class="ps-title">${p}</div></div><div class="ps-description">${escapeHtml(desc)}</div><ul class="ps-features">${features.length > 0 ? features.map(f => `<li><span class="icon-check"></span> ${escapeHtml(f)}</li>`).join('') : '<li><span class="icon-check"></span> Key strategy</li>'}</ul></div>`;
-    }
-    html += `</div></div>`;
-    return html;
-}
-
-function renderSWOTVisual(plan) {
-    if (!plan) return '<div class="empty-state">💪 Generate a plan first</div>';
-    const content = extractTagContent(plan, 'SWOT OUTPUT');
-    if (!content) return '<div class="empty-state">No SWOT data in generated plan</div>';
-    
-    let sections = { Strengths: [], Weaknesses: [], Opportunities: [], Threats: [] };
-    const sectionNames = ['Strengths', 'Weaknesses', 'Opportunities', 'Threats'];
-    const lines = content.split('\n');
-    let currentSection = null;
-    
-    for (const line of lines) {
-        const trimmed = line.trim();
-        for (const name of sectionNames) {
-            if (trimmed.match(new RegExp(`^${name}[:\\s]*`, 'i'))) {
-                currentSection = name;
-                const rest = trimmed.replace(new RegExp(`^${name}[:\\s]*`, 'i'), '');
-                if (rest.length > 2) sections[name].push(rest);
-                break;
-            }
-        }
-        if (currentSection && trimmed.match(/^[-•*]\s+/) && trimmed.length > 3) {
-            const item = trimmed.replace(/^[-•*]\s+/, '').trim();
-            if (item.length > 2) sections[currentSection].push(item);
-        }
-    }
-    
-    if (!sections.Strengths.length && !sections.Weaknesses.length) {
-        const lines2 = content.split('\n');
-        const allItems = [];
-        for (const line of lines2) {
-            if (line.match(/^[-•*]\s+/) && line.length > 5) {
-                allItems.push(line.replace(/^[-•*]\s+/, '').trim());
-            }
-        }
-        if (allItems.length > 0) {
-            const mid = Math.floor(allItems.length / 2);
-            sections.Strengths = allItems.slice(0, mid);
-            sections.Weaknesses = allItems.slice(mid);
-        }
-    }
-    
-    if (!sections.Strengths.length && !sections.Weaknesses.length && !sections.Opportunities.length && !sections.Threats.length) {
-        return `<div class="empty-state">No structured SWOT data found in plan</div>`;
-    }
-    
-    const colors = ['#34d399', '#f87171', '#fbbf24', '#a78bfa'];
-    const bgColors = ['rgba(16,185,129,.2)', 'rgba(239,68,68,.2)', 'rgba(245,158,11,.2)', 'rgba(139,92,246,.2)'];
-    
-    return `<div style="text-align:center;"><h2 style="color:#a5b4fc;">SWOT Analysis</h2><div class="swot-grid">
-        ${sectionNames.map((name, idx) => {
-            const items = sections[name] || [];
-            const icon = ['S', 'W', 'O', 'T'][idx];
-            return `<div class="swot-card ${name.toLowerCase()}">
-                <div class="swot-header"><div class="swot-letter" style="background:${bgColors[idx]};color:${colors[idx]};">${icon}</div>
-                <div class="swot-title" style="color:${colors[idx]};">${name.toUpperCase()}</div></div>
-                <div class="swot-details"><ul>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
-                ${items.length === 0 ? '<p style="color:rgba(255,255,255,.5);">No items</p>' : ''}
-                </div></div>`;
-        }).join('')}
-    </div></div>`;
-}
-
-function renderJourneyVisual(plan) {
-    if (!plan) return '<div class="empty-state">🗺️ Generate a plan first</div>';
-    const content = extractTagContent(plan, 'CUSTOMER JOURNEY OUTPUT');
-    if (!content) return '<div class="empty-state">No journey data in generated plan</div>';
-    
-    const stageNames = ['AWARENESS', 'CONSIDERATION', 'PURCHASE', 'RETENTION', 'ADVOCACY'];
-    let foundStages = [];
-    const lines = content.split('\n');
-    
-    for (const line of lines) {
-        const trimmed = line.trim();
-        for (const name of stageNames) {
-            if (trimmed.toUpperCase().includes(name)) {
-                const desc = trimmed.replace(new RegExp(name, 'i'), '').replace(/^[-•*]\s*/, '').trim();
-                const cleanName = name.charAt(0) + name.slice(1).toLowerCase();
-                if (!foundStages.find(s => s.name === cleanName)) {
-                    foundStages.push({ 
-                        day: foundStages.length * 7 + 1, 
-                        name: cleanName, 
-                        desc: desc || `${cleanName} stage`,
-                        icon: ['📱', '💡', '💰', '🛠️', '⭐'][foundStages.length] || '📌'
-                    });
-                }
-            }
-        }
-        if (trimmed.match(/^\d+\./)) {
-            const parts = trimmed.replace(/^\d+\./, '').trim().split('→');
-            if (parts.length >= 2) {
-                const name = parts[0].trim().toUpperCase();
-                const desc = parts[1].trim();
-                if (!foundStages.find(s => s.name === name) && foundStages.length < 5) {
-                    foundStages.push({
-                        day: foundStages.length * 7 + 1,
-                        name: name,
-                        desc: desc || `${name} stage`,
-                        icon: ['📱', '💡', '💰', '🛠️', '⭐'][foundStages.length] || '📌'
-                    });
-                }
-            }
-        }
-    }
-    
-    if (foundStages.length === 0) {
-        const defaultStages = ['Awareness', 'Consideration', 'Purchase', 'Retention', 'Advocacy'];
-        const descs = content.split('\n').filter(l => l.trim().length > 10).slice(0, 5);
-        foundStages = defaultStages.map((name, i) => ({
-            day: i * 7 + 1,
-            name: name,
-            desc: descs[i] ? descs[i].trim().substring(0, 60) : `${name} stage`,
-            icon: ['📱', '💡', '💰', '🛠️', '⭐'][i]
-        }));
-    }
-    
-    return `<div style="text-align:center;"><h2 style="color:#a5b4fc;">Customer Journey Map</h2>
-        <div class="journey-timeline-container"><div class="journey-timeline">
-        <div class="journey-dotted-line"></div>
-        <div class="journey-start">🏁</div>
-        <div class="journey-stages">
-            ${foundStages.slice(0,5).map(s => `
-                <div class="journey-stage"><div class="stage-dot"></div>
-                <div class="stage-day">Day ${s.day}</div>
-                <div class="stage-name"><span>${s.icon}</span> ${s.name}</div>
-                <div class="stage-desc">${escapeHtml(s.desc)}</div></div>
-            `).join('')}
-        </div>
-        <div class="journey-end">🎯</div>
-        </div></div></div>`;
-}
-
-function renderKPIVisual(plan) {
-    if (!plan) return '<div class="empty-state">📊 Generate a plan first</div>';
-    const content = extractTagContent(plan, 'KPI OUTPUT');
-    if (!content) return '<div class="empty-state">No KPI data in generated plan</div>';
-    
-    const kpis = [];
-    const lines = content.split('\n');
-    
-    const primaryMatch = content.match(/Primary KPI[:\s]*([^\n]+)/i);
-    if (primaryMatch) {
-        kpis.push({ label: 'Primary KPI', value: primaryMatch[1].trim().substring(0, 40), target: 'Target' });
-    }
-    
-    const tableMatch = content.match(/\|([^|]+)\|([^|]+)\|/g);
-    if (tableMatch && tableMatch.length > 1) {
-        for (let i = 1; i < Math.min(tableMatch.length, 5); i++) {
-            const parts = tableMatch[i].split('|').filter(p => p.trim());
-            if (parts.length >= 2) {
-                kpis.push({ 
-                    label: parts[0].trim().substring(0, 25), 
-                    value: parts[1].trim().substring(0, 30),
-                    target: 'Target'
-                });
-            }
-        }
-    }
-    
-    if (kpis.length === 0) {
-        const items = [];
-        for (const line of lines) {
-            if (line.match(/^[-•*]\s+/) && line.length > 10) {
-                items.push(line.replace(/^[-•*]\s+/, '').trim());
-            }
-        }
-        for (let i = 0; i < Math.min(items.length, 4); i++) {
-            const parts = items[i].split(/[:–-]/);
-            if (parts.length >= 2) {
-                kpis.push({ label: parts[0].trim().substring(0, 25), value: parts.slice(1).join(' ').trim().substring(0, 30), target: 'Target' });
-            } else {
-                kpis.push({ label: `KPI ${i+1}`, value: items[i].substring(0, 40), target: 'Target' });
-            }
-        }
-    }
-    
-    if (kpis.length === 0) {
-        return `<div class="empty-state">No KPI data found in plan</div>`;
-    }
-    
-    return `<div style="text-align:center;"><h2 style="color:#a5b4fc;">Key Performance Indicators</h2>
-        <div class="kpi-grid">${kpis.slice(0,4).map(k => `
-            <div class="kpi-card"><div class="kpi-value">${escapeHtml(k.value)}</div>
-            <div class="kpi-label">${escapeHtml(k.label)}</div>
-            <div class="kpi-target">🎯 ${escapeHtml(k.target)}</div></div>
-        `).join('')}</div></div>`;
-}
-
-function renderOKRVisual(plan) {
-    if (!plan) return '<div class="empty-state">🎯 Generate a plan first</div>';
-    const content = extractTagContent(plan, 'OKRS OUTPUT');
-    if (!content) return '<div class="empty-state">No OKR data in generated plan</div>';
-    
-    const objectives = [];
-    const lines = content.split('\n');
-    let currentObj = null;
-    
-    for (const line of lines) {
-        const trimmed = line.trim();
-        if (trimmed.match(/^Objective[:\s]*/i) || trimmed.match(/^O[0-9][.:\s]+/i)) {
-            const title = trimmed.replace(/^Objective[:\s]*/i, '').replace(/^O[0-9][.:\s]+/, '').trim();
-            if (title.length > 3) {
-                if (currentObj) objectives.push(currentObj);
-                currentObj = { objective: title, krs: [] };
-            }
-        } else if (trimmed.match(/^[-•*]\s+KR[:\s]*/i) || trimmed.match(/^[-•*]\s+Key Result[:\s]*/i) || trimmed.match(/^KR[0-9][:\s]*/i)) {
-            const krText = trimmed.replace(/^[-•*]\s+KR[:\s]*/i, '').replace(/^[-•*]\s+Key Result[:\s]*/i, '').replace(/^KR[0-9][:\s]*/, '').trim();
-            if (krText.length > 3 && currentObj) {
-                currentObj.krs.push({ name: krText.substring(0, 60), progress: 0 });
-            }
-        } else if (trimmed.match(/^[-•*]\s+/) && trimmed.length > 10 && currentObj) {
-            const krText = trimmed.replace(/^[-•*]\s+/, '').trim();
-            if (krText.length > 5 && currentObj.krs.length < 3) {
-                currentObj.krs.push({ name: krText.substring(0, 60), progress: 0 });
-            }
-        }
-    }
-    if (currentObj && currentObj.krs.length > 0) objectives.push(currentObj);
-    
-    if (objectives.length === 0) {
-        const blocks = content.split(/\n\s*\n/);
-        for (const block of blocks) {
-            if (block.length > 30) {
-                const lines2 = block.split('\n');
-                const title = lines2[0].replace(/^[-•*]\s*/, '').trim().substring(0, 50);
-                if (title.length > 5 && objectives.length < 3) {
-                    const krs = [];
-                    for (let i = 1; i < Math.min(lines2.length, 4); i++) {
-                        const kr = lines2[i].replace(/^[-•*]\s*/, '').trim();
-                        if (kr.length > 5) krs.push({ name: kr.substring(0, 60), progress: 0 });
+        if (competitors.length === 0) {
+            const lines = content.split('\n');
+            for (const line of lines) {
+                if (line.match(/^[-•*]\s+/) && line.length > 10) {
+                    const parts = line.replace(/^[-•*]\s+/, '').split(/[–-]/);
+                    if (parts.length >= 2) {
+                        competitors.push({
+                            name: parts[0].trim().substring(0, 30),
+                            threat: 'medium',
+                            offering: parts[1].trim().substring(0, 40) || 'Competitor',
+                            strengths: ['Market presence'],
+                            weaknesses: ['Limited data'],
+                            position: 'Competitor',
+                            differentiation: 'Differentiate'
+                        });
                     }
-                    if (krs.length > 0) objectives.push({ objective: title, krs: krs });
                 }
             }
         }
-    }
-    
-    if (objectives.length === 0) {
-        return `<div class="empty-state">No OKR data found in plan</div>`;
-    }
-    
-    return `<div style="text-align:center;"><h2 style="color:#a5b4fc;">Objectives & Key Results</h2>
-        <div class="okr-grid">${objectives.slice(0,2).map(o => `
-            <div class="okr-card"><div class="okr-title">📌 ${escapeHtml(o.objective)}</div>
-            ${o.krs.map(k => `
-                <div class="kr-item"><div class="kr-name"><span>${escapeHtml(k.name)}</span><span>0%</span></div>
-                <div class="kr-progress-bar"><div class="kr-progress-fill" style="width:0%"></div></div></div>
-            `).join('')}</div>
-        `).join('')}</div></div>`;
-}
-
-function renderRoadmapVisual(plan) {
-    if (!plan) return '<div class="empty-state">🗺️ Generate a plan first</div>';
-    const content = extractTagContent(plan, 'ROADMAP OUTPUT');
-    if (!content) return '<div class="empty-state">No roadmap data in generated plan</div>';
-    
-    const phases = [];
-    const lines = content.split('\n');
-    let currentPhase = null;
-    
-    for (const line of lines) {
-        const trimmed = line.trim();
-        if (trimmed.match(/^Phase\s*\d+[.:\s]+/i) || trimmed.match(/^Day\s*\d+[.:\s]+/i) || trimmed.match(/^\*\*Phase/)) {
-            const title = trimmed.replace(/^Phase\s*\d+[.:\s]+/i, '').replace(/^Day\s*\d+[.:\s]+/i, '').replace(/^\*\*Phase/, '').trim();
-            if (title.length > 3) {
-                if (currentPhase && currentPhase.items.length > 0) phases.push(currentPhase);
-                const daysMatch = trimmed.match(/\d+\s*[-–]\s*\d+/);
-                currentPhase = { 
-                    title: title.substring(0, 40), 
-                    days: daysMatch ? daysMatch[0] : `Phase ${phases.length + 1}`,
-                    items: []
-                };
-            }
-        } else if (trimmed.match(/^[-•*]\s+/) && trimmed.length > 5 && currentPhase) {
-            const item = trimmed.replace(/^[-•*]\s+/, '').trim();
-            if (item.length > 3) currentPhase.items.push(item.substring(0, 60));
-        } else if (trimmed.match(/^\d+\.\s+/) && currentPhase) {
-            const item = trimmed.replace(/^\d+\.\s+/, '').trim();
-            if (item.length > 3) currentPhase.items.push(item.substring(0, 60));
+        
+        if (competitors.length === 0) {
+            return `<div class="empty-state">No competitor data found in plan</div>`;
         }
+        
+        const threatIcons = { high: '🔴', medium: '🟡', low: '🟢' };
+        
+        return `<div style="text-align:center;"><h2 style="color:#a5b4fc;">Competitor Analysis</h2><div class="competitors-grid">${competitors.slice(0,3).map(comp => `<div class="competitor-card threat-${comp.threat}"><div class="competitor-header"><span class="competitor-name">${escapeHtml(comp.name)}</span><span class="threat-badge threat-${comp.threat}">${threatIcons[comp.threat]} ${comp.threat.toUpperCase()}</span></div><div class="competitor-offering"><span>📦</span><span>${escapeHtml(comp.offering)}</span></div><div class="strengths-weaknesses"><div class="strengths-list"><h4>✓ Strengths</h4><ul>${comp.strengths.map(s=>`<li>• ${escapeHtml(s)}</li>`).join('')}</ul></div><div class="weaknesses-list"><h4>⚠ Weaknesses</h4><ul>${comp.weaknesses.map(w=>`<li>• ${escapeHtml(w)}</li>`).join('')}</ul></div></div><div class="position-tag">🎯 ${escapeHtml(comp.position)}</div><div class="differentiation-box"><p><strong>💡 Differentiation:</strong> ${escapeHtml(comp.differentiation)}</p></div></div>`).join('')}</div></div>`;
     }
-    if (currentPhase && currentPhase.items.length > 0) phases.push(currentPhase);
     
-    if (phases.length === 0) {
-        const items = [];
-        for (const line of lines) {
-            if (line.match(/^[-•*]\s+/) && line.length > 10) {
-                items.push(line.replace(/^[-•*]\s+/, '').trim());
-            }
-        }
-        if (items.length > 0) {
-            const chunkSize = Math.ceil(items.length / 4);
-            const phaseNames = ['Foundation', 'Awareness', 'Conversion', 'Retention'];
-            for (let i = 0; i < Math.min(4, Math.ceil(items.length / chunkSize)); i++) {
-                const phaseItems = items.slice(i * chunkSize, (i + 1) * chunkSize);
-                if (phaseItems.length > 0) {
-                    phases.push({
-                        title: phaseNames[i] || `Phase ${i+1}`,
-                        days: `Days ${i*7+1}-${Math.min((i+1)*7, 30)}`,
-                        items: phaseItems
-                    });
+    function renderPositioningVisual(plan) {
+        if (!plan) return '<div class="empty-state">🎯 Generate a plan first</div>';
+        const content = extractTagContent(plan, 'POSITIONING OUTPUT');
+        if (!content) return '<div class="empty-state">No positioning data in generated plan</div>';
+        
+        let statement = content.substring(0, 200);
+        if (statement.length < 20) statement = "Positioning statement will appear here.";
+        
+        return `<div style="text-align:center;"><h2 style="color:#a5b4fc;">Brand Positioning</h2><div class="positioning-container"><div class="positioning-statement">${escapeHtml(statement)}</div></div></div>`;
+    }
+    
+    function render4PsVisual(plan) {
+        if (!plan) return '<div class="empty-state">📦 Generate a plan first</div>';
+        const content = extractTagContent(plan, '4Ps OUTPUT');
+        if (!content) return '<div class="empty-state">No 4Ps data in generated plan</div>';
+        
+        const icons = { product: '📱', price: '💰', place: '📍', promotion: '📢' };
+        const ps = ['Product', 'Price', 'Place', 'Promotion'];
+        let html = `<div style="text-align:center;"><h2 style="color:#a5b4fc;">Marketing Mix (4Ps)</h2><div class="fourps-grid">`;
+        
+        for (const p of ps) {
+            let desc = '';
+            const regex = new RegExp(`${p}[:\s]*([^\n]+)`, 'i');
+            const match = content.match(regex);
+            if (match) desc = match[1].trim().substring(0, 100);
+            if (!desc) desc = `${p} strategy from your plan.`;
+            
+            const pLower = p.toLowerCase();
+            const features = [];
+            const lines = content.split('\n');
+            let found = false;
+            for (const line of lines) {
+                if (line.trim().match(new RegExp(`^${p}[:\\s]*`, 'i'))) { found = true; continue; }
+                if (found && line.match(/^[-•*]\s+/) && line.length > 5) {
+                    features.push(line.replace(/^[-•*]\s+/, '').trim().substring(0, 40));
                 }
+                if (found && line.trim().length > 0 && !line.match(/^[-•*]\s+/) && !line.match(/^[A-Z]/)) break;
             }
+            
+            html += `<div class="ps-card ${pLower}"><div class="ps-header"><div class="ps-icon ${pLower}">${icons[pLower]}</div><div class="ps-title">${p}</div></div><div class="ps-description">${escapeHtml(desc)}</div><ul class="ps-features">${features.length > 0 ? features.map(f => `<li><span class="icon-check"></span> ${escapeHtml(f)}</li>`).join('') : '<li><span class="icon-check"></span> Key strategy</li>'}</ul></div>`;
         }
+        html += `</div></div>`;
+        return html;
     }
-    
-    if (phases.length === 0) {
-        return `<div class="empty-state">No roadmap data found in plan</div>`;
-    }
-    
-    return `<div style="text-align:center;"><h2 style="color:#a5b4fc;">30-Day Roadmap</h2>
-        <div class="roadmap-grid">${phases.slice(0,4).map(p => `
-            <div class="roadmap-phase"><div class="phase-header"><span class="phase-title">📋 ${escapeHtml(p.title)}</span>
-            <span class="phase-days">${escapeHtml(p.days)}</span></div>
-            <ul class="phase-items">${p.items.map(i => `<li><span class="icon-check"></span> ${escapeHtml(i)}</li>`).join('')}</ul></div>
-        `).join('')}</div></div>`;
-}
 
-// ============================================================
-// ROLE CONTENT HANDLER
-// ============================================================
-
-function showRoleContent(roleId, title, contentGetter) {
-    if(!currentPlan) {
-        elements.roleContentBody.innerHTML = `<p style="color:#f87171;">⚠️ Generate a plan first to see ${title}.</p>`;
+    // ============================================================
+    // EXISTING FUNCTIONS - Preserved
+    // ============================================================
+    
+    function showRoleContent(roleId, title, contentGetter) {
+        if(!currentPlan) {
+            elements.roleContentBody.innerHTML = `<p style="color:#f87171;">⚠️ Generate a plan first to see ${title}.</p>`;
+            elements.roleContentTitle.innerHTML = title;
+            elements.roleContentArea.style.display = 'block';
+            return;
+        }
+        elements.roleContentBody.innerHTML = contentGetter(currentPlan);
         elements.roleContentTitle.innerHTML = title;
         elements.roleContentArea.style.display = 'block';
-        return;
-    }
-    elements.roleContentBody.innerHTML = contentGetter(currentPlan);
-    elements.roleContentTitle.innerHTML = title;
-    elements.roleContentArea.style.display = 'block';
-    document.querySelectorAll('.role-item').forEach(i=>i.classList.remove('active'));
-    document.querySelector(`.role-item[data-role="${roleId}"]`)?.classList.add('active');
-    if(roleId === 'marketsizing') {
-        setTimeout(() => {
-            document.getElementById('tamBox')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('tamBox').classList.toggle('clicked'); });
-            document.getElementById('samBox')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('samBox').classList.toggle('clicked'); });
-            document.getElementById('somBox')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('somBox').classList.toggle('clicked'); });
-        }, 50);
-    }
-}
-
-// ============================================================
-// STATUS & PROGRESS
-// ============================================================
-
-function setStatus(msg, loading=true) { 
-    elements.statusMessage.textContent = msg; 
-    elements.statusBar.style.display = 'flex'; 
-    if(!loading) setTimeout(()=>elements.statusBar.style.display='none',3000); 
-}
-
-function updateProgress(p) { elements.progressFill.style.width = p+'%'; }
-
-// ============================================================
-// STREAM ROLES
-// ============================================================
-
-async function streamRoles(plan) {
-    const roles = [
-        { tag:'SEGMENTATION OUTPUT', title:'Market Segmentation' },
-        { tag:'TAMSAMSOM OUTPUT', title:'Market Sizing' },
-        { tag:'PESTLE OUTPUT', title:'PESTLE Analysis' },
-        { tag:'PORTER OUTPUT', title:"Porter's Forces" },
-        { tag:'COMPETITOR OUTPUT', title:'Competitors' },
-        { tag:'POSITIONING OUTPUT', title:'Positioning' },
-        { tag:'4Ps OUTPUT', title:'4Ps' },
-        { tag:'SWOT OUTPUT', title:'SWOT' },
-        { tag:'CUSTOMER JOURNEY OUTPUT', title:'Journey Map' },
-        { tag:'KPI OUTPUT', title:'KPIs' },
-        { tag:'OKRS OUTPUT', title:'OKRs' },
-        { tag:'ROADMAP OUTPUT', title:'Roadmap' }
-    ];
-    const out = [];
-    for(const r of roles) {
-        const re = new RegExp(`\\[${r.tag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
-        const m = plan.match(re);
-        if(m && m[1]?.trim().length>20) out.push({...r, content:m[1]});
-    }
-    if(!out.length) { 
-        elements.renderedOutput.innerHTML = `<div>${escapeHtml(plan).replace(/\n/g,'<br>')}</div>`; 
-        return; 
-    }
-    elements.renderedOutput.innerHTML = '';
-    for(let i=0;i<out.length;i++){
-        const card = document.createElement('div'); card.className = 'role-card';
-        card.innerHTML = `<div style="display:flex;gap:12px;margin-bottom:16px;"><strong style="color:#a5b4fc;">${out[i].title}</strong><span style="margin-left:auto;font-size:11px;">${i+1}/${out.length}</span></div><div class="stream-loading"><span class="loader"></span> Loading...</div>`;
-        elements.renderedOutput.appendChild(card);
-        await new Promise(r=>setTimeout(r,180));
-        card.querySelector('.stream-loading')?.remove();
-        const div = document.createElement('div'); div.innerHTML = formatContent(out[i].content); card.appendChild(div);
-        setTimeout(()=>card.classList.add('visible'),30);
-        updateProgress(((i+1)/out.length)*100);
-    }
-}
-
-// ============================================================
-// GENERATE MARKETING PLAN
-// ============================================================
-
-async function generateMarketingPlan(cd, pd) {
-    const res = await fetch('https://Bisratprompt-marketing-system-api.hf.space/generate', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({ customer_data:cd, product_description:pd })
-    });
-    if(!res.ok) throw new Error('Generation failed');
-    const data = await res.json();
-    return data.plan;
-}
-
-// ============================================================
-// HANDLE GENERATE
-// ============================================================
-
-async function handleGenerate() {
-    if(isGenerating) return;
-    const cd = elements.customerData.value.trim(), pd = elements.productDescription.value.trim();
-    if(!cd || !pd) { setStatus('Fill both fields',false); return; }
-    isGenerating = true;
-    elements.generateBtn.disabled = true;
-    elements.generateBtn.textContent = 'Generating...';
-    elements.outputArea.style.display = 'none';
-    setStatus('AI analyzing market data...',true);
-    updateProgress(5);
-    try{
-        const plan = await generateMarketingPlan(cd, pd);
-        currentPlan = plan;
-        elements.outputArea.style.display = 'block';
-        await streamRoles(plan);
-        setStatus('✓ Strategy generated successfully!',false);
-        updateProgress(100);
-        setTimeout(()=>updateProgress(0),2000);
-    } catch(e){
-        setStatus(`✗ Error: ${e.message}`,false);
-    } finally {
-        isGenerating=false;
-        elements.generateBtn.disabled=false;
-        elements.generateBtn.textContent = 'Generate Strategic Plan';
-    }
-}
-
-// ============================================================
-// CLEAR
-// ============================================================
-
-function handleClear() {
-    elements.customerData.value = '';
-    elements.productDescription.value = '';
-    elements.outputArea.style.display = 'none';
-    elements.renderedOutput.innerHTML = '';
-    currentPlan = null;
-    setStatus('Cleared. Ready for new strategy.',false);
-}
-
-// ============================================================
-// SAVE TO HISTORY
-// ============================================================
-
-function saveToHistory() {
-    if(currentPlan) {
-        let h = JSON.parse(localStorage.getItem('marketing_history')||'[]');
-        h.unshift({id:Date.now(), plan:currentPlan});
-        if(h.length>10) h.pop();
-        localStorage.setItem('marketing_history',JSON.stringify(h));
-        setStatus('✓ Saved to history!',false);
-    } else {
-        setStatus('No plan to save',false);
-    }
-}
-
-// ============================================================
-// EXPORT TO PDF
-// ============================================================
-
-function exportToPDF() {
-    if(!currentPlan) { setStatus('No plan to export',false); return; }
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head><title>Marketing Strategy Report</title><meta charset="UTF-8">
-        <style>
-            body { font-family: 'Inter', sans-serif; line-height: 1.6; color: #1e293b; max-width: 1000px; margin: 0 auto; padding: 40px; background: white; }
-            h1, h2, h3 { color: #1e293b; margin-top: 1.5em; }
-            h1 { font-size: 28px; border-bottom: 2px solid #6366f1; padding-bottom: 8px; }
-            table { width: 100%; border-collapse: collapse; margin: 1em 0; }
-            th { background: #f1f5f9; padding: 10px; text-align: left; border: 1px solid #e2e8f0; }
-            td { padding: 8px 10px; border: 1px solid #e2e8f0; }
-            ul, ol { margin: 0.5em 0 1em 1.5em; }
-            .footer { margin-top: 40px; padding-top: 20px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0; }
-        </style>
-        </head>
-        <body>
-            ${elements.renderedOutput.innerHTML}
-            <div class="footer"><p>Generated by Strategic Marketing System · AI-Powered Marketing Plan Generator</p></div>
-            <script>window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 500); };</script>
-        </body>
-        </html>
-    `);
-    printWindow.document.close();
-    setStatus('✓ PDF export initiated',false);
-}
-
-// ============================================================
-// COPY TO CLIPBOARD
-// ============================================================
-
-function copyToClipboard() {
-    if(!currentPlan) { setStatus('No plan to copy',false); return; }
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = elements.renderedOutput.innerHTML;
-    const plainText = tempDiv.textContent || tempDiv.innerText;
-    navigator.clipboard.writeText(plainText).then(() => {
-        setStatus('✓ Plan copied to clipboard!',false);
-    }).catch(() => {
-        const textarea = document.createElement('textarea');
-        textarea.value = plainText;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        setStatus('✓ Plan copied to clipboard!',false);
-    });
-}
-
-// ============================================================
-// INITIALIZE APP
-// ============================================================
-
-function initApp() {
-    // Event listeners
-    if (elements.generateBtn) elements.generateBtn.addEventListener('click', handleGenerate);
-    if (elements.clearBtn) elements.clearBtn.addEventListener('click', handleClear);
-    if (elements.copyOutputBtn) elements.copyOutputBtn.addEventListener('click', copyToClipboard);
-    if (elements.saveHistoryBtn) elements.saveHistoryBtn.addEventListener('click', saveToHistory);
-    if (elements.pdfExportBtn) elements.pdfExportBtn.addEventListener('click', exportToPDF);
-    
-    // Role click handlers
-    document.querySelectorAll('.role-item').forEach(item => {
-        const id = item.dataset.role, name = item.querySelector('.role-name')?.innerText || id;
-        let handler;
-        switch(id){
-            case 'segmentation': handler=()=>showRoleContent(id,name,renderSegmentationVisual); break;
-            case 'marketsizing': handler=()=>showRoleContent(id,name,renderMarketSizingVisual); break;
-            case 'pestle': handler=()=>showRoleContent(id,name,renderPESTLEVisual); break;
-            case 'porter': handler=()=>showRoleContent(id,name,renderPortersVisual); break;
-            case 'competitors': handler=()=>showRoleContent(id,name,renderCompetitorsVisual); break;
-            case 'positioning': handler=()=>showRoleContent(id,name,renderPositioningVisual); break;
-            case '4ps': handler=()=>showRoleContent(id,name,render4PsVisual); break;
-            case 'swot': handler=()=>showRoleContent(id,name,renderSWOTVisual); break;
-            case 'journey': handler=()=>showRoleContent(id,name,renderJourneyVisual); break;
-            case 'kpi': handler=()=>showRoleContent(id,name,renderKPIVisual); break;
-            case 'okrs': handler=()=>showRoleContent(id,name,renderOKRVisual); break;
-            case 'roadmap': handler=()=>showRoleContent(id,name,renderRoadmapVisual); break;
-            default: handler=()=>{};
+        document.querySelectorAll('.role-item').forEach(i=>i.classList.remove('active'));
+        document.querySelector(`.role-item[data-role="${roleId}"]`)?.classList.add('active');
+        if(roleId === 'marketsizing') {
+            setTimeout(() => {
+                document.getElementById('tamBox')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('tamBox').classList.toggle('clicked'); });
+                document.getElementById('samBox')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('samBox').classList.toggle('clicked'); });
+                document.getElementById('somBox')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('somBox').classList.toggle('clicked'); });
+            }, 50);
         }
-        item.addEventListener('click', handler);
-    });
+    }
+
+    function setStatus(msg, loading=true) { elements.statusMessage.textContent = msg; elements.statusBar.style.display = 'flex'; if(!loading) setTimeout(()=>elements.statusBar.style.display='none',3000); }
+    function updateProgress(p) { elements.progressFill.style.width = p+'%'; }
     
-    if (elements.closeRoleContent) {
+    async function streamRoles(plan) {
+        const roles = [
+            { tag:'SEGMENTATION OUTPUT', title:'Market Segmentation' }, { tag:'TAMSAMSOM OUTPUT', title:'Market Sizing' },
+            { tag:'PESTLE OUTPUT', title:'PESTLE Analysis' }, { tag:'PORTER OUTPUT', title:"Porter's Forces" },
+            { tag:'COMPETITOR OUTPUT', title:'Competitors' }, { tag:'POSITIONING OUTPUT', title:'Positioning' },
+            { tag:'4Ps OUTPUT', title:'4Ps' }, { tag:'SWOT OUTPUT', title:'SWOT' },
+            { tag:'CUSTOMER JOURNEY OUTPUT', title:'Journey Map' }, { tag:'KPI OUTPUT', title:'KPIs' },
+            { tag:'OKRS OUTPUT', title:'OKRs' }, { tag:'ROADMAP OUTPUT', title:'Roadmap' }
+        ];
+        const out = [];
+        for(const r of roles) {
+            const re = new RegExp(`\\[${r.tag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
+            const m = plan.match(re);
+            if(m && m[1]?.trim().length>20) out.push({...r, content:m[1]});
+        }
+        if(!out.length) { elements.renderedOutput.innerHTML = `<div>${escapeHtml(plan).replace(/\n/g,'<br>')}</div>`; return; }
+        elements.renderedOutput.innerHTML = '';
+        for(let i=0;i<out.length;i++){
+            const card = document.createElement('div'); card.className = 'role-card';
+            card.innerHTML = `<div style="display:flex;gap:12px;margin-bottom:16px;"><strong style="color:#a5b4fc;">${out[i].title}</strong><span style="margin-left:auto;font-size:11px;">${i+1}/${out.length}</span></div><div class="stream-loading"><span class="loader"></span> Loading...</div>`;
+            elements.renderedOutput.appendChild(card);
+            await new Promise(r=>setTimeout(r,180));
+            card.querySelector('.stream-loading')?.remove();
+            const div = document.createElement('div'); div.innerHTML = formatContent(out[i].content); card.appendChild(div);
+            setTimeout(()=>card.classList.add('visible'),30);
+            updateProgress(((i+1)/out.length)*100);
+        }
+    }
+    
+    async function generateMarketingPlan(cd, pd) {
+        const res = await fetch(`${API_BASE}/generate`, {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({ customer_data:cd, product_description:pd })
+        });
+        if(!res.ok) throw new Error('Generation failed');
+        const data = await res.json();
+        return data.plan;
+    }
+    
+    async function handleGenerate() {
+        if(isGenerating) return;
+        const cd = elements.customerData.value.trim(), pd = elements.productDescription.value.trim();
+        if(!cd || !pd) { setStatus('Fill both fields',false); return; }
+        isGenerating = true;
+        elements.generateBtn.disabled = true;
+        elements.generateBtn.textContent = 'Generating...';
+        elements.outputArea.style.display = 'none';
+        setStatus('AI analyzing market data...',true);
+        updateProgress(5);
+        try{
+            const plan = await generateMarketingPlan(cd, pd);
+            currentPlan = plan;
+            elements.outputArea.style.display = 'block';
+            await streamRoles(plan);
+            if(currentUser){
+                const users = JSON.parse(localStorage.getItem('stratmark_users') || '{}');
+                if(users[currentUser.email]) {
+                    users[currentUser.email].plansGenerated = (users[currentUser.email].plansGenerated || 0) + 1;
+                    localStorage.setItem('stratmark_users', JSON.stringify(users));
+                }
+            }
+            setStatus('✓ Strategy generated successfully!',false);
+            updateProgress(100);
+            setTimeout(()=>updateProgress(0),2000);
+        } catch(e){
+            setStatus(`✗ Error: ${e.message}`,false);
+        } finally {
+            isGenerating=false;
+            elements.generateBtn.disabled=false;
+            elements.generateBtn.textContent = 'Generate Strategic Plan';
+        }
+    }
+    
+    function handleClear() {
+        elements.customerData.value = '';
+        elements.productDescription.value = '';
+        elements.outputArea.style.display = 'none';
+        elements.renderedOutput.innerHTML = '';
+        currentPlan = null;
+        setStatus('Cleared. Ready for new strategy.',false);
+    }
+    
+    function saveToHistory() {
+        if(currentPlan) {
+            let h = JSON.parse(localStorage.getItem('marketing_history')||'[]');
+            h.unshift({id:Date.now(), plan:currentPlan});
+            if(h.length>10) h.pop();
+            localStorage.setItem('marketing_history',JSON.stringify(h));
+            setStatus('✓ Saved to history!',false);
+        } else {
+            setStatus('No plan to save',false);
+        }
+    }
+    
+    function exportToPDF() {
+        if(!currentPlan) { setStatus('No plan to export',false); return; }
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head><title>Marketing Strategy Report</title><meta charset="UTF-8">
+            <style>
+                body { font-family: 'Inter', sans-serif; line-height: 1.6; color: #1e293b; max-width: 1000px; margin: 0 auto; padding: 40px; background: white; }
+                h1, h2, h3 { color: #1e293b; margin-top: 1.5em; }
+                h1 { font-size: 28px; border-bottom: 2px solid #6366f1; padding-bottom: 8px; }
+                table { width: 100%; border-collapse: collapse; margin: 1em 0; }
+                th { background: #f1f5f9; padding: 10px; text-align: left; border: 1px solid #e2e8f0; }
+                td { padding: 8px 10px; border: 1px solid #e2e8f0; }
+                ul, ol { margin: 0.5em 0 1em 1.5em; }
+                .footer { margin-top: 40px; padding-top: 20px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0; }
+            </style>
+            </head>
+            <body>
+                ${elements.renderedOutput.innerHTML}
+                <div class="footer"><p>Generated by Strategic Marketing System · AI-Powered Marketing Plan Generator</p></div>
+                <script>window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 500); };</script>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+        setStatus('✓ PDF export initiated',false);
+    }
+    
+    function copyToClipboard() {
+        if(!currentPlan) { setStatus('No plan to copy',false); return; }
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = elements.renderedOutput.innerHTML;
+        const plainText = tempDiv.textContent || tempDiv.innerText;
+        navigator.clipboard.writeText(plainText).then(() => {
+            setStatus('✓ Plan copied to clipboard!',false);
+        }).catch(() => {
+            const textarea = document.createElement('textarea');
+            textarea.value = plainText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            setStatus('✓ Plan copied to clipboard!',false);
+        });
+    }
+
+    // ============================================================
+    // INITIALIZE APP
+    // ============================================================
+    function initApp() {
+        // Auth UI
+        updateAuthUI();
+        
+        // Event listeners
+        elements.generateBtn.addEventListener('click', handleGenerate);
+        elements.clearBtn.addEventListener('click', handleClear);
+        elements.copyOutputBtn?.addEventListener('click', copyToClipboard);
+        elements.saveHistoryBtn?.addEventListener('click', saveToHistory);
+        elements.pdfExportBtn?.addEventListener('click', exportToPDF);
+        
+        // Role click handlers
+        document.querySelectorAll('.role-item').forEach(item => {
+            const id = item.dataset.role, name = item.querySelector('.role-name')?.innerText || id;
+            let handler;
+            switch(id){
+                case 'segmentation': handler=()=>showRoleContent(id,name,renderSegmentationVisual); break;
+                case 'marketsizing': handler=()=>showRoleContent(id,name,renderMarketSizingVisual); break;
+                case 'pestle': handler=()=>showRoleContent(id,name,renderPESTLEVisual); break;
+                case 'porter': handler=()=>showRoleContent(id,name,renderPortersVisual); break;
+                case 'competitors': handler=()=>showRoleContent(id,name,renderCompetitorsVisual); break;
+                case 'positioning': handler=()=>showRoleContent(id,name,renderPositioningVisual); break;
+                case '4ps': handler=()=>showRoleContent(id,name,render4PsVisual); break;
+                case 'swot': handler=()=>showRoleContent(id,name,renderSWOTVisual); break;
+                case 'journey': handler=()=>showRoleContent(id,name,renderJourneyVisual); break;
+                case 'kpi': handler=()=>showRoleContent(id,name,renderKPIVisual); break;
+                case 'okrs': handler=()=>showRoleContent(id,name,renderOKRVisual); break;
+                case 'roadmap': handler=()=>showRoleContent(id,name,renderRoadmapVisual); break;
+                default: handler=()=>{};
+            }
+            item.addEventListener('click', handler);
+        });
+        
         elements.closeRoleContent.addEventListener('click', ()=> elements.roleContentArea.style.display = 'none');
-    }
-    
-    // Pricing grid
-    const pricingGrid = document.getElementById('pricingGrid');
-    if(pricingGrid) {
-        pricingGrid.innerHTML = `
-            <div class="pricing-card">
-                <h3>Free</h3>
-                <div class="price">$0<span>/month</span></div>
-                <div class="price-period">Perfect for getting started</div>
-                <ul class="feature-list">
-                    <li><span class="icon-check"></span> 5 plans/month</li>
-                    <li><span class="icon-check"></span> PDF export</li>
-                    <li><span class="icon-check"></span> Save to history</li>
-                </ul>
-                <button class="btn-primary" onclick="showPage('app')">Get Started →</button>
-            </div>
-            <div class="pricing-card popular">
-                <div class="popular-badge">⭐ MOST POPULAR</div>
-                <h3>Pro</h3>
-                <div class="price">$29<span>/month</span></div>
-                <div class="price-period">For growing teams</div>
-                <ul class="feature-list">
-                    <li><span class="icon-check"></span> Unlimited plans</li>
-                    <li><span class="icon-check"></span> Priority support</li>
-                    <li><span class="icon-check"></span> Advanced analytics</li>
-                </ul>
-                <button class="btn-primary" onclick="showPage('app')">Start Free Trial →</button>
-            </div>
-            <div class="pricing-card">
-                <h3>Enterprise</h3>
-                <div class="price">Custom</div>
-                <div class="price-period">For large organizations</div>
-                <ul class="feature-list">
-                    <li><span class="icon-check"></span> Unlimited everything</li>
-                    <li><span class="icon-check"></span> API access</li>
-                    <li><span class="icon-check"></span> Dedicated support</li>
-                </ul>
-                <button class="btn-outline" onclick="alert('Contact sales@strategicmarketing.com')">Contact Sales →</button>
-            </div>
+        
+        // Pricing grid
+        const pricingGrid = document.getElementById('pricingGrid');
+        if(pricingGrid) pricingGrid.innerHTML = `
+            <div class="pricing-card"><h3>Free</h3><div class="price">$0<span>/month</span></div><div class="price-period">Perfect for getting started</div><ul class="feature-list"><li><span class="icon-check"></span> 5 plans/month</li><li><span class="icon-check"></span> PDF export</li><li><span class="icon-check"></span> Save to history</li></ul><button class="btn-primary" onclick="showPage('app')">Get Started →</button></div>
+            <div class="pricing-card popular"><div class="popular-badge">⭐ MOST POPULAR</div><h3>Pro</h3><div class="price">$29<span>/month</span></div><div class="price-period">For growing teams</div><ul class="feature-list"><li><span class="icon-check"></span> Unlimited plans</li><li><span class="icon-check"></span> Priority support</li><li><span class="icon-check"></span> Advanced analytics</li></ul><button class="btn-primary" onclick="showPage('app')">Start Free Trial →</button></div>
+            <div class="pricing-card"><h3>Enterprise</h3><div class="price">Custom</div><div class="price-period">For large organizations</div><ul class="feature-list"><li><span class="icon-check"></span> Unlimited everything</li><li><span class="icon-check"></span> API access</li><li><span class="icon-check"></span> Dedicated support</li></ul><button class="btn-outline" onclick="alert('Contact sales@strategicmarketing.com')">Contact Sales →</button></div>
         `;
+        
+        // Prefill from session
+        if(sessionStorage.getItem('prefillCustomer')) {
+            elements.customerData.value = sessionStorage.getItem('prefillCustomer');
+            sessionStorage.removeItem('prefillCustomer');
+        }
+        if(sessionStorage.getItem('prefillProduct')) {
+            elements.productDescription.value = sessionStorage.getItem('prefillProduct');
+            sessionStorage.removeItem('prefillProduct');
+        }
+        
+        showPage('home');
+    }
+
+    // Auth functions preserved
+    function updateAuthUI() {
+        if (currentUser) {
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('userMenu').style.display = 'flex';
+            document.getElementById('userNameDisplay').textContent = currentUser.name || 'User';
+            document.getElementById('userAvatar').textContent = (currentUser.name || 'U').charAt(0).toUpperCase();
+            document.getElementById('leftPanel').classList.add('open');
+            document.getElementById('mainContent').classList.add('panel-open');
+            document.getElementById('dashboardPage').classList.add('active');
+        } else {
+            document.getElementById('authContainer').style.display = 'flex';
+            document.getElementById('userMenu').style.display = 'none';
+            document.getElementById('leftPanel').classList.remove('open');
+            document.getElementById('mainContent').classList.remove('panel-open');
+            document.getElementById('dashboardPage').classList.remove('active');
+            document.getElementById('roleContentArea').style.display = 'none';
+        }
     }
     
-    // Prefill from session
-    if(sessionStorage.getItem('prefillCustomer')) {
-        elements.customerData.value = sessionStorage.getItem('prefillCustomer');
-        sessionStorage.removeItem('prefillCustomer');
+    function showToast(message) {
+        let toast = document.getElementById('dynamicToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'dynamicToast';
+            toast.style.cssText = 'position: fixed; bottom: 100px; right: 24px; background: #0c1120; border: 1px solid rgba(99,102,241,.3); border-radius: 12px; padding: 12px 20px; z-index: 2000; transform: translateX(400px); transition: transform 0.3s ease;';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = message;
+        toast.style.transform = 'translateX(0)';
+        setTimeout(() => { toast.style.transform = 'translateX(400px)'; }, 2500);
     }
-    if(sessionStorage.getItem('prefillProduct')) {
-        elements.productDescription.value = sessionStorage.getItem('prefillProduct');
-        sessionStorage.removeItem('prefillProduct');
-    }
-    
-    showPage('home');
-}
 
-// ============================================================
-// START THE APP
-// ============================================================
-
-if (document.readyState === 'loading') {
+    // Initialize on DOM ready
     document.addEventListener('DOMContentLoaded', initApp);
-} else {
-    initApp();
-}
 </script>
 </body>
 </html>
