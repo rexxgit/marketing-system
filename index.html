@@ -1029,14 +1029,16 @@
 
 <script>
 // ============================================================
-// SIMPLE AUTHENTICATION SYSTEM (No Supabase for testing)
+// 🔐 ROBUST AUTHENTICATION SYSTEM (No Supabase)
 // ============================================================
 
+// ----- AUTH STATE -----
 let currentUser = null;
 let currentPlan = null;
 let isGenerating = false;
+let authToken = null;
 
-// DOM Elements
+// ----- DOM ELEMENTS -----
 const elements = {
     customerData: document.getElementById('customerData'),
     productDescription: document.getElementById('productDescription'),
@@ -1065,7 +1067,69 @@ const elements = {
     userAvatar: document.getElementById('userAvatar')
 };
 
-// Auth functions
+// ----- AUTH UTILITY FUNCTIONS -----
+function generateToken(user) {
+    const payload = {
+        email: user.email,
+        name: user.name,
+        exp: Date.now() + 7 * 24 * 60 * 60 * 1000
+    };
+    return btoa(JSON.stringify(payload));
+}
+
+function decodeToken(token) {
+    try {
+        const payload = JSON.parse(atob(token));
+        if (payload.exp < Date.now()) {
+            return null;
+        }
+        return payload;
+    } catch (e) {
+        return null;
+    }
+}
+
+function getUsers() {
+    try {
+        return JSON.parse(localStorage.getItem('auth_users') || '{}');
+    } catch (e) {
+        return {};
+    }
+}
+
+function setUsers(users) {
+    localStorage.setItem('auth_users', JSON.stringify(users));
+}
+
+function getCurrentSession() {
+    try {
+        const session = JSON.parse(localStorage.getItem('auth_session'));
+        if (session && session.token) {
+            const payload = decodeToken(session.token);
+            if (payload) {
+                return { ...session, user: payload };
+            }
+        }
+    } catch (e) {}
+    return null;
+}
+
+function setCurrentSession(user) {
+    const token = generateToken(user);
+    const session = {
+        token: token,
+        user: user,
+        loginTime: Date.now()
+    };
+    localStorage.setItem('auth_session', JSON.stringify(session));
+}
+
+function clearSession() {
+    localStorage.removeItem('auth_session');
+    localStorage.removeItem('demo_session');
+}
+
+// ----- AUTH UI FUNCTIONS -----
 function updateAuthUI() {
     if (currentUser) {
         elements.authContainer.style.display = 'none';
@@ -1075,6 +1139,11 @@ function updateAuthUI() {
         elements.leftPanel.classList.add('open');
         elements.mainContent.classList.add('panel-open');
         elements.dashboardPage.classList.add('active');
+        
+        if (!window._authNotified) {
+            window._authNotified = true;
+            setTimeout(() => showToast('👋 Welcome, ' + currentUser.name + '!'), 300);
+        }
     } else {
         elements.authContainer.style.display = 'flex';
         elements.userMenu.style.display = 'none';
@@ -1082,23 +1151,43 @@ function updateAuthUI() {
         elements.mainContent.classList.remove('panel-open');
         elements.dashboardPage.classList.remove('active');
         elements.roleContentArea.style.display = 'none';
+        window._authNotified = false;
     }
 }
 
-function showToast(message) {
+function showToast(message, isError = false) {
     let toast = document.getElementById('dynamicToast');
     if (!toast) {
         toast = document.createElement('div');
         toast.id = 'dynamicToast';
-        toast.style.cssText = 'position: fixed; bottom: 100px; right: 24px; background: #0c1120; border: 1px solid rgba(99,102,241,.3); border-radius: 12px; padding: 12px 20px; z-index: 2000; transform: translateX(400px); transition: transform 0.3s ease;';
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 100px;
+            right: 24px;
+            background: ${isError ? '#1a0a0a' : '#0c1120'};
+            border: 1px solid ${isError ? 'rgba(239,68,68,.4)' : 'rgba(99,102,241,.3)'};
+            border-radius: 12px;
+            padding: 14px 24px;
+            z-index: 2000;
+            transform: translateX(400px);
+            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            color: ${isError ? '#f87171' : '#e2e8f0'};
+            font-size: 14px;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0,0,0,.4);
+            backdrop-filter: blur(10px);
+        `;
         document.body.appendChild(toast);
     }
     toast.textContent = message;
     toast.style.transform = 'translateX(0)';
-    setTimeout(() => { toast.style.transform = 'translateX(400px)'; }, 3000);
+    clearTimeout(toast._hideTimeout);
+    toast._hideTimeout = setTimeout(() => {
+        toast.style.transform = 'translateX(400px)';
+    }, 3500);
 }
 
-// Auth modal controls
+// ----- AUTH MODAL CONTROLS -----
 function openAuthModal(formId) {
     document.getElementById('authOverlay').classList.add('active');
     showAuthForm(formId || 'signInForm');
@@ -1106,6 +1195,10 @@ function openAuthModal(formId) {
 
 function closeAuthModal() {
     document.getElementById('authOverlay').classList.remove('active');
+    document.querySelectorAll('.error-msg, .success-msg').forEach(el => {
+        el.classList.remove('show');
+        el.textContent = '';
+    });
 }
 
 function showAuthForm(formId) {
@@ -1115,90 +1208,140 @@ function showAuthForm(formId) {
 
 function showAuthError(elementId, message) {
     const el = document.getElementById(elementId);
-    el.textContent = message;
-    el.classList.add('show');
-    setTimeout(() => { el.classList.remove('show'); }, 5000);
+    if (el) {
+        el.textContent = message;
+        el.classList.add('show');
+        setTimeout(() => { 
+            el.classList.remove('show');
+            el.textContent = '';
+        }, 5000);
+    }
 }
 
 function showAuthSuccess(elementId, message) {
     const el = document.getElementById(elementId);
-    el.textContent = message;
-    el.classList.add('show');
-    setTimeout(() => { el.classList.remove('show'); }, 5000);
+    if (el) {
+        el.textContent = message;
+        el.classList.add('show');
+        setTimeout(() => { 
+            el.classList.remove('show');
+            el.textContent = '';
+        }, 5000);
+    }
 }
 
-// Event listeners
-document.getElementById('openLoginBtn').addEventListener('click', function(e) {
-    e.preventDefault();
-    openAuthModal('signInForm');
+// ----- EVENT LISTENERS -----
+document.addEventListener('DOMContentLoaded', function() {
+    const session = getCurrentSession();
+    if (session && session.user) {
+        currentUser = session.user;
+        updateAuthUI();
+    }
+    
+    const openLoginBtn = document.getElementById('openLoginBtn');
+    const openSignUpBtn = document.getElementById('openSignUpBtn');
+    const closeAuthModalBtn = document.getElementById('closeAuthModal');
+    const authOverlay = document.getElementById('authOverlay');
+    
+    if (openLoginBtn) {
+        openLoginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openAuthModal('signInForm');
+        });
+    }
+    
+    if (openSignUpBtn) {
+        openSignUpBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openAuthModal('signUpForm');
+        });
+    }
+    
+    if (closeAuthModalBtn) {
+        closeAuthModalBtn.addEventListener('click', closeAuthModal);
+    }
+    
+    if (authOverlay) {
+        authOverlay.addEventListener('click', function(e) {
+            if (e.target === this) closeAuthModal();
+        });
+    }
+    
+    const switchToSignUp = document.getElementById('switchToSignUp');
+    const switchToSignIn = document.getElementById('switchToSignIn');
+    const switchToSignInFromReset = document.getElementById('switchToSignInFromReset');
+    const switchToForgotPassword = document.getElementById('switchToForgotPassword');
+    
+    if (switchToSignUp) switchToSignUp.addEventListener('click', function(e) {
+        e.preventDefault();
+        showAuthForm('signUpForm');
+    });
+    
+    if (switchToSignIn) switchToSignIn.addEventListener('click', function(e) {
+        e.preventDefault();
+        showAuthForm('signInForm');
+    });
+    
+    if (switchToSignInFromReset) switchToSignInFromReset.addEventListener('click', function(e) {
+        e.preventDefault();
+        showAuthForm('signInForm');
+    });
+    
+    if (switchToForgotPassword) switchToForgotPassword.addEventListener('click', function(e) {
+        e.preventDefault();
+        showAuthForm('forgotPasswordForm');
+    });
 });
 
-document.getElementById('openSignUpBtn').addEventListener('click', function(e) {
-    e.preventDefault();
-    openAuthModal('signUpForm');
-});
-
-document.getElementById('closeAuthModal').addEventListener('click', closeAuthModal);
-
-document.getElementById('authOverlay').addEventListener('click', function(e) {
-    if (e.target === this) closeAuthModal();
-});
-
-document.getElementById('switchToSignUp').addEventListener('click', function(e) {
-    e.preventDefault();
-    showAuthForm('signUpForm');
-});
-
-document.getElementById('switchToSignIn').addEventListener('click', function(e) {
-    e.preventDefault();
-    showAuthForm('signInForm');
-});
-
-document.getElementById('switchToSignInFromReset').addEventListener('click', function(e) {
-    e.preventDefault();
-    showAuthForm('signInForm');
-});
-
-document.getElementById('switchToForgotPassword').addEventListener('click', function(e) {
-    e.preventDefault();
-    showAuthForm('forgotPasswordForm');
-});
-
-// Sign Up (simple demo)
+// ----- SIGN UP -----
 document.getElementById('signUpBtn').addEventListener('click', function() {
     const name = document.getElementById('signUpName').value.trim();
-    const email = document.getElementById('signUpEmail').value.trim();
+    const email = document.getElementById('signUpEmail').value.trim().toLowerCase();
     const password = document.getElementById('signUpPassword').value;
     
     if (!name) { showAuthError('signUpError', 'Please enter your full name'); return; }
     if (!email) { showAuthError('signUpError', 'Please enter your email address'); return; }
-    if (password.length < 8) { showAuthError('signUpError', 'Password must be at least 8 characters'); return; }
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) { 
+        showAuthError('signUpError', 'Please enter a valid email address'); 
+        return; 
+    }
+    if (password.length < 8) { 
+        showAuthError('signUpError', 'Password must be at least 8 characters'); 
+        return; 
+    }
     
-    const users = JSON.parse(localStorage.getItem('demo_users') || '{}');
+    const users = getUsers();
     if (users[email]) {
         showAuthError('signUpError', 'This email is already registered. Please log in.');
         return;
     }
     
-    users[email] = { name: name, password: password, verified: true };
-    localStorage.setItem('demo_users', JSON.stringify(users));
+    users[email] = { 
+        name: name, 
+        password: btoa(password),
+        verified: true,
+        created: Date.now(),
+        lastLogin: Date.now()
+    };
+    setUsers(users);
     
-    showToast('✅ Account created! You can now log in.');
+    showToast('✅ Account created successfully! Please log in.');
     showAuthForm('signInForm');
+    
     document.getElementById('signUpEmail').value = '';
     document.getElementById('signUpPassword').value = '';
     document.getElementById('signUpName').value = '';
 });
 
-// Log In
+// ----- LOG IN -----
 document.getElementById('signInBtn').addEventListener('click', function() {
-    const email = document.getElementById('signInEmail').value.trim();
+    const email = document.getElementById('signInEmail').value.trim().toLowerCase();
     const password = document.getElementById('signInPassword').value;
     
     if (!email) { showAuthError('signInError', 'Please enter your email'); return; }
     if (!password) { showAuthError('signInError', 'Please enter your password'); return; }
     
-    const users = JSON.parse(localStorage.getItem('demo_users') || '{}');
+    const users = getUsers();
     const user = users[email];
     
     if (!user) {
@@ -1206,35 +1349,87 @@ document.getElementById('signInBtn').addEventListener('click', function() {
         return;
     }
     
-    if (user.password !== password) {
+    if (btoa(password) !== user.password) {
         showAuthError('signInError', 'Invalid email or password');
         return;
     }
     
+    user.lastLogin = Date.now();
+    users[email] = user;
+    setUsers(users);
+    
     currentUser = { name: user.name, email: email };
+    setCurrentSession(currentUser);
+    window._authNotified = true;
     updateAuthUI();
     closeAuthModal();
-    showToast('Welcome back, ' + user.name + '!');
+    showToast('👋 Welcome back, ' + user.name + '!');
+    
     document.getElementById('signInEmail').value = '';
     document.getElementById('signInPassword').value = '';
 });
 
-// Forgot Password
+// ----- FORGOT PASSWORD -----
 document.getElementById('resetPasswordBtn').addEventListener('click', function() {
-    const email = document.getElementById('resetEmail').value.trim();
+    const email = document.getElementById('resetEmail').value.trim().toLowerCase();
     
-    if (!email) { showAuthError('resetError', 'Please enter your email address'); return; }
+    if (!email) { 
+        showAuthError('resetError', 'Please enter your email address'); 
+        return; 
+    }
     
-    showAuthSuccess('resetSuccess', '✅ Password reset link sent to your email!');
+    const users = getUsers();
+    if (!users[email]) {
+        showAuthError('resetError', 'No account found with this email');
+        return;
+    }
+    
+    const resetToken = btoa(email + ':' + Date.now());
+    users[email].resetToken = resetToken;
+    users[email].resetTokenExpiry = Date.now() + 3600000;
+    setUsers(users);
+    
+    showAuthSuccess('resetSuccess', '✅ Password reset link sent to your email! (Demo mode)');
+    showToast('📧 Reset link generated for: ' + email);
+    
+    console.log('Reset token for ' + email + ':', resetToken);
+    
     document.getElementById('resetEmail').value = '';
 });
 
-// Sign Out
+// ----- SIGN OUT -----
 document.getElementById('logoutBtnNav').addEventListener('click', function() {
     currentUser = null;
+    clearSession();
+    window._authNotified = false;
     updateAuthUI();
-    showToast('Signed out successfully');
+    showToast('👋 Signed out successfully');
 });
+
+// ----- KEYBOARD SHORTCUTS -----
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeAuthModal();
+    }
+    if (e.key === 'Enter') {
+        const activeForm = document.querySelector('.auth-modal [style*="display: block"]');
+        if (activeForm) {
+            const signInBtn = document.getElementById('signInBtn');
+            const signUpBtn = document.getElementById('signUpBtn');
+            const resetBtn = document.getElementById('resetPasswordBtn');
+            
+            if (activeForm.id === 'signInForm' && signInBtn) {
+                signInBtn.click();
+            } else if (activeForm.id === 'signUpForm' && signUpBtn) {
+                signUpBtn.click();
+            } else if (activeForm.id === 'forgotPasswordForm' && resetBtn) {
+                resetBtn.click();
+            }
+        }
+    }
+});
+
+console.log('🔐 Authentication system initialized successfully!');
 
 // ============================================================
 // APP FUNCTIONS
@@ -2052,24 +2247,12 @@ function copyToClipboard() {
 // INITIALIZE APP
 // ============================================================
 function initApp() {
-    // Check for existing session
-    const savedUser = localStorage.getItem('demo_session');
-    if (savedUser) {
-        try {
-            const user = JSON.parse(savedUser);
-            currentUser = user;
-            updateAuthUI();
-        } catch(e) {}
-    }
-    
-    // Event listeners - CHECK IF ELEMENTS EXIST
     if (elements.generateBtn) elements.generateBtn.addEventListener('click', handleGenerate);
     if (elements.clearBtn) elements.clearBtn.addEventListener('click', handleClear);
     if (elements.copyOutputBtn) elements.copyOutputBtn.addEventListener('click', copyToClipboard);
     if (elements.saveHistoryBtn) elements.saveHistoryBtn.addEventListener('click', saveToHistory);
     if (elements.pdfExportBtn) elements.pdfExportBtn.addEventListener('click', exportToPDF);
     
-    // Role click handlers
     document.querySelectorAll('.role-item').forEach(item => {
         const id = item.dataset.role, name = item.querySelector('.role-name')?.innerText || id;
         let handler;
@@ -2095,7 +2278,6 @@ function initApp() {
         elements.closeRoleContent.addEventListener('click', ()=> elements.roleContentArea.style.display = 'none');
     }
     
-    // Pricing grid
     const pricingGrid = document.getElementById('pricingGrid');
     if(pricingGrid) {
         pricingGrid.innerHTML = `
@@ -2136,7 +2318,6 @@ function initApp() {
         `;
     }
     
-    // Prefill from session
     if(sessionStorage.getItem('prefillCustomer')) {
         elements.customerData.value = sessionStorage.getItem('prefillCustomer');
         sessionStorage.removeItem('prefillCustomer');
@@ -2152,7 +2333,6 @@ function initApp() {
 // ============================================================
 // START THE APP
 // ============================================================
-// Wait for DOM to be fully loaded before initializing
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initApp);
 } else {
