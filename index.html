@@ -1032,9 +1032,6 @@
 // SIMPLE AUTHENTICATION SYSTEM (No Supabase for testing)
 // ============================================================
 
-// This is a simplified version that works without Supabase
-// for testing. Replace with Supabase when ready.
-
 let currentUser = null;
 let currentPlan = null;
 let isGenerating = false;
@@ -1177,7 +1174,6 @@ document.getElementById('signUpBtn').addEventListener('click', function() {
     if (!email) { showAuthError('signUpError', 'Please enter your email address'); return; }
     if (password.length < 8) { showAuthError('signUpError', 'Password must be at least 8 characters'); return; }
     
-    // Store user in localStorage
     const users = JSON.parse(localStorage.getItem('demo_users') || '{}');
     if (users[email]) {
         showAuthError('signUpError', 'This email is already registered. Please log in.');
@@ -1248,7 +1244,15 @@ function showPage(pageName) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(pageName + 'Page').classList.add('active');
     document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
-    document.getElementById('nav' + pageName.charAt(0).toUpperCase() + pageName.slice(1)).classList.add('active');
+    const navMap = {
+        'home': 'navHome',
+        'planner': 'navPlanner',
+        'about': 'navAbout',
+        'pricing': 'navPricing',
+        'app': 'navApp'
+    };
+    const navId = navMap[pageName];
+    if (navId) document.getElementById(navId).classList.add('active');
 }
 
 function goToAppWithData() {
@@ -2058,12 +2062,12 @@ function initApp() {
         } catch(e) {}
     }
     
-    // Event listeners
-    elements.generateBtn.addEventListener('click', handleGenerate);
-    elements.clearBtn.addEventListener('click', handleClear);
-    elements.copyOutputBtn?.addEventListener('click', copyToClipboard);
-    elements.saveHistoryBtn?.addEventListener('click', saveToHistory);
-    elements.pdfExportBtn?.addEventListener('click', exportToPDF);
+    // Event listeners - CHECK IF ELEMENTS EXIST
+    if (elements.generateBtn) elements.generateBtn.addEventListener('click', handleGenerate);
+    if (elements.clearBtn) elements.clearBtn.addEventListener('click', handleClear);
+    if (elements.copyOutputBtn) elements.copyOutputBtn.addEventListener('click', copyToClipboard);
+    if (elements.saveHistoryBtn) elements.saveHistoryBtn.addEventListener('click', saveToHistory);
+    if (elements.pdfExportBtn) elements.pdfExportBtn.addEventListener('click', exportToPDF);
     
     // Role click handlers
     document.querySelectorAll('.role-item').forEach(item => {
@@ -2087,7 +2091,9 @@ function initApp() {
         item.addEventListener('click', handler);
     });
     
-    elements.closeRoleContent.addEventListener('click', ()=> elements.roleContentArea.style.display = 'none');
+    if (elements.closeRoleContent) {
+        elements.closeRoleContent.addEventListener('click', ()=> elements.roleContentArea.style.display = 'none');
+    }
     
     // Pricing grid
     const pricingGrid = document.getElementById('pricingGrid');
@@ -2143,8 +2149,15 @@ function initApp() {
     showPage('home');
 }
 
-// Initialize on DOM ready
-document.addEventListener('DOMContentLoaded', initApp);
+// ============================================================
+// START THE APP
+// ============================================================
+// Wait for DOM to be fully loaded before initializing
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initApp);
+} else {
+    initApp();
+}
 </script>
 </body>
 </html>
