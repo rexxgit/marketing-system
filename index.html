@@ -25,19 +25,6 @@
             min-height: 100vh;
         }
 
-        /* PDF Export Styles */
-        @media print {
-            body { background: white; color: black; }
-            .left-panel, .nav, .nav-right, .footer, .lang-selector, .auth-buttons, .user-menu, .btn-primary, .btn-outline, .status-bar, .progress-bar, .close-role-content { display: none !important; }
-            .main-content { margin-left: 0 !important; padding: 0 !important; }
-            .output-area { display: block !important; background: white; color: black; border: none; padding: 20px; }
-            .role-card { background: white; border: 1px solid #ddd; color: black; page-break-inside: avoid; }
-            .role-card strong { color: #2c3e50; }
-            a, button { display: none; }
-            .output-area h3 { color: #2c3e50; }
-        }
-        
-        /* CSS Icons Library - Complete */
         .icon-target, .icon-bars, .icon-lightning, .icon-building, .icon-search, .icon-pin, .icon-grid, .icon-diamond, .icon-path, .icon-linechart, .icon-bullseye, .icon-calendar, .icon-paintbrush, .icon-home, .icon-clipboard, .icon-lightbulb, .icon-dollar, .icon-rocket, .icon-user, .icon-arrow, .icon-lock, .icon-data, .icon-check, .icon-star, .icon-heart, .icon-brain, .icon-gear {
             display: inline-block;
         }
@@ -126,14 +113,11 @@
             transform: translateX(-100%);
             transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
-        
         .left-panel.open { transform: translateX(0); }
-        
         .panel-logo { padding: 0 20px 24px; border-bottom: 1px solid rgba(255,255,255,.08); margin-bottom: 24px; }
         .panel-logo h2 { font-size: 18px; background: linear-gradient(135deg, #fff, #a5b4fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
         
         .roles-list { display: flex; flex-direction: column; gap: 4px; }
-        
         .role-item {
             display: flex;
             align-items: center;
@@ -183,7 +167,6 @@
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* AUTH OVERLAY */
         .auth-overlay {
             position: fixed;
             top: 0;
@@ -214,12 +197,10 @@
             box-shadow: 0 25px 60px rgba(0,0,0,.6);
             animation: slideUp 0.3s ease;
         }
-        
         @keyframes slideUp {
             from { transform: translateY(30px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
-        
         .auth-modal h2 {
             font-size: 28px;
             font-weight: 700;
@@ -229,17 +210,14 @@
             background-clip: text;
             color: transparent;
         }
-        
         .auth-modal .subtitle {
             color: rgba(255,255,255,.5);
             font-size: 14px;
             margin-bottom: 24px;
         }
-        
         .auth-modal .form-group {
             margin-bottom: 18px;
         }
-        
         .auth-modal label {
             display: block;
             font-size: 12px;
@@ -249,7 +227,6 @@
             margin-bottom: 6px;
             font-weight: 600;
         }
-        
         .auth-modal input {
             width: 100%;
             background: rgba(255,255,255,.05);
@@ -260,16 +237,13 @@
             font-size: 15px;
             transition: border-color 0.2s;
         }
-        
         .auth-modal input:focus {
             outline: none;
             border-color: #6366f1;
         }
-        
         .auth-modal input::placeholder {
             color: rgba(255,255,255,.3);
         }
-        
         .auth-modal .btn-primary {
             width: 100%;
             justify-content: center;
@@ -277,14 +251,12 @@
             font-size: 16px;
             margin-top: 8px;
         }
-        
         .auth-modal .auth-switch {
             text-align: center;
             margin-top: 20px;
             font-size: 14px;
             color: rgba(255,255,255,.5);
         }
-        
         .auth-modal .auth-switch a {
             color: #a5b4fc;
             cursor: pointer;
@@ -292,7 +264,6 @@
             font-weight: 600;
         }
         .auth-modal .auth-switch a:hover { text-decoration: underline; }
-        
         .auth-modal .error-msg {
             background: rgba(239,68,68,.15);
             border: 1px solid rgba(239,68,68,.3);
@@ -304,7 +275,6 @@
             display: none;
         }
         .auth-modal .error-msg.show { display: block; }
-        
         .auth-modal .success-msg {
             background: rgba(16,185,129,.15);
             border: 1px solid rgba(16,185,129,.3);
@@ -316,7 +286,6 @@
             display: none;
         }
         .auth-modal .success-msg.show { display: block; }
-        
         .close-auth {
             position: absolute;
             top: 16px;
@@ -329,7 +298,6 @@
             transition: color 0.2s;
         }
         .close-auth:hover { color: white; }
-        
         .auth-footer {
             margin-top: 20px;
             padding-top: 16px;
@@ -338,7 +306,6 @@
             font-size: 12px;
             color: rgba(255,255,255,.3);
         }
-        
         .auth-modal .password-hint {
             font-size: 12px;
             color: rgba(255,255,255,.4);
@@ -361,7 +328,6 @@
         textarea { width: 100%; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.1); border-radius: 16px; padding: 16px; color: white; font-family: inherit; resize: vertical; margin: 15px 0; }
         textarea:focus { outline: none; border-color: #6366f1; }
         
-        /* ENHANCED OUTPUT AREA - PROFESSIONAL & PDF READY */
         .output-area {
             background: rgba(255,255,255,.05);
             border: 1px solid rgba(255,255,255,.1);
@@ -373,7 +339,6 @@
             line-height: 1.6;
             color: #e2e8f0;
         }
-        
         .output-area h1, .output-area h2, .output-area h3 {
             color: #a5b4fc;
             margin-top: 1.5em;
@@ -419,7 +384,6 @@
         
         .footer { text-align: center; padding: 40px; border-top: 1px solid rgba(255,255,255,.1); margin-top: 60px; color: rgba(255,255,255,.5); font-size: 12px; }
         
-        /* Pricing Section Styles */
         .pricing-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -455,7 +419,6 @@
         .feature-list .icon-check { color: #4ade80; flex-shrink: 0; }
         .pricing-card .btn-primary, .pricing-card .btn-outline { width: 100%; justify-content: center; padding: 14px 28px; font-size: 15px; }
         
-        /* About Page Principles */
         .principles-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -477,7 +440,6 @@
         .principle-card h3 { font-size: 22px; margin-bottom: 12px; background: linear-gradient(135deg, #fff, #a5b4fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .principle-desc { font-size: 13px; color: rgba(255, 255, 255, 0.7); line-height: 1.5; max-width: 200px; margin: 0 auto; }
         
-        /* Market Sizing */
         .market-sizing-container { background: rgba(255,255,255,.03); border-radius: 20px; padding: 20px; margin-bottom: 24px; }
         .tam-box, .sam-box, .som-box { background: rgba(255,255,255,.05); border-radius: 16px; padding: 20px; margin-bottom: 20px; cursor: pointer; transition: all 0.3s ease; border: 1px solid rgba(99,102,241,.2); }
         .tam-box:hover, .sam-box:hover, .som-box:hover { border-color: #6366f1; background: rgba(99,102,241,.08); transform: translateX(5px); }
@@ -508,7 +470,6 @@
         .close-role-content { background: rgba(99,102,241,.2); border: 1px solid rgba(99,102,241,.4); border-radius: 50px; padding: 6px 16px; color: #a5b4fc; cursor: pointer; font-size: 12px; transition: all 0.2s; }
         .close-role-content:hover { background: rgba(99,102,241,.4); transform: translateX(2px); }
         
-        /* PESTLE Card Styles */
         .pestle-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -557,7 +518,6 @@
         .impact-low { background: rgba(16,185,129,.2); color: #34d399; border: 1px solid rgba(16,185,129,.3); }
         .pestle-footer { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.05); font-size: 12px; color: rgba(255,255,255,.5); display: flex; align-items: center; gap: 8px; }
         
-        /* Porter's Forces Styles */
         .porters-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -604,7 +564,6 @@
         .rating-fill.low { background: linear-gradient(90deg, #10b981, #34d399); width: 25%; }
         .porter-insight { font-size: 13px; color: rgba(255,255,255,.7); margin-top: 12px; line-height: 1.4; }
         
-        /* Competitors Analysis Styles */
         .competitors-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -647,7 +606,6 @@
         .differentiation-box { margin-top: 16px; padding: 12px; background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(236,72,153,.1)); border-radius: 12px; border-left: 3px solid #4ade80; }
         .differentiation-box p { font-size: 12px; color: rgba(255,255,255,.8); line-height: 1.4; }
         
-        /* Positioning Statement Styles */
         .positioning-container {
             background: linear-gradient(145deg, rgba(20, 25, 45, 0.9), rgba(10, 15, 30, 0.95));
             border-radius: 28px;
@@ -665,7 +623,6 @@
         .detail-label { font-size: 11px; text-transform: uppercase; color: #a5b4fc; letter-spacing: 1px; margin-bottom: 8px; }
         .detail-value { font-size: 14px; font-weight: 500; color: rgba(255,255,255,.9); }
         
-        /* 4Ps Marketing Mix Styles */
         .fourps-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -706,7 +663,6 @@
         .ps-features li { font-size: 12px; color: rgba(255,255,255,.7); padding: 6px 0; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,.05); }
         .ps-features li:last-child { border-bottom: none; }
         
-        /* SWOT Analysis Styles - 4 Cards with Capital Letters */
         .swot-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -753,7 +709,6 @@
         .swot-details ul { padding-left: 20px; margin-top: 8px; }
         .swot-details li { margin: 6px 0; }
         
-        /* Journey Map - Dotted Timeline Styles */
         .journey-timeline-container {
             background: linear-gradient(145deg, rgba(20, 25, 45, 0.85), rgba(10, 15, 30, 0.95));
             border-radius: 28px;
@@ -803,7 +758,6 @@
         .journey-start { left: 0; }
         .journey-end { right: 0; }
         
-        /* KPI Cards Styles */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -823,7 +777,6 @@
         .kpi-label { font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,.5); letter-spacing: 1px; }
         .kpi-target { font-size: 11px; color: #4ade80; margin-top: 8px; }
         
-        /* OKR Cards Styles */
         .okr-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -844,7 +797,6 @@
         .kr-progress-bar { height: 6px; background: rgba(255,255,255,.1); border-radius: 3px; overflow: hidden; }
         .kr-progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #4ade80, #22d3ee); transition: width 0.5s ease; }
         
-        /* Roadmap Timeline Styles */
         .roadmap-grid {
             display: flex;
             flex-direction: column;
@@ -1010,7 +962,6 @@
     <div class="auth-modal">
         <button class="close-auth" id="closeAuthModal">✕</button>
         
-        <!-- Log In Form -->
         <div id="signInForm">
             <h2>Welcome Back</h2>
             <p class="subtitle">Log in to access your saved strategies</p>
@@ -1032,7 +983,6 @@
             </div>
         </div>
         
-        <!-- Sign Up Form -->
         <div id="signUpForm" style="display:none;">
             <h2>Create Account</h2>
             <p class="subtitle">Start generating strategic marketing plans</p>
@@ -1056,7 +1006,6 @@
             </div>
         </div>
         
-        <!-- Forgot Password Form -->
         <div id="forgotPasswordForm" style="display:none;">
             <h2>Reset Password</h2>
             <p class="subtitle">Enter your email to receive a reset link</p>
@@ -1078,27 +1027,19 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ============================================================
-// SUPABASE AUTHENTICATION SYSTEM
+// SIMPLE AUTHENTICATION SYSTEM (No Supabase for testing)
 // ============================================================
 
-const SUPABASE_URL = 'https://ypbygmavodilkcpigpoq.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlwYnlnbWF2b2RpbGtjcGlncG9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MDA3ODEsImV4cCI6MjA5NzE3Njc4MX0.tSj89ijllbBhYlA8CxLBkp-NCuPLv9lHroODzayt4Jo';
+// This is a simplified version that works without Supabase
+// for testing. Replace with Supabase when ready.
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// ============================================================
-// AUTH STATE
-// ============================================================
 let currentUser = null;
 let currentPlan = null;
 let isGenerating = false;
 
-// ============================================================
-// DOM ELEMENTS
-// ============================================================
+// DOM Elements
 const elements = {
     customerData: document.getElementById('customerData'),
     productDescription: document.getElementById('productDescription'),
@@ -1127,15 +1068,13 @@ const elements = {
     userAvatar: document.getElementById('userAvatar')
 };
 
-// ============================================================
-// AUTH UI FUNCTIONS
-// ============================================================
+// Auth functions
 function updateAuthUI() {
     if (currentUser) {
         elements.authContainer.style.display = 'none';
         elements.userMenu.style.display = 'flex';
-        elements.userNameDisplay.textContent = currentUser.user_metadata?.full_name || currentUser.email || 'User';
-        elements.userAvatar.textContent = (currentUser.user_metadata?.full_name || currentUser.email || 'U').charAt(0).toUpperCase();
+        elements.userNameDisplay.textContent = currentUser.name || 'User';
+        elements.userAvatar.textContent = (currentUser.name || 'U').charAt(0).toUpperCase();
         elements.leftPanel.classList.add('open');
         elements.mainContent.classList.add('panel-open');
         elements.dashboardPage.classList.add('active');
@@ -1162,12 +1101,9 @@ function showToast(message) {
     setTimeout(() => { toast.style.transform = 'translateX(400px)'; }, 3000);
 }
 
-// ============================================================
-// AUTH MODAL CONTROLS
-// ============================================================
+// Auth modal controls
 function openAuthModal(formId) {
-    const overlay = document.getElementById('authOverlay');
-    overlay.classList.add('active');
+    document.getElementById('authOverlay').classList.add('active');
     showAuthForm(formId || 'signInForm');
 }
 
@@ -1194,9 +1130,7 @@ function showAuthSuccess(elementId, message) {
     setTimeout(() => { el.classList.remove('show'); }, 5000);
 }
 
-// ============================================================
-// AUTH EVENT LISTENERS
-// ============================================================
+// Event listeners
 document.getElementById('openLoginBtn').addEventListener('click', function(e) {
     e.preventDefault();
     openAuthModal('signInForm');
@@ -1233,10 +1167,8 @@ document.getElementById('switchToForgotPassword').addEventListener('click', func
     showAuthForm('forgotPasswordForm');
 });
 
-// ============================================================
-// SIGN UP
-// ============================================================
-document.getElementById('signUpBtn').addEventListener('click', async function() {
+// Sign Up (simple demo)
+document.getElementById('signUpBtn').addEventListener('click', function() {
     const name = document.getElementById('signUpName').value.trim();
     const email = document.getElementById('signUpEmail').value.trim();
     const password = document.getElementById('signUpPassword').value;
@@ -1245,126 +1177,67 @@ document.getElementById('signUpBtn').addEventListener('click', async function() 
     if (!email) { showAuthError('signUpError', 'Please enter your email address'); return; }
     if (password.length < 8) { showAuthError('signUpError', 'Password must be at least 8 characters'); return; }
     
-    try {
-        const { data, error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-            options: {
-                data: { full_name: name }
-            }
-        });
-        
-        if (error) {
-            if (error.message.includes('User already registered')) {
-                showAuthError('signUpError', 'This email is already registered. Please log in.');
-            } else {
-                showAuthError('signUpError', error.message);
-            }
-            return;
-        }
-        
-        if (data.user) {
-            showToast('✅ Account created! Please check your email for verification.');
-            showAuthForm('signInForm');
-            document.getElementById('signUpEmail').value = '';
-            document.getElementById('signUpPassword').value = '';
-            document.getElementById('signUpName').value = '';
-        }
-    } catch (err) {
-        showAuthError('signUpError', 'Network error. Please try again.');
+    // Store user in localStorage
+    const users = JSON.parse(localStorage.getItem('demo_users') || '{}');
+    if (users[email]) {
+        showAuthError('signUpError', 'This email is already registered. Please log in.');
+        return;
     }
+    
+    users[email] = { name: name, password: password, verified: true };
+    localStorage.setItem('demo_users', JSON.stringify(users));
+    
+    showToast('✅ Account created! You can now log in.');
+    showAuthForm('signInForm');
+    document.getElementById('signUpEmail').value = '';
+    document.getElementById('signUpPassword').value = '';
+    document.getElementById('signUpName').value = '';
 });
 
-// ============================================================
-// LOG IN
-// ============================================================
-document.getElementById('signInBtn').addEventListener('click', async function() {
+// Log In
+document.getElementById('signInBtn').addEventListener('click', function() {
     const email = document.getElementById('signInEmail').value.trim();
     const password = document.getElementById('signInPassword').value;
     
     if (!email) { showAuthError('signInError', 'Please enter your email'); return; }
     if (!password) { showAuthError('signInError', 'Please enter your password'); return; }
     
-    try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
-        
-        if (error) {
-            if (error.message.includes('Email not confirmed')) {
-                showAuthError('signInError', 'Please verify your email first. Check your inbox.');
-            } else if (error.message.includes('Invalid login credentials')) {
-                showAuthError('signInError', 'Invalid email or password');
-            } else {
-                showAuthError('signInError', error.message);
-            }
-            return;
-        }
-        
-        if (data.user) {
-            currentUser = data.user;
-            updateAuthUI();
-            closeAuthModal();
-            showToast('Welcome back, ' + (currentUser.user_metadata?.full_name || currentUser.email) + '!');
-            document.getElementById('signInEmail').value = '';
-            document.getElementById('signInPassword').value = '';
-        }
-    } catch (err) {
-        showAuthError('signInError', 'Network error. Please try again.');
+    const users = JSON.parse(localStorage.getItem('demo_users') || '{}');
+    const user = users[email];
+    
+    if (!user) {
+        showAuthError('signInError', 'No account found with this email');
+        return;
     }
+    
+    if (user.password !== password) {
+        showAuthError('signInError', 'Invalid email or password');
+        return;
+    }
+    
+    currentUser = { name: user.name, email: email };
+    updateAuthUI();
+    closeAuthModal();
+    showToast('Welcome back, ' + user.name + '!');
+    document.getElementById('signInEmail').value = '';
+    document.getElementById('signInPassword').value = '';
 });
 
-// ============================================================
-// FORGOT PASSWORD (RESET)
-// ============================================================
-document.getElementById('resetPasswordBtn').addEventListener('click', async function() {
+// Forgot Password
+document.getElementById('resetPasswordBtn').addEventListener('click', function() {
     const email = document.getElementById('resetEmail').value.trim();
     
     if (!email) { showAuthError('resetError', 'Please enter your email address'); return; }
     
-    try {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: window.location.origin + '/reset-password',
-        });
-        
-        if (error) {
-            showAuthError('resetError', error.message);
-            return;
-        }
-        
-        showAuthSuccess('resetSuccess', '✅ Password reset link sent to your email!');
-        document.getElementById('resetEmail').value = '';
-    } catch (err) {
-        showAuthError('resetError', 'Network error. Please try again.');
-    }
+    showAuthSuccess('resetSuccess', '✅ Password reset link sent to your email!');
+    document.getElementById('resetEmail').value = '';
 });
 
-// ============================================================
-// SIGN OUT
-// ============================================================
-document.getElementById('logoutBtnNav').addEventListener('click', async function() {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-        showToast('Error signing out: ' + error.message);
-        return;
-    }
+// Sign Out
+document.getElementById('logoutBtnNav').addEventListener('click', function() {
     currentUser = null;
     updateAuthUI();
     showToast('Signed out successfully');
-});
-
-// ============================================================
-// SUPABASE AUTH STATE LISTENER
-// ============================================================
-supabase.auth.onAuthStateChange((event, session) => {
-    if (session && session.user) {
-        currentUser = session.user;
-        updateAuthUI();
-    } else {
-        currentUser = null;
-        updateAuthUI();
-    }
 });
 
 // ============================================================
@@ -1385,7 +1258,7 @@ function goToAppWithData() {
 }
 
 // ============================================================
-// RENDER FUNCTIONS (COMPLETE)
+// RENDER FUNCTIONS
 // ============================================================
 
 function extractTagContent(plan, tagName) {
@@ -2176,12 +2049,14 @@ function copyToClipboard() {
 // ============================================================
 function initApp() {
     // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session && session.user) {
-            currentUser = session.user;
+    const savedUser = localStorage.getItem('demo_session');
+    if (savedUser) {
+        try {
+            const user = JSON.parse(savedUser);
+            currentUser = user;
             updateAuthUI();
-        }
-    });
+        } catch(e) {}
+    }
     
     // Event listeners
     elements.generateBtn.addEventListener('click', handleGenerate);
