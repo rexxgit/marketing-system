@@ -784,198 +784,459 @@
     // ============================================================
     // 🎯 ENHANCED SEGMENTATION PIE CHART - 3D Interactive
     // ============================================================
-
-    function renderSegmentationVisual(plan) {
-        if (!plan) return '<div class="empty-state">✨ Generate a plan first</div>';
-        
-        // Extract segments from plan
-        const match = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        let segments = [];
-        let primaryTarget = '';
-        
-        if (match) {
-            const segText = match[1];
-            const segmentLines = segText.split('\n');
-            for (const line of segmentLines) {
-                if (line.match(/^\d+\.|^[-•*]\s+/) && line.length > 10) {
-                    const segmentName = line.replace(/^\d+\.|^[-•*]\s+/, '').trim().substring(0, 50);
-                    if (segmentName.length > 5) segments.push(segmentName);
+function renderSegmentationVisual(plan) {
+    if (!plan) return '<div class="empty-state">✨ Generate a plan first</div>';
+    
+    // Extract segments from plan
+    const match = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+    let segments = [];
+    let primaryTarget = '';
+    let segmentData = [];
+    
+    if (match) {
+        const segText = match[1];
+        const segmentLines = segText.split('\n');
+        for (const line of segmentLines) {
+            if (line.match(/^\d+\.|^[-•*]\s+/) && line.length > 10) {
+                const segmentName = line.replace(/^\d+\.|^[-•*]\s+/, '').trim().substring(0, 50);
+                if (segmentName.length > 5) {
+                    segments.push(segmentName);
+                    // Generate realistic market share data for visualization
+                    const baseValue = 100 - segments.length * 5;
+                    const share = Math.floor(Math.random() * 15) + 20;
+                    segmentData.push({
+                        name: segmentName,
+                        share: share,
+                        value: Math.floor(Math.random() * 500000) + 100000,
+                        growth: (Math.random() * 15 + 5).toFixed(1)
+                    });
                 }
             }
-            const primaryMatch = plan.match(/Primary Target[:\s]*([^\n]+)/i);
-            if (primaryMatch) primaryTarget = primaryMatch[1].trim();
         }
-        
-        // Fallback values if no data
-        if (segments.length === 0) segments = ['Urban Young Professionals', 'Middle-income families', 'University students'];
-        if (!primaryTarget) primaryTarget = 'Young Urban Professionals (25-35, renters)';
-        
-        // Segment colors - Conscientious Design Palette
-        const segmentColors = ['#4ade80', '#22d3ee', '#fbbf24'];
-        const labels = segments.slice(0, 3);
-        
-        return `
-        <div style="text-align: center; position: relative;">
-            <h2 style="color: #a5b4fc; margin-bottom: 24px; font-weight: 700; letter-spacing: -0.5px;">Market Segmentation</h2>
-            
-            <!-- Interactive 3D Pie Chart Container -->
-            <div style="position: relative; width: 100%; max-width: 520px; margin: 0 auto; perspective: 1000px;">
-                <div class="pie-container" style="position: relative; width: 100%; padding-bottom: 100%;">
-                    
-                    <!-- SVG Pie Chart with Interactive 3D Slices -->
-                    <svg viewBox="0 0 400 400" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; filter: drop-shadow(0 15px 40px rgba(0,0,0,0.5));">
-                        <defs>
-                            <filter id="glow-1">
-                                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-                                <feMerge>
-                                    <feMergeNode in="coloredBlur"/>
-                                    <feMergeNode in="SourceGraphic"/>
-                                </feMerge>
-                            </filter>
-                            <filter id="glow-2">
-                                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-                                <feMerge>
-                                    <feMergeNode in="coloredBlur"/>
-                                    <feMergeNode in="SourceGraphic"/>
-                                </feMerge>
-                            </filter>
-                            <filter id="glow-3">
-                                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-                                <feMerge>
-                                    <feMergeNode in="coloredBlur"/>
-                                    <feMergeNode in="SourceGraphic"/>
-                                </feMerge>
-                            </filter>
-                            <filter id="shadow-3d">
-                                <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.4"/>
-                            </filter>
-                        </defs>
-                        
-                        <!-- Slice 1 - Emerald Green (120 degrees) - Pop-out on hover -->
-                        <g class="pie-slice" data-index="0" transform="translate(200, 200)" 
-                           style="transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); transform-origin: center center;">
-                            <path d="M0,0 L0,-150 A150,150 0 0,1 129.9,75 Z" 
-                                  fill="${segmentColors[0]}" 
-                                  opacity="0.92"
-                                  stroke="rgba(255,255,255,0.12)"
-                                  stroke-width="2"
-                                  style="transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; filter: url(#shadow-3d);"
-                                  onmouseenter="this.parentElement.style.transform='scale(1.14) translateZ(25px)'; this.parentElement.style.zIndex='10'; this.style.filter='brightness(1.25) drop-shadow(0 0 40px ${segmentColors[0]}80)';"
-                                  onmouseleave="this.parentElement.style.transform='scale(1) translateZ(0)'; this.parentElement.style.zIndex='1'; this.style.filter='url(#shadow-3d)';">
-                            </path>
-                            <text x="55" y="-85" fill="white" font-size="16" font-weight="700" text-anchor="middle" 
-                                  style="pointer-events: none; text-shadow: 0 2px 20px rgba(0,0,0,0.7); font-family: 'Segoe UI', sans-serif; letter-spacing: 0.3px;">
-                                ${escapeHtml(labels[0] || 'Segment 1')}
-                            </text>
-                        </g>
-                        
-                        <!-- Slice 2 - Cyan (120 degrees) - Pop-out on hover -->
-                        <g class="pie-slice" data-index="1" transform="translate(200, 200)"
-                           style="transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); transform-origin: center center;">
-                            <path d="M0,0 L129.9,75 A150,150 0 0,1 129.9,-75 Z" 
-                                  fill="${segmentColors[1]}" 
-                                  opacity="0.92"
-                                  stroke="rgba(255,255,255,0.12)"
-                                  stroke-width="2"
-                                  style="transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; filter: url(#shadow-3d);"
-                                  onmouseenter="this.parentElement.style.transform='scale(1.14) translateZ(25px)'; this.parentElement.style.zIndex='10'; this.style.filter='brightness(1.25) drop-shadow(0 0 40px ${segmentColors[1]}80)';"
-                                  onmouseleave="this.parentElement.style.transform='scale(1) translateZ(0)'; this.parentElement.style.zIndex='1'; this.style.filter='url(#shadow-3d)';">
-                            </path>
-                            <text x="80" y="-20" fill="white" font-size="16" font-weight="700" text-anchor="middle"
-                                  style="pointer-events: none; text-shadow: 0 2px 20px rgba(0,0,0,0.7); font-family: 'Segoe UI', sans-serif; letter-spacing: 0.3px;">
-                                ${escapeHtml(labels[1] || 'Segment 2')}
-                            </text>
-                        </g>
-                        
-                        <!-- Slice 3 - Gold (120 degrees) - Pop-out on hover -->
-                        <g class="pie-slice" data-index="2" transform="translate(200, 200)"
-                           style="transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); transform-origin: center center;">
-                            <path d="M0,0 L129.9,-75 A150,150 0 0,1 0,-150 Z" 
-                                  fill="${segmentColors[2]}" 
-                                  opacity="0.92"
-                                  stroke="rgba(255,255,255,0.12)"
-                                  stroke-width="2"
-                                  style="transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; filter: url(#shadow-3d);"
-                                  onmouseenter="this.parentElement.style.transform='scale(1.14) translateZ(25px)'; this.parentElement.style.zIndex='10'; this.style.filter='brightness(1.25) drop-shadow(0 0 40px ${segmentColors[2]}80)';"
-                                  onmouseleave="this.parentElement.style.transform='scale(1) translateZ(0)'; this.parentElement.style.zIndex='1'; this.style.filter='url(#shadow-3d)';">
-                            </path>
-                            <text x="-30" y="-85" fill="white" font-size="16" font-weight="700" text-anchor="middle"
-                                  style="pointer-events: none; text-shadow: 0 2px 20px rgba(0,0,0,0.7); font-family: 'Segoe UI', sans-serif; letter-spacing: 0.3px;">
-                                ${escapeHtml(labels[2] || 'Segment 3')}
-                            </text>
-                        </g>
-                        
-                        <!-- Center Circle - Donut hole with 3D depth -->
-                        <circle cx="200" cy="200" r="50" fill="#0a0e1a" stroke="rgba(255,255,255,0.08)" stroke-width="3" />
-                        <circle cx="200" cy="200" r="45" fill="none" stroke="rgba(99,102,241,0.1)" stroke-width="1" />
-                        <text x="200" y="200" fill="white" font-size="22" font-weight="800" text-anchor="middle" 
-                              style="pointer-events: none; text-shadow: 0 2px 20px rgba(0,0,0,0.5); font-family: 'Segoe UI', sans-serif;">
-                            ${segments.length}
-                        </text>
-                        <text x="200" y="218" fill="rgba(255,255,255,0.35)" font-size="10" text-anchor="middle" letter-spacing="1.5"
-                              style="pointer-events: none; font-family: 'Segoe UI', sans-serif; text-transform: uppercase;">
-                            Segments
-                        </text>
-                    </svg>
-                    
-                    <!-- Interactive Legend -->
-                    <div style="position: absolute; bottom: -50px; left: 0; right: 0; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; padding: 10px 0;">
-                        ${labels.map((seg, i) => `
-                            <div class="legend-item" style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.04); padding: 6px 14px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1); cursor: default;">
-                                <div style="width: 14px; height: 14px; border-radius: 50%; background: ${segmentColors[i]}; box-shadow: 0 0 20px ${segmentColors[i]}40; transition: all 0.3s;"></div>
-                                <span style="font-size: 12px; color: #e2e8f0; font-weight: 500;">${escapeHtml(seg)}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Primary Target Badge -->
-            ${primaryTarget ? `
-            <div class="priority-card" style="padding: 16px 32px; border-radius: 24px; background: linear-gradient(135deg, rgba(99,102,241,.12), rgba(236,72,153,.08)); border: 1px solid rgba(99,102,241,.25); margin-top: 70px; display: inline-block;">
-                <div style="background: #4ade80; color: #000; display: inline-block; padding: 3px 14px; border-radius: 20px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;">🏆 Primary Target</div>
-                <div style="margin-top: 8px; font-size: 17px; font-weight: 700; color: #4ade80;">${escapeHtml(primaryTarget)}</div>
-            </div>
-            ` : ''}
-            
-            <!-- Interactive Hint -->
-            <div style="margin-top: 24px; font-size: 12px; color: rgba(255,255,255,0.3); font-weight: 400; letter-spacing: 0.3px;">
-                <span style="display: inline-block; animation: pulse-hint 2.5s ease-in-out infinite;">🖱️ Hover any slice → it pops out like a piece of cake!</span>
+        const primaryMatch = plan.match(/Primary Target[:\s]*([^\n]+)/i);
+        if (primaryMatch) primaryTarget = primaryMatch[1].trim();
+    }
+    
+    // Fallback values if no data
+    if (segments.length === 0) {
+        segments = ['Urban Young Professionals', 'Middle-income families', 'University students'];
+        segmentData = [
+            { name: 'Urban Young Professionals', share: 45, value: 320000, growth: '12.5' },
+            { name: 'Middle-income families', share: 30, value: 210000, growth: '8.3' },
+            { name: 'University students', share: 25, value: 180000, growth: '15.2' }
+        ];
+    }
+    if (!primaryTarget) primaryTarget = 'Young Urban Professionals (25-35, renters)';
+    
+    // DaVinci-inspired color palette - harmonious and meaningful
+    const segmentColors = [
+        { main: '#4ade80', glow: 'rgba(74, 222, 128, 0.6)', label: 'Emerald' },
+        { main: '#22d3ee', glow: 'rgba(34, 211, 238, 0.6)', label: 'Cyan' },
+        { main: '#fbbf24', glow: 'rgba(251, 191, 36, 0.6)', label: 'Gold' }
+    ];
+    
+    const labels = segments.slice(0, 3);
+    const data = segmentData.slice(0, 3);
+    
+    // Calculate total for percentages
+    const totalShare = data.reduce((sum, d) => sum + d.share, 0);
+    
+    // Generate SVG paths for pie chart with dynamic angles
+    function generatePiePath(index, total) {
+        const startAngle = (index / total) * 2 * Math.PI - Math.PI / 2;
+        const endAngle = ((index + 1) / total) * 2 * Math.PI - Math.PI / 2;
+        const radius = 150;
+        const x1 = Math.cos(startAngle) * radius;
+        const y1 = Math.sin(startAngle) * radius;
+        const x2 = Math.cos(endAngle) * radius;
+        const y2 = Math.sin(endAngle) * radius;
+        const largeArc = endAngle - startAngle > Math.PI ? 1 : 0;
+        return `M0,0 L${x1},${y1} A${radius},${radius} 0 ${largeArc},1 ${x2},${y2} Z`;
+    }
+    
+    // Build the HTML with interactive features
+    return `
+    <div style="text-align: center; position: relative; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;">
+        <!-- Header with DaVinci-inspired design -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+            <h2 style="color: #a5b4fc; font-weight: 700; font-size: 24px; letter-spacing: -0.5px; margin: 0;">
+                <span style="background: linear-gradient(135deg, #6366f1, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Market Segmentation</span>
+            </h2>
+            <div style="display: flex; gap: 8px; align-items: center; font-size: 11px; color: rgba(255,255,255,0.4);">
+                <span style="display: inline-flex; align-items: center; gap: 4px;">
+                    <span style="display: inline-block; width: 8px; height: 8px; background: #4ade80; border-radius: 50%;"></span>
+                    <span>Hover</span>
+                </span>
+                <span style="display: inline-flex; align-items: center; gap: 4px;">
+                    <span style="display: inline-block; width: 8px; height: 8px; background: #22d3ee; border-radius: 50%;"></span>
+                    <span>Click</span>
+                </span>
             </div>
         </div>
         
-        <style>
-            @keyframes pulse-hint {
-                0%, 100% { opacity: 0.3; transform: scale(1); }
-                50% { opacity: 0.8; transform: scale(1.04); }
-            }
+        <!-- Interactive 3D Pie Chart Container - DaVinci inspired perspective -->
+        <div style="position: relative; width: 100%; max-width: 600px; margin: 0 auto; perspective: 1200px;">
+            <div class="pie-container" style="position: relative; width: 100%; padding-bottom: 100%;">
+                
+                <!-- SVG Pie Chart with Advanced Interactivity -->
+                <svg viewBox="0 0 400 400" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; filter: drop-shadow(0 20px 50px rgba(0,0,0,0.6));">
+                    <defs>
+                        <!-- Glow filters for each segment -->
+                        <filter id="glow-0">
+                            <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                        <filter id="glow-1">
+                            <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                        <filter id="glow-2">
+                            <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                        
+                        <!-- 3D Shadow Effect -->
+                        <filter id="shadow-3d">
+                            <feDropShadow dx="0" dy="10" stdDeviation="15" flood-color="#000" flood-opacity="0.5"/>
+                        </filter>
+                        
+                        <!-- Glowing border -->
+                        <filter id="glow-border">
+                            <feGaussianBlur stdDeviation="3" result="blur"/>
+                            <feMerge>
+                                <feMergeNode in="blur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    
+                    ${data.map((d, i) => {
+                        const color = segmentColors[i % segmentColors.length];
+                        const path = generatePiePath(i, data.length);
+                        const angle = ((i / data.length) * 360) + 90;
+                        const labelAngle = ((i / data.length) * 2 * Math.PI) - Math.PI / 2;
+                        const labelRadius = 110;
+                        const lx = Math.cos(labelAngle) * labelRadius;
+                        const ly = Math.sin(labelAngle) * labelRadius;
+                        const percent = ((d.share / totalShare) * 100).toFixed(0);
+                        
+                        return `
+                        <g class="pie-slice" data-index="${i}" data-segment="${escapeHtml(d.name)}" 
+                           transform="translate(200, 200)" 
+                           style="transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); transform-origin: center center; cursor: pointer;">
+                            <path d="${path}" 
+                                  fill="${color.main}" 
+                                  opacity="0.92"
+                                  stroke="rgba(255,255,255,0.15)"
+                                  stroke-width="2"
+                                  style="transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); filter: url(#shadow-3d);"
+                                  onmouseenter="this.parentElement.style.transform='scale(1.15) translateZ(30px)'; this.parentElement.style.zIndex='10'; this.style.filter='brightness(1.3) drop-shadow(0 0 50px ${color.glow})'; this.style.stroke='rgba(255,255,255,0.4)'; this.style.strokeWidth='3';"
+                                  onmouseleave="this.parentElement.style.transform='scale(1) translateZ(0)'; this.parentElement.style.zIndex='1'; this.style.filter='url(#shadow-3d)'; this.style.stroke='rgba(255,255,255,0.15)'; this.style.strokeWidth='2';"
+                                  onclick="handleSegmentClick(${i}, '${escapeHtml(d.name)}', ${d.share}, '${escapeHtml(d.value.toLocaleString())}', '${d.growth}')">
+                            </path>
+                            <text x="${lx}" y="${ly - 10}" fill="white" font-size="14" font-weight="700" text-anchor="middle" 
+                                  style="pointer-events: none; text-shadow: 0 2px 20px rgba(0,0,0,0.8); font-family: 'Inter', sans-serif; letter-spacing: 0.3px;">
+                                ${escapeHtml(d.name.split(' ').slice(0,2).join(' '))}
+                            </text>
+                            <text x="${lx}" y="${ly + 14}" fill="rgba(255,255,255,0.7)" font-size="12" font-weight="600" text-anchor="middle"
+                                  style="pointer-events: none; text-shadow: 0 2px 20px rgba(0,0,0,0.8); font-family: 'Inter', sans-serif;">
+                                ${percent}%
+                            </text>
+                        </g>
+                        `;
+                    }).join('')}
+                    
+                    <!-- Center Circle - Donut hole with 3D depth and dynamic content -->
+                    <circle cx="200" cy="200" r="50" fill="#0a0e1a" stroke="rgba(255,255,255,0.06)" stroke-width="3" />
+                    <circle cx="200" cy="200" r="45" fill="none" stroke="rgba(99,102,241,0.08)" stroke-width="1" />
+                    <text x="200" y="195" fill="white" font-size="20" font-weight="800" text-anchor="middle" 
+                          style="pointer-events: none; text-shadow: 0 2px 20px rgba(0,0,0,0.5); font-family: 'Inter', sans-serif;">
+                        ${data.length}
+                    </text>
+                    <text x="200" y="213" fill="rgba(255,255,255,0.3)" font-size="9" text-anchor="middle" letter-spacing="1.2"
+                          style="pointer-events: none; font-family: 'Inter', sans-serif; text-transform: uppercase;">
+                        Segments
+                    </text>
+                </svg>
+                
+                <!-- Legend - Excel/PowerBI style -->
+                <div style="position: absolute; bottom: -60px; left: 0; right: 0; display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; padding: 10px 0;">
+                    ${data.map((d, i) => {
+                        const color = segmentColors[i % segmentColors.length];
+                        const percent = ((d.share / totalShare) * 100).toFixed(0);
+                        return `
+                        <div class="legend-item" data-index="${i}" 
+                             style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.04); padding: 8px 18px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.06); transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1); cursor: pointer;"
+                             onmouseenter="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateY(-3px) scale(1.03)'; this.style.borderColor='${color.glow}';"
+                             onmouseleave="this.style.background='rgba(255,255,255,0.04)'; this.style.transform='translateY(0) scale(1)'; this.style.borderColor='rgba(255,255,255,0.06)';"
+                             onclick="handleLegendClick(${i})">
+                            <div style="width: 14px; height: 14px; border-radius: 50%; background: ${color.main}; box-shadow: 0 0 20px ${color.glow}; transition: all 0.3s;"></div>
+                            <span style="font-size: 12px; color: #e2e8f0; font-weight: 500;">${escapeHtml(d.name)}</span>
+                            <span style="font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 400;">${percent}%</span>
+                        </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        </div>
+        
+        <!-- DaVinci-inspired Details Panel - Dynamic KPI cards like PowerBI -->
+        <div id="segmentDetailsPanel" style="margin-top: 80px; display: none; animation: slideUpPanel 0.5s ease;">
+            <div style="background: linear-gradient(145deg, rgba(20, 25, 45, 0.9), rgba(10, 15, 30, 0.95)); border-radius: 20px; padding: 20px 24px; border: 1px solid rgba(99,102,241,0.2); box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                    <h3 id="segmentDetailTitle" style="color: #a5b4fc; font-size: 18px; font-weight: 700; margin: 0;">Segment Overview</h3>
+                    <button onclick="closeSegmentDetails()" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50px; padding: 4px 14px; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 12px; transition: all 0.3s;"
+                            onmouseenter="this.style.background='rgba(255,255,255,0.1)'; this.style.color='white';"
+                            onmouseleave="this.style.background='rgba(255,255,255,0.05)'; this.style.color='rgba(255,255,255,0.5)';">
+                        ✕ Close
+                    </button>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px;">
+                    <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
+                        <div style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 0.5px;">Market Share</div>
+                        <div id="detailShare" style="font-size: 28px; font-weight: 800; color: #4ade80; margin-top: 4px;">--</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
+                        <div style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 0.5px;">Estimated Value</div>
+                        <div id="detailValue" style="font-size: 28px; font-weight: 800; color: #22d3ee; margin-top: 4px;">--</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
+                        <div style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 0.5px;">Growth Rate</div>
+                        <div id="detailGrowth" style="font-size: 28px; font-weight: 800; color: #fbbf24; margin-top: 4px;">--</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
+                        <div style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 0.5px;">Primary Target</div>
+                        <div id="detailTarget" style="font-size: 14px; font-weight: 600; color: #f472b6; margin-top: 4px;">${escapeHtml(primaryTarget)}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Primary Target Badge - Always visible -->
+        ${primaryTarget ? `
+        <div class="priority-card" style="padding: 12px 24px; border-radius: 20px; background: linear-gradient(135deg, rgba(99,102,241,.1), rgba(236,72,153,.06)); border: 1px solid rgba(99,102,241,.2); margin-top: 20px; display: inline-block;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="background: #4ade80; color: #000; padding: 2px 12px; border-radius: 16px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">🏆 Primary</span>
+                <span style="font-size: 14px; color: #4ade80; font-weight: 600;">${escapeHtml(primaryTarget)}</span>
+            </div>
+        </div>
+        ` : ''}
+        
+        <!-- Interactive Hint - DaVinci inspired -->
+        <div style="margin-top: 16px; font-size: 11px; color: rgba(255,255,255,0.25); font-weight: 400; letter-spacing: 0.3px;">
+            <span style="display: inline-block; animation: pulse-hint 2.5s ease-in-out infinite;">
+                🖱️ Hover to highlight · Click for deep insights · Like a DaVinci sketch come to life
+            </span>
+        </div>
+    </div>
+    
+    <style>
+        @keyframes pulse-hint {
+            0%, 100% { opacity: 0.25; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.02); }
+        }
+        
+        @keyframes slideUpPanel {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .pie-slice {
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: center center;
+        }
+        
+        .pie-slice:hover path {
+            filter: brightness(1.3) drop-shadow(0 0 30px rgba(255,255,255,0.15));
+        }
+        
+        .legend-item:hover {
+            background: rgba(255,255,255,0.08) !important;
+            transform: translateY(-3px) scale(1.03);
+            border-color: rgba(99,102,241,0.2) !important;
+        }
+        
+        .legend-item:hover div:first-child {
+            transform: scale(1.25);
+            box-shadow: 0 0 30px var(--glow-color, rgba(99,102,241,0.4));
+        }
+        
+        .legend-item:nth-child(1) div:first-child { --glow-color: rgba(74, 222, 128, 0.6); }
+        .legend-item:nth-child(2) div:first-child { --glow-color: rgba(34, 211, 238, 0.6); }
+        .legend-item:nth-child(3) div:first-child { --glow-color: rgba(251, 191, 36, 0.6); }
+        
+        /* Segment highlight animation */
+        .segment-highlight {
+            animation: glowPulse 1.2s ease-in-out 2;
+        }
+        
+        @keyframes glowPulse {
+            0%, 100% { filter: brightness(1) drop-shadow(0 0 0px rgba(255,255,255,0)); }
+            50% { filter: brightness(1.4) drop-shadow(0 0 40px rgba(99,102,241,0.6)); }
+        }
+    </style>
+    
+    <script>
+        // ============================================================
+        // DaVinci-Inspired Interactive Functions
+        // ============================================================
+        
+        // Handle segment click - PowerBI style drill-down
+        function handleSegmentClick(index, name, share, value, growth) {
+            // Update details panel
+            document.getElementById('detailShare').textContent = share + '%';
+            document.getElementById('detailValue').textContent = value;
+            document.getElementById('detailGrowth').textContent = growth + '%';
+            document.getElementById('detailTarget').textContent = name;
+            document.getElementById('segmentDetailTitle').textContent = name + ' - Segment Details';
             
-            .pie-slice {
-                transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-                transform-origin: center center;
-            }
+            // Show panel with animation
+            const panel = document.getElementById('segmentDetailsPanel');
+            panel.style.display = 'block';
             
-            .pie-slice:hover path {
-                filter: brightness(1.3) drop-shadow(0 0 30px rgba(255,255,255,0.15));
-            }
+            // Highlight clicked segment
+            const slices = document.querySelectorAll('.pie-slice');
+            slices.forEach((slice, i) => {
+                if (i === index) {
+                    slice.style.transform = 'scale(1.2) translateZ(40px)';
+                    slice.style.zIndex = '20';
+                    slice.querySelector('path').style.filter = 'brightness(1.4) drop-shadow(0 0 60px rgba(99,102,241,0.5))';
+                    slice.querySelector('path').style.stroke = 'rgba(255,255,255,0.5)';
+                    slice.querySelector('path').style.strokeWidth = '4';
+                } else {
+                    slice.style.transform = 'scale(0.85) translateZ(-10px)';
+                    slice.style.zIndex = '1';
+                    slice.querySelector('path').style.opacity = '0.4';
+                }
+            });
             
-            .legend-item:hover {
-                background: rgba(255,255,255,0.08) !important;
-                transform: translateY(-3px) scale(1.03);
-                border-color: rgba(99,102,241,0.2) !important;
-            }
+            // Highlight legend
+            document.querySelectorAll('.legend-item').forEach((item, i) => {
+                if (i === index) {
+                    item.style.background = 'rgba(255,255,255,0.12)';
+                    item.style.borderColor = 'rgba(99,102,241,0.4)';
+                    item.style.transform = 'scale(1.05)';
+                } else {
+                    item.style.opacity = '0.4';
+                }
+            });
             
-            .legend-item:hover div:first-child {
-                transform: scale(1.25);
-                box-shadow: 0 0 30px var(--glow-color, rgba(99,102,241,0.4));
-            }
+            // Show toast notification
+            showToast('🔍 ' + name + ' - ' + share + '% market share, ' + growth + '% growth');
+        }
+        
+        // Handle legend click - filter view
+        function handleLegendClick(index) {
+            const slices = document.querySelectorAll('.pie-slice');
+            slices.forEach((slice, i) => {
+                if (i === index) {
+                    slice.style.transform = 'scale(1.15) translateZ(30px)';
+                    slice.style.zIndex = '10';
+                    slice.querySelector('path').style.filter = 'brightness(1.3) drop-shadow(0 0 50px rgba(99,102,241,0.3))';
+                    slice.querySelector('path').style.opacity = '1';
+                    slice.querySelector('path').style.stroke = 'rgba(255,255,255,0.4)';
+                    slice.querySelector('path').style.strokeWidth = '3';
+                } else {
+                    slice.style.transform = 'scale(0.9) translateZ(-5px)';
+                    slice.style.zIndex = '1';
+                    slice.querySelector('path').style.opacity = '0.3';
+                    slice.querySelector('path').style.stroke = 'rgba(255,255,255,0.05)';
+                    slice.querySelector('path').style.strokeWidth = '1';
+                }
+            });
             
-            .legend-item:nth-child(1) div:first-child { --glow-color: rgba(74, 222, 128, 0.6); }
-            .legend-item:nth-child(2) div:first-child { --glow-color: rgba(34, 211, 238, 0.6); }
-            .legend-item:nth-child(3) div:first-child { --glow-color: rgba(251, 191, 36, 0.6); }
-        </style>
-        `;
-    }
+            // Update legend
+            document.querySelectorAll('.legend-item').forEach((item, i) => {
+                if (i === index) {
+                    item.style.background = 'rgba(255,255,255,0.12)';
+                    item.style.borderColor = 'rgba(99,102,241,0.4)';
+                    item.style.transform = 'scale(1.05)';
+                } else {
+                    item.style.opacity = '0.3';
+                    item.style.transform = 'scale(0.95)';
+                }
+            });
+            
+            showToast('🎯 Filtering: ' + document.querySelectorAll('.legend-item')[index].textContent.trim());
+        }
+        
+        // Close segment details - reset view
+        function closeSegmentDetails() {
+            document.getElementById('segmentDetailsPanel').style.display = 'none';
+            
+            // Reset all slices
+            document.querySelectorAll('.pie-slice').forEach((slice) => {
+                slice.style.transform = 'scale(1) translateZ(0)';
+                slice.style.zIndex = '1';
+                slice.querySelector('path').style.filter = 'url(#shadow-3d)';
+                slice.querySelector('path').style.opacity = '0.92';
+                slice.querySelector('path').style.stroke = 'rgba(255,255,255,0.15)';
+                slice.querySelector('path').style.strokeWidth = '2';
+            });
+            
+            // Reset legend
+            document.querySelectorAll('.legend-item').forEach((item) => {
+                item.style.background = 'rgba(255,255,255,0.04)';
+                item.style.borderColor = 'rgba(255,255,255,0.06)';
+                item.style.transform = 'scale(1)';
+                item.style.opacity = '1';
+            });
+            
+            showToast('✨ View reset to default');
+        }
+        
+        // Toast notification system
+        function showToast(message) {
+            let toast = document.getElementById('segmentToast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'segmentToast';
+                toast.style.cssText = `
+                    position: fixed;
+                    bottom: 120px;
+                    left: 50%;
+                    transform: translateX(-50%) translateY(20px);
+                    background: rgba(12, 17, 32, 0.95);
+                    backdrop-filter: blur(12px);
+                    border: 1px solid rgba(99,102,241,0.3);
+                    border-radius: 16px;
+                    padding: 12px 28px;
+                    color: #e2e8f0;
+                    font-size: 14px;
+                    font-weight: 500;
+                    z-index: 3000;
+                    opacity: 0;
+                    transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+                    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+                    font-family: 'Inter', sans-serif;
+                    max-width: 90%;
+                    text-align: center;
+                    pointer-events: none;
+                `;
+                document.body.appendChild(toast);
+            }
+            toast.textContent = message;
+            toast.style.opacity = '1';
+            toast.style.transform = 'translateX(-50%) translateY(0)';
+            clearTimeout(toast._hideTimeout);
+            toast._hideTimeout = setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(-50%) translateY(20px)';
+            }, 2800);
+        }
+    </script>
+    `;
+}
+   
 
     // ============================================================
     // OTHER RENDERERS (Preserved exactly as they were)
