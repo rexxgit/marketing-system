@@ -782,241 +782,101 @@
     }
 
     // ============================================================
-    // 🎯 GLOBAL INTERACTIVE FUNCTIONS FOR SEGMENTATION PIE CHART
+    // 🎯 CSS PIE CHART WITH DAVINCI-INSPIRED INTERACTIVITY
     // ============================================================
 
-    function handleSegmentHover(index, isEnter) {
-        const slices = document.querySelectorAll('.pie-slice');
-        const legendItems = document.querySelectorAll('.legend-item');
-        const colors = ['#4ade80', '#22d3ee', '#fbbf24'];
-        const segmentNames = [];
-        
-        slices.forEach((slice) => {
-            const name = slice.getAttribute('data-segment') || 'Segment';
-            segmentNames.push(name);
-        });
+    // Global functions for pie chart interactivity
+    let activePieIndex = -1;
 
+    function handlePieHover(index, isEnter) {
+        const wrappers = document.querySelectorAll('.pie-wrapper');
+        const colors = ['#4ade80', '#22d3ee', '#fbbf24'];
+        
         if (isEnter) {
-            slices.forEach((slice, i) => {
-                const path = slice.querySelector('path');
+            activePieIndex = index;
+            wrappers.forEach((wrapper, i) => {
                 if (i === index) {
-                    slice.style.transform = 'scale(1) translateZ(0)';
-                    slice.style.zIndex = '10';
-                    if (path) {
-                        path.style.filter = `brightness(1.3) drop-shadow(0 0 40px ${colors[index % colors.length]}80)`;
-                        path.style.stroke = 'rgba(255,255,255,0.5)';
-                        path.style.strokeWidth = '3';
-                        path.style.opacity = '1';
-                    }
-                    // Show percentage on hover
-                    const percentText = slice.querySelector('text:last-child');
-                    if (percentText) {
-                        percentText.style.fontSize = '20px';
-                        percentText.style.fill = 'white';
-                        percentText.style.fontWeight = '800';
-                    }
-                    // Show segment name larger
-                    const nameText = slice.querySelector('text:first-child');
-                    if (nameText) {
-                        nameText.style.fontSize = '18px';
-                        nameText.style.fill = 'white';
-                        nameText.style.fontWeight = '800';
+                    wrapper.style.transform = 'scale(1.15)';
+                    wrapper.style.zIndex = '10';
+                    wrapper.style.filter = `drop-shadow(0 0 30px ${colors[index % colors.length]}80)`;
+                    wrapper.style.borderColor = colors[index % colors.length];
+                    wrapper.style.borderWidth = '3px';
+                    wrapper.style.borderStyle = 'solid';
+                    // Show percentage large
+                    const label = wrapper.querySelector('.pie-label');
+                    if (label) {
+                        label.style.fontSize = '28px';
+                        label.style.color = '#4ade80';
+                        label.style.fontWeight = '800';
                     }
                 } else {
-                    slice.style.transform = 'scale(1) translateZ(0)';
-                    slice.style.zIndex = '1';
-                    if (path) {
-                        path.style.opacity = '0.2';
-                        path.style.stroke = 'rgba(255,255,255,0.05)';
-                        path.style.strokeWidth = '1';
-                        path.style.filter = 'brightness(0.4)';
-                    }
+                    wrapper.style.transform = 'scale(0.85)';
+                    wrapper.style.zIndex = '1';
+                    wrapper.style.opacity = '0.3';
+                    wrapper.style.borderWidth = '1px';
+                    wrapper.style.borderStyle = 'solid';
+                    wrapper.style.borderColor = 'rgba(255,255,255,0.05)';
                 }
             });
-            
-            legendItems.forEach((item, i) => {
-                if (i === index) {
-                    item.style.background = 'rgba(255,255,255,0.12)';
-                    item.style.borderColor = `${colors[index % colors.length]}80`;
-                    item.style.transform = 'scale(1.05)';
-                    item.style.opacity = '1';
-                } else {
-                    item.style.opacity = '0.3';
-                    item.style.transform = 'scale(0.95)';
-                }
-            });
-            
-            // Update center text to show segment name and percentage
-            const centerText = document.querySelector('.pie-container text[x="200"][y="195"]');
-            const centerSubtext = document.querySelector('.pie-container text[x="200"][y="213"]');
-            if (centerText && segmentNames[index]) {
-                const percent = slices[index]?.querySelector('text:last-child')?.textContent || '';
-                centerText.textContent = segmentNames[index].split(' ').slice(0,2).join(' ');
-                centerText.style.fontSize = '16px';
-                if (centerSubtext) {
-                    centerSubtext.textContent = percent || 'Hovering';
-                    centerSubtext.style.fill = 'rgba(255,255,255,0.6)';
-                }
-            }
-            
         } else {
-            slices.forEach((slice) => {
-                const path = slice.querySelector('path');
-                slice.style.transform = 'scale(1) translateZ(0)';
-                slice.style.zIndex = '1';
-                if (path) {
-                    path.style.filter = 'url(#shadow-3d)';
-                    path.style.opacity = '0.92';
-                    path.style.stroke = 'rgba(255,255,255,0.15)';
-                    path.style.strokeWidth = '2';
-                }
-                // Reset text
-                const percentText = slice.querySelector('text:last-child');
-                if (percentText) {
-                    percentText.style.fontSize = '12px';
-                    percentText.style.fill = 'rgba(255,255,255,0.7)';
-                    percentText.style.fontWeight = '600';
-                }
-                const nameText = slice.querySelector('text:first-child');
-                if (nameText) {
-                    nameText.style.fontSize = '14px';
-                    nameText.style.fill = 'white';
-                    nameText.style.fontWeight = '700';
+            activePieIndex = -1;
+            wrappers.forEach((wrapper) => {
+                wrapper.style.transform = 'scale(1)';
+                wrapper.style.zIndex = '1';
+                wrapper.style.opacity = '1';
+                wrapper.style.filter = 'none';
+                wrapper.style.borderWidth = '1px';
+                wrapper.style.borderStyle = 'solid';
+                wrapper.style.borderColor = 'rgba(255,255,255,0.1)';
+                const label = wrapper.querySelector('.pie-label');
+                if (label) {
+                    label.style.fontSize = '14px';
+                    label.style.color = '#e2e8f0';
+                    label.style.fontWeight = '400';
                 }
             });
-            
-            legendItems.forEach((item) => {
-                item.style.background = 'rgba(255,255,255,0.04)';
-                item.style.borderColor = 'rgba(255,255,255,0.06)';
-                item.style.transform = 'scale(1)';
-                item.style.opacity = '1';
-            });
-            
-            // Reset center text
-            const centerText = document.querySelector('.pie-container text[x="200"][y="195"]');
-            const centerSubtext = document.querySelector('.pie-container text[x="200"][y="213"]');
-            if (centerText) {
-                centerText.textContent = document.querySelectorAll('.pie-slice').length;
-                centerText.style.fontSize = '20px';
-                if (centerSubtext) {
-                    centerSubtext.textContent = 'Segments';
-                    centerSubtext.style.fill = 'rgba(255,255,255,0.3)';
-                }
-            }
         }
     }
 
-    function handleSegmentClick(index, name, share, value, growth) {
+    function handlePieClick(index, name, value) {
+        const detailTitle = document.getElementById('segmentDetailTitle');
         const detailShare = document.getElementById('detailShare');
         const detailValue = document.getElementById('detailValue');
         const detailGrowth = document.getElementById('detailGrowth');
         const detailTarget = document.getElementById('detailTarget');
-        const detailTitle = document.getElementById('segmentDetailTitle');
         const panel = document.getElementById('segmentDetailsPanel');
         
-        if (!detailShare || !panel) return;
+        if (!panel) return;
         
-        detailShare.textContent = share + '%';
-        detailValue.textContent = value;
-        detailGrowth.textContent = growth + '%';
-        detailTarget.textContent = name;
         detailTitle.textContent = name + ' - Segment Details';
+        detailShare.textContent = value + '%';
+        detailValue.textContent = 'Value';
+        detailGrowth.textContent = 'Growth';
+        detailTarget.textContent = name;
         panel.style.display = 'block';
         
-        showSegmentToast('🔍 ' + name + ' - ' + share + '% market share, ' + growth + '% growth');
-    }
-
-    function handleLegendClick(index) {
-        const slices = document.querySelectorAll('.pie-slice');
-        const colors = ['#4ade80', '#22d3ee', '#fbbf24'];
-        
-        slices.forEach((slice, i) => {
-            const path = slice.querySelector('path');
-            if (i === index) {
-                slice.style.transform = 'scale(1) translateZ(0)';
-                slice.style.zIndex = '10';
-                if (path) {
-                    path.style.filter = `brightness(1.3) drop-shadow(0 0 40px ${colors[index % colors.length]}80)`;
-                    path.style.opacity = '1';
-                    path.style.stroke = 'rgba(255,255,255,0.4)';
-                    path.style.strokeWidth = '3';
-                }
-            } else {
-                slice.style.transform = 'scale(1) translateZ(0)';
-                slice.style.zIndex = '1';
-                if (path) {
-                    path.style.opacity = '0.2';
-                    path.style.stroke = 'rgba(255,255,255,0.05)';
-                    path.style.strokeWidth = '1';
-                    path.style.filter = 'brightness(0.4)';
-                }
-            }
-        });
-        
-        document.querySelectorAll('.legend-item').forEach((item, i) => {
-            if (i === index) {
-                item.style.background = 'rgba(255,255,255,0.12)';
-                item.style.borderColor = `${colors[index % colors.length]}80`;
-                item.style.transform = 'scale(1.05)';
-                item.style.opacity = '1';
-            } else {
-                item.style.opacity = '0.25';
-                item.style.transform = 'scale(0.95)';
-            }
-        });
-        
-        const legendText = document.querySelectorAll('.legend-item')[index]?.textContent?.trim() || 'Segment';
-        showSegmentToast('🎯 Filtering: ' + legendText);
+        showSegmentToast('🔍 ' + name + ' - ' + value + '% market share');
     }
 
     function closeSegmentDetails() {
         const panel = document.getElementById('segmentDetailsPanel');
         if (panel) panel.style.display = 'none';
         
-        // Reset all slices
-        document.querySelectorAll('.pie-slice').forEach((slice) => {
-            const path = slice.querySelector('path');
-            slice.style.transform = 'scale(1) translateZ(0)';
-            slice.style.zIndex = '1';
-            if (path) {
-                path.style.filter = 'url(#shadow-3d)';
-                path.style.opacity = '0.92';
-                path.style.stroke = 'rgba(255,255,255,0.15)';
-                path.style.strokeWidth = '2';
-            }
-            // Reset text
-            const percentText = slice.querySelector('text:last-child');
-            if (percentText) {
-                percentText.style.fontSize = '12px';
-                percentText.style.fill = 'rgba(255,255,255,0.7)';
-                percentText.style.fontWeight = '600';
-            }
-            const nameText = slice.querySelector('text:first-child');
-            if (nameText) {
-                nameText.style.fontSize = '14px';
-                nameText.style.fill = 'white';
-                nameText.style.fontWeight = '700';
+        document.querySelectorAll('.pie-wrapper').forEach((wrapper) => {
+            wrapper.style.transform = 'scale(1)';
+            wrapper.style.zIndex = '1';
+            wrapper.style.opacity = '1';
+            wrapper.style.filter = 'none';
+            wrapper.style.borderWidth = '1px';
+            wrapper.style.borderStyle = 'solid';
+            wrapper.style.borderColor = 'rgba(255,255,255,0.1)';
+            const label = wrapper.querySelector('.pie-label');
+            if (label) {
+                label.style.fontSize = '14px';
+                label.style.color = '#e2e8f0';
+                label.style.fontWeight = '400';
             }
         });
-        
-        document.querySelectorAll('.legend-item').forEach((item) => {
-            item.style.background = 'rgba(255,255,255,0.04)';
-            item.style.borderColor = 'rgba(255,255,255,0.06)';
-            item.style.transform = 'scale(1)';
-            item.style.opacity = '1';
-        });
-        
-        // Reset center text
-        const centerText = document.querySelector('.pie-container text[x="200"][y="195"]');
-        const centerSubtext = document.querySelector('.pie-container text[x="200"][y="213"]');
-        if (centerText) {
-            centerText.textContent = document.querySelectorAll('.pie-slice').length;
-            centerText.style.fontSize = '20px';
-            if (centerSubtext) {
-                centerSubtext.textContent = 'Segments';
-                centerSubtext.style.fill = 'rgba(255,255,255,0.3)';
-            }
-        }
         
         showSegmentToast('✨ View reset to default');
     }
@@ -1048,7 +908,7 @@
     }
 
     // ============================================================
-    // 🎯 SEGMENTATION PIE CHART RENDERER - PERFECTLY CENTERED
+    // 🎯 SEGMENTATION RENDERER - CSS PIE CHART APPROACH
     // ============================================================
 
     function renderSegmentationVisual(plan) {
@@ -1094,23 +954,10 @@
         const segmentColors = ['#4ade80', '#22d3ee', '#fbbf24'];
         const labels = segments.slice(0, 3);
         const data = segmentData.slice(0, 3);
-        const totalShare = data.reduce((sum, d) => sum + d.share, 0);
-        
-        function generatePiePath(index, total) {
-            const startAngle = (index / total) * 2 * Math.PI - Math.PI / 2;
-            const endAngle = ((index + 1) / total) * 2 * Math.PI - Math.PI / 2;
-            const radius = 150;
-            const x1 = Math.cos(startAngle) * radius;
-            const y1 = Math.sin(startAngle) * radius;
-            const x2 = Math.cos(endAngle) * radius;
-            const y2 = Math.sin(endAngle) * radius;
-            const largeArc = endAngle - startAngle > Math.PI ? 1 : 0;
-            return `M0,0 L${x1},${y1} A${radius},${radius} 0 ${largeArc},1 ${x2},${y2} Z`;
-        }
         
         let html = `
-        <div style="text-align: center; position: relative; font-family: 'Inter', sans-serif;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+        <div style="text-align: center; position: relative; font-family: 'Inter', sans-serif; padding: 20px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
                 <h2 style="color: #a5b4fc; font-weight: 700; font-size: 24px; letter-spacing: -0.5px; margin: 0;">
                     <span style="background: linear-gradient(135deg, #6366f1, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Market Segmentation</span>
                 </h2>
@@ -1126,93 +973,102 @@
                 </div>
             </div>
             
-            <div style="position: relative; width: 100%; max-width: 600px; margin: 0 auto;">
-                <div class="pie-container" style="position: relative; width: 100%; padding-bottom: 100%;">
-                    <svg viewBox="0 0 400 400" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; filter: drop-shadow(0 20px 50px rgba(0,0,0,0.6));">
-                        <defs>
-                            <filter id="glow-0"><feGaussianBlur stdDeviation="6" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                            <filter id="glow-1"><feGaussianBlur stdDeviation="6" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                            <filter id="glow-2"><feGaussianBlur stdDeviation="6" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                            <filter id="shadow-3d"><feDropShadow dx="0" dy="10" stdDeviation="15" flood-color="#000" flood-opacity="0.5"/></filter>
-                        </defs>
+            <div style="display: flex; justify-content: center; align-items: center; gap: 40px; flex-wrap: wrap; margin: 30px 0;">
         `;
         
         data.forEach((d, i) => {
             const color = segmentColors[i % segmentColors.length];
-            const path = generatePiePath(i, data.length);
-            const labelAngle = ((i / data.length) * 2 * Math.PI) - Math.PI / 2;
-            const labelRadius = 110;
-            const lx = Math.cos(labelAngle) * labelRadius;
-            const ly = Math.sin(labelAngle) * labelRadius;
-            const percent = ((d.share / totalShare) * 100).toFixed(0);
-            const colorGlow = color === '#4ade80' ? 'rgba(74,222,128,0.6)' : color === '#22d3ee' ? 'rgba(34,211,238,0.6)' : 'rgba(251,191,36,0.6)';
+            const percent = d.share;
+            const value = percent;
             
             html += `
-                <g class="pie-slice" data-index="${i}" data-segment="${escapeHtml(d.name)}" 
-                   transform="translate(200, 200)" 
-                   style="transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); transform-origin: center center; cursor: pointer;">
-                    <path d="${path}" 
-                          fill="${color}" 
-                          opacity="0.92"
-                          stroke="rgba(255,255,255,0.15)"
-                          stroke-width="2"
-                          style="transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); filter: url(#shadow-3d);"
-                          onmouseenter="handleSegmentHover(${i}, true)"
-                          onmouseleave="handleSegmentHover(${i}, false)"
-                          onclick="handleSegmentClick(${i}, '${escapeHtml(d.name)}', ${d.share}, '${escapeHtml(d.value.toLocaleString())}', '${d.growth}')">
-                    </path>
-                    <text x="${lx}" y="${ly - 10}" fill="white" font-size="14" font-weight="700" text-anchor="middle" 
-                          style="pointer-events: none; text-shadow: 0 2px 20px rgba(0,0,0,0.8); font-family: 'Inter', sans-serif; letter-spacing: 0.3px;">
-                        ${escapeHtml(d.name.split(' ').slice(0,2).join(' '))}
-                    </text>
-                    <text x="${lx}" y="${ly + 14}" fill="rgba(255,255,255,0.7)" font-size="12" font-weight="600" text-anchor="middle"
-                          style="pointer-events: none; text-shadow: 0 2px 20px rgba(0,0,0,0.8); font-family: 'Inter', sans-serif;">
-                        ${percent}%
-                    </text>
-                </g>
-            `;
-        });
-        
-        html += `
-                        <circle cx="200" cy="200" r="50" fill="#0a0e1a" stroke="rgba(255,255,255,0.06)" stroke-width="3" />
-                        <circle cx="200" cy="200" r="45" fill="none" stroke="rgba(99,102,241,0.08)" stroke-width="1" />
-                        <text x="200" y="195" fill="white" font-size="20" font-weight="800" text-anchor="middle" 
-                              style="pointer-events: none; text-shadow: 0 2px 20px rgba(0,0,0,0.5); font-family: 'Inter', sans-serif;">
-                            ${data.length}
-                        </text>
-                        <text x="200" y="213" fill="rgba(255,255,255,0.3)" font-size="9" text-anchor="middle" letter-spacing="1.2"
-                              style="pointer-events: none; font-family: 'Inter', sans-serif; text-transform: uppercase;">
-                            Segments
-                        </text>
-                    </svg>
+                <div class="pie-wrapper" 
+                     style="
+                        height: 160px; 
+                        width: 160px; 
+                        display: inline-block; 
+                        position: relative; 
+                        background: rgba(255,255,255,0.05);
+                        border-radius: 80px;
+                        border: 1px solid rgba(255,255,255,0.1);
+                        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+                        cursor: pointer;
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                        backdrop-filter: blur(10px);
+                     "
+                     onmouseenter="handlePieHover(${i}, true)"
+                     onmouseleave="handlePieHover(${i}, false)"
+                     onclick="handlePieClick(${i}, '${escapeHtml(d.name)}', ${percent})">
                     
-                    <div style="position: absolute; bottom: -60px; left: 0; right: 0; display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; padding: 10px 0;">
-        `;
-        
-        data.forEach((d, i) => {
-            const color = segmentColors[i % segmentColors.length];
-            const percent = ((d.share / totalShare) * 100).toFixed(0);
-            const colorGlow = color === '#4ade80' ? 'rgba(74,222,128,0.6)' : color === '#22d3ee' ? 'rgba(34,211,238,0.6)' : 'rgba(251,191,36,0.6)';
-            
-            html += `
-                        <div class="legend-item" data-index="${i}" 
-                             style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.04); padding: 8px 18px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.06); transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1); cursor: pointer;"
-                             onmouseenter="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateY(-3px) scale(1.03)'; this.style.borderColor='${colorGlow}';"
-                             onmouseleave="this.style.background='rgba(255,255,255,0.04)'; this.style.transform='translateY(0) scale(1)'; this.style.borderColor='rgba(255,255,255,0.06)';"
-                             onclick="handleLegendClick(${i})">
-                            <div style="width: 14px; height: 14px; border-radius: 50%; background: ${color}; box-shadow: 0 0 20px ${colorGlow}; transition: all 0.3s;"></div>
-                            <span style="font-size: 12px; color: #e2e8f0; font-weight: 500;">${escapeHtml(d.name)}</span>
-                            <span style="font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 400;">${percent}%</span>
+                    <div class="csspie" 
+                         data-value="${percent}" 
+                         style="
+                            position: absolute;
+                            width: 80px;
+                            height: 160px;
+                            overflow: hidden;
+                            transform-origin: left center;
+                            left: ${percent >= 50 ? '0px' : '80px'};
+                         ">
+                        <div class="pie-before" 
+                             style="
+                                content: '';
+                                position: absolute;
+                                width: 80px;
+                                height: 160px;
+                                left: -80px;
+                                border-radius: 80px 0 0 80px;
+                                transform-origin: right center;
+                                background-color: ${color};
+                                transform: rotate(${percent * 3.6}deg);
+                                transition: all 0.4s ease;
+                                box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+                             ">
                         </div>
-            `;
-        });
-        
-        html += `
+                        ${percent >= 50 ? `
+                        <div class="pie-after" 
+                             style="
+                                content: '';
+                                position: absolute;
+                                width: 80px;
+                                height: 160px;
+                                left: 80px;
+                                border-radius: 0 80px 80px 0;
+                                background-color: ${color};
+                                box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+                             ">
+                        </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="pie-label" 
+                         style="
+                            width: 160px;
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            font-weight: 700;
+                            color: #e2e8f0;
+                            text-align: center;
+                            font-size: 14px;
+                            pointer-events: none;
+                            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+                            z-index: 2;
+                         ">
+                        ${percent}%
+                        <div style="font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 400; margin-top: 4px;">
+                            ${escapeHtml(d.name.split(' ').slice(0,2).join(' '))}
+                        </div>
                     </div>
                 </div>
+            `;
+        });
+        
+        html += `
             </div>
             
-            <div id="segmentDetailsPanel" style="margin-top: 80px; display: none; animation: slideUpPanel 0.5s ease;">
+            <div id="segmentDetailsPanel" style="margin-top: 30px; display: none; animation: slideUpPanel 0.5s ease;">
                 <div style="background: linear-gradient(145deg, rgba(20, 25, 45, 0.9), rgba(10, 15, 30, 0.95)); border-radius: 20px; padding: 20px 24px; border: 1px solid rgba(99,102,241,0.2); box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
                         <h3 id="segmentDetailTitle" style="color: #a5b4fc; font-size: 18px; font-weight: 700; margin: 0;">Segment Overview</h3>
@@ -1254,7 +1110,7 @@
             
             <div style="margin-top: 16px; font-size: 11px; color: rgba(255,255,255,0.25); font-weight: 400; letter-spacing: 0.3px;">
                 <span style="display: inline-block; animation: pulse-hint 2.5s ease-in-out infinite;">
-                    🖱️ Hover to highlight · Click for deep insights · Like a DaVinci sketch come to life
+                    🖱️ Hover to highlight · Click for insights · Like a DaVinci masterpiece
                 </span>
             </div>
         </div>
@@ -1262,10 +1118,6 @@
         <style>
             @keyframes pulse-hint { 0%, 100% { opacity: 0.25; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.02); } }
             @keyframes slideUpPanel { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-            .pie-slice { transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); transform-origin: center center; }
-            .pie-slice:hover path { filter: brightness(1.3) drop-shadow(0 0 30px rgba(255,255,255,0.15)); }
-            .legend-item:hover { background: rgba(255,255,255,0.08) !important; transform: translateY(-3px) scale(1.03); border-color: rgba(99,102,241,0.2) !important; }
-            .legend-item:hover div:first-child { transform: scale(1.25); }
         </style>
         `;
         
