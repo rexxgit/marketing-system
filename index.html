@@ -336,22 +336,398 @@
         .principle-card h3 { font-size: 22px; margin-bottom: 12px; background: linear-gradient(135deg, #fff, #a5b4fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .principle-desc { font-size: 13px; color: rgba(255, 255, 255, 0.7); line-height: 1.5; max-width: 200px; margin: 0 auto; }
         
-        /* Market Sizing */
-        .market-sizing-container { background: rgba(255,255,255,.03); border-radius: 20px; padding: 20px; margin-bottom: 24px; }
-        .tam-box, .sam-box, .som-box { background: rgba(255,255,255,.05); border-radius: 16px; padding: 20px; margin-bottom: 20px; cursor: pointer; transition: all 0.3s ease; border: 1px solid rgba(99,102,241,.2); }
-        .tam-box:hover, .sam-box:hover, .som-box:hover { border-color: #6366f1; background: rgba(99,102,241,.08); transform: translateX(5px); }
-        .tam-value, .sam-value, .som-value { font-size: 42px; font-weight: bold; color: #a5b4fc; text-align: center; margin: 15px 0; }
-        .tam-region { font-size: 14px; color: rgba(255,255,255,.6); text-align: center; margin-bottom: 10px; font-weight: 500; }
-        .icon-grid-small { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
-        .market-icon { width: 34px; height: 34px; background: linear-gradient(135deg, #6366f1, #ec4899); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.2); }
-        .sam-layout { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-        .sam-hand { flex: 1; text-align: center; font-size: 70px; }
-        .sam-value-right { flex: 1; text-align: center; }
-        .som-center { display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .hand-icon-large { font-size: 70px; text-align: center; margin-bottom: 10px; }
-        .hidden-detail { display: none; margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.1); }
-        .tam-box.clicked .hidden-detail, .sam-box.clicked .hidden-detail, .som-box.clicked .hidden-detail { display: block; }
-        .click-hint { text-align: center; font-size: 11px; color: rgba(255,255,255,.4); margin-top: 8px; }
+        /* Market Sizing - Glass Morphism Venn Diagram */
+        .market-sizing-container {
+            background: rgba(255,255,255,.03);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,.08);
+        }
+        
+        .tam-box, .sam-box, .som-box { 
+            background: rgba(255,255,255,.05); 
+            border-radius: 16px; 
+            padding: 20px; 
+            margin-bottom: 20px; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            border: 1px solid rgba(99,102,241,.2);
+            backdrop-filter: blur(5px);
+        }
+        .tam-box:hover, .sam-box:hover, .som-box:hover { 
+            border-color: #6366f1; 
+            background: rgba(99,102,241,.08); 
+            transform: translateX(5px); 
+        }
+        .tam-value, .sam-value, .som-value { 
+            font-size: 42px; 
+            font-weight: bold; 
+            color: #a5b4fc; 
+            text-align: center; 
+            margin: 15px 0; 
+        }
+        .tam-region { 
+            font-size: 14px; 
+            color: rgba(255,255,255,.6); 
+            text-align: center; 
+            margin-bottom: 10px; 
+            font-weight: 500; 
+        }
+        .icon-grid-small { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 8px; 
+            justify-content: center; 
+            margin-top: 16px; 
+        }
+        .market-icon { 
+            width: 34px; 
+            height: 34px; 
+            background: linear-gradient(135deg, #6366f1, #ec4899); 
+            border-radius: 10px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 16px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,.2); 
+        }
+        .sam-layout { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            gap: 20px; 
+        }
+        .sam-hand { 
+            flex: 1; 
+            text-align: center; 
+            font-size: 70px; 
+        }
+        .sam-value-right { 
+            flex: 1; 
+            text-align: center; 
+        }
+        .som-center { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .hand-icon-large { 
+            font-size: 70px; 
+            text-align: center; 
+            margin-bottom: 10px; 
+        }
+        .hidden-detail { 
+            display: none; 
+            margin-top: 16px; 
+            padding-top: 12px; 
+            border-top: 1px solid rgba(255,255,255,.1); 
+        }
+        .tam-box.clicked .hidden-detail, .sam-box.clicked .hidden-detail, .som-box.clicked .hidden-detail { 
+            display: block; 
+        }
+        .click-hint { 
+            text-align: center; 
+            font-size: 11px; 
+            color: rgba(255,255,255,.4); 
+            margin-top: 8px; 
+        }
+        
+        /* ============================================================
+           GLASS MORPHISM VENN DIAGRAM - TAM > SAM > SOM
+           ============================================================ */
+        .venn-container {
+            background: rgba(255,255,255,.03);
+            border-radius: 24px;
+            padding: 30px 20px;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,.08);
+            margin: 10px 0;
+            position: relative;
+            overflow: hidden;
+            min-height: 400px;
+        }
+        
+        .venn-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 40%, rgba(99,102,241,0.05) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        
+        .venn-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: #a5b4fc;
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 20px rgba(99,102,241,0.2);
+        }
+        
+        .venn-diagram-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            aspect-ratio: 1/1;
+        }
+        
+        /* TAM - Biggest circle (outer) */
+        .venn-tam {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(99,102,241,0.12);
+            border: 2px solid rgba(99,102,241,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 0 40px rgba(99,102,241,0.05);
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+        
+        .venn-tam:hover {
+            border-color: rgba(99,102,241,0.6);
+            box-shadow: 0 0 60px rgba(99,102,241,0.15);
+            transform: scale(1.02);
+        }
+        
+        .venn-tam-label {
+            position: absolute;
+            top: 12%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            font-weight: 700;
+            color: #818cf8;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+        }
+        
+        .venn-tam-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #a5b4fc;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+        }
+        
+        .venn-tam-desc {
+            position: absolute;
+            bottom: 12%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+            text-align: center;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        
+        /* SAM - Medium circle */
+        .venn-sam {
+            position: absolute;
+            width: 72%;
+            height: 72%;
+            top: 14%;
+            left: 14%;
+            border-radius: 50%;
+            background: rgba(34,211,238,0.10);
+            border: 2px solid rgba(34,211,238,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 0 30px rgba(34,211,238,0.05);
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+        
+        .venn-sam:hover {
+            border-color: rgba(34,211,238,0.5);
+            box-shadow: 0 0 50px rgba(34,211,238,0.12);
+            transform: scale(1.02);
+        }
+        
+        .venn-sam-label {
+            position: absolute;
+            top: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: 700;
+            color: #22d3ee;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+        }
+        
+        .venn-sam-value {
+            font-size: 22px;
+            font-weight: 800;
+            color: #22d3ee;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+        }
+        
+        .venn-sam-desc {
+            position: absolute;
+            bottom: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: rgba(255,255,255,0.35);
+            text-align: center;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        
+        /* SOM - Smallest circle */
+        .venn-som {
+            position: absolute;
+            width: 44%;
+            height: 44%;
+            top: 28%;
+            left: 28%;
+            border-radius: 50%;
+            background: rgba(251,191,36,0.10);
+            border: 2px solid rgba(251,191,36,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 0 30px rgba(251,191,36,0.05);
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+        
+        .venn-som:hover {
+            border-color: rgba(251,191,36,0.5);
+            box-shadow: 0 0 50px rgba(251,191,36,0.12);
+            transform: scale(1.02);
+        }
+        
+        .venn-som-label {
+            position: absolute;
+            top: 6%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            font-weight: 700;
+            color: #fbbf24;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+        }
+        
+        .venn-som-value {
+            font-size: 18px;
+            font-weight: 800;
+            color: #fbbf24;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+        }
+        
+        .venn-som-desc {
+            position: absolute;
+            bottom: 6%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            color: rgba(255,255,255,0.3);
+            text-align: center;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        
+        /* Intersection labels - DaVinci inspired connecting lines */
+        .venn-intersection {
+            position: absolute;
+            font-size: 9px;
+            color: rgba(255,255,255,0.25);
+            letter-spacing: 0.3px;
+            text-align: center;
+            pointer-events: none;
+        }
+        
+        .venn-intersection-1 {
+            top: 38%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .venn-intersection-2 {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            color: rgba(255,255,255,0.35);
+            font-weight: 600;
+        }
+        
+        /* Venn Diagram hover effects */
+        .venn-tam.active, .venn-sam.active, .venn-som.active {
+            transform: scale(1.08);
+            z-index: 10;
+        }
+        
+        .venn-tam.active {
+            border-color: #818cf8;
+            box-shadow: 0 0 80px rgba(99,102,241,0.25);
+        }
+        
+        .venn-sam.active {
+            border-color: #22d3ee;
+            box-shadow: 0 0 60px rgba(34,211,238,0.2);
+        }
+        
+        .venn-som.active {
+            border-color: #fbbf24;
+            box-shadow: 0 0 60px rgba(251,191,36,0.2);
+        }
+        
+        .venn-legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .venn-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .venn-legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .venn-legend-dot.tam-dot {
+            background: rgba(99,102,241,0.3);
+            border-color: rgba(99,102,241,0.3);
+        }
+        
+        .venn-legend-dot.sam-dot {
+            background: rgba(34,211,238,0.3);
+            border-color: rgba(34,211,238,0.3);
+        }
+        
+        .venn-legend-dot.som-dot {
+            background: rgba(251,191,36,0.3);
+            border-color: rgba(251,191,36,0.3);
+        }
         
         .dashboard-container { display: none; }
         .dashboard-container.active { display: block; }
@@ -579,6 +955,11 @@
             .positioning-statement { font-size: 16px; padding: 16px; }
             .journey-timeline-container { overflow-x: auto; }
             .journey-timeline { min-width: 550px; }
+            .venn-diagram-wrapper { max-width: 320px; }
+            .venn-tam-value { font-size: 20px; }
+            .venn-sam-value { font-size: 16px; }
+            .venn-som-value { font-size: 14px; }
+            .venn-tam-label, .venn-sam-label, .venn-som-label { font-size: 10px; }
         }
     </style>
 </head>
@@ -782,110 +1163,118 @@
     }
 
     // ============================================================
-    // 🎯 CSS PIE CHART WITH DAVINCI-INSPIRED INTERACTIVITY
+    // 🎯 MARKET SIZING - GLASS MORPHISM VENN DIAGRAM (TAM > SAM > SOM)
     // ============================================================
 
-    // Global functions for pie chart interactivity
-    let activePieIndex = -1;
-
-    function handlePieHover(index, isEnter) {
-        const wrappers = document.querySelectorAll('.pie-wrapper');
-        const colors = ['#4ade80', '#22d3ee', '#fbbf24'];
+    function renderMarketSizingVisual(plan) {
+        if (!plan) return '<div class="empty-state">📊 Generate a plan first</div>';
         
-        if (isEnter) {
-            activePieIndex = index;
-            wrappers.forEach((wrapper, i) => {
-                if (i === index) {
-                    wrapper.style.transform = 'scale(1.15)';
-                    wrapper.style.zIndex = '10';
-                    wrapper.style.filter = `drop-shadow(0 0 30px ${colors[index % colors.length]}80)`;
-                    wrapper.style.borderColor = colors[index % colors.length];
-                    wrapper.style.borderWidth = '3px';
-                    wrapper.style.borderStyle = 'solid';
-                    // Show percentage large
-                    const label = wrapper.querySelector('.pie-label');
-                    if (label) {
-                        label.style.fontSize = '28px';
-                        label.style.color = '#4ade80';
-                        label.style.fontWeight = '800';
-                    }
-                } else {
-                    wrapper.style.transform = 'scale(0.85)';
-                    wrapper.style.zIndex = '1';
-                    wrapper.style.opacity = '0.3';
-                    wrapper.style.borderWidth = '1px';
-                    wrapper.style.borderStyle = 'solid';
-                    wrapper.style.borderColor = 'rgba(255,255,255,0.05)';
-                }
-            });
-        } else {
-            activePieIndex = -1;
-            wrappers.forEach((wrapper) => {
-                wrapper.style.transform = 'scale(1)';
-                wrapper.style.zIndex = '1';
-                wrapper.style.opacity = '1';
-                wrapper.style.filter = 'none';
-                wrapper.style.borderWidth = '1px';
-                wrapper.style.borderStyle = 'solid';
-                wrapper.style.borderColor = 'rgba(255,255,255,0.1)';
-                const label = wrapper.querySelector('.pie-label');
-                if (label) {
-                    label.style.fontSize = '14px';
-                    label.style.color = '#e2e8f0';
-                    label.style.fontWeight = '400';
-                }
-            });
+        const tamMatch = plan.match(/\[TAMSAMSOM OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        let tam = 1680000, sam = 1200000, som = 200000;
+        let tamLabel = 'TAM', samLabel = 'SAM', somLabel = 'SOM';
+        
+        if (tamMatch) {
+            const text = tamMatch[1];
+            const tamV = text.match(/TAM[:\s]*([0-9,]+)/i);
+            const samV = text.match(/SAM[:\s]*([0-9,]+)/i);
+            const somV = text.match(/SOM[:\s]*([0-9,]+)/i);
+            if (tamV) tam = parseInt(tamV[1].replace(/,/g,''));
+            if (samV) sam = parseInt(samV[1].replace(/,/g,''));
+            if (somV) som = parseInt(somV[1].replace(/,/g,''));
         }
-    }
-
-    function handlePieClick(index, name, value) {
-        const detailTitle = document.getElementById('segmentDetailTitle');
-        const detailShare = document.getElementById('detailShare');
-        const detailValue = document.getElementById('detailValue');
-        const detailGrowth = document.getElementById('detailGrowth');
-        const detailTarget = document.getElementById('detailTarget');
-        const panel = document.getElementById('segmentDetailsPanel');
         
-        if (!panel) return;
+        // Ensure TAM > SAM > SOM
+        if (sam >= tam) sam = tam * 0.7;
+        if (som >= sam) som = sam * 0.4;
         
-        detailTitle.textContent = name + ' - Segment Details';
-        detailShare.textContent = value + '%';
-        detailValue.textContent = 'Value';
-        detailGrowth.textContent = 'Growth';
-        detailTarget.textContent = name;
-        panel.style.display = 'block';
+        const tamFormatted = tam >= 1000000 ? (tam/1000000).toFixed(1) + 'M' : (tam/1000).toFixed(0) + 'K';
+        const samFormatted = sam >= 1000000 ? (sam/1000000).toFixed(1) + 'M' : (sam/1000).toFixed(0) + 'K';
+        const somFormatted = som >= 1000000 ? (som/1000000).toFixed(1) + 'M' : (som/1000).toFixed(0) + 'K';
         
-        showSegmentToast('🔍 ' + name + ' - ' + value + '% market share');
-    }
-
-    function closeSegmentDetails() {
-        const panel = document.getElementById('segmentDetailsPanel');
-        if (panel) panel.style.display = 'none';
+        return `
+        <div style="text-align:center;">
+            <h2 style="color:#a5b4fc; font-size:22px; font-weight:700; margin-bottom:20px;">Market Sizing</h2>
+            
+            <!-- Glass Morphism Venn Diagram -->
+            <div class="venn-container">
+                <div class="venn-title">TAM · SAM · SOM</div>
+                
+                <div class="venn-diagram-wrapper">
+                    <!-- TAM - Biggest (outer circle) -->
+                    <div class="venn-tam" 
+                         onmouseenter="this.classList.add('active')" 
+                         onmouseleave="this.classList.remove('active')"
+                         onclick="showToast('🔍 TAM: Total Addressable Market - ${tamFormatted}')">
+                        <div class="venn-tam-label">TAM</div>
+                        <div class="venn-tam-value">${tamFormatted}</div>
+                        <div class="venn-tam-desc">Total Addressable Market</div>
+                    </div>
+                    
+                    <!-- SAM - Medium (middle circle) -->
+                    <div class="venn-sam" 
+                         onmouseenter="this.classList.add('active')" 
+                         onmouseleave="this.classList.remove('active')"
+                         onclick="showToast('🔍 SAM: Serviceable Available Market - ${samFormatted}')">
+                        <div class="venn-sam-label">SAM</div>
+                        <div class="venn-sam-value">${samFormatted}</div>
+                        <div class="venn-sam-desc">Serviceable Available Market</div>
+                    </div>
+                    
+                    <!-- SOM - Smallest (inner circle) -->
+                    <div class="venn-som" 
+                         onmouseenter="this.classList.add('active')" 
+                         onmouseleave="this.classList.remove('active')"
+                         onclick="showToast('🔍 SOM: Serviceable Obtainable Market - ${somFormatted}')">
+                        <div class="venn-som-label">SOM</div>
+                        <div class="venn-som-value">${somFormatted}</div>
+                        <div class="venn-som-desc">Serviceable Obtainable Market</div>
+                    </div>
+                    
+                    <!-- DaVinci-inspired intersection labels -->
+                    <div class="venn-intersection venn-intersection-1">⨯</div>
+                    <div class="venn-intersection venn-intersection-2">●</div>
+                </div>
+                
+                <!-- Legend -->
+                <div class="venn-legend">
+                    <div class="venn-legend-item">
+                        <span class="venn-legend-dot tam-dot"></span>
+                        TAM - ${tamFormatted}
+                    </div>
+                    <div class="venn-legend-item">
+                        <span class="venn-legend-dot sam-dot"></span>
+                        SAM - ${samFormatted}
+                    </div>
+                    <div class="venn-legend-item">
+                        <span class="venn-legend-dot som-dot"></span>
+                        SOM - ${somFormatted}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Click hint -->
+            <div style="margin-top:12px; font-size:11px; color:rgba(255,255,255,0.3);">
+                <span style="display:inline-block; animation:pulse-hint 2.5s ease-in-out infinite;">
+                    🖱️ Hover to highlight · Click for insights
+                </span>
+            </div>
+        </div>
         
-        document.querySelectorAll('.pie-wrapper').forEach((wrapper) => {
-            wrapper.style.transform = 'scale(1)';
-            wrapper.style.zIndex = '1';
-            wrapper.style.opacity = '1';
-            wrapper.style.filter = 'none';
-            wrapper.style.borderWidth = '1px';
-            wrapper.style.borderStyle = 'solid';
-            wrapper.style.borderColor = 'rgba(255,255,255,0.1)';
-            const label = wrapper.querySelector('.pie-label');
-            if (label) {
-                label.style.fontSize = '14px';
-                label.style.color = '#e2e8f0';
-                label.style.fontWeight = '400';
+        <style>
+            @keyframes pulse-hint {
+                0%, 100% { opacity: 0.3; transform: scale(1); }
+                50% { opacity: 0.8; transform: scale(1.04); }
             }
-        });
-        
-        showSegmentToast('✨ View reset to default');
+        </style>
+        `;
     }
 
-    function showSegmentToast(message) {
-        let toast = document.getElementById('segmentToast');
+    // Toast notification for Venn Diagram clicks
+    function showToast(message) {
+        let toast = document.getElementById('vennToast');
         if (!toast) {
             toast = document.createElement('div');
-            toast.id = 'segmentToast';
+            toast.id = 'vennToast';
             toast.style.cssText = `
                 position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%) translateY(20px);
                 background: rgba(12,17,32,0.95); backdrop-filter: blur(12px);
@@ -908,227 +1297,10 @@
     }
 
     // ============================================================
-    // 🎯 SEGMENTATION RENDERER - CSS PIE CHART APPROACH
-    // ============================================================
-
-    function renderSegmentationVisual(plan) {
-        if (!plan) return '<div class="empty-state">✨ Generate a plan first</div>';
-        
-        const match = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        let segments = [];
-        let primaryTarget = '';
-        let segmentData = [];
-        
-        if (match) {
-            const segText = match[1];
-            const segmentLines = segText.split('\n');
-            for (const line of segmentLines) {
-                if (line.match(/^\d+\.|^[-•*]\s+/) && line.length > 10) {
-                    const segmentName = line.replace(/^\d+\.|^[-•*]\s+/, '').trim().substring(0, 50);
-                    if (segmentName.length > 5) {
-                        segments.push(segmentName);
-                        const share = Math.floor(Math.random() * 15) + 20;
-                        segmentData.push({
-                            name: segmentName,
-                            share: share,
-                            value: Math.floor(Math.random() * 500000) + 100000,
-                            growth: (Math.random() * 15 + 5).toFixed(1)
-                        });
-                    }
-                }
-            }
-            const primaryMatch = plan.match(/Primary Target[:\s]*([^\n]+)/i);
-            if (primaryMatch) primaryTarget = primaryMatch[1].trim();
-        }
-        
-        if (segments.length === 0) {
-            segments = ['Urban Young Professionals', 'Middle-income families', 'University students'];
-            segmentData = [
-                { name: 'Urban Young Professionals', share: 45, value: 320000, growth: '12.5' },
-                { name: 'Middle-income families', share: 30, value: 210000, growth: '8.3' },
-                { name: 'University students', share: 25, value: 180000, growth: '15.2' }
-            ];
-        }
-        if (!primaryTarget) primaryTarget = 'Young Urban Professionals (25-35, renters)';
-        
-        const segmentColors = ['#4ade80', '#22d3ee', '#fbbf24'];
-        const labels = segments.slice(0, 3);
-        const data = segmentData.slice(0, 3);
-        
-        let html = `
-        <div style="text-align: center; position: relative; font-family: 'Inter', sans-serif; padding: 20px 0;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
-                <h2 style="color: #a5b4fc; font-weight: 700; font-size: 24px; letter-spacing: -0.5px; margin: 0;">
-                    <span style="background: linear-gradient(135deg, #6366f1, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Market Segmentation</span>
-                </h2>
-                <div style="display: flex; gap: 8px; align-items: center; font-size: 11px; color: rgba(255,255,255,0.4);">
-                    <span style="display: inline-flex; align-items: center; gap: 4px;">
-                        <span style="display: inline-block; width: 8px; height: 8px; background: #4ade80; border-radius: 50%;"></span>
-                        <span>Hover</span>
-                    </span>
-                    <span style="display: inline-flex; align-items: center; gap: 4px;">
-                        <span style="display: inline-block; width: 8px; height: 8px; background: #22d3ee; border-radius: 50%;"></span>
-                        <span>Click</span>
-                    </span>
-                </div>
-            </div>
-            
-            <div style="display: flex; justify-content: center; align-items: center; gap: 40px; flex-wrap: wrap; margin: 30px 0;">
-        `;
-        
-        data.forEach((d, i) => {
-            const color = segmentColors[i % segmentColors.length];
-            const percent = d.share;
-            const value = percent;
-            
-            html += `
-                <div class="pie-wrapper" 
-                     style="
-                        height: 160px; 
-                        width: 160px; 
-                        display: inline-block; 
-                        position: relative; 
-                        background: rgba(255,255,255,0.05);
-                        border-radius: 80px;
-                        border: 1px solid rgba(255,255,255,0.1);
-                        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-                        cursor: pointer;
-                        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-                        backdrop-filter: blur(10px);
-                     "
-                     onmouseenter="handlePieHover(${i}, true)"
-                     onmouseleave="handlePieHover(${i}, false)"
-                     onclick="handlePieClick(${i}, '${escapeHtml(d.name)}', ${percent})">
-                    
-                    <div class="csspie" 
-                         data-value="${percent}" 
-                         style="
-                            position: absolute;
-                            width: 80px;
-                            height: 160px;
-                            overflow: hidden;
-                            transform-origin: left center;
-                            left: ${percent >= 50 ? '0px' : '80px'};
-                         ">
-                        <div class="pie-before" 
-                             style="
-                                content: '';
-                                position: absolute;
-                                width: 80px;
-                                height: 160px;
-                                left: -80px;
-                                border-radius: 80px 0 0 80px;
-                                transform-origin: right center;
-                                background-color: ${color};
-                                transform: rotate(${percent * 3.6}deg);
-                                transition: all 0.4s ease;
-                                box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
-                             ">
-                        </div>
-                        ${percent >= 50 ? `
-                        <div class="pie-after" 
-                             style="
-                                content: '';
-                                position: absolute;
-                                width: 80px;
-                                height: 160px;
-                                left: 80px;
-                                border-radius: 0 80px 80px 0;
-                                background-color: ${color};
-                                box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
-                             ">
-                        </div>
-                        ` : ''}
-                    </div>
-                    
-                    <div class="pie-label" 
-                         style="
-                            width: 160px;
-                            position: absolute;
-                            top: 50%;
-                            left: 50%;
-                            transform: translate(-50%, -50%);
-                            font-weight: 700;
-                            color: #e2e8f0;
-                            text-align: center;
-                            font-size: 14px;
-                            pointer-events: none;
-                            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-                            z-index: 2;
-                         ">
-                        ${percent}%
-                        <div style="font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 400; margin-top: 4px;">
-                            ${escapeHtml(d.name.split(' ').slice(0,2).join(' '))}
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-        
-        html += `
-            </div>
-            
-            <div id="segmentDetailsPanel" style="margin-top: 30px; display: none; animation: slideUpPanel 0.5s ease;">
-                <div style="background: linear-gradient(145deg, rgba(20, 25, 45, 0.9), rgba(10, 15, 30, 0.95)); border-radius: 20px; padding: 20px 24px; border: 1px solid rgba(99,102,241,0.2); box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
-                        <h3 id="segmentDetailTitle" style="color: #a5b4fc; font-size: 18px; font-weight: 700; margin: 0;">Segment Overview</h3>
-                        <button onclick="closeSegmentDetails()" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50px; padding: 4px 14px; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 12px; transition: all 0.3s;"
-                                onmouseenter="this.style.background='rgba(255,255,255,0.1)'; this.style.color='white';"
-                                onmouseleave="this.style.background='rgba(255,255,255,0.05)'; this.style.color='rgba(255,255,255,0.5)';">
-                            ✕ Close
-                        </button>
-                    </div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px;">
-                        <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
-                            <div style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 0.5px;">Market Share</div>
-                            <div id="detailShare" style="font-size: 28px; font-weight: 800; color: #4ade80; margin-top: 4px;">--</div>
-                        </div>
-                        <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
-                            <div style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 0.5px;">Estimated Value</div>
-                            <div id="detailValue" style="font-size: 28px; font-weight: 800; color: #22d3ee; margin-top: 4px;">--</div>
-                        </div>
-                        <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
-                            <div style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 0.5px;">Growth Rate</div>
-                            <div id="detailGrowth" style="font-size: 28px; font-weight: 800; color: #fbbf24; margin-top: 4px;">--</div>
-                        </div>
-                        <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
-                            <div style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 0.5px;">Primary Target</div>
-                            <div id="detailTarget" style="font-size: 14px; font-weight: 600; color: #f472b6; margin-top: 4px;">${escapeHtml(primaryTarget)}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            ${primaryTarget ? `
-            <div class="priority-card" style="padding: 12px 24px; border-radius: 20px; background: linear-gradient(135deg, rgba(99,102,241,.1), rgba(236,72,153,.06)); border: 1px solid rgba(99,102,241,.2); margin-top: 20px; display: inline-block;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span style="background: #4ade80; color: #000; padding: 2px 12px; border-radius: 16px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">🏆 Primary</span>
-                    <span style="font-size: 14px; color: #4ade80; font-weight: 600;">${escapeHtml(primaryTarget)}</span>
-                </div>
-            </div>
-            ` : ''}
-            
-            <div style="margin-top: 16px; font-size: 11px; color: rgba(255,255,255,0.25); font-weight: 400; letter-spacing: 0.3px;">
-                <span style="display: inline-block; animation: pulse-hint 2.5s ease-in-out infinite;">
-                    🖱️ Hover to highlight · Click for insights · Like a DaVinci masterpiece
-                </span>
-            </div>
-        </div>
-        
-        <style>
-            @keyframes pulse-hint { 0%, 100% { opacity: 0.25; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.02); } }
-            @keyframes slideUpPanel { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        </style>
-        `;
-        
-        return html;
-    }
-
-    // ============================================================
     // OTHER RENDERERS (Preserved exactly as they were)
     // ============================================================
 
-    function renderMarketSizingVisual(plan) { if(!plan) return '<div class="empty-state">📊 Generate a plan first</div>'; const tamMatch = plan.match(/\[TAMSAMSOM OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); let tam=1680000, sam=1200000, som=200000; if(tamMatch){ const text = tamMatch[1]; const tamV = text.match(/TAM[:\s]*([0-9,]+)/i); const samV = text.match(/SAM[:\s]*([0-9,]+)/i); const somV = text.match(/SOM[:\s]*([0-9,]+)/i); if(tamV) tam = parseInt(tamV[1].replace(/,/g,'')); if(samV) sam = parseInt(samV[1].replace(/,/g,'')); if(somV) som = parseInt(somV[1].replace(/,/g,'')); } const tamFormatted = tam>=1000000?(tam/1000000).toFixed(1)+'M':(tam/1000).toFixed(0)+'K'; const samFormatted = sam>=1000000?(sam/1000000).toFixed(1)+'M':(sam/1000).toFixed(0)+'K'; const somFormatted = som>=1000000?(som/1000000).toFixed(1)+'M':(som/1000).toFixed(0)+'K'; const tamIcons = Math.min(Math.floor(tam/70000),20); const samIcons = Math.min(Math.floor(sam/70000),15); const somIcons = Math.min(Math.floor(som/17000),12); return `<div style="text-align:center;"><h2 style="color:#a5b4fc;">Market Sizing (TAM / SAM / SOM)</h2><div class="market-sizing-container"><div class="tam-box" id="tamBox"><div class="tam-region">🌍 Addis Ababa Metro Area</div><div class="tam-value">${tamFormatted}</div><div class="hidden-detail"><div class="icon-grid-small">${Array(tamIcons).fill('<div class="market-icon">🏢</div>').join('')}</div><p>Total Addressable Market</p></div><div class="click-hint">▼ Click to explore</div></div><div class="sam-box" id="samBox"><div class="sam-layout"><div class="sam-hand">🖐️🤝</div><div class="sam-value-right"><div class="sam-value">${samFormatted}</div></div></div><div class="hidden-detail"><div class="icon-grid-small">${Array(samIcons).fill('<div class="market-icon">🏪</div>').join('')}</div><p>Serviceable Available Market</p></div><div class="click-hint">▼ Click to explore</div></div><div class="som-box" id="somBox"><div class="som-center"><div class="hand-icon-large">🖐️🎯</div><div class="som-value">${somFormatted}</div></div><div class="hidden-detail"><div class="icon-grid-small">${Array(somIcons).fill('<div class="market-icon">🚀</div>').join('')}</div><p>Serviceable Obtainable Market</p></div><div class="click-hint">▼ Click to explore</div></div></div></div>`; }
+    function renderSegmentationVisual(plan) { if(!plan) return '<div class="empty-state">✨ Generate a plan first</div>'; const match = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); let segments = [], primaryTarget = ''; if(match) { const segText = match[1]; const segmentLines = segText.split('\n'); for(const line of segmentLines) { if(line.match(/^\d+\.|^[-•*]\s+/) && line.length > 10) { const segmentName = line.replace(/^\d+\.|^[-•*]\s+/, '').trim().substring(0, 50); if(segmentName.length > 5) segments.push(segmentName); } } const primaryMatch = plan.match(/Primary Target[:\s]*([^\n]+)/i); if(primaryMatch) primaryTarget = primaryMatch[1].trim(); } if(segments.length === 0) segments = ['Urban Young Professionals', 'Middle-income families', 'University students']; if(!primaryTarget) primaryTarget = 'Young Urban Professionals (25-35, renters)'; const segmentColors = ['#4ade80', '#22d3ee', '#fbbf24']; return `<div style="text-align: center;"><h2 style="color: #a5b4fc;">Market Segmentation</h2><div style="width: 200px; height: 200px; margin: 20px auto;"><div style="width:100%;height:100%;border-radius:50%;background:conic-gradient(${segmentColors[0]} 0deg 120deg, ${segmentColors[1]} 120deg 240deg, ${segmentColors[2]} 240deg 360deg);"></div></div><div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;">${segments.slice(0,3).map((seg,i)=>`<div><div style="width:12px;height:12px;background:${segmentColors[i]};border-radius:50%;display:inline-block;margin-right:6px;"></div><span>${escapeHtml(seg)}</span></div>`).join('')}</div><div class="priority-card" style="margin-top:24px;padding:20px;border-radius:20px;background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(236,72,153,.1));"><div style="background:#4ade80;color:#000;display:inline-block;padding:4px 12px;border-radius:20px;">🏆 PRIMARY TARGET</div><div style="margin-top:12px;font-size:16px;font-weight:600;color:#4ade80;">${escapeHtml(primaryTarget)}</div></div></div>`; }
     
     function renderPESTLEVisual(plan) { if(!plan) return '<div class="empty-state">🔍 Generate a plan first</div>'; const icons = { political: '🏛️', economic: '📈', social: '👥', technological: '💻', legal: '⚖️', environmental: '🌿' }; const titles = { political: 'Political', economic: 'Economic', social: 'Social', technological: 'Technological', legal: 'Legal', environmental: 'Environmental' }; const pestleData = { political: { insight: 'Government incentives for "Made in Ethiopia" products lower import tariffs.', impact: 'high' }, economic: { insight: 'Rising consumer price index pushes shoppers toward low-cost items.', impact: 'high' }, social: { insight: 'Growing urban lifestyle emphasizes speed and convenience.', impact: 'medium' }, technological: { insight: 'Widespread 4G/5G coverage enables rapid e-commerce adoption.', impact: 'high' }, legal: { insight: 'New labeling regulations require clear ingredient disclosure.', impact: 'medium' }, environmental: { insight: 'Municipal campaigns promote waste reduction and biodegradability.', impact: 'high' } }; return `<div style="text-align:center;"><h2 style="color:#a5b4fc;">PESTLE Analysis</h2><div class="pestle-grid">${Object.entries(pestleData).map(([key,data])=>`<div class="pestle-card ${key}"><div class="pestle-header"><div class="pestle-icon ${key}">${icons[key]}</div><div class="pestle-title">${titles[key]}</div></div><div class="pestle-insight">${escapeHtml(data.insight)}</div><div class="pestle-footer"><span class="impact-badge impact-${data.impact}">${data.impact.toUpperCase()} IMPACT</span></div></div>`).join('')}</div></div>`; }
     
@@ -1159,7 +1331,9 @@
         if(!currentPlan) { elements.roleContentBody.innerHTML = `<p style="color:#f87171;">⚠️ Generate a plan first to see ${title}.</p>`; elements.roleContentTitle.innerHTML = title; elements.roleContentArea.style.display = 'block'; return; }
         elements.roleContentBody.innerHTML = contentGetter(currentPlan); elements.roleContentTitle.innerHTML = title; elements.roleContentArea.style.display = 'block';
         document.querySelectorAll('.role-item').forEach(i=>i.classList.remove('active')); document.querySelector(`.role-item[data-role="${roleId}"]`)?.classList.add('active');
-        if(roleId === 'marketsizing') { setTimeout(() => { document.getElementById('tamBox')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('tamBox').classList.toggle('clicked'); }); document.getElementById('samBox')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('samBox').classList.toggle('clicked'); }); document.getElementById('somBox')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('somBox').classList.toggle('clicked'); }); }, 50); }
+        if(roleId === 'marketsizing') { 
+            // Venn diagram interaction handlers are inline in the HTML
+        }
     }
 
     function setStatus(msg, loading=true) { elements.statusMessage.textContent = msg; elements.statusBar.style.display = 'flex'; if(!loading) setTimeout(()=>elements.statusBar.style.display='none',3000); }
