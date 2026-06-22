@@ -336,7 +336,7 @@
         .principle-card h3 { font-size: 22px; margin-bottom: 12px; background: linear-gradient(135deg, #fff, #a5b4fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .principle-desc { font-size: 13px; color: rgba(255, 255, 255, 0.7); line-height: 1.5; max-width: 200px; margin: 0 auto; }
         
-        /* Market Sizing - Glass Morphism Venn Diagram */
+        /* Market Sizing - Glass Morphism */
         .market-sizing-container {
             background: rgba(255,255,255,.03);
             border-radius: 20px;
@@ -344,95 +344,6 @@
             margin-bottom: 24px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,.08);
-        }
-        
-        .tam-box, .sam-box, .som-box { 
-            background: rgba(255,255,255,.05); 
-            border-radius: 16px; 
-            padding: 20px; 
-            margin-bottom: 20px; 
-            cursor: pointer; 
-            transition: all 0.3s ease; 
-            border: 1px solid rgba(99,102,241,.2);
-            backdrop-filter: blur(5px);
-        }
-        .tam-box:hover, .sam-box:hover, .som-box:hover { 
-            border-color: #6366f1; 
-            background: rgba(99,102,241,.08); 
-            transform: translateX(5px); 
-        }
-        .tam-value, .sam-value, .som-value { 
-            font-size: 42px; 
-            font-weight: bold; 
-            color: #a5b4fc; 
-            text-align: center; 
-            margin: 15px 0; 
-        }
-        .tam-region { 
-            font-size: 14px; 
-            color: rgba(255,255,255,.6); 
-            text-align: center; 
-            margin-bottom: 10px; 
-            font-weight: 500; 
-        }
-        .icon-grid-small { 
-            display: flex; 
-            flex-wrap: wrap; 
-            gap: 8px; 
-            justify-content: center; 
-            margin-top: 16px; 
-        }
-        .market-icon { 
-            width: 34px; 
-            height: 34px; 
-            background: linear-gradient(135deg, #6366f1, #ec4899); 
-            border-radius: 10px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 16px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,.2); 
-        }
-        .sam-layout { 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            gap: 20px; 
-        }
-        .sam-hand { 
-            flex: 1; 
-            text-align: center; 
-            font-size: 70px; 
-        }
-        .sam-value-right { 
-            flex: 1; 
-            text-align: center; 
-        }
-        .som-center { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-        }
-        .hand-icon-large { 
-            font-size: 70px; 
-            text-align: center; 
-            margin-bottom: 10px; 
-        }
-        .hidden-detail { 
-            display: none; 
-            margin-top: 16px; 
-            padding-top: 12px; 
-            border-top: 1px solid rgba(255,255,255,.1); 
-        }
-        .tam-box.clicked .hidden-detail, .sam-box.clicked .hidden-detail, .som-box.clicked .hidden-detail { 
-            display: block; 
-        }
-        .click-hint { 
-            text-align: center; 
-            font-size: 11px; 
-            color: rgba(255,255,255,.4); 
-            margin-top: 8px; 
         }
         
         /* ============================================================
@@ -645,52 +556,6 @@
             text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
         
-        /* Intersection labels - DaVinci inspired connecting lines */
-        .venn-intersection {
-            position: absolute;
-            font-size: 9px;
-            color: rgba(255,255,255,0.25);
-            letter-spacing: 0.3px;
-            text-align: center;
-            pointer-events: none;
-        }
-        
-        .venn-intersection-1 {
-            top: 38%;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        .venn-intersection-2 {
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 10px;
-            color: rgba(255,255,255,0.35);
-            font-weight: 600;
-        }
-        
-        /* Venn Diagram hover effects */
-        .venn-tam.active, .venn-sam.active, .venn-som.active {
-            transform: scale(1.08);
-            z-index: 10;
-        }
-        
-        .venn-tam.active {
-            border-color: #818cf8;
-            box-shadow: 0 0 80px rgba(99,102,241,0.25);
-        }
-        
-        .venn-sam.active {
-            border-color: #22d3ee;
-            box-shadow: 0 0 60px rgba(34,211,238,0.2);
-        }
-        
-        .venn-som.active {
-            border-color: #fbbf24;
-            box-shadow: 0 0 60px rgba(251,191,36,0.2);
-        }
-        
         .venn-legend {
             display: flex;
             justify-content: center;
@@ -727,6 +592,39 @@
         .venn-legend-dot.som-dot {
             background: rgba(251,191,36,0.3);
             border-color: rgba(251,191,36,0.3);
+        }
+        
+        /* Tooltip styles for Venn diagram */
+        .venn-tooltip {
+            position: absolute;
+            background: rgba(12,17,32,0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(99,102,241,0.3);
+            border-radius: 12px;
+            padding: 12px 18px;
+            color: #e2e8f0;
+            font-size: 13px;
+            font-weight: 500;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            min-width: 120px;
+            text-align: center;
+        }
+        
+        .venn-tooltip .tooltip-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: #a5b4fc;
+        }
+        
+        .venn-tooltip .tooltip-label {
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .dashboard-container { display: none; }
@@ -1202,8 +1100,8 @@
                 <div class="venn-diagram-wrapper">
                     <!-- TAM - Biggest (outer circle) -->
                     <div class="venn-tam" 
-                         onmouseenter="this.classList.add('active')" 
-                         onmouseleave="this.classList.remove('active')"
+                         onmouseenter="this.classList.add('active'); showVennTooltip(event, 'TAM', '${tamFormatted}', 'Total Addressable Market')" 
+                         onmouseleave="this.classList.remove('active'); hideVennTooltip()"
                          onclick="showToast('🔍 TAM: Total Addressable Market - ${tamFormatted}')">
                         <div class="venn-tam-label">TAM</div>
                         <div class="venn-tam-value">${tamFormatted}</div>
@@ -1212,8 +1110,8 @@
                     
                     <!-- SAM - Medium (middle circle) -->
                     <div class="venn-sam" 
-                         onmouseenter="this.classList.add('active')" 
-                         onmouseleave="this.classList.remove('active')"
+                         onmouseenter="this.classList.add('active'); showVennTooltip(event, 'SAM', '${samFormatted}', 'Serviceable Available Market')" 
+                         onmouseleave="this.classList.remove('active'); hideVennTooltip()"
                          onclick="showToast('🔍 SAM: Serviceable Available Market - ${samFormatted}')">
                         <div class="venn-sam-label">SAM</div>
                         <div class="venn-sam-value">${samFormatted}</div>
@@ -1222,17 +1120,17 @@
                     
                     <!-- SOM - Smallest (inner circle) -->
                     <div class="venn-som" 
-                         onmouseenter="this.classList.add('active')" 
-                         onmouseleave="this.classList.remove('active')"
+                         onmouseenter="this.classList.add('active'); showVennTooltip(event, 'SOM', '${somFormatted}', 'Serviceable Obtainable Market')" 
+                         onmouseleave="this.classList.remove('active'); hideVennTooltip()"
                          onclick="showToast('🔍 SOM: Serviceable Obtainable Market - ${somFormatted}')">
                         <div class="venn-som-label">SOM</div>
                         <div class="venn-som-value">${somFormatted}</div>
                         <div class="venn-som-desc">Serviceable Obtainable Market</div>
                     </div>
                     
-                    <!-- DaVinci-inspired intersection labels -->
-                    <div class="venn-intersection venn-intersection-1">⨯</div>
-                    <div class="venn-intersection venn-intersection-2">●</div>
+                    <!-- DaVinci-inspired intersection markers -->
+                    <div class="venn-intersection" style="position:absolute; top:38%; left:50%; transform:translateX(-50%); font-size:9px; color:rgba(255,255,255,0.2); pointer-events:none;">⨯</div>
+                    <div class="venn-intersection" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:10px; color:rgba(255,255,255,0.25); pointer-events:none; font-weight:600;">●</div>
                 </div>
                 
                 <!-- Legend -->
@@ -1255,9 +1153,16 @@
             <!-- Click hint -->
             <div style="margin-top:12px; font-size:11px; color:rgba(255,255,255,0.3);">
                 <span style="display:inline-block; animation:pulse-hint 2.5s ease-in-out infinite;">
-                    🖱️ Hover to highlight · Click for insights
+                    🖱️ Hover to see values · Click for insights
                 </span>
             </div>
+        </div>
+        
+        <!-- Tooltip -->
+        <div id="vennTooltip" class="venn-tooltip" style="display:none;">
+            <div class="tooltip-label"></div>
+            <div class="tooltip-value"></div>
+            <div style="font-size:10px; color:rgba(255,255,255,0.4); margin-top:4px;"></div>
         </div>
         
         <style>
@@ -1265,8 +1170,86 @@
                 0%, 100% { opacity: 0.3; transform: scale(1); }
                 50% { opacity: 0.8; transform: scale(1.04); }
             }
+            .venn-tooltip {
+                position: fixed;
+                background: rgba(12,17,32,0.95);
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(99,102,241,0.3);
+                border-radius: 12px;
+                padding: 12px 18px;
+                color: #e2e8f0;
+                font-size: 13px;
+                font-weight: 500;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                z-index: 1000;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+                min-width: 140px;
+                text-align: center;
+            }
+            .venn-tooltip.visible {
+                opacity: 1;
+            }
+            .venn-tooltip .tooltip-value {
+                font-size: 24px;
+                font-weight: 800;
+                color: #a5b4fc;
+            }
+            .venn-tooltip .tooltip-label {
+                font-size: 11px;
+                color: rgba(255,255,255,0.4);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            .venn-tooltip .tooltip-desc {
+                font-size: 10px;
+                color: rgba(255,255,255,0.3);
+                margin-top: 4px;
+            }
         </style>
         `;
+    }
+
+    // Tooltip functions for Venn diagram
+    function showVennTooltip(event, label, value, desc) {
+        const tooltip = document.getElementById('vennTooltip');
+        if (!tooltip) return;
+        
+        const labelEl = tooltip.querySelector('.tooltip-label');
+        const valueEl = tooltip.querySelector('.tooltip-value');
+        const descEl = tooltip.querySelector('.tooltip-desc');
+        
+        if (labelEl) labelEl.textContent = label;
+        if (valueEl) valueEl.textContent = value;
+        if (descEl) descEl.textContent = desc;
+        
+        tooltip.style.display = 'block';
+        tooltip.style.left = (event.clientX + 15) + 'px';
+        tooltip.style.top = (event.clientY - 20) + 'px';
+        
+        // Position tooltip within viewport
+        const rect = tooltip.getBoundingClientRect();
+        if (rect.right > window.innerWidth) {
+            tooltip.style.left = (event.clientX - rect.width - 15) + 'px';
+        }
+        if (rect.bottom > window.innerHeight) {
+            tooltip.style.top = (event.clientY - rect.height - 10) + 'px';
+        }
+        
+        requestAnimationFrame(() => {
+            tooltip.classList.add('visible');
+        });
+    }
+
+    function hideVennTooltip() {
+        const tooltip = document.getElementById('vennTooltip');
+        if (tooltip) {
+            tooltip.classList.remove('visible');
+            setTimeout(() => {
+                tooltip.style.display = 'none';
+            }, 300);
+        }
     }
 
     // Toast notification for Venn Diagram clicks
@@ -1297,11 +1280,35 @@
     }
 
     // ============================================================
+    // SEGMENTATION RENDERER - KEPT INTACT
+    // ============================================================
+
+    function renderSegmentationVisual(plan) {
+        if (!plan) return '<div class="empty-state">✨ Generate a plan first</div>';
+        const match = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        let segments = [], primaryTarget = '';
+        if (match) {
+            const segText = match[1];
+            const segmentLines = segText.split('\n');
+            for (const line of segmentLines) {
+                if (line.match(/^\d+\.|^[-•*]\s+/) && line.length > 10) {
+                    const segmentName = line.replace(/^\d+\.|^[-•*]\s+/, '').trim().substring(0, 50);
+                    if (segmentName.length > 5) segments.push(segmentName);
+                }
+            }
+            const primaryMatch = plan.match(/Primary Target[:\s]*([^\n]+)/i);
+            if (primaryMatch) primaryTarget = primaryMatch[1].trim();
+        }
+        if (segments.length === 0) segments = ['Urban Young Professionals', 'Middle-income families', 'University students'];
+        if (!primaryTarget) primaryTarget = 'Young Urban Professionals (25-35, renters)';
+        const segmentColors = ['#4ade80', '#22d3ee', '#fbbf24'];
+        return `<div style="text-align: center;"><h2 style="color: #a5b4fc;">Market Segmentation</h2><div style="width: 200px; height: 200px; margin: 20px auto;"><div style="width:100%;height:100%;border-radius:50%;background:conic-gradient(${segmentColors[0]} 0deg 120deg, ${segmentColors[1]} 120deg 240deg, ${segmentColors[2]} 240deg 360deg);"></div></div><div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;">${segments.slice(0,3).map((seg,i)=>`<div><div style="width:12px;height:12px;background:${segmentColors[i]};border-radius:50%;display:inline-block;margin-right:6px;"></div><span>${escapeHtml(seg)}</span></div>`).join('')}</div><div class="priority-card" style="margin-top:24px;padding:20px;border-radius:20px;background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(236,72,153,.1));"><div style="background:#4ade80;color:#000;display:inline-block;padding:4px 12px;border-radius:20px;">🏆 PRIMARY TARGET</div><div style="margin-top:12px;font-size:16px;font-weight:600;color:#4ade80;">${escapeHtml(primaryTarget)}</div></div></div>`;
+    }
+
+    // ============================================================
     // OTHER RENDERERS (Preserved exactly as they were)
     // ============================================================
 
-    function renderSegmentationVisual(plan) { if(!plan) return '<div class="empty-state">✨ Generate a plan first</div>'; const match = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i); let segments = [], primaryTarget = ''; if(match) { const segText = match[1]; const segmentLines = segText.split('\n'); for(const line of segmentLines) { if(line.match(/^\d+\.|^[-•*]\s+/) && line.length > 10) { const segmentName = line.replace(/^\d+\.|^[-•*]\s+/, '').trim().substring(0, 50); if(segmentName.length > 5) segments.push(segmentName); } } const primaryMatch = plan.match(/Primary Target[:\s]*([^\n]+)/i); if(primaryMatch) primaryTarget = primaryMatch[1].trim(); } if(segments.length === 0) segments = ['Urban Young Professionals', 'Middle-income families', 'University students']; if(!primaryTarget) primaryTarget = 'Young Urban Professionals (25-35, renters)'; const segmentColors = ['#4ade80', '#22d3ee', '#fbbf24']; return `<div style="text-align: center;"><h2 style="color: #a5b4fc;">Market Segmentation</h2><div style="width: 200px; height: 200px; margin: 20px auto;"><div style="width:100%;height:100%;border-radius:50%;background:conic-gradient(${segmentColors[0]} 0deg 120deg, ${segmentColors[1]} 120deg 240deg, ${segmentColors[2]} 240deg 360deg);"></div></div><div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;">${segments.slice(0,3).map((seg,i)=>`<div><div style="width:12px;height:12px;background:${segmentColors[i]};border-radius:50%;display:inline-block;margin-right:6px;"></div><span>${escapeHtml(seg)}</span></div>`).join('')}</div><div class="priority-card" style="margin-top:24px;padding:20px;border-radius:20px;background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(236,72,153,.1));"><div style="background:#4ade80;color:#000;display:inline-block;padding:4px 12px;border-radius:20px;">🏆 PRIMARY TARGET</div><div style="margin-top:12px;font-size:16px;font-weight:600;color:#4ade80;">${escapeHtml(primaryTarget)}</div></div></div>`; }
-    
     function renderPESTLEVisual(plan) { if(!plan) return '<div class="empty-state">🔍 Generate a plan first</div>'; const icons = { political: '🏛️', economic: '📈', social: '👥', technological: '💻', legal: '⚖️', environmental: '🌿' }; const titles = { political: 'Political', economic: 'Economic', social: 'Social', technological: 'Technological', legal: 'Legal', environmental: 'Environmental' }; const pestleData = { political: { insight: 'Government incentives for "Made in Ethiopia" products lower import tariffs.', impact: 'high' }, economic: { insight: 'Rising consumer price index pushes shoppers toward low-cost items.', impact: 'high' }, social: { insight: 'Growing urban lifestyle emphasizes speed and convenience.', impact: 'medium' }, technological: { insight: 'Widespread 4G/5G coverage enables rapid e-commerce adoption.', impact: 'high' }, legal: { insight: 'New labeling regulations require clear ingredient disclosure.', impact: 'medium' }, environmental: { insight: 'Municipal campaigns promote waste reduction and biodegradability.', impact: 'high' } }; return `<div style="text-align:center;"><h2 style="color:#a5b4fc;">PESTLE Analysis</h2><div class="pestle-grid">${Object.entries(pestleData).map(([key,data])=>`<div class="pestle-card ${key}"><div class="pestle-header"><div class="pestle-icon ${key}">${icons[key]}</div><div class="pestle-title">${titles[key]}</div></div><div class="pestle-insight">${escapeHtml(data.insight)}</div><div class="pestle-footer"><span class="impact-badge impact-${data.impact}">${data.impact.toUpperCase()} IMPACT</span></div></div>`).join('')}</div></div>`; }
     
     function renderPortersVisual(plan) { if(!plan) return '<div class="empty-state">⚔️ Generate a plan first</div>'; const icons = { newEntrants: '🚪', buyerPower: '🛒', supplierPower: '🏭', substitutes: '🔄', rivalry: '⚔️' }; const classes = { newEntrants: 'new-entrants', buyerPower: 'buyer-power', supplierPower: 'supplier-power', substitutes: 'substitutes', rivalry: 'rivalry' }; const forces = { newEntrants: { name: 'Threat of New Entrants', rating: 'medium', insight: 'Low barriers for basic consumer goods but brand trust adds friction.' }, buyerPower: { name: 'Bargaining Power of Buyers', rating: 'high', insight: 'Price-sensitive shoppers can switch brands easily.' }, supplierPower: { name: 'Bargaining Power of Suppliers', rating: 'low', insight: 'Commodity raw materials are abundant locally.' }, substitutes: { name: 'Threat of Substitutes', rating: 'medium', insight: 'Alternative cleaning tools compete on price and convenience.' }, rivalry: { name: 'Industry Rivalry', rating: 'high', insight: 'Numerous local and imported brands compete aggressively.' } }; return `<div style="text-align:center;"><h2 style="color:#a5b4fc;">Porter's Five Forces</h2><div class="porters-grid">${Object.entries(forces).map(([key,force])=>`<div class="porter-card ${classes[key]}"><div class="porter-header"><div class="porter-icon ${classes[key]}">${icons[key]}</div><div class="porter-title">${force.name}</div></div><div class="porter-rating"><span>${force.rating.toUpperCase()} THREAT</span><div class="rating-bar"><div class="rating-fill ${force.rating}"></div></div></div><div class="porter-insight">${escapeHtml(force.insight)}</div></div>`).join('')}</div></div>`; }
@@ -1331,9 +1338,6 @@
         if(!currentPlan) { elements.roleContentBody.innerHTML = `<p style="color:#f87171;">⚠️ Generate a plan first to see ${title}.</p>`; elements.roleContentTitle.innerHTML = title; elements.roleContentArea.style.display = 'block'; return; }
         elements.roleContentBody.innerHTML = contentGetter(currentPlan); elements.roleContentTitle.innerHTML = title; elements.roleContentArea.style.display = 'block';
         document.querySelectorAll('.role-item').forEach(i=>i.classList.remove('active')); document.querySelector(`.role-item[data-role="${roleId}"]`)?.classList.add('active');
-        if(roleId === 'marketsizing') { 
-            // Venn diagram interaction handlers are inline in the HTML
-        }
     }
 
     function setStatus(msg, loading=true) { elements.statusMessage.textContent = msg; elements.statusBar.style.display = 'flex'; if(!loading) setTimeout(()=>elements.statusBar.style.display='none',3000); }
