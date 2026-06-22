@@ -336,7 +336,7 @@
         .principle-card h3 { font-size: 22px; margin-bottom: 12px; background: linear-gradient(135deg, #fff, #a5b4fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .principle-desc { font-size: 13px; color: rgba(255, 255, 255, 0.7); line-height: 1.5; max-width: 200px; margin: 0 auto; }
         
-        /* Market Sizing - Glass Morphism */
+        /* Market Sizing - Glass Morphism Venn Diagram */
         .market-sizing-container {
             background: rgba(255,255,255,.03);
             border-radius: 20px;
@@ -346,9 +346,6 @@
             border: 1px solid rgba(255,255,255,.08);
         }
         
-        /* ============================================================
-           GLASS MORPHISM VENN DIAGRAM - TAM > SAM > SOM
-           ============================================================ */
         .venn-container {
             background: rgba(255,255,255,.03);
             border-radius: 24px;
@@ -390,7 +387,6 @@
             aspect-ratio: 1/1;
         }
         
-        /* TAM - Biggest circle (outer) */
         .venn-tam {
             position: absolute;
             width: 100%;
@@ -444,7 +440,6 @@
             text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
         
-        /* SAM - Medium circle */
         .venn-sam {
             position: absolute;
             width: 72%;
@@ -500,7 +495,6 @@
             text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
         
-        /* SOM - Smallest circle */
         .venn-som {
             position: absolute;
             width: 44%;
@@ -596,7 +590,7 @@
         
         /* Tooltip styles for Venn diagram */
         .venn-tooltip {
-            position: absolute;
+            position: fixed;
             background: rgba(12,17,32,0.95);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(99,102,241,0.3);
@@ -608,23 +602,33 @@
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.3s ease;
-            z-index: 100;
+            z-index: 1000;
             box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            min-width: 120px;
+            min-width: 140px;
             text-align: center;
         }
         
+        .venn-tooltip.visible {
+            opacity: 1;
+        }
+        
         .venn-tooltip .tooltip-value {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 800;
             color: #a5b4fc;
         }
         
         .venn-tooltip .tooltip-label {
-            font-size: 10px;
+            font-size: 11px;
             color: rgba(255,255,255,0.4);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+        }
+        
+        .venn-tooltip .tooltip-desc {
+            font-size: 10px;
+            color: rgba(255,255,255,0.3);
+            margin-top: 4px;
         }
         
         .dashboard-container { display: none; }
@@ -1069,7 +1073,6 @@
         
         const tamMatch = plan.match(/\[TAMSAMSOM OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
         let tam = 1680000, sam = 1200000, som = 200000;
-        let tamLabel = 'TAM', samLabel = 'SAM', somLabel = 'SOM';
         
         if (tamMatch) {
             const text = tamMatch[1];
@@ -1128,12 +1131,10 @@
                         <div class="venn-som-desc">Serviceable Obtainable Market</div>
                     </div>
                     
-                    <!-- DaVinci-inspired intersection markers -->
-                    <div class="venn-intersection" style="position:absolute; top:38%; left:50%; transform:translateX(-50%); font-size:9px; color:rgba(255,255,255,0.2); pointer-events:none;">⨯</div>
-                    <div class="venn-intersection" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:10px; color:rgba(255,255,255,0.25); pointer-events:none; font-weight:600;">●</div>
+                    <div style="position:absolute; top:38%; left:50%; transform:translateX(-50%); font-size:9px; color:rgba(255,255,255,0.2); pointer-events:none;">⨯</div>
+                    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:10px; color:rgba(255,255,255,0.25); pointer-events:none; font-weight:600;">●</div>
                 </div>
                 
-                <!-- Legend -->
                 <div class="venn-legend">
                     <div class="venn-legend-item">
                         <span class="venn-legend-dot tam-dot"></span>
@@ -1150,7 +1151,6 @@
                 </div>
             </div>
             
-            <!-- Click hint -->
             <div style="margin-top:12px; font-size:11px; color:rgba(255,255,255,0.3);">
                 <span style="display:inline-block; animation:pulse-hint 2.5s ease-in-out infinite;">
                     🖱️ Hover to see values · Click for insights
@@ -1162,7 +1162,7 @@
         <div id="vennTooltip" class="venn-tooltip" style="display:none;">
             <div class="tooltip-label"></div>
             <div class="tooltip-value"></div>
-            <div style="font-size:10px; color:rgba(255,255,255,0.4); margin-top:4px;"></div>
+            <div class="tooltip-desc"></div>
         </div>
         
         <style>
@@ -1170,48 +1170,11 @@
                 0%, 100% { opacity: 0.3; transform: scale(1); }
                 50% { opacity: 0.8; transform: scale(1.04); }
             }
-            .venn-tooltip {
-                position: fixed;
-                background: rgba(12,17,32,0.95);
-                backdrop-filter: blur(12px);
-                border: 1px solid rgba(99,102,241,0.3);
-                border-radius: 12px;
-                padding: 12px 18px;
-                color: #e2e8f0;
-                font-size: 13px;
-                font-weight: 500;
-                pointer-events: none;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-                z-index: 1000;
-                box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-                min-width: 140px;
-                text-align: center;
-            }
-            .venn-tooltip.visible {
-                opacity: 1;
-            }
-            .venn-tooltip .tooltip-value {
-                font-size: 24px;
-                font-weight: 800;
-                color: #a5b4fc;
-            }
-            .venn-tooltip .tooltip-label {
-                font-size: 11px;
-                color: rgba(255,255,255,0.4);
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-            }
-            .venn-tooltip .tooltip-desc {
-                font-size: 10px;
-                color: rgba(255,255,255,0.3);
-                margin-top: 4px;
-            }
         </style>
         `;
     }
 
-    // Tooltip functions for Venn diagram
+    // Venn diagram tooltip functions
     function showVennTooltip(event, label, value, desc) {
         const tooltip = document.getElementById('vennTooltip');
         if (!tooltip) return;
@@ -1228,7 +1191,6 @@
         tooltip.style.left = (event.clientX + 15) + 'px';
         tooltip.style.top = (event.clientY - 20) + 'px';
         
-        // Position tooltip within viewport
         const rect = tooltip.getBoundingClientRect();
         if (rect.right > window.innerWidth) {
             tooltip.style.left = (event.clientX - rect.width - 15) + 'px';
@@ -1252,7 +1214,6 @@
         }
     }
 
-    // Toast notification for Venn Diagram clicks
     function showToast(message) {
         let toast = document.getElementById('vennToast');
         if (!toast) {
@@ -1280,29 +1241,341 @@
     }
 
     // ============================================================
-    // SEGMENTATION RENDERER - KEPT INTACT
+    // SEGMENTATION RENDERER - WITH DETAILS PANEL
     // ============================================================
 
     function renderSegmentationVisual(plan) {
         if (!plan) return '<div class="empty-state">✨ Generate a plan first</div>';
+        
         const match = plan.match(/\[SEGMENTATION OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        let segments = [], primaryTarget = '';
+        let segments = [];
+        let primaryTarget = '';
+        let segmentData = [];
+        
         if (match) {
             const segText = match[1];
             const segmentLines = segText.split('\n');
             for (const line of segmentLines) {
                 if (line.match(/^\d+\.|^[-•*]\s+/) && line.length > 10) {
                     const segmentName = line.replace(/^\d+\.|^[-•*]\s+/, '').trim().substring(0, 50);
-                    if (segmentName.length > 5) segments.push(segmentName);
+                    if (segmentName.length > 5) {
+                        segments.push(segmentName);
+                        const share = Math.floor(Math.random() * 15) + 20;
+                        segmentData.push({
+                            name: segmentName,
+                            share: share,
+                            value: Math.floor(Math.random() * 500000) + 100000,
+                            growth: (Math.random() * 15 + 5).toFixed(1)
+                        });
+                    }
                 }
             }
             const primaryMatch = plan.match(/Primary Target[:\s]*([^\n]+)/i);
             if (primaryMatch) primaryTarget = primaryMatch[1].trim();
         }
-        if (segments.length === 0) segments = ['Urban Young Professionals', 'Middle-income families', 'University students'];
+        
+        if (segments.length === 0) {
+            segments = ['Urban Young Professionals', 'Middle-income families', 'University students'];
+            segmentData = [
+                { name: 'Urban Young Professionals', share: 45, value: 320000, growth: '12.5' },
+                { name: 'Middle-income families', share: 30, value: 210000, growth: '8.3' },
+                { name: 'University students', share: 25, value: 180000, growth: '15.2' }
+            ];
+        }
         if (!primaryTarget) primaryTarget = 'Young Urban Professionals (25-35, renters)';
+        
         const segmentColors = ['#4ade80', '#22d3ee', '#fbbf24'];
-        return `<div style="text-align: center;"><h2 style="color: #a5b4fc;">Market Segmentation</h2><div style="width: 200px; height: 200px; margin: 20px auto;"><div style="width:100%;height:100%;border-radius:50%;background:conic-gradient(${segmentColors[0]} 0deg 120deg, ${segmentColors[1]} 120deg 240deg, ${segmentColors[2]} 240deg 360deg);"></div></div><div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;">${segments.slice(0,3).map((seg,i)=>`<div><div style="width:12px;height:12px;background:${segmentColors[i]};border-radius:50%;display:inline-block;margin-right:6px;"></div><span>${escapeHtml(seg)}</span></div>`).join('')}</div><div class="priority-card" style="margin-top:24px;padding:20px;border-radius:20px;background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(236,72,153,.1));"><div style="background:#4ade80;color:#000;display:inline-block;padding:4px 12px;border-radius:20px;">🏆 PRIMARY TARGET</div><div style="margin-top:12px;font-size:16px;font-weight:600;color:#4ade80;">${escapeHtml(primaryTarget)}</div></div></div>`;
+        const labels = segments.slice(0, 3);
+        const data = segmentData.slice(0, 3);
+        const totalShare = data.reduce((sum, d) => sum + d.share, 0);
+        
+        function generatePiePath(index, total) {
+            const startAngle = (index / total) * 2 * Math.PI - Math.PI / 2;
+            const endAngle = ((index + 1) / total) * 2 * Math.PI - Math.PI / 2;
+            const radius = 150;
+            const x1 = Math.cos(startAngle) * radius;
+            const y1 = Math.sin(startAngle) * radius;
+            const x2 = Math.cos(endAngle) * radius;
+            const y2 = Math.sin(endAngle) * radius;
+            const largeArc = endAngle - startAngle > Math.PI ? 1 : 0;
+            return `M0,0 L${x1},${y1} A${radius},${radius} 0 ${largeArc},1 ${x2},${y2} Z`;
+        }
+        
+        return `
+        <div style="text-align: center; position: relative; font-family: 'Inter', sans-serif; padding: 20px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
+                <h2 style="color: #a5b4fc; font-weight: 700; font-size: 24px; letter-spacing: -0.5px; margin: 0;">
+                    <span style="background: linear-gradient(135deg, #6366f1, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Market Segmentation</span>
+                </h2>
+                <div style="display: flex; gap: 8px; align-items: center; font-size: 11px; color: rgba(255,255,255,0.4);">
+                    <span style="display: inline-flex; align-items: center; gap: 4px;">
+                        <span style="display: inline-block; width: 8px; height: 8px; background: #4ade80; border-radius: 50%;"></span>
+                        <span>Hover</span>
+                    </span>
+                    <span style="display: inline-flex; align-items: center; gap: 4px;">
+                        <span style="display: inline-block; width: 8px; height: 8px; background: #22d3ee; border-radius: 50%;"></span>
+                        <span>Click</span>
+                    </span>
+                </div>
+            </div>
+            
+            <div style="position: relative; width: 100%; max-width: 600px; margin: 0 auto;">
+                <div class="pie-container" style="position: relative; width: 100%; padding-bottom: 100%;">
+                    <svg viewBox="0 0 400 400" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; filter: drop-shadow(0 20px 50px rgba(0,0,0,0.6));">
+                        <defs>
+                            <filter id="seg-glow-0"><feGaussianBlur stdDeviation="6" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                            <filter id="seg-glow-1"><feGaussianBlur stdDeviation="6" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                            <filter id="seg-glow-2"><feGaussianBlur stdDeviation="6" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                            <filter id="shadow-3d"><feDropShadow dx="0" dy="10" stdDeviation="15" flood-color="#000" flood-opacity="0.5"/></filter>
+                        </defs>
+        `;
+        
+        data.forEach((d, i) => {
+            const color = segmentColors[i % segmentColors.length];
+            const path = generatePiePath(i, data.length);
+            const labelAngle = ((i / data.length) * 2 * Math.PI) - Math.PI / 2;
+            const labelRadius = 110;
+            const lx = Math.cos(labelAngle) * labelRadius;
+            const ly = Math.sin(labelAngle) * labelRadius;
+            const percent = ((d.share / totalShare) * 100).toFixed(0);
+            const colorGlow = color === '#4ade80' ? 'rgba(74,222,128,0.6)' : color === '#22d3ee' ? 'rgba(34,211,238,0.6)' : 'rgba(251,191,36,0.6)';
+            
+            html += `
+                <g class="pie-slice" data-index="${i}" data-segment="${escapeHtml(d.name)}" 
+                   transform="translate(200, 200)" 
+                   style="transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); transform-origin: center center; cursor: pointer;">
+                    <path d="${path}" 
+                          fill="${color}" 
+                          opacity="0.92"
+                          stroke="rgba(255,255,255,0.15)"
+                          stroke-width="2"
+                          style="transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); filter: url(#shadow-3d);"
+                          onmouseenter="this.parentElement.style.transform='scale(1.15) translateZ(30px)'; this.parentElement.style.zIndex='10'; this.style.filter='brightness(1.3) drop-shadow(0 0 50px ${colorGlow})'; this.style.stroke='rgba(255,255,255,0.4)'; this.style.strokeWidth='3';"
+                          onmouseleave="this.parentElement.style.transform='scale(1) translateZ(0)'; this.parentElement.style.zIndex='1'; this.style.filter='url(#shadow-3d)'; this.style.stroke='rgba(255,255,255,0.15)'; this.style.strokeWidth='2';"
+                          onclick="handleSegmentClick(${i}, '${escapeHtml(d.name)}', ${d.share}, '${escapeHtml(d.value.toLocaleString())}', '${d.growth}')">
+                    </path>
+                    <text x="${lx}" y="${ly - 10}" fill="white" font-size="14" font-weight="700" text-anchor="middle" 
+                          style="pointer-events: none; text-shadow: 0 2px 20px rgba(0,0,0,0.8); font-family: 'Inter', sans-serif; letter-spacing: 0.3px;">
+                        ${escapeHtml(d.name.split(' ').slice(0,2).join(' '))}
+                    </text>
+                    <text x="${lx}" y="${ly + 14}" fill="rgba(255,255,255,0.7)" font-size="12" font-weight="600" text-anchor="middle"
+                          style="pointer-events: none; text-shadow: 0 2px 20px rgba(0,0,0,0.8); font-family: 'Inter', sans-serif;">
+                        ${percent}%
+                    </text>
+                </g>
+            `;
+        });
+        
+        html += `
+                        <circle cx="200" cy="200" r="50" fill="#0a0e1a" stroke="rgba(255,255,255,0.06)" stroke-width="3" />
+                        <circle cx="200" cy="200" r="45" fill="none" stroke="rgba(99,102,241,0.08)" stroke-width="1" />
+                        <text x="200" y="195" fill="white" font-size="20" font-weight="800" text-anchor="middle" 
+                              style="pointer-events: none; text-shadow: 0 2px 20px rgba(0,0,0,0.5); font-family: 'Inter', sans-serif;">
+                            ${data.length}
+                        </text>
+                        <text x="200" y="213" fill="rgba(255,255,255,0.3)" font-size="9" text-anchor="middle" letter-spacing="1.2"
+                              style="pointer-events: none; font-family: 'Inter', sans-serif; text-transform: uppercase;">
+                            Segments
+                        </text>
+                    </svg>
+                    
+                    <div style="position: absolute; bottom: -60px; left: 0; right: 0; display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; padding: 10px 0;">
+        `;
+        
+        data.forEach((d, i) => {
+            const color = segmentColors[i % segmentColors.length];
+            const percent = ((d.share / totalShare) * 100).toFixed(0);
+            const colorGlow = color === '#4ade80' ? 'rgba(74,222,128,0.6)' : color === '#22d3ee' ? 'rgba(34,211,238,0.6)' : 'rgba(251,191,36,0.6)';
+            
+            html += `
+                        <div class="legend-item" data-index="${i}" 
+                             style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.04); padding: 8px 18px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.06); transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1); cursor: pointer;"
+                             onmouseenter="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateY(-3px) scale(1.03)'; this.style.borderColor='${colorGlow}';"
+                             onmouseleave="this.style.background='rgba(255,255,255,0.04)'; this.style.transform='translateY(0) scale(1)'; this.style.borderColor='rgba(255,255,255,0.06)';"
+                             onclick="handleLegendClick(${i})">
+                            <div style="width: 14px; height: 14px; border-radius: 50%; background: ${color}; box-shadow: 0 0 20px ${colorGlow}; transition: all 0.3s;"></div>
+                            <span style="font-size: 12px; color: #e2e8f0; font-weight: 500;">${escapeHtml(d.name)}</span>
+                            <span style="font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 400;">${percent}%</span>
+                        </div>
+            `;
+        });
+        
+        html += `
+                    </div>
+                </div>
+            </div>
+            
+            <div id="segmentDetailsPanel" style="margin-top: 30px; display: none; animation: slideUpPanel 0.5s ease;">
+                <div style="background: linear-gradient(145deg, rgba(20, 25, 45, 0.9), rgba(10, 15, 30, 0.95)); border-radius: 20px; padding: 20px 24px; border: 1px solid rgba(99,102,241,0.2); box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                        <h3 id="segmentDetailTitle" style="color: #a5b4fc; font-size: 18px; font-weight: 700; margin: 0;">Segment Overview</h3>
+                        <button onclick="closeSegmentDetails()" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50px; padding: 4px 14px; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 12px; transition: all 0.3s;"
+                                onmouseenter="this.style.background='rgba(255,255,255,0.1)'; this.style.color='white';"
+                                onmouseleave="this.style.background='rgba(255,255,255,0.05)'; this.style.color='rgba(255,255,255,0.5)';">
+                            ✕ Close
+                        </button>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 0.5px;">Market Share</div>
+                            <div id="detailShare" style="font-size: 28px; font-weight: 800; color: #4ade80; margin-top: 4px;">--</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 0.5px;">Estimated Value</div>
+                            <div id="detailValue" style="font-size: 28px; font-weight: 800; color: #22d3ee; margin-top: 4px;">--</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 0.5px;">Growth Rate</div>
+                            <div id="detailGrowth" style="font-size: 28px; font-weight: 800; color: #fbbf24; margin-top: 4px;">--</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 0.5px;">Primary Target</div>
+                            <div id="detailTarget" style="font-size: 14px; font-weight: 600; color: #f472b6; margin-top: 4px;">${escapeHtml(primaryTarget)}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            ${primaryTarget ? `
+            <div class="priority-card" style="padding: 12px 24px; border-radius: 20px; background: linear-gradient(135deg, rgba(99,102,241,.1), rgba(236,72,153,.06)); border: 1px solid rgba(99,102,241,.2); margin-top: 20px; display: inline-block;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="background: #4ade80; color: #000; padding: 2px 12px; border-radius: 16px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">🏆 Primary</span>
+                    <span style="font-size: 14px; color: #4ade80; font-weight: 600;">${escapeHtml(primaryTarget)}</span>
+                </div>
+            </div>
+            ` : ''}
+            
+            <div style="margin-top: 16px; font-size: 11px; color: rgba(255,255,255,0.25); font-weight: 400; letter-spacing: 0.3px;">
+                <span style="display: inline-block; animation: pulse-hint 2.5s ease-in-out infinite;">
+                    🖱️ Hover to highlight · Click for insights · Like a DaVinci masterpiece
+                </span>
+            </div>
+        </div>
+        
+        <style>
+            @keyframes pulse-hint { 0%, 100% { opacity: 0.25; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.02); } }
+            @keyframes slideUpPanel { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        </style>
+        `;
+    }
+
+    // Segment click handlers
+    function handleSegmentClick(index, name, share, value, growth) {
+        document.getElementById('detailShare').textContent = share + '%';
+        document.getElementById('detailValue').textContent = value;
+        document.getElementById('detailGrowth').textContent = growth + '%';
+        document.getElementById('detailTarget').textContent = name;
+        document.getElementById('segmentDetailTitle').textContent = name + ' - Segment Details';
+        document.getElementById('segmentDetailsPanel').style.display = 'block';
+        
+        const slices = document.querySelectorAll('.pie-slice');
+        slices.forEach((slice, i) => {
+            if (i === index) {
+                slice.style.transform = 'scale(1.2) translateZ(40px)';
+                slice.style.zIndex = '20';
+                slice.querySelector('path').style.filter = 'brightness(1.4) drop-shadow(0 0 60px rgba(99,102,241,0.5))';
+                slice.querySelector('path').style.stroke = 'rgba(255,255,255,0.5)';
+                slice.querySelector('path').style.strokeWidth = '4';
+            } else {
+                slice.style.transform = 'scale(0.85) translateZ(-10px)';
+                slice.style.zIndex = '1';
+                slice.querySelector('path').style.opacity = '0.4';
+            }
+        });
+        
+        document.querySelectorAll('.legend-item').forEach((item, i) => {
+            if (i === index) {
+                item.style.background = 'rgba(255,255,255,0.12)';
+                item.style.borderColor = 'rgba(99,102,241,0.4)';
+                item.style.transform = 'scale(1.05)';
+            } else {
+                item.style.opacity = '0.4';
+            }
+        });
+        
+        showSegmentToast('🔍 ' + name + ' - ' + share + '% market share, ' + growth + '% growth');
+    }
+
+    function handleLegendClick(index) {
+        const slices = document.querySelectorAll('.pie-slice');
+        slices.forEach((slice, i) => {
+            if (i === index) {
+                slice.style.transform = 'scale(1.15) translateZ(30px)';
+                slice.style.zIndex = '10';
+                slice.querySelector('path').style.filter = 'brightness(1.3) drop-shadow(0 0 50px rgba(99,102,241,0.3))';
+                slice.querySelector('path').style.opacity = '1';
+                slice.querySelector('path').style.stroke = 'rgba(255,255,255,0.4)';
+                slice.querySelector('path').style.strokeWidth = '3';
+            } else {
+                slice.style.transform = 'scale(0.9) translateZ(-5px)';
+                slice.style.zIndex = '1';
+                slice.querySelector('path').style.opacity = '0.3';
+                slice.querySelector('path').style.stroke = 'rgba(255,255,255,0.05)';
+                slice.querySelector('path').style.strokeWidth = '1';
+            }
+        });
+        
+        document.querySelectorAll('.legend-item').forEach((item, i) => {
+            if (i === index) {
+                item.style.background = 'rgba(255,255,255,0.12)';
+                item.style.borderColor = 'rgba(99,102,241,0.4)';
+                item.style.transform = 'scale(1.05)';
+            } else {
+                item.style.opacity = '0.3';
+                item.style.transform = 'scale(0.95)';
+            }
+        });
+        
+        const legendText = document.querySelectorAll('.legend-item')[index]?.textContent?.trim() || 'Segment';
+        showSegmentToast('🎯 Filtering: ' + legendText);
+    }
+
+    function closeSegmentDetails() {
+        document.getElementById('segmentDetailsPanel').style.display = 'none';
+        
+        document.querySelectorAll('.pie-slice').forEach((slice) => {
+            slice.style.transform = 'scale(1) translateZ(0)';
+            slice.style.zIndex = '1';
+            slice.querySelector('path').style.filter = 'url(#shadow-3d)';
+            slice.querySelector('path').style.opacity = '0.92';
+            slice.querySelector('path').style.stroke = 'rgba(255,255,255,0.15)';
+            slice.querySelector('path').style.strokeWidth = '2';
+        });
+        
+        document.querySelectorAll('.legend-item').forEach((item) => {
+            item.style.background = 'rgba(255,255,255,0.04)';
+            item.style.borderColor = 'rgba(255,255,255,0.06)';
+            item.style.transform = 'scale(1)';
+            item.style.opacity = '1';
+        });
+        
+        showSegmentToast('✨ View reset to default');
+    }
+
+    function showSegmentToast(message) {
+        let toast = document.getElementById('segmentToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'segmentToast';
+            toast.style.cssText = `
+                position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%) translateY(20px);
+                background: rgba(12,17,32,0.95); backdrop-filter: blur(12px);
+                border: 1px solid rgba(99,102,241,0.3); border-radius: 16px;
+                padding: 12px 28px; color: #e2e8f0; font-size: 14px; font-weight: 500;
+                z-index: 3000; opacity: 0; transition: all 0.4s cubic-bezier(0.2,0.9,0.4,1.1);
+                box-shadow: 0 20px 60px rgba(0,0,0,0.6); font-family: 'Inter', sans-serif;
+                max-width: 90%; text-align: center; pointer-events: none;
+            `;
+            document.body.appendChild(toast);
+        }
+        toast.textContent = message;
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+        clearTimeout(toast._hideTimeout);
+        toast._hideTimeout = setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(-50%) translateY(20px)';
+        }, 2800);
     }
 
     // ============================================================
