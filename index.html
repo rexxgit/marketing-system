@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StratMark · Da Vinci Marketing Synthesis</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <title>Strategic Marketing System | AI-Powered Marketing Plan Generator</title>
     <style>
-        /* ===== ORIGINAL CSS ICONS LIBRARY - PRESERVED ===== */
+        /* ===== ORIGINAL CSS ICONS LIBRARY - STRICTLY PRESERVED ===== */
         .icon-target, .icon-bars, .icon-lightning, .icon-building, .icon-search, .icon-pin, .icon-grid, .icon-diamond, 
         .icon-path, .icon-linechart, .icon-bullseye, .icon-calendar, .icon-paintbrush, .icon-home, .icon-clipboard, 
         .icon-lightbulb, .icon-dollar, .icon-rocket, .icon-user, .icon-arrow, .icon-lock, .icon-data, .icon-check, 
@@ -90,112 +89,67 @@
         /* ===== RESET & BASE ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #0a0e1a;
-            color: #f0f4ff;
+            color: #ffffff;
+            line-height: 1.6;
             min-height: 100vh;
-            line-height: 1.5;
         }
         .app-wrapper { display: flex; min-height: 100vh; }
+
+        /* ===== PDF EXPORT STYLES ===== */
+        @media print {
+            body { background: white; color: black; }
+            .left-panel, .nav, .nav-right, .footer, .lang-selector, .auth-buttons, .user-menu, .btn-primary, .btn-outline, .status-bar, .progress-bar, .close-role-content { display: none !important; }
+            .main-content { margin-left: 0 !important; padding: 0 !important; }
+            .output-area { display: block !important; background: white; color: black; border: none; padding: 20px; }
+            .role-card { background: white; border: 1px solid #ddd; color: black; page-break-inside: avoid; }
+            .role-card strong { color: #2c3e50; }
+            a, button { display: none; }
+            .output-area h3 { color: #2c3e50; }
+        }
 
         /* ===== LEFT PANEL ===== */
         .left-panel {
             width: 300px;
-            background: linear-gradient(160deg, rgba(12,17,32,0.96), rgba(5,8,16,0.98));
-            backdrop-filter: blur(12px);
-            border-right: 1px solid rgba(255,255,255,0.06);
-            padding: 28px 0 20px;
+            background: linear-gradient(180deg, #0c1120 0%, #050810 100%);
+            border-right: 1px solid rgba(255,255,255,0.08);
+            padding: 24px 0;
             position: fixed;
             height: 100vh;
             overflow-y: auto;
             z-index: 50;
             transform: translateX(-100%);
-            transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1);
-            box-shadow: 8px 0 40px rgba(0,0,0,0.6);
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
         .left-panel.open { transform: translateX(0); }
-        .panel-logo {
-            padding: 0 24px 24px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .panel-logo h2 {
-            font-size: 20px;
-            background: linear-gradient(135deg, #e0e7ff, #a5b4fc, #ec4899);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-        .panel-logo small {
-            font-size: 10px;
-            color: rgba(255,255,255,0.3);
-            letter-spacing: 0.3px;
-            background: rgba(99,102,241,0.15);
-            padding: 2px 10px;
-            border-radius: 40px;
-            border: 1px solid rgba(99,102,241,0.15);
-        }
-        .roles-list {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            padding: 0 10px;
-        }
+        .panel-logo { padding: 0 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 24px; }
+        .panel-logo h2 { font-size: 18px; background: linear-gradient(135deg, #fff, #a5b4fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .roles-list { display: flex; flex-direction: column; gap: 4px; }
         .role-item {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 10px 16px;
-            border-radius: 14px;
+            padding: 12px 20px;
+            margin: 0 8px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            color: rgba(255,255,255,0.55);
-            font-size: 13px;
-            font-weight: 500;
-            border: 1px solid transparent;
+            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            color: rgba(255,255,255,0.6);
         }
-        .role-item:hover {
-            background: rgba(99,102,241,0.08);
-            color: #c7d2fe;
-            transform: translateX(4px);
-            border-color: rgba(99,102,241,0.15);
-        }
-        .role-item.active {
-            background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(236,72,153,0.08));
-            color: #a5b4fc;
-            border-left: 3px solid #6366f1;
-            border-color: rgba(99,102,241,0.25);
-        }
-        .role-icon {
-            width: 28px;
-            height: 28px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255,255,255,0.5);
-        }
-        .role-name { flex: 1; }
-        .role-status {
-            font-size: 9px;
-            color: rgba(255,255,255,0.2);
-            background: rgba(255,255,255,0.03);
-            padding: 2px 8px;
-            border-radius: 30px;
-        }
-        .role-status.has-data { color: #4ade80; background: rgba(74,222,128,0.08); }
+        .role-item:hover { background: rgba(99,102,241,0.1); color: #a5b4fc; transform: translateX(4px); }
+        .role-item.active { background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(236,72,153,0.1)); color: #a5b4fc; border-left: 3px solid #6366f1; }
+        .role-icon { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; }
+        .role-name { font-size: 13px; font-weight: 500; flex: 1; }
+        .role-status { font-size: 10px; color: rgba(255,255,255,0.3); }
+        .role-status.has-data { color: #4ade80; }
 
-        /* ===== MAIN ===== */
+        /* ===== MAIN CONTENT ===== */
         .main-content {
             flex: 1;
             margin-left: 0;
-            padding: 24px 32px 40px;
-            transition: margin-left 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1);
-            min-height: 100vh;
+            padding: 24px 32px;
+            transition: margin-left 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
         .main-content.panel-open { margin-left: 300px; }
 
@@ -204,270 +158,328 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 18px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             flex-wrap: wrap;
             gap: 16px;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
         .logo {
             font-size: 24px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #e0e7ff, #a5b4fc, #ec4899);
+            font-weight: bold;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             cursor: pointer;
-            letter-spacing: -0.02em;
+        }
+        .nav-links { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+        .nav-links button {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 8px 0;
+            transition: color 0.2s;
             display: flex;
             align-items: center;
             gap: 6px;
         }
-        .logo span { font-weight: 300; background: none; color: rgba(255,255,255,0.2); font-size: 14px; }
-        .nav-links {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .nav-links button {
-            background: transparent;
-            border: none;
-            color: rgba(255,255,255,0.5);
+        .nav-links button:hover { color: #6366f1; }
+        .nav-links button.active { color: #6366f1; }
+        .nav-right { display: flex; align-items: center; gap: 16px; }
+        .lang-selector {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
+            padding: 8px 16px;
             cursor: pointer;
             font-size: 13px;
-            padding: 6px 14px;
-            border-radius: 40px;
-            transition: all 0.2s;
-            font-weight: 500;
             display: flex;
             align-items: center;
             gap: 6px;
         }
-        .nav-links button:hover { color: #a5b4fc; background: rgba(99,102,241,0.06); }
-        .nav-links button.active { color: #a5b4fc; background: rgba(99,102,241,0.10); }
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .lang-selector {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 40px;
-            padding: 6px 14px;
-            font-size: 12px;
-            color: rgba(255,255,255,0.5);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .auth-buttons {
-            display: flex;
-            gap: 8px;
-        }
+        .auth-buttons { display: flex; gap: 12px; }
         .btn-signin {
             background: transparent;
-            border: 1px solid rgba(99,102,241,0.3);
-            border-radius: 40px;
-            padding: 6px 18px;
+            border: 1px solid rgba(99,102,241,0.5);
+            border-radius: 50px;
+            padding: 8px 20px;
             color: #a5b4fc;
-            font-size: 12px;
-            font-weight: 500;
             cursor: pointer;
-            transition: 0.2s;
+            font-size: 13px;
+            font-weight: 500;
             display: flex;
             align-items: center;
             gap: 6px;
         }
-        .btn-signin:hover { background: rgba(99,102,241,0.08); }
         .btn-signup {
             background: linear-gradient(135deg, #6366f1, #ec4899);
             border: none;
-            border-radius: 40px;
-            padding: 6px 18px;
+            border-radius: 50px;
+            padding: 8px 20px;
             color: white;
-            font-size: 12px;
-            font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
+            font-size: 13px;
+            font-weight: 500;
             display: flex;
             align-items: center;
             gap: 6px;
         }
-        .btn-signup:hover { transform: scale(1.02); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
         .user-menu {
             display: flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(255,255,255,0.04);
-            border-radius: 40px;
-            padding: 4px 12px 4px 16px;
-            cursor: default;
-            border: 1px solid rgba(255,255,255,0.04);
+            gap: 12px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50px;
+            padding: 6px 16px 6px 20px;
+            cursor: pointer;
         }
-        .user-name { font-size: 12px; font-weight: 500; color: #a5b4fc; }
+        .user-name { font-size: 13px; font-weight: 500; color: #a5b4fc; }
         .user-avatar {
-            width: 28px; height: 28px;
+            width: 32px;
+            height: 32px;
             background: linear-gradient(135deg, #6366f1, #ec4899);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
-            font-weight: 600;
-            color: white;
+            font-size: 14px;
         }
         .logout-btn {
             background: none;
             border: none;
-            color: rgba(255,255,255,0.3);
-            font-size: 11px;
+            color: rgba(255,255,255,0.5);
             cursor: pointer;
-            padding: 4px 6px;
-            border-radius: 30px;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 50px;
         }
-        .logout-btn:hover { color: #f87171; background: rgba(248,113,113,0.06); }
 
         /* ===== PAGES ===== */
-        .page { display: none; animation: fadeIn 0.4s ease; }
+        .page { display: none; animation: fadeIn 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1); }
         .page.active { display: block; }
-        @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .hero { text-align:center; padding: 40px 0 30px; }
-        .hero h1 { font-size: 40px; font-weight:800; background: linear-gradient(135deg, #fff, #a5b4fc, #ec4899); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:12px; letter-spacing:-0.02em; }
-        .hero p { font-size:17px; color: rgba(255,255,255,0.6); max-width:580px; margin:0 auto 24px; }
+        .hero { text-align: center; padding: 60px 0; }
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, #a5b4fc, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .hero p { font-size: 18px; color: rgba(255,255,255,0.7); max-width: 600px; margin: 0 auto 30px; }
 
-        .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin:40px 0; }
-        .step-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:24px; padding:28px 20px; text-align:center; transition:0.3s; backdrop-filter:blur(4px); }
-        .step-card:hover { transform:translateY(-4px); border-color:rgba(99,102,241,0.25); background:rgba(255,255,255,0.04); }
-        .step-number { width:40px;height:40px; background:linear-gradient(135deg,#6366f1,#ec4899); border-radius:50%; display:flex;align-items:center;justify-content:center; margin:0 auto 16px; font-weight:700; font-size:18px; }
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 60px 0;
+        }
+        .step-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .step-card:hover { transform: translateY(-5px); border-color: rgba(99,102,241,0.3); }
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
 
         /* ===== INPUT / OUTPUT ===== */
         .input-area {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 28px;
-            padding: 28px 32px;
-            margin-bottom: 28px;
-            backdrop-filter: blur(6px);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 30px;
         }
         textarea {
             width: 100%;
-            background: rgba(0,0,0,0.25);
-            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 16px;
-            padding: 14px 16px;
-            color: #e2e8f0;
+            padding: 16px;
+            color: white;
             font-family: inherit;
-            font-size: 14px;
             resize: vertical;
-            transition: 0.2s;
-            margin: 10px 0;
+            margin: 15px 0;
         }
-        textarea:focus { outline:none; border-color:#6366f1; box-shadow:0 0 0 3px rgba(99,102,241,0.15); }
+        textarea:focus { outline: none; border-color: #6366f1; }
+
+        .output-area {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 32px;
+            margin-top: 30px;
+            display: none;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: #e2e8f0;
+        }
+        .output-area h1, .output-area h2, .output-area h3 {
+            color: #a5b4fc;
+            margin-top: 1.5em;
+            margin-bottom: 0.75em;
+            font-weight: 600;
+        }
+        .output-area h1 { font-size: 28px; border-bottom: 2px solid rgba(99,102,241,0.3); padding-bottom: 8px; }
+        .output-area h2 { font-size: 22px; }
+        .output-area h3 { font-size: 18px; }
+        .output-area p { margin-bottom: 1em; color: #cbd5e1; }
+        .output-area ul, .output-area ol { margin: 0.75em 0 1em 1.5em; color: #cbd5e1; }
+        .output-area li { margin: 0.25em 0; }
+        .output-area strong { color: #a5b4fc; font-weight: 600; }
+
+        /* ===== ROLE CARD (for left panel visualization) ===== */
+        .role-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 24px;
+            margin: 20px 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s;
+        }
+        .role-card.visible { opacity: 1; transform: translateY(0); }
+
+        .status-bar {
+            background: rgba(99,102,241,0.1);
+            border: 1px solid rgba(99,102,241,0.3);
+            border-radius: 12px;
+            padding: 12px 20px;
+            margin: 20px 0;
+            display: none;
+        }
+        .progress-bar {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            height: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            transition: width 0.3s;
+        }
+
         .btn-primary {
             background: linear-gradient(135deg, #6366f1, #ec4899);
             border: none;
-            border-radius: 60px;
-            padding: 10px 28px;
+            border-radius: 50px;
+            padding: 12px 28px;
             color: white;
-            font-weight: 600;
-            font-size: 14px;
+            font-weight: bold;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.25s;
-            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(99,102,241,0.25); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99,102,241,0.3); }
         .btn-outline {
             background: transparent;
-            border: 1px solid rgba(99,102,241,0.25);
-            border-radius: 60px;
-            padding: 10px 24px;
+            border: 1px solid rgba(99,102,241,0.5);
+            border-radius: 50px;
+            padding: 12px 28px;
             color: #a5b4fc;
-            font-weight: 500;
-            font-size: 13px;
+            font-weight: bold;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            transition: 0.2s;
+            gap: 8px;
+            transition: all 0.2s;
         }
-        .btn-outline:hover { background: rgba(99,102,241,0.06); border-color: rgba(99,102,241,0.5); }
-        .progress-bar { background: rgba(255,255,255,0.05); border-radius: 20px; height: 4px; margin: 20px 0 8px; overflow:hidden; }
-        .progress-fill { width:0%; height:100%; background: linear-gradient(90deg, #6366f1, #ec4899); transition: width 0.4s; }
-        .status-bar {
-            background: rgba(99,102,241,0.06);
-            border: 1px solid rgba(99,102,241,0.12);
-            border-radius: 16px;
-            padding: 10px 20px;
-            margin: 12px 0;
-            display: none;
-            align-items: center;
-            gap: 12px;
-            font-size: 13px;
-            color: rgba(255,255,255,0.6);
-        }
-        .status-bar .loader { display:inline-block; width:16px;height:16px; border:2px solid rgba(255,255,255,0.1); border-top-color:#6366f1; border-radius:50%; animation:spin 0.7s linear infinite; }
-        @keyframes spin { to { transform:rotate(360deg); } }
-        .output-area {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 28px;
-            padding: 28px 32px;
-            margin-top: 28px;
-            display: none;
-            backdrop-filter: blur(4px);
-        }
-        .output-area h2 { color: #a5b4fc; margin: 1.2em 0 0.6em; font-weight:600; letter-spacing:-0.01em; }
-        .output-area h3 { color: #c7d2fe; margin: 1em 0 0.4em; font-weight:500; }
-        .output-area p { color: rgba(255,255,255,0.7); margin-bottom:0.8em; }
-        .output-area ul { margin:0.5em 0 1em 1.2em; color: rgba(255,255,255,0.7); }
-        .output-area li { margin:0.2em 0; }
-        .output-area strong { color: #a5b4fc; }
+        .btn-outline:hover { background: rgba(99,102,241,0.1); transform: translateY(-2px); }
 
-        /* ===== PIE CHART (Da Vinci + PowerBI style) ===== */
-        .pie-master-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 24px 0 16px;
-            width: 100%;
+        .footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 60px;
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
         }
-        .pie-row {
+
+        .role-content-area {
+            background: rgba(255,255,255,0.03);
+            border-radius: 24px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+        .role-content-header {
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
             flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 40px 60px;
-            margin: 10px 0 20px;
+            gap: 12px;
         }
-        .pie-wrapper {
-            position: relative;
-            width: 180px;
-            height: 180px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255,255,255,0.02);
+        .close-role-content {
+            background: rgba(99,102,241,0.2);
+            border: 1px solid rgba(99,102,241,0.4);
+            border-radius: 50px;
+            padding: 6px 16px;
+            color: #a5b4fc;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        .close-role-content:hover { background: rgba(99,102,241,0.4); transform: translateX(2px); }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #6366f1;
             border-radius: 50%;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ===== PIE CHART STYLES (for left panel visualization) ===== */
+        .pie-wrapper {
+            height: 180px;
+            width: 180px;
+            display: inline-block;
+            position: relative;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            margin: 10px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
             cursor: pointer;
         }
         .pie-wrapper:hover {
-            transform: scale(1.03);
-            box-shadow: 0 12px 56px rgba(99,102,241,0.15), 0 0 0 1px rgba(99,102,241,0.15);
+            transform: scale(1.05);
+            box-shadow: 0 12px 48px rgba(99,102,241,0.2);
         }
         .pie-wrapper.selected {
-            transform: scale(1.08);
-            box-shadow: 0 0 0 3px rgba(99,102,241,0.25), 0 20px 60px rgba(99,102,241,0.2);
+            transform: scale(1.12);
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.4), 0 20px 60px rgba(99,102,241,0.25);
         }
+
         .csspie {
             position: absolute;
             width: 90px;
@@ -476,7 +488,6 @@
             transform-origin: left center;
             left: 0;
             top: 0;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .csspie::before {
             content: "";
@@ -500,28 +511,8 @@
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .csspie[data-value]::before {
-            transform: rotate(calc(var(--val, 0) * 3.6deg));
-        }
         .csspie[data-value] {
             --val: 0;
-        }
-        .csspie[data-value="10"] { --val: 10; }
-        .csspie[data-value="20"] { --val: 20; }
-        .csspie[data-value="30"] { --val: 30; }
-        .csspie[data-value="40"] { --val: 40; }
-        .csspie[data-value="50"] { --val: 50; }
-        .csspie[data-value="60"] { --val: 60; }
-        .csspie[data-value="70"] { --val: 70; }
-        .csspie[data-value="80"] { --val: 80; }
-        .csspie[data-value="90"] { --val: 90; }
-        .csspie[data-value="100"] { --val: 100; }
-
-        .csspie[data-value]::after {
-            opacity: 1;
-            background: #ec4899;
-        }
-        .csspie[data-value] {
             width: 180px;
             height: 180px;
             transform-origin: center center;
@@ -552,15 +543,14 @@
         .pie-label {
             position: absolute;
             bottom: -32px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: rgba(255,255,255,0.7);
             text-align: center;
             width: 100%;
-            letter-spacing: 0.02em;
             text-shadow: 0 2px 12px rgba(0,0,0,0.6);
         }
-        .pie-wrapper .pie-percent {
+        .pie-percent {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -572,33 +562,25 @@
             pointer-events: none;
             z-index: 5;
         }
-        .pie-wrapper .pie-sub {
-            position: absolute;
-            bottom: 28px;
-            font-size: 10px;
-            color: rgba(255,255,255,0.3);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            pointer-events: none;
-        }
+
         .pie-dominant {
             border: 2px solid rgba(255,255,255,0.08);
             background: rgba(255,255,255,0.02);
             border-radius: 28px;
-            padding: 24px 32px;
-            margin: 24px 0 12px;
+            padding: 20px 28px;
+            margin: 20px auto 10px;
             text-align: center;
             backdrop-filter: blur(4px);
             width: 100%;
             max-width: 640px;
         }
         .pie-dominant h4 {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
             color: rgba(255,255,255,0.4);
             letter-spacing: 0.05em;
             text-transform: uppercase;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         .pie-dominant p {
             font-size: 18px;
@@ -611,66 +593,48 @@
             display: block;
             margin-top: 4px;
         }
-        .role-card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 20px;
-            padding: 20px 24px;
-            margin: 16px 0;
-            transition: 0.3s;
+        .pie-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 30px 50px;
+            margin: 10px 0 20px;
         }
-        .role-card.visible { opacity:1; transform:translateY(0); }
-        .role-card { opacity:0; transform:translateY(12px); transition: all 0.5s ease; }
-
-        .footer {
-            text-align: center;
-            padding: 32px 0 16px;
-            border-top: 1px solid rgba(255,255,255,0.04);
-            margin-top: 48px;
-            color: rgba(255,255,255,0.2);
-            font-size: 11px;
-            letter-spacing: 0.02em;
+        .pie-master-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 0;
+            width: 100%;
         }
 
         /* ===== RESPONSIVE ===== */
-        @media (max-width:768px) {
-            .left-panel { width:270px; }
-            .main-content.panel-open { margin-left:270px; }
-            .main-content { padding:20px 16px; }
-            .steps { grid-template-columns:1fr; }
-            .pie-row { gap:30px; }
-            .pie-wrapper { width:140px; height:140px; }
-            .csspie { width:70px; height:140px; }
-            .csspie[data-value] { width:140px; height:140px; }
-            .csspie[data-value]::before { border-radius:70px 0 0 70px; }
-            .csspie[data-value]::after { left:70px; border-radius:0 70px 70px 0; }
-            .csspie[data-value]::before { left:0; }
-            .pie-percent { font-size:22px; }
-            .hero h1 { font-size:30px; }
-        }
-        @media print {
-            .left-panel, .nav, .nav-right, .footer, .status-bar, .progress-bar { display:none !important; }
-            .main-content { margin-left:0 !important; padding:20px; }
-            .output-area { display:block !important; background:white; color:black; border:none; }
-            .output-area h2, .output-area h3, .output-area strong { color:#1e293b; }
-            .pie-wrapper { border:1px solid #ccc; }
-            .pie-dominant { border:1px solid #ccc; }
+        @media (max-width: 768px) {
+            .left-panel { width: 280px; }
+            .main-content.panel-open { margin-left: 280px; }
+            .steps { grid-template-columns: 1fr; }
+            .pie-wrapper { width: 140px; height: 140px; }
+            .csspie { width: 70px; height: 140px; }
+            .csspie[data-value] { width: 140px; height: 140px; }
+            .csspie[data-value]::before { border-radius: 70px 0 0 70px; }
+            .csspie[data-value]::after { left: 70px; border-radius: 0 70px 70px 0; }
+            .pie-percent { font-size: 22px; }
+            .hero h1 { font-size: 30px; }
         }
     </style>
 </head>
 <body>
 <div class="app-wrapper">
-    <!-- LEFT PANEL : Original CSS Icons Restored -->
+    <!-- LEFT PANEL -->
     <div class="left-panel" id="leftPanel">
-        <div class="panel-logo">
-            <h2>✧ StratMark</h2>
-            <small>Da Vinci</small>
-        </div>
+        <div class="panel-logo"><h2>StratMark AI</h2></div>
         <div class="roles-list">
             <div class="role-item active" data-role="segmentation">
                 <div class="role-icon"><span class="icon-target"></span></div>
                 <span class="role-name">Segmentation</span>
-                <span class="role-status">●</span>
+                <span class="role-status"></span>
             </div>
             <div class="role-item" data-role="marketsizing">
                 <div class="role-icon"><span class="icon-bars"><span></span><span></span><span></span><span></span></span></div>
@@ -728,31 +692,28 @@
                 <span class="role-status"></span>
             </div>
         </div>
-        <div style="margin-top:24px;padding:0 20px;font-size:10px;color:rgba(255,255,255,0.15);border-top:1px solid rgba(255,255,255,0.04);padding-top:16px;text-align:center;letter-spacing:0.02em;">
-            <span>“Simplicity is the ultimate sophistication.”</span><br>— Leonardo da Vinci
-        </div>
     </div>
 
     <!-- MAIN CONTENT -->
     <div class="main-content" id="mainContent">
         <nav class="nav">
-            <div class="logo" onclick="showPage('home')">✧ StratMark <span>· Da Vinci</span></div>
+            <div class="logo" onclick="showPage('home')">StrategicMarketing</div>
             <div class="nav-links">
-                <button onclick="showPage('home')" class="active" id="navHome"><span class="icon-home"></span> Home</button>
-                <button onclick="showPage('planner')" id="navPlanner"><span class="icon-clipboard"></span> Planner</button>
-                <button onclick="showPage('about')" id="navAbout"><span class="icon-lightbulb"></span> About</button>
-                <button onclick="showPage('app')" id="navApp"><span class="icon-rocket"></span> Launch</button>
+                <button onclick="showPage('home')" class="active" id="navHome"><span class="icon-home"></span>Home</button>
+                <button onclick="showPage('planner')" id="navPlanner"><span class="icon-clipboard"></span>Planner</button>
+                <button onclick="showPage('about')" id="navAbout"><span class="icon-lightbulb"></span>About</button>
+                <button onclick="showPage('app')" id="navApp"><span class="icon-rocket"></span>Launch App</button>
             </div>
             <div class="nav-right">
-                <div class="lang-selector"><span class="icon-gear"></span> EN</div>
+                <div class="lang-selector" id="langSelector"><span class="icon-gear"></span>English</div>
                 <div id="authContainer" class="auth-buttons">
-                    <button class="btn-signin" id="demoSignInBtn"><span class="icon-user"></span> Sign In</button>
-                    <button class="btn-signup" id="demoSignUpBtn"><span class="icon-user"></span> Sign Up</button>
+                    <button class="btn-signin" id="demoSignInBtn"><span class="icon-user"></span>Sign In</button>
+                    <button class="btn-signup" id="demoSignUpBtn"><span class="icon-user"></span>Sign Up</button>
                 </div>
                 <div id="userMenu" class="user-menu" style="display:none;">
-                    <span class="user-name" id="userNameDisplay">Demo</span>
+                    <span class="user-name" id="userNameDisplay">Demo User</span>
                     <div class="user-avatar" id="userAvatar">D</div>
-                    <button class="logout-btn" id="logoutBtnNav">✕</button>
+                    <button class="logout-btn" id="logoutBtnNav">Sign Out</button>
                 </div>
             </div>
         </nav>
@@ -760,82 +721,92 @@
         <!-- HOME -->
         <div id="homePage" class="page active">
             <div class="hero">
-                <h1>Stop guessing. Start executing.</h1>
-                <p>13 disciplined roles, synthesised through the lens of Da Vinci — clarity, not confusion.</p>
-                <button class="btn-primary" onclick="showPage('app')"><span class="icon-rocket"></span> Start Your Free Plan</button>
+                <h1>Stop second-guessing.<br>Start executing.</h1>
+                <p>A conscientious marketing system that delivers 13 disciplined roles—executed in precise sequence—so you get clarity, not confusion.</p>
+                <button class="btn-primary" onclick="showPage('app')"><span class="icon-rocket"></span>Start Your Free Plan</button>
             </div>
+            <h2 style="text-align:center;margin-bottom:40px;">How it works</h2>
             <div class="steps">
-                <div class="step-card"><div class="step-number">1</div><h3>Describe audience</h3><p>Who are you selling to?</p></div>
-                <div class="step-card"><div class="step-number">2</div><h3>Describe product</h3><p>What are you offering?</p></div>
-                <div class="step-card"><div class="step-number">3</div><h3>Get full plan</h3><p>13 roles of strategic synthesis</p></div>
+                <div class="step-card"><div class="step-number">1</div><h3>Describe your audience</h3><p>Tell us who you want to sell to</p></div>
+                <div class="step-card"><div class="step-number">2</div><h3>Describe your product</h3><p>Tell us what you're selling</p></div>
+                <div class="step-card"><div class="step-number">3</div><h3>Get your full plan</h3><p>Receive 13 roles of strategic analysis</p></div>
             </div>
         </div>
 
         <!-- PLANNER -->
         <div id="plannerPage" class="page">
-            <div class="hero" style="padding:20px 0;"><h1>Strategy Planner</h1><p>Fill in your business details, let AI do the rest</p></div>
+            <div class="hero" style="padding:40px 0;"><h1>Strategy Planner</h1><p>Fill in your business details and let our AI do the rest</p></div>
             <div class="input-area">
-                <label style="font-size:13px;color:rgba(255,255,255,0.5);font-weight:500;">Customer / Target Audience</label>
-                <textarea id="plannerCustomer" rows="3" placeholder="e.g. Enterprise CTOs at mid-sized tech companies..."></textarea>
-                <label style="font-size:13px;color:rgba(255,255,255,0.5);font-weight:500;">Product / Service</label>
-                <textarea id="plannerProduct" rows="4" placeholder="e.g. AI-powered marketing analytics platform..."></textarea>
-                <button class="btn-primary" onclick="goToAppWithData()"><span class="icon-rocket"></span> Generate Strategic Plan</button>
+                <label>Customer Data / Target Audience</label>
+                <textarea id="plannerCustomer" rows="3" placeholder="Example: Enterprise CTOs at mid-sized tech companies..."></textarea>
+                <label>Product Description / Service</label>
+                <textarea id="plannerProduct" rows="4" placeholder="Example: An AI-powered marketing analytics platform..."></textarea>
+                <button class="btn-primary" onclick="goToAppWithData()"><span class="icon-rocket"></span>Generate Strategic Plan</button>
             </div>
         </div>
 
         <!-- ABOUT -->
         <div id="aboutPage" class="page">
-            <div class="hero" style="padding:20px 0;">
+            <div class="hero" style="padding:40px 0;">
                 <h1>Built on <span style="color:#6366f1;">Conscientiousness</span></h1>
-                <p>Da Vinci's synthesis: connect dots, see the whole, act with precision.</p>
+                <p>We believe marketing strategy should be disciplined, not chaotic. 13 roles. One clear output. Every time.</p>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin:30px 0;">
-                <div style="background:rgba(255,255,255,0.02);border-radius:20px;padding:24px;border:1px solid rgba(255,255,255,0.04);text-align:center;">
-                    <div style="font-size:32px;margin-bottom:12px;">🧠</div>
-                    <h3 style="color:#a5b4fc;">Synthesis</h3>
-                    <p style="font-size:13px;color:rgba(255,255,255,0.5);">Connecting disparate ideas into unified strategy.</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin:40px 0;">
+                <div style="background:rgba(255,255,255,0.03);border-radius:20px;padding:24px;text-align:center;border:1px solid rgba(255,255,255,0.05);">
+                    <div style="font-size:32px;margin-bottom:12px;"><span class="icon-gear" style="width:32px;height:32px;color:#a5b4fc;"></span></div>
+                    <h3 style="color:#a5b4fc;">Autonomy</h3>
+                    <p style="font-size:13px;color:rgba(255,255,255,0.5);">System works independently. No need to instruct next steps.</p>
                 </div>
-                <div style="background:rgba(255,255,255,0.02);border-radius:20px;padding:24px;border:1px solid rgba(255,255,255,0.04);text-align:center;">
-                    <div style="font-size:32px;margin-bottom:12px;">🎨</div>
-                    <h3 style="color:#a5b4fc;">Perspective</h3>
-                    <p style="font-size:13px;color:rgba(255,255,255,0.5);">Seeing the whole from every angle, like Da Vinci.</p>
+                <div style="background:rgba(255,255,255,0.03);border-radius:20px;padding:24px;text-align:center;border:1px solid rgba(255,255,255,0.05);">
+                    <div style="font-size:32px;margin-bottom:12px;"><span class="icon-brain" style="width:32px;height:24px;color:#a5b4fc;"></span></div>
+                    <h3 style="color:#a5b4fc;">Intelligence</h3>
+                    <p style="font-size:13px;color:rgba(255,255,255,0.5);">Smart analysis that learns and adapts to your business.</p>
                 </div>
-                <div style="background:rgba(255,255,255,0.02);border-radius:20px;padding:24px;border:1px solid rgba(255,255,255,0.04);text-align:center;">
-                    <div style="font-size:32px;margin-bottom:12px;">⚡</div>
-                    <h3 style="color:#a5b4fc;">Execution</h3>
-                    <p style="font-size:13px;color:rgba(255,255,255,0.5);">From insight to action, seamlessly.</p>
+                <div style="background:rgba(255,255,255,0.03);border-radius:20px;padding:24px;text-align:center;border:1px solid rgba(255,255,255,0.05);">
+                    <div style="font-size:32px;margin-bottom:12px;"><span class="icon-heart" style="width:28px;height:24px;color:#a5b4fc;"></span></div>
+                    <h3 style="color:#a5b4fc;">Goodness</h3>
+                    <p style="font-size:13px;color:rgba(255,255,255,0.5);">Ethical strategies benefiting everyone, not just bottom line.</p>
                 </div>
             </div>
         </div>
 
-        <!-- APP (main generator) -->
+        <!-- APP -->
         <div id="appPage" class="page">
             <div class="input-area">
-                <label style="font-size:13px;color:rgba(255,255,255,0.5);font-weight:500;">Customer / Target Audience</label>
-                <textarea id="customerData" rows="3" placeholder="e.g. Enterprise CTOs at mid-sized tech..."></textarea>
-                <label style="font-size:13px;color:rgba(255,255,255,0.5);font-weight:500;">Product / Service</label>
-                <textarea id="productDescription" rows="5" placeholder="e.g. AI-powered marketing analytics platform..."></textarea>
-                <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:6px;">
-                    <button id="generateBtn" class="btn-primary"><span class="icon-rocket"></span> Generate Plan</button>
-                    <button id="clearBtn" class="btn-outline"><span class="icon-arrow"></span> Clear</button>
-                    <button id="pdfExportBtn" class="btn-outline" style="border-color:rgba(16,185,129,0.3);"><span class="icon-data"></span> PDF</button>
+                <label>Customer Data / Target Audience</label>
+                <textarea id="customerData" rows="3" placeholder="Example: Enterprise CTOs..."></textarea>
+                <label>Product Description / Service</label>
+                <textarea id="productDescription" rows="5" placeholder="Example: An AI-powered marketing analytics platform..."></textarea>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                    <button id="generateBtn" class="btn-primary"><span class="icon-rocket"></span>Generate Strategic Plan</button>
+                    <button id="clearBtn" class="btn-outline">Clear All</button>
+                    <button id="pdfExportBtn" class="btn-outline" style="background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.5);"><span class="icon-data"></span>Export as PDF</button>
                 </div>
             </div>
             <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-            <div class="status-bar" id="statusBar"><span class="loader"></span><span id="statusMessage">Ready</span></div>
+            <div class="status-bar" id="statusBar"><span class="loader"></span><span id="statusMessage">Ready to generate</span></div>
             <div class="output-area" id="outputArea">
-                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
-                    <h3 style="color:#a5b4fc;font-weight:600;margin:0;">📋 Strategic Synthesis</h3>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+                    <h3 style="margin:0;">Generated Marketing Strategy</h3>
                     <div>
-                        <button id="copyOutputBtn" class="btn-outline" style="padding:6px 16px;"><span class="icon-clipboard"></span> Copy</button>
-                        <button id="saveHistoryBtn" class="btn-outline" style="padding:6px 16px;"><span class="icon-calendar"></span> Save</button>
+                        <button id="copyOutputBtn" class="btn-outline"><span class="icon-clipboard"></span>Copy All</button>
+                        <button id="saveHistoryBtn" class="btn-outline"><span class="icon-calendar"></span>Save</button>
                     </div>
                 </div>
                 <div id="renderedOutput"></div>
             </div>
         </div>
 
-        <footer class="footer">© 2025 StratMark · Da Vinci Synthesis · 13 Roles · Conscientious by Design</footer>
+        <!-- ROLE CONTENT (Left panel visualization) -->
+        <div id="roleContentArea" class="role-content-area" style="display:none;">
+            <div class="role-content-header">
+                <h3 id="roleContentTitle">Role Title</h3>
+                <button id="closeRoleContent" class="close-role-content">Close</button>
+            </div>
+            <div id="roleContentBody"></div>
+        </div>
+
+        <footer class="footer"><p>© 2025 Strategic Marketing System · Powered by AI · 13-Role Framework · Conscientious by Design</p></footer>
     </div>
 </div>
 
@@ -867,6 +838,10 @@
         userMenu: document.getElementById('userMenu'),
         userNameDisplay: document.getElementById('userNameDisplay'),
         userAvatar: document.getElementById('userAvatar'),
+        roleContentArea: document.getElementById('roleContentArea'),
+        roleContentTitle: document.getElementById('roleContentTitle'),
+        roleContentBody: document.getElementById('roleContentBody'),
+        closeRoleContent: document.getElementById('closeRoleContent')
     };
 
     function showPage(name) {
@@ -877,6 +852,8 @@
         const navMap = { home:'navHome', planner:'navPlanner', about:'navAbout', app:'navApp' };
         const btn = document.getElementById(navMap[name]);
         if (btn) btn.classList.add('active');
+        // Hide role content when switching pages
+        el.roleContentArea.style.display = 'none';
     }
 
     function goToAppWithData() {
@@ -888,7 +865,7 @@
     // ===== AUTH =====
     function getDemoUser() {
         let u = localStorage.getItem('demo_user');
-        if (!u) { u = { id: Date.now(), name: 'Demo User', email: 'demo@stratmark.ai', plan: 'free', plansGenerated: 0 }; localStorage.setItem('demo_user', JSON.stringify(u)); }
+        if (!u) { u = { id: Date.now(), name: 'Demo User', email: 'demo@strategicmarketing.com', plan: 'free', plansGenerated: 0 }; localStorage.setItem('demo_user', JSON.stringify(u)); }
         return JSON.parse(u);
     }
     function saveDemoUser(u) { localStorage.setItem('demo_user', JSON.stringify(u)); }
@@ -918,7 +895,7 @@
     }
     function updateProgress(p) { el.progressFill.style.width = p + '%'; }
 
-    // ===== PIE CHART: DOMINANT SELECTION (PowerBI style) =====
+    // ===== PIE CHART: DOMINANT SELECTION =====
     function initPieDominance() {
         document.querySelectorAll('.pie-wrapper').forEach(wrapper => {
             wrapper.addEventListener('click', function(e) {
@@ -929,7 +906,7 @@
                 const label = this.querySelector('.pie-label')?.textContent || 'Segment';
                 const dominantBox = document.getElementById('dominantInsight');
                 if (dominantBox) {
-                    dominantBox.innerHTML = `<h4>🎯 DOMINANT SEGMENT</h4><p>${label.trim()} · ${val}%</p><small>Da Vinci synthesis: focus reveals clarity.</small>`;
+                    dominantBox.innerHTML = `<h4>🎯 DOMINANT SEGMENT</h4><p>${label.trim()} · ${val}%</p><small>Click any pie to focus</small>`;
                 }
             });
         });
@@ -943,25 +920,28 @@
         return m ? m[1].trim() : null;
     }
 
-    function formatContent(c) {
-        if (!c) return '';
-        let h = c.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                 .replace(/^[-•*]\s+(.*)$/gm, '<li>$1</li>')
-                 .replace(/(<li>.*?<\/li>)+/gs, '<ul>$&</ul>')
-                 .replace(/\n/g, '<br>');
-        return h;
+    // ===== PLAIN TEXT FORMATTER (for main output) =====
+    function formatPlainText(content) {
+        if (!content) return '';
+        // Convert markdown-style formatting to plain text with proper spacing
+        let text = content
+            .replace(/\*\*(.*?)\*\*/g, '$1') // Remove bold
+            .replace(/\n{3,}/g, '\n\n') // Normalize spacing
+            .replace(/^[-•*]\s+(.*)$/gm, '• $1') // Format list items
+            .trim();
+        return text;
     }
 
-    // ===== SEGMENTATION RENDER with Da Vinci Pie =====
+    // ===== SEGMENTATION VISUALIZATION (for left panel) =====
     function renderSegmentationVisual(plan) {
-        if (!plan) return '<div class="empty-state" style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">✨ Generate a plan first</div>';
+        if (!plan) return '<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">✨ Generate a plan first</div>';
         let segments = [];
         const match = extractTagContent(plan, 'SEGMENTATION OUTPUT');
         if (match) {
             const lines = match.split('\n');
             for (const line of lines) {
                 if (line.match(/^\d+\.|^[-•*]\s+/) && line.length > 10) {
-                    const name = line.replace(/^\d+\.|^[-•*]\s+/, '').trim().substring(0, 30);
+                    const name = line.replace(/^\d+\.|^[-•*]\s+/, '').trim().substring(0, 25);
                     if (name.length > 4) segments.push(name);
                 }
             }
@@ -983,87 +963,202 @@
         });
         return `
             <div class="pie-master-container">
-                <h3 style="color:#a5b4fc;font-weight:600;margin-bottom:8px;">📊 Market Segmentation · Da Vinci Synthesis</h3>
-                <p style="font-size:13px;color:rgba(255,255,255,0.3);margin-bottom:16px;">Tap any pie to dominate · PowerBI style</p>
+                <h3 style="color:#a5b4fc;font-weight:600;margin-bottom:8px;">📊 Market Segmentation</h3>
+                <p style="font-size:13px;color:rgba(255,255,255,0.3);margin-bottom:12px;">Click any pie to dominate</p>
                 <div class="pie-row">${piesHtml}</div>
                 <div class="pie-dominant" id="dominantInsight">
                     <h4>🎯 DOMINANT SEGMENT</h4>
-                    <p>Tap a pie to focus</p>
-                    <small>“Simplicity is the ultimate sophistication.”</small>
+                    <p>Click a pie to focus</p>
+                    <small>Tap to reveal insights</small>
                 </div>
             </div>
         `;
     }
 
-    // ===== OTHER RENDERERS =====
-    function renderMarketSizingVisual(plan) {
-        if (!plan) return '<div class="empty-state" style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">📊 Generate first</div>';
-        return `<div style="text-align:center;padding:20px;"><h3 style="color:#a5b4fc;">📈 Market Sizing</h3><div style="display:flex;flex-wrap:wrap;gap:30px;justify-content:center;margin-top:20px;"><div style="background:rgba(255,255,255,0.03);padding:20px 30px;border-radius:20px;border:1px solid rgba(255,255,255,0.05);"><div style="font-size:28px;font-weight:700;color:#4ade80;">$1.8M</div><div style="font-size:12px;color:rgba(255,255,255,0.3);">TAM</div></div><div style="background:rgba(255,255,255,0.03);padding:20px 30px;border-radius:20px;border:1px solid rgba(255,255,255,0.05);"><div style="font-size:28px;font-weight:700;color:#22d3ee;">$1.2M</div><div style="font-size:12px;color:rgba(255,255,255,0.3);">SAM</div></div><div style="background:rgba(255,255,255,0.03);padding:20px 30px;border-radius:20px;border:1px solid rgba(255,255,255,0.05);"><div style="font-size:28px;font-weight:700;color:#fbbf24;">$200K</div><div style="font-size:12px;color:rgba(255,255,255,0.3);">SOM</div></div></div></div>`;
-    }
-    function renderPESTLEVisual(plan) {
-        if (!plan) return '<div class="empty-state" style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">🌍 Generate first</div>';
-        return `<div style="text-align:center;padding:12px;"><h3 style="color:#a5b4fc;">🌍 PESTLE Analysis</h3><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:16px;">${['Political','Economic','Social','Technological','Legal','Environmental'].map((p,i)=>`<div style="background:rgba(255,255,255,0.02);padding:14px;border-radius:16px;border:1px solid rgba(255,255,255,0.04);"><div style="font-size:24px;">${['🏛️','📈','👥','💻','⚖️','🌿'][i]}</div><div style="font-size:13px;font-weight:500;color:#a5b4fc;">${p}</div><div style="font-size:10px;color:rgba(255,255,255,0.3);">Impact: ${['High','High','Medium','High','Medium','High'][i]}</div></div>`).join('')}</div></div>`;
-    }
-    function renderPortersVisual(plan) {
-        if (!plan) return '<div class="empty-state" style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">⚔️ Generate first</div>';
-        return `<div style="text-align:center;padding:12px;"><h3 style="color:#a5b4fc;">⚔️ Porter\'s Forces</h3><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:16px;">${['New Entrants','Buyer Power','Supplier Power','Substitutes','Rivalry'].map((f,i)=>`<div style="background:rgba(255,255,255,0.02);padding:14px;border-radius:16px;border:1px solid rgba(255,255,255,0.04);"><div style="font-size:20px;">${['🚪','🛒','🏭','🔄','⚔️'][i]}</div><div style="font-size:13px;font-weight:500;color:#a5b4fc;">${f}</div><div style="font-size:11px;color:${['#f87171','#fbbf24','#4ade80','#fbbf24','#f87171'][i]};">${['High','Medium','Low','Medium','High'][i]}</div></div>`).join('')}</div></div>`;
-    }
-    function renderCompetitorsVisual(plan) {
-        if (!plan) return '<div class="empty-state" style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">🔍 Generate first</div>';
-        const comps = ['AddisClean Co. (Medium)', 'EcoSponge (High)', 'QuickWipe (Medium)'];
-        return `<div style="text-align:center;padding:12px;"><h3 style="color:#a5b4fc;">🔍 Competitors</h3><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:16px;">${comps.map(c=>`<div style="background:rgba(255,255,255,0.02);padding:16px;border-radius:20px;border:1px solid rgba(255,255,255,0.05);"><div style="font-weight:600;color:#c7d2fe;">${c}</div><div style="font-size:11px;color:rgba(255,255,255,0.3);">Differentiation: eco + ergonomic</div></div>`).join('')}</div></div>`;
-    }
-    function renderPositioningVisual(plan) {
-        if (!plan) return '<div class="empty-state" style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">🎯 Generate first</div>';
-        return `<div style="text-align:center;padding:20px;background:rgba(255,255,255,0.02);border-radius:24px;border:1px solid rgba(255,255,255,0.04);"><h3 style="color:#a5b4fc;">🎯 Positioning</h3><p style="font-size:18px;font-weight:500;color:#c7d2fe;max-width:500px;margin:12px auto;">“For young urban professionals, our biodegradable sponge delivers effortless cleaning at a budget price.”</p><div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:12px;"><span style="background:rgba(99,102,241,0.08);padding:4px 16px;border-radius:40px;font-size:12px;">Target: Urban Pro</span><span style="background:rgba(99,102,241,0.08);padding:4px 16px;border-radius:40px;font-size:12px;">Benefit: Effortless</span><span style="background:rgba(99,102,241,0.08);padding:4px 16px;border-radius:40px;font-size:12px;">RTB: Biodegradable</span></div></div>`;
-    }
-    function render4PsVisual(plan) {
-        if (!plan) return '<div class="empty-state" style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">🧩 Generate first</div>';
-        const ps = ['Product: Ergonomic sponge', 'Price: ETB 45', 'Place: Supermarkets + online', 'Promotion: TikTok challenge'];
-        return `<div style="text-align:center;padding:12px;"><h3 style="color:#a5b4fc;">🧩 4Ps</h3><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:16px;">${ps.map(p=>`<div style="background:rgba(255,255,255,0.02);padding:14px;border-radius:16px;border:1px solid rgba(255,255,255,0.04);font-size:13px;color:#c7d2fe;">${p}</div>`).join('')}</div></div>`;
-    }
-    function renderSWOTVisual(plan) {
-        if (!plan) return '<div class="empty-state" style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">💎 Generate first</div>';
-        const items = { Strengths: ['Low price + biodegradable','Ergonomic'], Weaknesses: ['Limited brand','Shelf life'], Opportunities: ['Bulk partnerships','Zero waste'], Threats: ['Imported plastic','Regulations'] };
-        return `<div style="text-align:center;padding:12px;"><h3 style="color:#a5b4fc;">💎 SWOT</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px;">${Object.entries(items).map(([k,v])=>`<div style="background:rgba(255,255,255,0.02);padding:14px;border-radius:16px;border:1px solid rgba(255,255,255,0.04);"><div style="font-weight:600;color:${['#4ade80','#f87171','#fbbf24','#a78bfa'][Object.keys(items).indexOf(k)]};">${k}</div><ul style="font-size:12px;color:rgba(255,255,255,0.6);padding-left:16px;">${v.map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('')}</div></div>`;
-    }
-    function renderJourneyVisual(plan) {
-        if (!plan) return '<div class="empty-state" style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">🗺️ Generate first</div>';
-        const stages = ['Awareness','Consideration','Purchase','Retention','Advocacy'];
-        return `<div style="text-align:center;padding:12px;"><h3 style="color:#a5b4fc;">🗺️ Customer Journey</h3><div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:16px;">${stages.map((s,i)=>`<div style="background:rgba(255,255,255,0.02);padding:12px 18px;border-radius:40px;border:1px solid rgba(255,255,255,0.04);font-size:13px;color:#c7d2fe;">${['📱','💡','💰','🛠️','⭐'][i]} ${s}</div>`).join('')}</div></div>`;
-    }
-    function renderKPIVisual(plan) {
-        if (!plan) return '<div class="empty-state" style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">📊 Generate first</div>';
-        const kpis = [{label:'Conversion',val:'3:1',trend:'+12%'},{label:'Monthly Sales',val:'30K',trend:'+8%'},{label:'AOV',val:'ETB 50',trend:'+4%'},{label:'CPA',val:'≤ ETB 12',trend:'-7%'}];
-        return `<div style="text-align:center;padding:12px;"><h3 style="color:#a5b4fc;">📊 KPIs</h3><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:16px;">${kpis.map(k=>`<div style="background:rgba(255,255,255,0.02);padding:16px;border-radius:20px;border:1px solid rgba(255,255,255,0.05);"><div style="font-size:12px;color:rgba(255,255,255,0.3);">${k.label}</div><div style="font-size:24px;font-weight:700;color:#a5b4fc;">${k.val}</div><div style="font-size:11px;color:${k.trend.startsWith('+')?'#4ade80':'#f87171'};">${k.trend}</div></div>`).join('')}</div></div>`;
-    }
-    function renderOKRVisual(plan) {
-        if (!plan) return '<div class="empty-state" style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">🎯 Generate first</div>';
-        return `<div style="text-align:center;padding:12px;"><h3 style="color:#a5b4fc;">🎯 OKRs</h3><div style="max-width:400px;margin:12px auto;background:rgba(255,255,255,0.02);padding:20px;border-radius:20px;border:1px solid rgba(255,255,255,0.04);"><div style="font-weight:600;color:#c7d2fe;">Objective: Drive habit adoption</div><div style="margin:8px 0;"><span style="font-size:13px;">Units sold: 30K</span><div style="background:rgba(255,255,255,0.05);height:6px;border-radius:10px;margin-top:4px;"><div style="width:65%;height:100%;background:linear-gradient(90deg,#6366f1,#ec4899);border-radius:10px;"></div></div></div><div><span style="font-size:13px;">Repeat rate: 35%</span><div style="background:rgba(255,255,255,0.05);height:6px;border-radius:10px;margin-top:4px;"><div style="width:40%;height:100%;background:linear-gradient(90deg,#6366f1,#ec4899);border-radius:10px;"></div></div></div></div></div>`;
-    }
-    function renderRoadmapVisual(plan) {
-        if (!plan) return '<div class="empty-state" style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">📅 Generate first</div>';
-        const phases = ['Foundation (D1-7)','Awareness (D8-14)','Conversion (D15-21)','Retention (D22-30)'];
-        return `<div style="text-align:center;padding:12px;"><h3 style="color:#a5b4fc;">📅 30-Day Roadmap</h3><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:16px;">${phases.map(p=>`<div style="background:rgba(255,255,255,0.02);padding:14px;border-radius:16px;border-left:3px solid #6366f1;border:1px solid rgba(255,255,255,0.04);border-left-width:4px;"><div style="font-weight:500;color:#c7d2fe;">${p}</div><div style="font-size:11px;color:rgba(255,255,255,0.3);">● ● ●</div></div>`).join('')}</div></div>`;
+    // ===== PLAIN TEXT RENDERERS (for main output) =====
+    function renderSegmentationText(plan) {
+        if (!plan) return 'No segmentation data available.';
+        const content = extractTagContent(plan, 'SEGMENTATION OUTPUT');
+        return content ? formatPlainText(content) : 'No segmentation data found.';
     }
 
-    // ===== ROLE CONTENT DISPATCH =====
-    function showRoleContent(roleId, title, contentGetter) {
+    function renderMarketSizingText(plan) {
+        if (!plan) return 'No market sizing data available.';
+        const content = extractTagContent(plan, 'TAMSAMSOM OUTPUT');
+        return content ? formatPlainText(content) : 'No market sizing data found.';
+    }
+
+    function renderPESTLEText(plan) {
+        if (!plan) return 'No PESTLE data available.';
+        const content = extractTagContent(plan, 'PESTLE OUTPUT');
+        return content ? formatPlainText(content) : 'No PESTLE data found.';
+    }
+
+    function renderPortersText(plan) {
+        if (!plan) return 'No Porter\'s Forces data available.';
+        const content = extractTagContent(plan, 'PORTER OUTPUT');
+        return content ? formatPlainText(content) : 'No Porter\'s Forces data found.';
+    }
+
+    function renderCompetitorsText(plan) {
+        if (!plan) return 'No competitor data available.';
+        const content = extractTagContent(plan, 'COMPETITOR OUTPUT');
+        return content ? formatPlainText(content) : 'No competitor data found.';
+    }
+
+    function renderPositioningText(plan) {
+        if (!plan) return 'No positioning data available.';
+        const content = extractTagContent(plan, 'POSITIONING OUTPUT');
+        return content ? formatPlainText(content) : 'No positioning data found.';
+    }
+
+    function render4PsText(plan) {
+        if (!plan) return 'No 4Ps data available.';
+        const content = extractTagContent(plan, '4Ps OUTPUT');
+        return content ? formatPlainText(content) : 'No 4Ps data found.';
+    }
+
+    function renderSWOTText(plan) {
+        if (!plan) return 'No SWOT data available.';
+        const content = extractTagContent(plan, 'SWOT OUTPUT');
+        return content ? formatPlainText(content) : 'No SWOT data found.';
+    }
+
+    function renderJourneyText(plan) {
+        if (!plan) return 'No journey map data available.';
+        const content = extractTagContent(plan, 'CUSTOMER JOURNEY OUTPUT');
+        return content ? formatPlainText(content) : 'No journey map data found.';
+    }
+
+    function renderKPIText(plan) {
+        if (!plan) return 'No KPI data available.';
+        const content = extractTagContent(plan, 'KPI OUTPUT');
+        return content ? formatPlainText(content) : 'No KPI data found.';
+    }
+
+    function renderOKRText(plan) {
+        if (!plan) return 'No OKR data available.';
+        const content = extractTagContent(plan, 'OKRS OUTPUT');
+        return content ? formatPlainText(content) : 'No OKR data found.';
+    }
+
+    function renderRoadmapText(plan) {
+        if (!plan) return 'No roadmap data available.';
+        const content = extractTagContent(plan, 'ROADMAP OUTPUT');
+        return content ? formatPlainText(content) : 'No roadmap data found.';
+    }
+
+    // ===== VISUAL RENDERERS (for left panel) =====
+    function renderMarketSizingVisual(plan) {
+        if (!plan) return '<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">📊 Generate first</div>';
+        const content = extractTagContent(plan, 'TAMSAMSOM OUTPUT');
+        if (content) {
+            return `<div style="padding:16px;background:rgba(255,255,255,0.02);border-radius:16px;"><pre style="white-space:pre-wrap;color:#cbd5e1;font-family:inherit;font-size:14px;">${content}</pre></div>`;
+        }
+        return '<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);">No market sizing data available</div>';
+    }
+
+    function renderPESTLEVisual(plan) {
+        if (!plan) return '<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">🌍 Generate first</div>';
+        const content = extractTagContent(plan, 'PESTLE OUTPUT');
+        if (content) {
+            return `<div style="padding:16px;background:rgba(255,255,255,0.02);border-radius:16px;"><pre style="white-space:pre-wrap;color:#cbd5e1;font-family:inherit;font-size:14px;">${content}</pre></div>`;
+        }
+        return '<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);">No PESTLE data available</div>';
+    }
+
+    function renderPortersVisual(plan) {
+        if (!plan) return '<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">⚔️ Generate first</div>';
+        const content = extractTagContent(plan, 'PORTER OUTPUT');
+        if (content) {
+            return `<div style="padding:16px;background:rgba(255,255,255,0.02);border-radius:16px;"><pre style="white-space:pre-wrap;color:#cbd5e1;font-family:inherit;font-size:14px;">${content}</pre></div>`;
+        }
+        return '<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);">No Porter\'s Forces data available</div>';
+    }
+
+    function renderCompetitorsVisual(plan) {
+        if (!plan) return '<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">🔍 Generate first</div>';
+        const content = extractTagContent(plan, 'COMPETITOR OUTPUT');
+        if (content) {
+            return `<div style="padding:16px;background:rgba(255,255,255,0.02);border-radius:16px;"><pre style="white-space:pre-wrap;color:#cbd5e1;font-family:inherit;font-size:14px;">${content}</pre></div>`;
+        }
+        return '<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);">No competitor data available</div>';
+    }
+
+    function renderPositioningVisual(plan) {
+        if (!plan) return '<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">🎯 Generate first</div>';
+        const content = extractTagContent(plan, 'POSITIONING OUTPUT');
+        if (content) {
+            return `<div style="padding:16px;background:rgba(255,255,255,0.02);border-radius:16px;"><pre style="white-space:pre-wrap;color:#cbd5e1;font-family:inherit;font-size:14px;">${content}</pre></div>`;
+        }
+        return '<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);">No positioning data available</div>';
+    }
+
+    function render4PsVisual(plan) {
+        if (!plan) return '<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">🧩 Generate first</div>';
+        const content = extractTagContent(plan, '4Ps OUTPUT');
+        if (content) {
+            return `<div style="padding:16px;background:rgba(255,255,255,0.02);border-radius:16px;"><pre style="white-space:pre-wrap;color:#cbd5e1;font-family:inherit;font-size:14px;">${content}</pre></div>`;
+        }
+        return '<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);">No 4Ps data available</div>';
+    }
+
+    function renderSWOTVisual(plan) {
+        if (!plan) return '<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">💎 Generate first</div>';
+        const content = extractTagContent(plan, 'SWOT OUTPUT');
+        if (content) {
+            return `<div style="padding:16px;background:rgba(255,255,255,0.02);border-radius:16px;"><pre style="white-space:pre-wrap;color:#cbd5e1;font-family:inherit;font-size:14px;">${content}</pre></div>`;
+        }
+        return '<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);">No SWOT data available</div>';
+    }
+
+    function renderJourneyVisual(plan) {
+        if (!plan) return '<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">🗺️ Generate first</div>';
+        const content = extractTagContent(plan, 'CUSTOMER JOURNEY OUTPUT');
+        if (content) {
+            return `<div style="padding:16px;background:rgba(255,255,255,0.02);border-radius:16px;"><pre style="white-space:pre-wrap;color:#cbd5e1;font-family:inherit;font-size:14px;">${content}</pre></div>`;
+        }
+        return '<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);">No journey map data available</div>';
+    }
+
+    function renderKPIVisual(plan) {
+        if (!plan) return '<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">📊 Generate first</div>';
+        const content = extractTagContent(plan, 'KPI OUTPUT');
+        if (content) {
+            return `<div style="padding:16px;background:rgba(255,255,255,0.02);border-radius:16px;"><pre style="white-space:pre-wrap;color:#cbd5e1;font-family:inherit;font-size:14px;">${content}</pre></div>`;
+        }
+        return '<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);">No KPI data available</div>';
+    }
+
+    function renderOKRVisual(plan) {
+        if (!plan) return '<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">🎯 Generate first</div>';
+        const content = extractTagContent(plan, 'OKRS OUTPUT');
+        if (content) {
+            return `<div style="padding:16px;background:rgba(255,255,255,0.02);border-radius:16px;"><pre style="white-space:pre-wrap;color:#cbd5e1;font-family:inherit;font-size:14px;">${content}</pre></div>`;
+        }
+        return '<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);">No OKR data available</div>';
+    }
+
+    function renderRoadmapVisual(plan) {
+        if (!plan) return '<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">📅 Generate first</div>';
+        const content = extractTagContent(plan, 'ROADMAP OUTPUT');
+        if (content) {
+            return `<div style="padding:16px;background:rgba(255,255,255,0.02);border-radius:16px;"><pre style="white-space:pre-wrap;color:#cbd5e1;font-family:inherit;font-size:14px;">${content}</pre></div>`;
+        }
+        return '<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);">No roadmap data available</div>';
+    }
+
+    // ===== SHOW ROLE CONTENT =====
+    function showRoleContent(roleId, title, visualRenderer) {
         if (!currentPlan) {
-            const body = document.getElementById('roleContentBody');
-            if (body) body.innerHTML = `<p style="color:#f87171;">⚠️ Generate a plan first.</p>`;
-            const titleEl = document.getElementById('roleContentTitle');
-            if (titleEl) titleEl.innerHTML = title;
-            const area = document.getElementById('roleContentArea');
-            if (area) area.style.display = 'block';
+            el.roleContentBody.innerHTML = `<p style="color:#f87171;">⚠️ Generate a plan first to see ${title}.</p>`;
+            el.roleContentTitle.innerHTML = title;
+            el.roleContentArea.style.display = 'block';
             return;
         }
-        const body = document.getElementById('roleContentBody');
-        if (body) body.innerHTML = contentGetter(currentPlan);
-        const titleEl = document.getElementById('roleContentTitle');
-        if (titleEl) titleEl.innerHTML = title;
-        const area = document.getElementById('roleContentArea');
-        if (area) area.style.display = 'block';
+        el.roleContentBody.innerHTML = visualRenderer(currentPlan);
+        el.roleContentTitle.innerHTML = title;
+        el.roleContentArea.style.display = 'block';
         document.querySelectorAll('.role-item').forEach(i => i.classList.remove('active'));
         const target = document.querySelector(`.role-item[data-role="${roleId}"]`);
         if (target) target.classList.add('active');
@@ -1085,83 +1180,121 @@
     async function handleGenerate() {
         if (isGenerating) return;
         const cd = el.customerData.value.trim(), pd = el.productDescription.value.trim();
-        if (!cd || !pd) { setStatus('Please fill both fields', false); return; }
+        if (!cd || !pd) { setStatus('Fill both fields', false); return; }
         isGenerating = true;
         el.generateBtn.disabled = true;
-        el.generateBtn.innerHTML = '<span class="loader" style="display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.2);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite;"></span> Generating...';
+        el.generateBtn.textContent = 'Generating...';
         el.outputArea.style.display = 'none';
-        setStatus('🧠 Synthesizing with Da Vinci perspective...', true);
+        setStatus('AI analyzing market data...', true);
         updateProgress(5);
         try {
             const plan = await generateMarketingPlan(cd, pd);
             currentPlan = plan;
             el.outputArea.style.display = 'block';
+            
+            // Render as plain text in main output
             const roles = [
-                { tag:'SEGMENTATION OUTPUT', title:'Segmentation', render: renderSegmentationVisual },
-                { tag:'TAMSAMSOM OUTPUT', title:'Market Sizing', render: renderMarketSizingVisual },
-                { tag:'PESTLE OUTPUT', title:'PESTLE', render: renderPESTLEVisual },
-                { tag:'PORTER OUTPUT', title:"Porter's Forces", render: renderPortersVisual },
-                { tag:'COMPETITOR OUTPUT', title:'Competitors', render: renderCompetitorsVisual },
-                { tag:'POSITIONING OUTPUT', title:'Positioning', render: renderPositioningVisual },
-                { tag:'4Ps OUTPUT', title:'4Ps', render: render4PsVisual },
-                { tag:'SWOT OUTPUT', title:'SWOT', render: renderSWOTVisual },
-                { tag:'CUSTOMER JOURNEY OUTPUT', title:'Journey', render: renderJourneyVisual },
-                { tag:'KPI OUTPUT', title:'KPIs', render: renderKPIVisual },
-                { tag:'OKRS OUTPUT', title:'OKRs', render: renderOKRVisual },
-                { tag:'ROADMAP OUTPUT', title:'Roadmap', render: renderRoadmapVisual }
+                { tag: 'SEGMENTATION OUTPUT', title: 'Market Segmentation', textRenderer: renderSegmentationText },
+                { tag: 'TAMSAMSOM OUTPUT', title: 'Market Sizing', textRenderer: renderMarketSizingText },
+                { tag: 'PESTLE OUTPUT', title: 'PESTLE Analysis', textRenderer: renderPESTLEText },
+                { tag: 'PORTER OUTPUT', title: "Porter's Forces", textRenderer: renderPortersText },
+                { tag: 'COMPETITOR OUTPUT', title: 'Competitors', textRenderer: renderCompetitorsText },
+                { tag: 'POSITIONING OUTPUT', title: 'Positioning', textRenderer: renderPositioningText },
+                { tag: '4Ps OUTPUT', title: '4Ps', textRenderer: render4PsText },
+                { tag: 'SWOT OUTPUT', title: 'SWOT', textRenderer: renderSWOTText },
+                { tag: 'CUSTOMER JOURNEY OUTPUT', title: 'Journey Map', textRenderer: renderJourneyText },
+                { tag: 'KPI OUTPUT', title: 'KPIs', textRenderer: renderKPIText },
+                { tag: 'OKRS OUTPUT', title: 'OKRs', textRenderer: renderOKRText },
+                { tag: 'ROADMAP OUTPUT', title: 'Roadmap', textRenderer: renderRoadmapText }
             ];
+            
             const out = [];
             for (const r of roles) {
                 const content = extractTagContent(plan, r.tag);
                 if (content && content.length > 20) out.push({ ...r, content });
             }
+            
             if (!out.length) {
-                el.renderedOutput.innerHTML = `<div>${escapeHtml(plan).replace(/\n/g,'<br>')}</div>`;
+                el.renderedOutput.innerHTML = `<pre style="white-space:pre-wrap;color:#cbd5e1;font-family:inherit;font-size:14px;">${plan}</pre>`;
             } else {
                 el.renderedOutput.innerHTML = '';
                 for (let i = 0; i < out.length; i++) {
                     const card = document.createElement('div');
                     card.className = 'role-card';
-                    card.innerHTML = `<div style="display:flex;gap:12px;margin-bottom:12px;"><strong style="color:#a5b4fc;">${out[i].title}</strong><span style="margin-left:auto;font-size:11px;color:rgba(255,255,255,0.2);">${i+1}/${out.length}</span></div><div>${out[i].render(plan)}</div>`;
+                    const plainText = out[i].textRenderer(plan);
+                    card.innerHTML = `
+                        <div style="display:flex;gap:12px;margin-bottom:12px;">
+                            <strong style="color:#a5b4fc;">${out[i].title}</strong>
+                            <span style="margin-left:auto;font-size:11px;color:rgba(255,255,255,0.2);">${i+1}/${out.length}</span>
+                        </div>
+                        <div style="white-space:pre-wrap;color:#cbd5e1;font-family:inherit;font-size:14px;line-height:1.7;">${plainText}</div>
+                    `;
                     el.renderedOutput.appendChild(card);
                     await new Promise(r => setTimeout(r, 120));
                     card.classList.add('visible');
-                    updateProgress(((i+1)/out.length)*100);
+                    updateProgress(((i+1)/out.length) * 100);
                 }
             }
+            
             if (currentUser) { currentUser.plansGenerated = (currentUser.plansGenerated || 0) + 1; saveDemoUser(currentUser); }
-            setStatus('✅ Strategy synthesized!', false);
+            setStatus('✓ Strategy generated!', false);
             updateProgress(100);
             setTimeout(() => updateProgress(0), 2000);
-            setTimeout(initPieDominance, 300);
         } catch (e) {
-            setStatus(`❌ Error: ${e.message}`, false);
+            setStatus(`✗ Error: ${e.message}`, false);
         } finally {
             isGenerating = false;
             el.generateBtn.disabled = false;
-            el.generateBtn.innerHTML = '<span class="icon-rocket"></span> Generate Plan';
+            el.generateBtn.textContent = 'Generate Strategic Plan';
         }
     }
 
-    function escapeHtml(s) { return String(s).replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
+    function handleClear() {
+        el.customerData.value = '';
+        el.productDescription.value = '';
+        el.outputArea.style.display = 'none';
+        el.renderedOutput.innerHTML = '';
+        currentPlan = null;
+        el.roleContentArea.style.display = 'none';
+        setStatus('Cleared. Ready for new strategy.', false);
+    }
+
+    function saveToHistory() {
+        if (currentPlan) {
+            let h = JSON.parse(localStorage.getItem('marketing_history') || '[]');
+            h.unshift({ id: Date.now(), plan: currentPlan });
+            if (h.length > 10) h.pop();
+            localStorage.setItem('marketing_history', JSON.stringify(h));
+            setStatus('✓ Saved to history!', false);
+        } else {
+            setStatus('No plan to save', false);
+        }
+    }
 
     function copyToClipboard() {
         if (!currentPlan) { setStatus('No plan to copy', false); return; }
         const text = el.renderedOutput.textContent || el.renderedOutput.innerText || '';
-        navigator.clipboard.writeText(text).then(() => setStatus('✅ Copied!', false)).catch(() => setStatus('❌ Copy failed', false));
+        navigator.clipboard.writeText(text).then(() => setStatus('✓ Copied!', false)).catch(() => setStatus('❌ Copy failed', false));
     }
-    function saveToHistory() {
-        if (!currentPlan) { setStatus('No plan to save', false); return; }
-        let h = JSON.parse(localStorage.getItem('marketing_history') || '[]');
-        h.unshift({ id: Date.now(), plan: currentPlan });
-        if (h.length > 10) h.pop();
-        localStorage.setItem('marketing_history', JSON.stringify(h));
-        setStatus('💾 Saved to history!', false);
-    }
+
     function exportToPDF() {
         if (!currentPlan) { setStatus('No plan to export', false); return; }
         const win = window.open('', '_blank');
-        win.document.write(`<html><head><title>StratMark Report</title><style>body{font-family:Inter,sans-serif;padding:40px;max-width:900px;margin:auto;color:#1e293b;}h2{color:#1e293b;}table{border-collapse:collapse;width:100%;}td,th{border:1px solid #ccc;padding:8px;}</style></head><body><h1>📊 StratMark · Da Vinci Synthesis</h1><div>${el.renderedOutput.innerHTML}</div><p style="margin-top:40px;font-size:12px;color:#94a3b8;">Generated by StratMark · Da Vinci AI</p><script>window.onload=function(){window.print();setTimeout(function(){window.close()},600)}<\/script></body></html>`);
+        win.document.write(`
+            <html><head><title>Marketing Strategy Report</title>
+            <style>
+                body { font-family: 'Segoe UI', Arial, sans-serif; padding: 40px; max-width: 900px; margin: auto; color: #1e293b; line-height: 1.6; }
+                h2 { color: #2c3e50; border-bottom: 2px solid #6366f1; padding-bottom: 8px; }
+                pre { white-space: pre-wrap; font-family: inherit; font-size: 14px; }
+                .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 12px; color: #94a3b8; }
+            </style>
+            </head><body>
+            <h1>Marketing Strategy Report</h1>
+            <div>${el.renderedOutput.innerHTML}</div>
+            <div class="footer"><p>Generated by Strategic Marketing System · 13-Role Framework</p></div>
+            <script>window.onload=function(){window.print();setTimeout(function(){window.close()},600)}<\/script>
+            </body></html>
+        `);
         win.document.close();
     }
 
@@ -1171,41 +1304,51 @@
         if (saved) { currentUser = JSON.parse(saved); showLoggedInUI(); } else { showLoggedOutUI(); }
 
         el.generateBtn.addEventListener('click', handleGenerate);
-        el.clearBtn.addEventListener('click', () => { el.customerData.value = ''; el.productDescription.value = ''; el.outputArea.style.display = 'none'; el.renderedOutput.innerHTML = ''; currentPlan = null; setStatus('Cleared', false); });
+        el.clearBtn.addEventListener('click', handleClear);
         el.copyOutputBtn?.addEventListener('click', copyToClipboard);
         el.saveHistoryBtn?.addEventListener('click', saveToHistory);
         el.pdfExportBtn?.addEventListener('click', exportToPDF);
+        el.closeRoleContent.addEventListener('click', () => el.roleContentArea.style.display = 'none');
 
-        // Role items
+        // Role click handlers
         const roleMap = {
-            segmentation: { title: 'Segmentation', render: renderSegmentationVisual },
-            marketsizing: { title: 'Market Sizing', render: renderMarketSizingVisual },
-            pestle: { title: 'PESTLE', render: renderPESTLEVisual },
-            porter: { title: "Porter's Forces", render: renderPortersVisual },
-            competitors: { title: 'Competitors', render: renderCompetitorsVisual },
-            positioning: { title: 'Positioning', render: renderPositioningVisual },
-            '4ps': { title: '4Ps', render: render4PsVisual },
-            swot: { title: 'SWOT', render: renderSWOTVisual },
-            journey: { title: 'Journey Map', render: renderJourneyVisual },
-            kpi: { title: 'KPIs', render: renderKPIVisual },
-            okrs: { title: 'OKRs', render: renderOKRVisual },
-            roadmap: { title: 'Roadmap', render: renderRoadmapVisual }
+            segmentation: { title: 'Segmentation', visual: renderSegmentationVisual },
+            marketsizing: { title: 'Market Sizing', visual: renderMarketSizingVisual },
+            pestle: { title: 'PESTLE', visual: renderPESTLEVisual },
+            porter: { title: "Porter's Forces", visual: renderPortersVisual },
+            competitors: { title: 'Competitors', visual: renderCompetitorsVisual },
+            positioning: { title: 'Positioning', visual: renderPositioningVisual },
+            '4ps': { title: '4Ps', visual: render4PsVisual },
+            swot: { title: 'SWOT', visual: renderSWOTVisual },
+            journey: { title: 'Journey Map', visual: renderJourneyVisual },
+            kpi: { title: 'KPIs', visual: renderKPIVisual },
+            okrs: { title: 'OKRs', visual: renderOKRVisual },
+            roadmap: { title: 'Roadmap', visual: renderRoadmapVisual }
         };
+
         document.querySelectorAll('.role-item').forEach(item => {
             const id = item.dataset.role;
             if (roleMap[id]) {
                 item.addEventListener('click', () => {
-                    showRoleContent(id, roleMap[id].title, roleMap[id].render);
+                    showRoleContent(id, roleMap[id].title, roleMap[id].visual);
                 });
             }
         });
 
+        // Auth buttons
         document.getElementById('demoSignInBtn')?.addEventListener('click', demoSignIn);
         document.getElementById('demoSignUpBtn')?.addEventListener('click', demoSignIn);
         document.getElementById('logoutBtnNav')?.addEventListener('click', demoSignOut);
 
-        if (sessionStorage.getItem('prefillCustomer')) { el.customerData.value = sessionStorage.getItem('prefillCustomer'); sessionStorage.removeItem('prefillCustomer'); }
-        if (sessionStorage.getItem('prefillProduct')) { el.productDescription.value = sessionStorage.getItem('prefillProduct'); sessionStorage.removeItem('prefillProduct'); }
+        // Prefill from session
+        if (sessionStorage.getItem('prefillCustomer')) {
+            el.customerData.value = sessionStorage.getItem('prefillCustomer');
+            sessionStorage.removeItem('prefillCustomer');
+        }
+        if (sessionStorage.getItem('prefillProduct')) {
+            el.productDescription.value = sessionStorage.getItem('prefillProduct');
+            sessionStorage.removeItem('prefillProduct');
+        }
 
         showPage('home');
         setTimeout(initPieDominance, 300);
