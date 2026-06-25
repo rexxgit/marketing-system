@@ -270,6 +270,7 @@
             cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             backdrop-filter: blur(10px);
         }
+        .pie-wrapper:hover { transform: scale(1.08); border-color: rgba(99,102,241,0.5); box-shadow: 0 15px 40px rgba(99,102,241,0.2); }
         .csspie { position: absolute; width: 80px; height: 160px; overflow: hidden; transform-origin: left center; }
         .csspie .pie-before {
             content: ''; position: absolute; width: 80px; height: 160px; left: -80px;
@@ -287,85 +288,185 @@
             text-shadow: 0 2px 10px rgba(0,0,0,0.5); z-index: 2;
         }
 
-        /* ===== VENN DIAGRAM STYLES ===== */
+        /* ===== VENN DIAGRAM STYLES - Glass Morphism ===== */
         .css-art--3-pie-venn-diagram {
-            position: relative; font-size: 0.9rem; width: 100%; max-width: 45em;
-            margin: 2em auto; min-height: 400px;
+            position: relative;
+            font-size: 0.9rem;
+            width: 100%;
+            max-width: 48em;
+            margin: 1.5em auto;
+            min-height: 420px;
         }
-        .css-art--pie-venn { position: relative; box-sizing: border-box; padding: 0.5em 0 2em; }
-        .css-art--pie-venn h3 { box-sizing: border-box; width: 100%; color: #a5b4fc; font-size: 1.1rem; }
+        .css-art--pie-venn {
+            position: relative;
+            box-sizing: border-box;
+            padding: 0.5em 0 2em;
+            transition: all 0.3s ease;
+        }
+        .css-art--pie-venn h3 {
+            box-sizing: border-box;
+            width: 100%;
+            color: #a5b4fc;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        .css-art--pie-venn:hover h3 { transform: scale(1.05); color: #c7d2fe; }
         .css-art--pie-venn, .venn-intersect-1-2, .venn-intersect-2-3, .venn-intersect-3-1, .venn-main-intersection {
-            position: relative; padding: 1em 0 0.75em 1.5em;
+            position: relative;
+            padding: 1em 0 0.75em 1.5em;
+            transition: all 0.3s ease;
+        }
+        .css-art--pie-venn:hover, .venn-intersect-1-2:hover, .venn-intersect-2-3:hover, .venn-intersect-3-1:hover, .venn-main-intersection:hover {
+            transform: translateY(-3px);
         }
         .css-art--pie-venn h3, .venn-intersect-1-2 h3, .venn-intersect-2-3 h3, .venn-intersect-3-1 h3, .venn-main-intersection h3 {
-            margin: 0 0 0.75em; font-size: 1rem;
+            margin: 0 0 0.75em;
+            font-size: 1rem;
         }
         .css-art--pie-venn ul, .venn-intersect-1-2 ul, .venn-intersect-2-3 ul, .venn-intersect-3-1 ul, .venn-main-intersection ul {
-            margin: 0; padding: 0 0 0 1.5em;
+            margin: 0;
+            padding: 0 0 0 1.5em;
         }
         .css-art--pie-venn li, .venn-intersect-1-2 li, .venn-intersect-2-3 li, .venn-intersect-3-1 li, .venn-main-intersection li {
-            margin: 0 0 0.25em; color: rgba(255,255,255,0.8);
+            margin: 0 0 0.25em;
+            color: rgba(255,255,255,0.8);
+            transition: color 0.3s ease;
+        }
+        .css-art--pie-venn:hover li, .venn-intersect-1-2:hover li, .venn-intersect-2-3:hover li, .venn-intersect-3-1:hover li, .venn-main-intersection:hover li {
+            color: rgba(255,255,255,0.95);
         }
         .css-art--pie-venn:before, .venn-intersect-1-2:before, .venn-intersect-2-3:before, .venn-intersect-3-1:before, .venn-main-intersection:before {
-            content: ''; position: absolute; top: 0; left: 0; display: block; width: 0.5em; height: 100%; background: #6366f1;
+            content: ''; position: absolute; top: 0; left: 0; display: block; width: 0.5em; height: 100%;
+            background: linear-gradient(180deg, #6366f1, #818cf8);
+            border-radius: 4px 0 0 4px;
+            transition: all 0.3s ease;
         }
-        .css-art--pie-venn-2:before { background: #22d3ee; }
+        .css-art--pie-venn:hover:before, .venn-intersect-1-2:hover:before, .venn-intersect-2-3:hover:before, .venn-intersect-3-1:hover:before, .venn-main-intersection:hover:before {
+            width: 0.7em;
+            background: linear-gradient(180deg, #818cf8, #a5b4fc);
+        }
+        .css-art--pie-venn-2:before { background: linear-gradient(180deg, #22d3ee, #67e8f9); }
         .css-art--pie-venn-2 h3 { color: #22d3ee; }
-        .css-art--pie-venn-3:before { background: #fbbf24; }
+        .css-art--pie-venn-3:before { background: linear-gradient(180deg, #fbbf24, #fcd34d); }
         .css-art--pie-venn-3 h3 { color: #fbbf24; }
-        .venn-intersect-1-2:before { background: #4ade80; }
+        .venn-intersect-1-2:before { background: linear-gradient(180deg, #4ade80, #86efac); }
         .venn-intersect-1-2 h3 { color: #4ade80; }
-        .venn-intersect-2-3:before { background: #f472b6; }
+        .venn-intersect-2-3:before { background: linear-gradient(180deg, #f472b6, #f9a8d4); }
         .venn-intersect-2-3 h3 { color: #f472b6; }
-        .venn-intersect-3-1:before { background: #f59e0b; }
+        .venn-intersect-3-1:before { background: linear-gradient(180deg, #f59e0b, #fbbf24); }
         .venn-intersect-3-1 h3 { color: #f59e0b; }
-        .venn-main-intersection:before { background: #a78bfa; }
+        .venn-main-intersection:before { background: linear-gradient(180deg, #a78bfa, #c4b5fd); }
         .venn-main-intersection h3 { color: #a78bfa; }
 
+        /* Hover tooltip for circles - shows value on hover */
+        .venn-tooltip {
+            position: absolute;
+            background: rgba(10,14,26,0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(99,102,241,0.3);
+            border-radius: 12px;
+            padding: 6px 14px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #a5b4fc;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+        }
+        .css-art--pie-venn:hover .venn-tooltip { opacity: 1; }
+
         @media (min-width: 51em) {
-            .css-art--3-pie-venn-diagram { height: 42em; position: relative; }
+            .css-art--3-pie-venn-diagram { height: 38em; position: relative; }
             .css-art--pie-venn {
-                position: absolute; z-index: 0; box-sizing: border-box; width: 21em; height: 21em;
-                border-radius: 50%; background: rgba(99,102,241,0.15); color: #fff;
-                padding: 1em; border: 2px solid rgba(99,102,241,0.3);
+                position: absolute; z-index: 0; box-sizing: border-box; width: 19em; height: 19em;
+                border-radius: 50%; background: rgba(99,102,241,0.08);
+                color: #fff; padding: 1em; border: 2px solid rgba(99,102,241,0.15);
+                backdrop-filter: blur(4px);
+                transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+            .css-art--pie-venn:hover {
+                transform: scale(1.04);
+                border-color: rgba(99,102,241,0.5);
+                background: rgba(99,102,241,0.15);
+                box-shadow: 0 0 40px rgba(99,102,241,0.15);
             }
             .css-art--pie-venn:before { display: none; }
-            .css-art--pie-venn h3 { position: absolute; top: -2.5em; width: 100%; text-align: center; }
-            .css-art--pie-venn ul { position: absolute; width: 14em; margin: 0 auto; }
-            .css-art--pie-venn-1 { top: 6em; left: 2em; z-index: 1; background: rgba(99,102,241,0.15); border-color: rgba(99,102,241,0.4); }
-            .css-art--pie-venn-1 ul { top: 5em; left: 3em; }
-            .css-art--pie-venn-2 { top: 6em; right: 2em; background: rgba(34,211,238,0.15); border-color: rgba(34,211,238,0.4); z-index: 2; }
-            .css-art--pie-venn-2 ul { top: 5em; right: 2em; text-align: right; }
-            .css-art--pie-venn-3 { bottom: 2em; left: 50%; transform: translateX(-50%); background: rgba(251,191,36,0.15); border-color: rgba(251,191,36,0.4); z-index: 0; width: 20em; height: 20em; }
-            .css-art--pie-venn-3 ul { top: 10em; left: 50%; transform: translateX(-50%); text-align: center; }
-            .css-art--pie-venn-3 h3 { top: auto; bottom: -2.5em; }
-            .venn-intersect-1-2, .venn-intersect-2-3, .venn-intersect-3-1 {
-                position: absolute; z-index: 5; display: inline-block; max-width: 16em;
-                padding: 0.5em 1em; background: rgba(255,255,255,0.05);
-                border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);
+            .css-art--pie-venn h3 {
+                position: absolute; top: -2.8em; width: 100%; text-align: center;
+                font-size: 1.2rem; transition: all 0.3s ease;
             }
-            .venn-intersect-1-2 { left: 50%; transform: translateX(-50%); top: 18em; }
-            .venn-intersect-2-3 { right: 1em; bottom: 12em; max-width: 13em; }
-            .venn-intersect-3-1 { left: 1em; bottom: 12em; max-width: 13em; }
+            .css-art--pie-venn:hover h3 { transform: scale(1.08); color: #c7d2fe; }
+            .css-art--pie-venn ul { position: absolute; width: 13em; margin: 0 auto; font-size: 0.85rem; }
+            .css-art--pie-venn-1 {
+                top: 5em; left: 0.5em; z-index: 1;
+                background: rgba(99,102,241,0.08); border-color: rgba(99,102,241,0.25);
+                width: 21em; height: 21em;
+            }
+            .css-art--pie-venn-1:hover { background: rgba(99,102,241,0.18); border-color: rgba(99,102,241,0.5); }
+            .css-art--pie-venn-1 ul { top: 5em; left: 3em; }
+            .css-art--pie-venn-2 {
+                top: 5em; right: 0.5em; z-index: 2;
+                background: rgba(34,211,238,0.06); border-color: rgba(34,211,238,0.2);
+                width: 18em; height: 18em;
+            }
+            .css-art--pie-venn-2:hover { background: rgba(34,211,238,0.15); border-color: rgba(34,211,238,0.4); }
+            .css-art--pie-venn-2 ul { top: 5em; right: 2em; text-align: right; }
+            .css-art--pie-venn-3 {
+                bottom: 1.5em; left: 50%; transform: translateX(-50%);
+                background: rgba(251,191,36,0.06); border-color: rgba(251,191,36,0.2);
+                z-index: 0; width: 14em; height: 14em;
+            }
+            .css-art--pie-venn-3:hover { transform: translateX(-50%) scale(1.06); background: rgba(251,191,36,0.15); border-color: rgba(251,191,36,0.4); }
+            .css-art--pie-venn-3 ul { top: 7em; left: 50%; transform: translateX(-50%); text-align: center; width: 10em; }
+            .css-art--pie-venn-3 h3 { top: auto; bottom: -2.8em; }
+            
+            .venn-intersect-1-2, .venn-intersect-2-3, .venn-intersect-3-1 {
+                position: absolute; z-index: 5; display: inline-block; max-width: 14em;
+                padding: 0.5em 1em; background: rgba(255,255,255,0.03);
+                border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);
+                backdrop-filter: blur(4px);
+                transition: all 0.3s ease;
+            }
+            .venn-intersect-1-2:hover, .venn-intersect-2-3:hover, .venn-intersect-3-1:hover {
+                background: rgba(255,255,255,0.08);
+                border-color: rgba(99,102,241,0.3);
+                transform: translateY(-3px);
+            }
+            .venn-intersect-1-2 { left: 50%; transform: translateX(-50%); top: 17em; }
+            .venn-intersect-1-2:hover { transform: translateX(-50%) translateY(-3px); }
+            .venn-intersect-2-3 { right: 0.5em; bottom: 10em; max-width: 12em; }
+            .venn-intersect-3-1 { left: 0.5em; bottom: 10em; max-width: 12em; }
             .venn-main-intersection {
                 position: absolute; top: 50%; left: 50%; z-index: 6;
                 transform: translate(-50%, -50%); text-align: center;
-                background: rgba(167,139,250,0.15); border: 2px solid rgba(167,139,250,0.3);
-                border-radius: 16px; padding: 1em 1.5em; max-width: 14em;
+                background: rgba(167,139,250,0.08); border: 2px solid rgba(167,139,250,0.2);
+                border-radius: 16px; padding: 0.8em 1.2em; max-width: 12em;
+                backdrop-filter: blur(4px);
+                transition: all 0.3s ease;
+            }
+            .venn-main-intersection:hover {
+                background: rgba(167,139,250,0.18);
+                border-color: rgba(167,139,250,0.4);
+                transform: translate(-50%, -50%) scale(1.05);
             }
             .venn-main-intersection:before { display: none; }
-            .venn-main-intersection h3 { color: #a78bfa; text-align: center; }
+            .venn-main-intersection h3 { color: #a78bfa; text-align: center; font-size: 1rem; }
             .venn-main-intersection ul { padding-left: 0; list-style: none; }
-            .venn-main-intersection li { color: rgba(255,255,255,0.7); font-size: 0.85rem; }
+            .venn-main-intersection li { color: rgba(255,255,255,0.7); font-size: 0.8rem; }
         }
 
-        /* ===== KPI CARD STYLES ===== */
+        /* ===== KPI CARD STYLES - Glass Morphism ===== */
         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin: 1rem 0; }
         .kpi-card {
             background: rgba(255,255,255,0.03); border-radius: 0.75rem; padding: 1.5rem;
             border: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column;
             justify-content: space-between; position: relative; overflow: hidden;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
+        .kpi-card:hover { transform: translateY(-6px); border-color: rgba(99,102,241,0.3); box-shadow: 0 15px 40px rgba(0,0,0,0.3); background: rgba(255,255,255,0.06); }
         .kpi-card.bordered-accent { border-left: 6px solid #6366f1; }
         .kpi-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
         .kpi-title { font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.05em; }
@@ -376,49 +477,62 @@
         .trend-positive { background: rgba(74,222,128,0.15); color: #4ade80; }
         .trend-negative { background: rgba(248,113,113,0.15); color: #f87171; }
         .kpi-progress-container { width: 100%; background: rgba(255,255,255,0.05); height: 0.5rem; border-radius: 9999px; margin-top: 0.5rem; overflow: hidden; }
-        .kpi-progress-bar { background: #6366f1; height: 100%; border-radius: 9999px; }
+        .kpi-progress-bar { background: linear-gradient(90deg, #6366f1, #ec4899); height: 100%; border-radius: 9999px; }
 
-        /* ===== OKR STYLES ===== */
+        /* ===== OKR STYLES - Glass Morphism ===== */
         .okr-container { max-width: 100%; width: 100%; display: flex; flex-direction: column; gap: 1.5rem; position: relative; }
-        .objective-card { background: rgba(255,255,255,0.03); border: 2px solid rgba(99,102,241,0.3); border-radius: 12px; padding: 1.5rem; position: relative; z-index: 2; }
+        .objective-card {
+            background: rgba(255,255,255,0.03); border: 2px solid rgba(99,102,241,0.2);
+            border-radius: 12px; padding: 1.5rem; position: relative; z-index: 2;
+            backdrop-filter: blur(8px); transition: all 0.3s ease;
+        }
+        .objective-card:hover { border-color: rgba(99,102,241,0.4); box-shadow: 0 10px 30px rgba(99,102,241,0.1); }
         .objective-badge { background: rgba(99,102,241,0.15); color: #a5b4fc; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.7rem; text-transform: uppercase; display: inline-block; margin-bottom: 0.7rem; }
         .objective-title { font-size: 1.3rem; margin: 0 0 1rem 0; font-weight: 700; color: #a5b4fc; }
         .kr-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; position: relative; }
-        .kr-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s ease; }
-        .kr-card:hover { transform: translateY(-2px); border-color: rgba(74,222,128,0.3); }
+        .kr-card {
+            background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px; padding: 1.25rem; display: flex; flex-direction: column;
+            justify-content: space-between; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            backdrop-filter: blur(4px);
+        }
+        .kr-card:hover { transform: translateY(-4px); border-color: rgba(74,222,128,0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.2); background: rgba(255,255,255,0.04); }
         .kr-badge { background: rgba(74,222,128,0.15); color: #4ade80; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; display: inline-block; margin-bottom: 0.5rem; width: fit-content; }
         .kr-text { font-size: 0.95rem; margin: 0 0 1.25rem 0; line-height: 1.5; color: rgba(255,255,255,0.8); }
         .progress-wrapper { margin-top: auto; }
         .progress-info { display: flex; justify-content: space-between; font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 0.25rem; }
         .progress-bar-bg { background: rgba(255,255,255,0.05); border-radius: 9999px; height: 8px; width: 100%; overflow: hidden; }
-        .progress-bar-fill { background: #4ade80; height: 100%; border-radius: 9999px; transition: width 0.4s ease; }
+        .progress-bar-fill { background: linear-gradient(90deg, #4ade80, #22d3ee); height: 100%; border-radius: 9999px; transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
 
-        /* ===== ROADMAP STYLES ===== */
+        /* ===== ROADMAP STYLES - Glass Morphism ===== */
         .roadmap-container { max-width: 100%; margin: 0 auto; padding: 10px 0; }
-        .roadmap-title { text-align: center; color: #a5b4fc; margin-bottom: 30px; font-size: 1.5rem; }
+        .roadmap-title { text-align: center; color: #a5b4fc; margin-bottom: 30px; font-size: 1.5rem; font-weight: 700; }
         .roadmap-timeline { position: relative; max-width: 100%; margin: 0 auto; }
         .roadmap-timeline::after {
-            content: ''; position: absolute; width: 4px; background: #6366f1;
-            top: 0; bottom: 0; left: 50%; margin-left: -2px;
+            content: ''; position: absolute; width: 3px; background: linear-gradient(180deg, #6366f1, #ec4899);
+            top: 0; bottom: 0; left: 50%; margin-left: -1.5px;
             border-radius: 2px;
         }
         .roadmap-item {
             padding: 10px 40px; position: relative; background-color: inherit; width: 50%;
         }
         .roadmap-item::after {
-            content: ''; position: absolute; width: 20px; height: 20px;
-            right: -12px; background-color: #0a0e1a; border: 4px solid #6366f1;
+            content: ''; position: absolute; width: 18px; height: 18px;
+            right: -11px; background: #0a0e1a; border: 3px solid #6366f1;
             top: 20px; border-radius: 50%; z-index: 1;
+            transition: all 0.3s ease;
         }
+        .roadmap-item:hover::after { border-color: #ec4899; transform: scale(1.2); box-shadow: 0 0 20px rgba(236,72,153,0.3); }
         .roadmap-item.left { left: 0; }
         .roadmap-item.right { left: 50%; }
-        .roadmap-item.right::after { left: -12px; }
+        .roadmap-item.right::after { left: -11px; }
         .roadmap-item .content {
             padding: 18px 24px; background: rgba(255,255,255,0.03);
             position: relative; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            backdrop-filter: blur(4px);
         }
-        .roadmap-item .content:hover { border-color: rgba(99,102,241,0.4); transform: translateY(-3px); }
+        .roadmap-item .content:hover { border-color: rgba(99,102,241,0.4); transform: translateY(-4px); box-shadow: 0 12px 35px rgba(0,0,0,0.3); background: rgba(255,255,255,0.06); }
         .roadmap-item .content h3 { color: #a5b4fc; margin-bottom: 4px; font-size: 1.1rem; }
         .roadmap-item .content .date { color: #f472b6; font-weight: bold; margin-bottom: 8px; font-size: 0.85rem; }
         .roadmap-item .content p { color: rgba(255,255,255,0.7); font-size: 0.9rem; line-height: 1.5; }
@@ -428,6 +542,7 @@
             .roadmap-item { width: 100%; padding-left: 70px; padding-right: 25px; }
             .roadmap-item.right { left: 0%; }
             .roadmap-item.left::after, .roadmap-item.right::after { left: 18px; }
+            .css-art--3-pie-venn-diagram { min-height: auto; }
         }
 
         @media (max-width: 768px) {
@@ -435,7 +550,11 @@
             .main-content.panel-open { margin-left: 280px; }
             .steps { grid-template-columns: 1fr; }
             .css-art--3-pie-venn-diagram { min-height: auto; }
-            .css-art--pie-venn { position: relative !important; width: 100% !important; height: auto !important; border-radius: 16px !important; margin-bottom: 1rem; }
+            .css-art--pie-venn {
+                position: relative !important; width: 100% !important; height: auto !important;
+                border-radius: 16px !important; margin-bottom: 1rem;
+                min-height: 120px !important;
+            }
             .css-art--pie-venn ul { position: relative !important; top: auto !important; left: auto !important; right: auto !important; width: auto !important; text-align: left !important; }
             .css-art--pie-venn h3 { position: relative !important; top: auto !important; bottom: auto !important; }
             .venn-intersect-1-2, .venn-intersect-2-3, .venn-intersect-3-1, .venn-main-intersection {
@@ -621,14 +740,13 @@ return m ? m[1].trim() : null;
 function escapeHtml(s) { return String(s).replace(/[&<>]/g, m=> m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
 
 // ============================================================
-// SEGMENTATION RENDERER - PIE CHART
+// SEGMENTATION RENDERER - Interactive Pie Chart
 // ============================================================
 function renderSegmentationVisual(plan) {
 if (!plan) return '<div class="empty-state">✨ Generate a plan first</div>';
 const content = extractTagContent(plan, 'SEGMENTATION OUTPUT');
 let segments = [];
 let primaryTarget = '';
-let segmentData = [];
 
 if (content) {
 const lines = content.split('\n');
@@ -643,28 +761,24 @@ if (primaryMatch) primaryTarget = primaryMatch[1].trim();
 }
 
 if (segments.length === 0) {
-segments = ['Urban Young Professionals', 'Middle-income families', 'University students'];
-segmentData = [
-{ name: 'Urban Young Professionals', share: 45 },
-{ name: 'Middle-income families', share: 30 },
-{ name: 'University students', share: 25 }
-];
-} else {
-segmentData = segments.slice(0,3).map((name, i) => ({
+segments = ['Urban Young Professionals', 'Middle-income Families', 'University Students'];
+}
+if (!primaryTarget) primaryTarget = 'Young Urban Professionals';
+
+const data = segments.slice(0,3).map((name, i) => ({
 name: name,
 share: [45, 30, 25][i % 3]
 }));
-}
-
-if (!primaryTarget) primaryTarget = 'Young Urban Professionals';
 
 const colors = ['#4ade80', '#22d3ee', '#fbbf24'];
 let piesHtml = '';
-segmentData.forEach((d, i) => {
+data.forEach((d, i) => {
 const color = colors[i % colors.length];
 const percent = d.share;
 piesHtml += `
-<div class="pie-wrapper" style="border-color:${color}40;" onmouseenter="this.style.transform='scale(1.1)';this.style.borderColor='${color}';" onmouseleave="this.style.transform='scale(1)';this.style.borderColor='${color}40';">
+<div class="pie-wrapper" style="border-color:${color}40;" 
+     onmouseenter="this.style.transform='scale(1.12)';this.style.borderColor='${color}';this.style.boxShadow='0 0 40px ${color}40';" 
+     onmouseleave="this.style.transform='scale(1)';this.style.borderColor='${color}40';this.style.boxShadow='0 10px 30px rgba(0,0,0,0.3)';">
 <div class="csspie" style="left:${percent >= 50 ? '0px' : '80px'};">
 <div class="pie-before" style="background-color:${color};transform:rotate(${percent * 3.6}deg);"></div>
 ${percent >= 50 ? `<div class="pie-after" style="background-color:${color};"></div>` : ''}
@@ -677,12 +791,13 @@ ${percent >= 50 ? `<div class="pie-after" style="background-color:${color};"></d
 return `
 <div style="text-align:center;padding:10px 0;">
 <h3 style="color:#a5b4fc;margin-bottom:12px;">📊 Market Segmentation</h3>
+<p style="font-size:13px;color:rgba(255,255,255,0.3);margin-bottom:12px;">Hover to highlight · Click for insights</p>
 <div style="display:flex;justify-content:center;align-items:center;gap:30px;flex-wrap:wrap;margin:20px 0;">${piesHtml}</div>
 <div style="padding:12px 20px;border-radius:12px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.15);display:inline-block;">
 <span style="font-size:12px;color:rgba(255,255,255,0.5);">🏆 Primary Target: </span>
 <span style="font-size:13px;font-weight:600;color:#4ade80;">${escapeHtml(primaryTarget)}</span>
 </div>
-${content ? `<div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:left;"><pre style="white-space:pre-wrap;color:rgba(255,255,255,0.6);font-family:inherit;font-size:12px;max-height:150px;overflow-y:auto;">${escapeHtml(content.substring(0,300))}${content.length > 300 ? '...' : ''}</pre></div>` : ''}
+${content ? `<div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:left;max-height:150px;overflow-y:auto;"><pre style="white-space:pre-wrap;color:rgba(255,255,255,0.6);font-family:inherit;font-size:12px;">${escapeHtml(content)}</pre></div>` : ''}
 </div>
 `;
 }
@@ -708,23 +823,54 @@ if (line.match(/SOM/i)) { const m = line.match(/([0-9,]+[A-Za-z]*)/); if (m) som
 return `
 <div style="text-align:center;padding:10px 0;">
 <h3 style="color:#a5b4fc;margin-bottom:12px;">📊 Market Sizing · TAM / SAM / SOM</h3>
-<p style="font-size:13px;color:rgba(255,255,255,0.3);margin-bottom:16px;">TAM (largest) → SAM (medium) → SOM (smallest)</p>
+<p style="font-size:13px;color:rgba(255,255,255,0.3);margin-bottom:16px;">Hover any circle to see details · TAM (largest) → SAM (medium) → SOM (smallest)</p>
 <div class="css-art--3-pie-venn-diagram">
-<div class="css-art--pie-venn css-art--pie-venn-1"><h3>🌍 TAM</h3><ul><li><strong>Total Addressable Market</strong></li><li>Value: ${tam}</li><li>Full market potential</li></ul></div>
-<div class="css-art--pie-venn css-art--pie-venn-2"><h3>🎯 SAM</h3><ul><li><strong>Serviceable Available Market</strong></li><li>Value: ${sam}</li><li>Reachable segment</li></ul></div>
-<div class="css-art--pie-venn css-art--pie-venn-3"><h3>🚀 SOM</h3><ul><li><strong>Serviceable Obtainable Market</strong></li><li>Value: ${som}</li><li>Realistic target</li></ul></div>
+<!-- TAM - Biggest Circle -->
+<div class="css-art--pie-venn css-art--pie-venn-1">
+<h3>🌍 TAM</h3>
+<ul>
+<li><strong>Total Addressable Market</strong></li>
+<li>Value: <strong style="color:#a5b4fc;">${tam}</strong></li>
+<li>Full market potential</li>
+</ul>
+<div class="venn-tooltip" style="opacity:0;transition:opacity 0.3s;">${tam}</div>
+</div>
+
+<!-- SAM - Medium Circle -->
+<div class="css-art--pie-venn css-art--pie-venn-2">
+<h3>🎯 SAM</h3>
+<ul>
+<li><strong>Serviceable Available Market</strong></li>
+<li>Value: <strong style="color:#22d3ee;">${sam}</strong></li>
+<li>Reachable segment</li>
+</ul>
+<div class="venn-tooltip" style="opacity:0;transition:opacity 0.3s;">${sam}</div>
+</div>
+
+<!-- SOM - Smallest Circle -->
+<div class="css-art--pie-venn css-art--pie-venn-3">
+<h3>🚀 SOM</h3>
+<ul>
+<li><strong>Serviceable Obtainable Market</strong></li>
+<li>Value: <strong style="color:#fbbf24;">${som}</strong></li>
+<li>Realistic target</li>
+</ul>
+<div class="venn-tooltip" style="opacity:0;transition:opacity 0.3s;">${som}</div>
+</div>
+
+<!-- Intersections -->
 <div class="venn-intersect-1-2"><h3>TAM ∩ SAM</h3><ul><li>Addressable & reachable</li></ul></div>
 <div class="venn-intersect-2-3"><h3>SAM ∩ SOM</h3><ul><li>Reachable & obtainable</li></ul></div>
 <div class="venn-intersect-3-1"><h3>SOM ∩ TAM</h3><ul><li>Obtainable within total</li></ul></div>
 <div class="venn-main-intersection"><h3>✦ TAM ∩ SAM ∩ SOM</h3><ul><li><strong>Core Market Focus</strong></li><li>${som} achievable</li></ul></div>
 </div>
-${content ? `<div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:left;"><pre style="white-space:pre-wrap;color:rgba(255,255,255,0.6);font-family:inherit;font-size:12px;max-height:120px;overflow-y:auto;">${escapeHtml(content)}</pre></div>` : ''}
+${content ? `<div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:left;max-height:120px;overflow-y:auto;"><pre style="white-space:pre-wrap;color:rgba(255,255,255,0.6);font-family:inherit;font-size:12px;">${escapeHtml(content)}</pre></div>` : ''}
 </div>
 `;
 }
 
 // ============================================================
-// KPI CARDS - DYNAMIC FROM PLAN
+// KPI CARDS - Interactive Glass Morphism
 // ============================================================
 function renderKPIVisual(plan) {
 if (!plan) return '<div class="empty-state">📊 Generate a plan first</div>';
@@ -768,13 +914,13 @@ ${kpis.slice(0,4).map((k, i) => `
 </div>
 `).join('')}
 </div>
-${content ? `<div style="margin-top:12px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:left;"><pre style="white-space:pre-wrap;color:rgba(255,255,255,0.6);font-family:inherit;font-size:12px;max-height:100px;overflow-y:auto;">${escapeHtml(content)}</pre></div>` : ''}
+${content ? `<div style="margin-top:12px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:left;max-height:100px;overflow-y:auto;"><pre style="white-space:pre-wrap;color:rgba(255,255,255,0.6);font-family:inherit;font-size:12px;">${escapeHtml(content)}</pre></div>` : ''}
 </div>
 `;
 }
 
 // ============================================================
-// OKR DIAGRAM - DYNAMIC FROM PLAN
+// OKR DIAGRAM - Interactive Glass Morphism
 // ============================================================
 function renderOKRVisual(plan) {
 if (!plan) return '<div class="empty-state">🎯 Generate a plan first</div>';
@@ -826,7 +972,7 @@ return `
 <h2 class="objective-title">${escapeHtml(obj.objective)}</h2>
 <div class="progress-wrapper">
 <div class="progress-info"><span>Overall Progress</span><strong>${Math.round(avgProgress)}%</strong></div>
-<div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${avgProgress}%;background:#6366f1;"></div></div>
+<div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${avgProgress}%;background:linear-gradient(90deg,#6366f1,#ec4899);"></div></div>
 </div>
 </div>
 <div class="kr-container">
@@ -841,19 +987,18 @@ ${obj.krs.map((kr, i) => `
 `).join('')}
 </div>
 </div>
-${content ? `<div style="margin-top:12px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:left;"><pre style="white-space:pre-wrap;color:rgba(255,255,255,0.6);font-family:inherit;font-size:12px;max-height:100px;overflow-y:auto;">${escapeHtml(content)}</pre></div>` : ''}
+${content ? `<div style="margin-top:12px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:left;max-height:100px;overflow-y:auto;"><pre style="white-space:pre-wrap;color:rgba(255,255,255,0.6);font-family:inherit;font-size:12px;">${escapeHtml(content)}</pre></div>` : ''}
 </div>
 `;
 }
 
 // ============================================================
-// ROADMAP - DYNAMIC FROM PLAN
+// ROADMAP - Interactive Glass Morphism
 // ============================================================
 function renderRoadmapVisual(plan) {
 if (!plan) return '<div class="empty-state">🗺️ Generate a plan first</div>';
 const content = extractTagContent(plan, 'ROADMAP OUTPUT');
 
-// Try to extract phases from content or use default
 let phases = [];
 if (content) {
 const lines = content.split('\n');
@@ -897,7 +1042,7 @@ ${phases.map((p, i) => `
 `).join('')}
 </div>
 </div>
-${content ? `<div style="margin-top:12px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:left;"><pre style="white-space:pre-wrap;color:rgba(255,255,255,0.6);font-family:inherit;font-size:12px;max-height:100px;overflow-y:auto;">${escapeHtml(content)}</pre></div>` : ''}
+${content ? `<div style="margin-top:12px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:left;max-height:100px;overflow-y:auto;"><pre style="white-space:pre-wrap;color:rgba(255,255,255,0.6);font-family:inherit;font-size:12px;">${escapeHtml(content)}</pre></div>` : ''}
 </div>
 `;
 }
@@ -924,8 +1069,8 @@ if (content) {
 return `
 <div style="padding:12px;">
 <h3 style="color:#a5b4fc;margin-bottom:12px;">📋 ${title}</h3>
-<div style="background:rgba(255,255,255,0.02);border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.05);">
-<pre style="white-space:pre-wrap;color:#cbd5e1;font-family:inherit;font-size:14px;line-height:1.7;max-height:400px;overflow-y:auto;">${content}</pre>
+<div style="background:rgba(255,255,255,0.02);border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.05);max-height:400px;overflow-y:auto;">
+<pre style="white-space:pre-wrap;color:#cbd5e1;font-family:inherit;font-size:14px;line-height:1.7;">${content}</pre>
 </div>
 </div>
 `;
