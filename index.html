@@ -25,7 +25,6 @@
             min-height: 100vh;
         }
 
-        /* PDF Export Styles */
         @media print {
             body { background: white; color: black; }
             .left-panel, .nav, .nav-right, .footer, .lang-selector, .auth-buttons, .user-menu, .btn-primary, .btn-outline, .status-bar, .progress-bar, .close-role-content { display: none !important; }
@@ -260,288 +259,364 @@
         
         .loader { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,.3); border-top-color: #6366f1; border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
-        /* ===== PIE CHART STYLES ===== */
-        .pie-wrapper {
-            height: 160px; width: 160px; display: inline-block; position: relative;
-            background: rgba(255,255,255,0.05); border-radius: 80px;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            backdrop-filter: blur(10px);
-        }
-        .pie-wrapper:hover { transform: scale(1.08); border-color: rgba(99,102,241,0.5); box-shadow: 0 15px 40px rgba(99,102,241,0.2); }
-        .csspie { position: absolute; width: 80px; height: 160px; overflow: hidden; transform-origin: left center; }
-        .csspie .pie-before {
-            content: ''; position: absolute; width: 80px; height: 160px; left: -80px;
-            border-radius: 80px 0 0 80px; transform-origin: right center;
-            transition: all 0.4s ease; box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
-        }
-        .csspie .pie-after {
-            content: ''; position: absolute; width: 80px; height: 160px; left: 80px;
-            border-radius: 0 80px 80px 0; box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
-        }
-        .pie-label {
-            width: 160px; position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%); font-weight: 700; color: #e2e8f0;
-            text-align: center; font-size: 14px; pointer-events: none;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5); z-index: 2;
-        }
 
-        /* ===== VENN DIAGRAM STYLES - Glass Morphism ===== */
-        .css-art--3-pie-venn-diagram {
-            position: relative;
-            font-size: 0.9rem;
-            width: 100%;
-            max-width: 48em;
-            margin: 1.5em auto;
-            min-height: 420px;
+        /* Role Content Display */
+        .role-content-display {
+            padding: 12px;
         }
-        .css-art--pie-venn {
-            position: relative;
-            box-sizing: border-box;
-            padding: 0.5em 0 2em;
-            transition: all 0.3s ease;
-        }
-        .css-art--pie-venn h3 {
-            box-sizing: border-box;
-            width: 100%;
+        .role-content-display h3 {
             color: #a5b4fc;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
+            margin-bottom: 16px;
         }
-        .css-art--pie-venn:hover h3 { transform: scale(1.05); color: #c7d2fe; }
-        .css-art--pie-venn, .venn-intersect-1-2, .venn-intersect-2-3, .venn-intersect-3-1, .venn-main-intersection {
-            position: relative;
-            padding: 1em 0 0.75em 1.5em;
-            transition: all 0.3s ease;
+        .role-content-display ul {
+            padding-left: 20px;
+            margin: 8px 0;
         }
-        .css-art--pie-venn:hover, .venn-intersect-1-2:hover, .venn-intersect-2-3:hover, .venn-intersect-3-1:hover, .venn-main-intersection:hover {
-            transform: translateY(-3px);
-        }
-        .css-art--pie-venn h3, .venn-intersect-1-2 h3, .venn-intersect-2-3 h3, .venn-intersect-3-1 h3, .venn-main-intersection h3 {
-            margin: 0 0 0.75em;
-            font-size: 1rem;
-        }
-        .css-art--pie-venn ul, .venn-intersect-1-2 ul, .venn-intersect-2-3 ul, .venn-intersect-3-1 ul, .venn-main-intersection ul {
-            margin: 0;
-            padding: 0 0 0 1.5em;
-        }
-        .css-art--pie-venn li, .venn-intersect-1-2 li, .venn-intersect-2-3 li, .venn-intersect-3-1 li, .venn-main-intersection li {
-            margin: 0 0 0.25em;
+        .role-content-display li {
+            margin: 4px 0;
             color: rgba(255,255,255,0.8);
-            transition: color 0.3s ease;
         }
-        .css-art--pie-venn:hover li, .venn-intersect-1-2:hover li, .venn-intersect-2-3:hover li, .venn-intersect-3-1:hover li, .venn-main-intersection:hover li {
-            color: rgba(255,255,255,0.95);
-        }
-        .css-art--pie-venn:before, .venn-intersect-1-2:before, .venn-intersect-2-3:before, .venn-intersect-3-1:before, .venn-main-intersection:before {
-            content: ''; position: absolute; top: 0; left: 0; display: block; width: 0.5em; height: 100%;
-            background: linear-gradient(180deg, #6366f1, #818cf8);
-            border-radius: 4px 0 0 4px;
-            transition: all 0.3s ease;
-        }
-        .css-art--pie-venn:hover:before, .venn-intersect-1-2:hover:before, .venn-intersect-2-3:hover:before, .venn-intersect-3-1:hover:before, .venn-main-intersection:hover:before {
-            width: 0.7em;
-            background: linear-gradient(180deg, #818cf8, #a5b4fc);
-        }
-        .css-art--pie-venn-2:before { background: linear-gradient(180deg, #22d3ee, #67e8f9); }
-        .css-art--pie-venn-2 h3 { color: #22d3ee; }
-        .css-art--pie-venn-3:before { background: linear-gradient(180deg, #fbbf24, #fcd34d); }
-        .css-art--pie-venn-3 h3 { color: #fbbf24; }
-        .venn-intersect-1-2:before { background: linear-gradient(180deg, #4ade80, #86efac); }
-        .venn-intersect-1-2 h3 { color: #4ade80; }
-        .venn-intersect-2-3:before { background: linear-gradient(180deg, #f472b6, #f9a8d4); }
-        .venn-intersect-2-3 h3 { color: #f472b6; }
-        .venn-intersect-3-1:before { background: linear-gradient(180deg, #f59e0b, #fbbf24); }
-        .venn-intersect-3-1 h3 { color: #f59e0b; }
-        .venn-main-intersection:before { background: linear-gradient(180deg, #a78bfa, #c4b5fd); }
-        .venn-main-intersection h3 { color: #a78bfa; }
-
-        /* Hover tooltip for circles - shows value on hover */
-        .venn-tooltip {
-            position: absolute;
-            background: rgba(10,14,26,0.92);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(99,102,241,0.3);
-            border-radius: 12px;
-            padding: 6px 14px;
-            font-size: 14px;
-            font-weight: 600;
+        .role-content-display strong {
             color: #a5b4fc;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 10;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-        }
-        .css-art--pie-venn:hover .venn-tooltip { opacity: 1; }
-
-        @media (min-width: 51em) {
-            .css-art--3-pie-venn-diagram { height: 38em; position: relative; }
-            .css-art--pie-venn {
-                position: absolute; z-index: 0; box-sizing: border-box; width: 19em; height: 19em;
-                border-radius: 50%; background: rgba(99,102,241,0.08);
-                color: #fff; padding: 1em; border: 2px solid rgba(99,102,241,0.15);
-                backdrop-filter: blur(4px);
-                transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            }
-            .css-art--pie-venn:hover {
-                transform: scale(1.04);
-                border-color: rgba(99,102,241,0.5);
-                background: rgba(99,102,241,0.15);
-                box-shadow: 0 0 40px rgba(99,102,241,0.15);
-            }
-            .css-art--pie-venn:before { display: none; }
-            .css-art--pie-venn h3 {
-                position: absolute; top: -2.8em; width: 100%; text-align: center;
-                font-size: 1.2rem; transition: all 0.3s ease;
-            }
-            .css-art--pie-venn:hover h3 { transform: scale(1.08); color: #c7d2fe; }
-            .css-art--pie-venn ul { position: absolute; width: 13em; margin: 0 auto; font-size: 0.85rem; }
-            .css-art--pie-venn-1 {
-                top: 5em; left: 0.5em; z-index: 1;
-                background: rgba(99,102,241,0.08); border-color: rgba(99,102,241,0.25);
-                width: 21em; height: 21em;
-            }
-            .css-art--pie-venn-1:hover { background: rgba(99,102,241,0.18); border-color: rgba(99,102,241,0.5); }
-            .css-art--pie-venn-1 ul { top: 5em; left: 3em; }
-            .css-art--pie-venn-2 {
-                top: 5em; right: 0.5em; z-index: 2;
-                background: rgba(34,211,238,0.06); border-color: rgba(34,211,238,0.2);
-                width: 18em; height: 18em;
-            }
-            .css-art--pie-venn-2:hover { background: rgba(34,211,238,0.15); border-color: rgba(34,211,238,0.4); }
-            .css-art--pie-venn-2 ul { top: 5em; right: 2em; text-align: right; }
-            .css-art--pie-venn-3 {
-                bottom: 1.5em; left: 50%; transform: translateX(-50%);
-                background: rgba(251,191,36,0.06); border-color: rgba(251,191,36,0.2);
-                z-index: 0; width: 14em; height: 14em;
-            }
-            .css-art--pie-venn-3:hover { transform: translateX(-50%) scale(1.06); background: rgba(251,191,36,0.15); border-color: rgba(251,191,36,0.4); }
-            .css-art--pie-venn-3 ul { top: 7em; left: 50%; transform: translateX(-50%); text-align: center; width: 10em; }
-            .css-art--pie-venn-3 h3 { top: auto; bottom: -2.8em; }
-            
-            .venn-intersect-1-2, .venn-intersect-2-3, .venn-intersect-3-1 {
-                position: absolute; z-index: 5; display: inline-block; max-width: 14em;
-                padding: 0.5em 1em; background: rgba(255,255,255,0.03);
-                border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);
-                backdrop-filter: blur(4px);
-                transition: all 0.3s ease;
-            }
-            .venn-intersect-1-2:hover, .venn-intersect-2-3:hover, .venn-intersect-3-1:hover {
-                background: rgba(255,255,255,0.08);
-                border-color: rgba(99,102,241,0.3);
-                transform: translateY(-3px);
-            }
-            .venn-intersect-1-2 { left: 50%; transform: translateX(-50%); top: 17em; }
-            .venn-intersect-1-2:hover { transform: translateX(-50%) translateY(-3px); }
-            .venn-intersect-2-3 { right: 0.5em; bottom: 10em; max-width: 12em; }
-            .venn-intersect-3-1 { left: 0.5em; bottom: 10em; max-width: 12em; }
-            .venn-main-intersection {
-                position: absolute; top: 50%; left: 50%; z-index: 6;
-                transform: translate(-50%, -50%); text-align: center;
-                background: rgba(167,139,250,0.08); border: 2px solid rgba(167,139,250,0.2);
-                border-radius: 16px; padding: 0.8em 1.2em; max-width: 12em;
-                backdrop-filter: blur(4px);
-                transition: all 0.3s ease;
-            }
-            .venn-main-intersection:hover {
-                background: rgba(167,139,250,0.18);
-                border-color: rgba(167,139,250,0.4);
-                transform: translate(-50%, -50%) scale(1.05);
-            }
-            .venn-main-intersection:before { display: none; }
-            .venn-main-intersection h3 { color: #a78bfa; text-align: center; font-size: 1rem; }
-            .venn-main-intersection ul { padding-left: 0; list-style: none; }
-            .venn-main-intersection li { color: rgba(255,255,255,0.7); font-size: 0.8rem; }
         }
 
-        /* ===== KPI CARD STYLES - Glass Morphism ===== */
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin: 1rem 0; }
-        .kpi-card {
-            background: rgba(255,255,255,0.03); border-radius: 0.75rem; padding: 1.5rem;
-            border: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column;
-            justify-content: space-between; position: relative; overflow: hidden;
+        /* Price Highlight Card */
+        .price-highlight {
+            background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(99,102,241,0.1));
+            border: 1px solid rgba(16,185,129,0.3);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 12px 0;
             backdrop-filter: blur(8px);
+        }
+        .price-amount {
+            font-size: 28px;
+            font-weight: 700;
+            color: #4ade80;
+            display: block;
+        }
+        .price-note {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            display: block;
+            margin-top: 4px;
+        }
+
+        /* Glass KPI Cards */
+        .kpi-grid-glass {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .kpi-card-glass {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.06);
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .kpi-card:hover { transform: translateY(-6px); border-color: rgba(99,102,241,0.3); box-shadow: 0 15px 40px rgba(0,0,0,0.3); background: rgba(255,255,255,0.06); }
-        .kpi-card.bordered-accent { border-left: 6px solid #6366f1; }
-        .kpi-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-        .kpi-title { font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.05em; }
-        .kpi-icon { font-size: 1.25rem; width: 2.25rem; height: 2.25rem; display: flex; align-items: center; justify-content: center; border-radius: 0.5rem; background: rgba(255,255,255,0.05); }
-        .kpi-value { font-size: 1.875rem; font-weight: 700; color: #a5b4fc; line-height: 1.2; margin-bottom: 0.5rem; }
-        .kpi-footer { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: rgba(255,255,255,0.4); }
-        .trend-badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; border-radius: 0.375rem; font-weight: 600; font-size: 0.7rem; }
-        .trend-positive { background: rgba(74,222,128,0.15); color: #4ade80; }
-        .trend-negative { background: rgba(248,113,113,0.15); color: #f87171; }
-        .kpi-progress-container { width: 100%; background: rgba(255,255,255,0.05); height: 0.5rem; border-radius: 9999px; margin-top: 0.5rem; overflow: hidden; }
-        .kpi-progress-bar { background: linear-gradient(90deg, #6366f1, #ec4899); height: 100%; border-radius: 9999px; }
-
-        /* ===== OKR STYLES - Glass Morphism ===== */
-        .okr-container { max-width: 100%; width: 100%; display: flex; flex-direction: column; gap: 1.5rem; position: relative; }
-        .objective-card {
-            background: rgba(255,255,255,0.03); border: 2px solid rgba(99,102,241,0.2);
-            border-radius: 12px; padding: 1.5rem; position: relative; z-index: 2;
-            backdrop-filter: blur(8px); transition: all 0.3s ease;
+        .kpi-card-glass:hover {
+            transform: translateY(-4px);
+            border-color: rgba(99,102,241,0.3);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.06);
         }
-        .objective-card:hover { border-color: rgba(99,102,241,0.4); box-shadow: 0 10px 30px rgba(99,102,241,0.1); }
-        .objective-badge { background: rgba(99,102,241,0.15); color: #a5b4fc; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.7rem; text-transform: uppercase; display: inline-block; margin-bottom: 0.7rem; }
-        .objective-title { font-size: 1.3rem; margin: 0 0 1rem 0; font-weight: 700; color: #a5b4fc; }
-        .kr-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; position: relative; }
-        .kr-card {
-            background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 8px; padding: 1.25rem; display: flex; flex-direction: column;
-            justify-content: space-between; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        .kpi-card-glass .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .kpi-card-glass .kpi-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .kpi-card-glass .kpi-icon {
+            font-size: 1.2rem;
+        }
+        .kpi-card-glass .kpi-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #a5b4fc;
+            margin-bottom: 8px;
+        }
+        .kpi-card-glass .kpi-footer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+        }
+        .trend-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.7rem;
+        }
+        .trend-positive {
+            background: rgba(74,222,128,0.15);
+            color: #4ade80;
+        }
+        .trend-negative {
+            background: rgba(248,113,113,0.15);
+            color: #f87171;
+        }
+
+        /* Glass OKR Cards */
+        .okr-container-glass {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 16px;
+        }
+        .okr-card-glass {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-left: 4px solid #6366f1;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .okr-card-glass:hover {
+            transform: translateY(-4px);
+            border-color: rgba(99,102,241,0.3);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.06);
+        }
+        .okr-card-glass .objective-badge {
+            background: rgba(99,102,241,0.15);
+            color: #a5b4fc;
+            font-weight: 700;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        .okr-card-glass .objective-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #a5b4fc;
+            margin-bottom: 12px;
+        }
+        .okr-card-glass .kr-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        .okr-card-glass .kr-card {
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
+            padding: 12px 16px;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .okr-card-glass .kr-badge {
+            background: rgba(74,222,128,0.15);
+            color: #4ade80;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+        .okr-card-glass .kr-text {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 8px;
+        }
+        .okr-card-glass .progress-wrapper {
+            margin-top: auto;
+        }
+        .okr-card-glass .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 4px;
+        }
+        .okr-card-glass .progress-bar-bg {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            height: 6px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .okr-card-glass .progress-bar-fill {
+            background: linear-gradient(90deg, #4ade80, #22d3ee);
+            height: 100%;
+            border-radius: 20px;
+            transition: width 0.6s ease;
+        }
+
+        /* Venn Diagram Styles */
+        .venn-diagram-wrapper {
+            padding: 12px 0;
+        }
+        .css-art--3-pie-venn-diagram {
+            position: relative;
+            width: 100%;
+            max-width: 48em;
+            margin: 0 auto;
+            min-height: 400px;
+        }
+        .venn-mobile-layout {
+            display: none;
+        }
+        .venn-section {
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255,255,255,0.06);
             backdrop-filter: blur(4px);
-        }
-        .kr-card:hover { transform: translateY(-4px); border-color: rgba(74,222,128,0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.2); background: rgba(255,255,255,0.04); }
-        .kr-badge { background: rgba(74,222,128,0.15); color: #4ade80; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; display: inline-block; margin-bottom: 0.5rem; width: fit-content; }
-        .kr-text { font-size: 0.95rem; margin: 0 0 1.25rem 0; line-height: 1.5; color: rgba(255,255,255,0.8); }
-        .progress-wrapper { margin-top: auto; }
-        .progress-info { display: flex; justify-content: space-between; font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 0.25rem; }
-        .progress-bar-bg { background: rgba(255,255,255,0.05); border-radius: 9999px; height: 8px; width: 100%; overflow: hidden; }
-        .progress-bar-fill { background: linear-gradient(90deg, #4ade80, #22d3ee); height: 100%; border-radius: 9999px; transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
-
-        /* ===== ROADMAP STYLES - Glass Morphism ===== */
-        .roadmap-container { max-width: 100%; margin: 0 auto; padding: 10px 0; }
-        .roadmap-title { text-align: center; color: #a5b4fc; margin-bottom: 30px; font-size: 1.5rem; font-weight: 700; }
-        .roadmap-timeline { position: relative; max-width: 100%; margin: 0 auto; }
-        .roadmap-timeline::after {
-            content: ''; position: absolute; width: 3px; background: linear-gradient(180deg, #6366f1, #ec4899);
-            top: 0; bottom: 0; left: 50%; margin-left: -1.5px;
-            border-radius: 2px;
-        }
-        .roadmap-item {
-            padding: 10px 40px; position: relative; background-color: inherit; width: 50%;
-        }
-        .roadmap-item::after {
-            content: ''; position: absolute; width: 18px; height: 18px;
-            right: -11px; background: #0a0e1a; border: 3px solid #6366f1;
-            top: 20px; border-radius: 50%; z-index: 1;
             transition: all 0.3s ease;
         }
-        .roadmap-item:hover::after { border-color: #ec4899; transform: scale(1.2); box-shadow: 0 0 20px rgba(236,72,153,0.3); }
-        .roadmap-item.left { left: 0; }
-        .roadmap-item.right { left: 50%; }
-        .roadmap-item.right::after { left: -11px; }
-        .roadmap-item .content {
-            padding: 18px 24px; background: rgba(255,255,255,0.03);
-            position: relative; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            backdrop-filter: blur(4px);
+        .venn-section:hover {
+            transform: translateX(4px);
+            border-color: rgba(99,102,241,0.3);
+            background: rgba(255,255,255,0.06);
         }
-        .roadmap-item .content:hover { border-color: rgba(99,102,241,0.4); transform: translateY(-4px); box-shadow: 0 12px 35px rgba(0,0,0,0.3); background: rgba(255,255,255,0.06); }
-        .roadmap-item .content h3 { color: #a5b4fc; margin-bottom: 4px; font-size: 1.1rem; }
-        .roadmap-item .content .date { color: #f472b6; font-weight: bold; margin-bottom: 8px; font-size: 0.85rem; }
-        .roadmap-item .content p { color: rgba(255,255,255,0.7); font-size: 0.9rem; line-height: 1.5; }
+        .venn-section h3 {
+            color: #a5b4fc;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+        .venn-section ul {
+            padding-left: 16px;
+            margin-top: 8px;
+        }
+        .venn-section li {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.6);
+            margin: 2px 0;
+        }
+        .venn-circle {
+            display: none;
+        }
+        .venn-intersection {
+            display: none;
+        }
 
-        @media screen and (max-width: 600px) {
-            .roadmap-timeline::after { left: 31px; }
-            .roadmap-item { width: 100%; padding-left: 70px; padding-right: 25px; }
-            .roadmap-item.right { left: 0%; }
-            .roadmap-item.left::after, .roadmap-item.right::after { left: 18px; }
+        @media (min-width: 768px) {
+            .venn-mobile-layout {
+                display: none !important;
+            }
+            .venn-circle {
+                display: block;
+                position: absolute;
+                border-radius: 50%;
+                border: 2px solid rgba(99,102,241,0.2);
+                background: rgba(99,102,241,0.06);
+                backdrop-filter: blur(4px);
+                padding: 20px;
+                text-align: center;
+                transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+            .venn-circle:hover {
+                transform: scale(1.04);
+                border-color: rgba(99,102,241,0.4);
+                background: rgba(99,102,241,0.12);
+                box-shadow: 0 0 40px rgba(99,102,241,0.1);
+            }
+            .venn-circle.tam {
+                width: 280px;
+                height: 280px;
+                top: 30px;
+                left: 10px;
+                z-index: 1;
+                border-color: rgba(74,222,128,0.3);
+            }
+            .venn-circle.tam:hover { border-color: #4ade80; background: rgba(74,222,128,0.08); }
+            .venn-circle.sam {
+                width: 230px;
+                height: 230px;
+                top: 30px;
+                right: 10px;
+                z-index: 2;
+                border-color: rgba(251,191,36,0.3);
+            }
+            .venn-circle.sam:hover { border-color: #fbbf24; background: rgba(251,191,36,0.08); }
+            .venn-circle.som {
+                width: 180px;
+                height: 180px;
+                bottom: 10px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 0;
+                border-color: rgba(248,113,113,0.3);
+            }
+            .venn-circle.som:hover { transform: translateX(-50%) scale(1.04); border-color: #f87171; background: rgba(248,113,113,0.08); }
+            .venn-circle h3 {
+                font-size: 1.1rem;
+                font-weight: 700;
+                margin-bottom: 6px;
+            }
+            .venn-circle ul {
+                list-style: none;
+                padding: 0;
+                font-size: 0.7rem;
+                color: rgba(255,255,255,0.6);
+                margin-top: 8px;
+            }
+            .venn-circle ul li { margin: 3px 0; }
+            
+            .venn-intersection {
+                display: block;
+                position: absolute;
+                z-index: 5;
+                background: rgba(255,255,255,0.04);
+                backdrop-filter: blur(4px);
+                border: 1px solid rgba(255,255,255,0.06);
+                border-radius: 12px;
+                padding: 8px 14px;
+                font-size: 0.7rem;
+                text-align: center;
+                transition: all 0.3s ease;
+            }
+            .venn-intersection:hover {
+                background: rgba(255,255,255,0.08);
+                border-color: rgba(99,102,241,0.3);
+                transform: scale(1.05);
+            }
+            .venn-intersection strong {
+                color: #a5b4fc;
+                display: block;
+                font-size: 0.75rem;
+            }
+            .venn-intersection span {
+                color: rgba(255,255,255,0.5);
+                font-size: 0.65rem;
+            }
+            .venn-intersection.tam-sam {
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            .venn-intersection.tam-sam:hover { transform: translate(-50%, -50%) scale(1.05); }
+            .venn-intersection.sam-som {
+                bottom: 30%;
+                right: 5%;
+            }
+            .venn-intersection.tam-som {
+                bottom: 30%;
+                left: 5%;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .venn-mobile-layout { display: block; }
+            .venn-circle { display: none !important; }
+            .venn-intersection { display: none !important; }
             .css-art--3-pie-venn-diagram { min-height: auto; }
         }
 
@@ -549,20 +624,6 @@
             .left-panel { width: 280px; }
             .main-content.panel-open { margin-left: 280px; }
             .steps { grid-template-columns: 1fr; }
-            .css-art--3-pie-venn-diagram { min-height: auto; }
-            .css-art--pie-venn {
-                position: relative !important; width: 100% !important; height: auto !important;
-                border-radius: 16px !important; margin-bottom: 1rem;
-                min-height: 120px !important;
-            }
-            .css-art--pie-venn ul { position: relative !important; top: auto !important; left: auto !important; right: auto !important; width: auto !important; text-align: left !important; }
-            .css-art--pie-venn h3 { position: relative !important; top: auto !important; bottom: auto !important; }
-            .venn-intersect-1-2, .venn-intersect-2-3, .venn-intersect-3-1, .venn-main-intersection {
-                position: relative !important; left: auto !important; right: auto !important;
-                bottom: auto !important; top: auto !important; transform: none !important;
-                max-width: 100% !important; margin-bottom: 0.5rem;
-            }
-            .venn-main-intersection { margin-top: 1rem; }
         }
     </style>
 </head>
@@ -740,343 +801,391 @@ return m ? m[1].trim() : null;
 function escapeHtml(s) { return String(s).replace(/[&<>]/g, m=> m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
 
 // ============================================================
-// SEGMENTATION RENDERER - Interactive Pie Chart
+// SEGMENTATION RENDERER - From API Output
 // ============================================================
 function renderSegmentationVisual(plan) {
 if (!plan) return '<div class="empty-state">✨ Generate a plan first</div>';
 const content = extractTagContent(plan, 'SEGMENTATION OUTPUT');
-let segments = [];
-let primaryTarget = '';
-
 if (content) {
-const lines = content.split('\n');
-for (const line of lines) {
-if (line.match(/^\d+\.|^[-•*]\s+/) && line.length > 10) {
-const name = line.replace(/^\d+\.|^[-•*]\s+/, '').trim().substring(0, 30);
-if (name.length > 4) segments.push(name);
+return `<div class="role-content-display">
+<h3 style="color:#a5b4fc; margin-bottom:16px;">📊 Market Segmentation</h3>
+${formatContent(content)}
+</div>`;
 }
-}
-const primaryMatch = plan.match(/Primary Target[:\s]*([^\n]+)/i);
-if (primaryMatch) primaryTarget = primaryMatch[1].trim();
-}
-
-if (segments.length === 0) {
-segments = ['Urban Young Professionals', 'Middle-income Families', 'University Students'];
-}
-if (!primaryTarget) primaryTarget = 'Young Urban Professionals';
-
-const data = segments.slice(0,3).map((name, i) => ({
-name: name,
-share: [45, 30, 25][i % 3]
-}));
-
-const colors = ['#4ade80', '#22d3ee', '#fbbf24'];
-let piesHtml = '';
-data.forEach((d, i) => {
-const color = colors[i % colors.length];
-const percent = d.share;
-piesHtml += `
-<div class="pie-wrapper" style="border-color:${color}40;" 
-     onmouseenter="this.style.transform='scale(1.12)';this.style.borderColor='${color}';this.style.boxShadow='0 0 40px ${color}40';" 
-     onmouseleave="this.style.transform='scale(1)';this.style.borderColor='${color}40';this.style.boxShadow='0 10px 30px rgba(0,0,0,0.3)';">
-<div class="csspie" style="left:${percent >= 50 ? '0px' : '80px'};">
-<div class="pie-before" style="background-color:${color};transform:rotate(${percent * 3.6}deg);"></div>
-${percent >= 50 ? `<div class="pie-after" style="background-color:${color};"></div>` : ''}
-</div>
-<div class="pie-label">${percent}%<div style="font-size:10px;color:rgba(255,255,255,0.5);font-weight:400;">${escapeHtml(d.name.split(' ').slice(0,2).join(' '))}</div></div>
-</div>
-`;
-});
-
-return `
-<div style="text-align:center;padding:10px 0;">
-<h3 style="color:#a5b4fc;margin-bottom:12px;">📊 Market Segmentation</h3>
-<p style="font-size:13px;color:rgba(255,255,255,0.3);margin-bottom:12px;">Hover to highlight · Click for insights</p>
-<div style="display:flex;justify-content:center;align-items:center;gap:30px;flex-wrap:wrap;margin:20px 0;">${piesHtml}</div>
-<div style="padding:12px 20px;border-radius:12px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.15);display:inline-block;">
-<span style="font-size:12px;color:rgba(255,255,255,0.5);">🏆 Primary Target: </span>
-<span style="font-size:13px;font-weight:600;color:#4ade80;">${escapeHtml(primaryTarget)}</span>
-</div>
-${content ? `<div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:left;max-height:150px;overflow-y:auto;"><pre style="white-space:pre-wrap;color:rgba(255,255,255,0.6);font-family:inherit;font-size:12px;">${escapeHtml(content)}</pre></div>` : ''}
-</div>
-`;
+return '<div class="empty-state">✨ No segmentation data found in the generated plan</div>';
 }
 
 // ============================================================
-// VENN DIAGRAM - MARKET SIZING (TAM biggest, SAM medium, SOM smallest)
+// MARKET SIZING RENDERER - From API Output with Venn Diagram
 // ============================================================
-function renderMarketSizingVenn(plan) {
-if (!plan) return '<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">📊 Generate a plan first</div>';
-
+function renderMarketSizingVisual(plan) {
+if (!plan) return '<div class="empty-state">📊 Generate a plan first</div>';
 const content = extractTagContent(plan, 'TAMSAMSOM OUTPUT');
-let tam = '$1.8M', sam = '$1.2M', som = '$200K';
-
 if (content) {
-const lines = content.split('\n');
-for (const line of lines) {
-if (line.match(/TAM/i)) { const m = line.match(/([0-9,]+[A-Za-z]*)/); if (m) tam = m[1]; }
-if (line.match(/SAM/i)) { const m = line.match(/([0-9,]+[A-Za-z]*)/); if (m) sam = m[1]; }
-if (line.match(/SOM/i)) { const m = line.match(/([0-9,]+[A-Za-z]*)/); if (m) som = m[1]; }
-}
-}
+// Parse values from content
+let tamValue = '1.68M', samValue = '1.2M', somValue = '200K';
+const tamMatch = content.match(/TAM[:\s]*([0-9,.]+[KMB]?)/i);
+const samMatch = content.match(/SAM[:\s]*([0-9,.]+[KMB]?)/i);
+const somMatch = content.match(/SOM[:\s]*([0-9,.]+[KMB]?)/i);
+if (tamMatch) tamValue = tamMatch[1];
+if (samMatch) samValue = samMatch[1];
+if (somMatch) somValue = somMatch[1];
 
 return `
-<div style="text-align:center;padding:10px 0;">
-<h3 style="color:#a5b4fc;margin-bottom:12px;">📊 Market Sizing · TAM / SAM / SOM</h3>
-<p style="font-size:13px;color:rgba(255,255,255,0.3);margin-bottom:16px;">Hover any circle to see details · TAM (largest) → SAM (medium) → SOM (smallest)</p>
+<div class="venn-diagram-wrapper">
+<h3 style="color:#a5b4fc; text-align:center; margin-bottom:20px;">Market Sizing - TAM / SAM / SOM</h3>
 <div class="css-art--3-pie-venn-diagram">
-<!-- TAM - Biggest Circle -->
-<div class="css-art--pie-venn css-art--pie-venn-1">
-<h3>🌍 TAM</h3>
+<!-- Mobile Layout -->
+<div class="venn-mobile-layout">
+<div class="venn-section tam">
+<h3>🔵 TAM - Total Addressable Market</h3>
+<p style="font-size:28px; font-weight:700; color:#4ade80;">${tamValue}</p>
+<p style="color:rgba(255,255,255,0.6); font-size:13px;">Entire market opportunity</p>
 <ul>
-<li><strong>Total Addressable Market</strong></li>
-<li>Value: <strong style="color:#a5b4fc;">${tam}</strong></li>
-<li>Full market potential</li>
+<li>All potential customers</li>
+<li>Urban & rural households</li>
+<li>Commercial & institutional buyers</li>
 </ul>
-<div class="venn-tooltip" style="opacity:0;transition:opacity 0.3s;">${tam}</div>
+</div>
+<div class="venn-section sam">
+<h3>🟡 SAM - Serviceable Available Market</h3>
+<p style="font-size:24px; font-weight:700; color:#fbbf24;">${samValue}</p>
+<p style="color:rgba(255,255,255,0.6); font-size:13px;">Targetable segments</p>
+<ul>
+<li>Urban professionals</li>
+<li>Middle-income households</li>
+<li>Accessible distribution channels</li>
+</ul>
+</div>
+<div class="venn-section som">
+<h3>🔴 SOM - Serviceable Obtainable Market</h3>
+<p style="font-size:20px; font-weight:700; color:#f87171;">${somValue}</p>
+<p style="color:rgba(255,255,255,0.6); font-size:13px;">Realistic target</p>
+<ul>
+<li>Early adopters</li>
+<li>Eco-conscious consumers</li>
+<li>Digital-first shoppers</li>
+</ul>
+</div>
 </div>
 
-<!-- SAM - Medium Circle -->
-<div class="css-art--pie-venn css-art--pie-venn-2">
-<h3>🎯 SAM</h3>
+<!-- Desktop Venn Diagram -->
+<div class="venn-circle tam">
+<h3>🔵 TAM</h3>
+<p style="font-size:22px; font-weight:700; color:#4ade80;">${tamValue}</p>
+<p style="font-size:11px; color:rgba(255,255,255,0.5);">Total Addressable Market</p>
 <ul>
-<li><strong>Serviceable Available Market</strong></li>
-<li>Value: <strong style="color:#22d3ee;">${sam}</strong></li>
-<li>Reachable segment</li>
+<li>Urban & rural households</li>
+<li>Commercial & institutional buyers</li>
 </ul>
-<div class="venn-tooltip" style="opacity:0;transition:opacity 0.3s;">${sam}</div>
 </div>
-
-<!-- SOM - Smallest Circle -->
-<div class="css-art--pie-venn css-art--pie-venn-3">
-<h3>🚀 SOM</h3>
+<div class="venn-circle sam">
+<h3>🟡 SAM</h3>
+<p style="font-size:20px; font-weight:700; color:#fbbf24;">${samValue}</p>
+<p style="font-size:11px; color:rgba(255,255,255,0.5);">Serviceable Available Market</p>
 <ul>
-<li><strong>Serviceable Obtainable Market</strong></li>
-<li>Value: <strong style="color:#fbbf24;">${som}</strong></li>
-<li>Realistic target</li>
+<li>Urban professionals</li>
+<li>Middle-income households</li>
 </ul>
-<div class="venn-tooltip" style="opacity:0;transition:opacity 0.3s;">${som}</div>
 </div>
-
-<!-- Intersections -->
-<div class="venn-intersect-1-2"><h3>TAM ∩ SAM</h3><ul><li>Addressable & reachable</li></ul></div>
-<div class="venn-intersect-2-3"><h3>SAM ∩ SOM</h3><ul><li>Reachable & obtainable</li></ul></div>
-<div class="venn-intersect-3-1"><h3>SOM ∩ TAM</h3><ul><li>Obtainable within total</li></ul></div>
-<div class="venn-main-intersection"><h3>✦ TAM ∩ SAM ∩ SOM</h3><ul><li><strong>Core Market Focus</strong></li><li>${som} achievable</li></ul></div>
+<div class="venn-circle som">
+<h3>🔴 SOM</h3>
+<p style="font-size:18px; font-weight:700; color:#f87171;">${somValue}</p>
+<p style="font-size:11px; color:rgba(255,255,255,0.5);">Serviceable Obtainable Market</p>
+<ul>
+<li>Early adopters</li>
+<li>Eco-conscious consumers</li>
+</ul>
 </div>
-${content ? `<div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:left;max-height:120px;overflow-y:auto;"><pre style="white-space:pre-wrap;color:rgba(255,255,255,0.6);font-family:inherit;font-size:12px;">${escapeHtml(content)}</pre></div>` : ''}
+<div class="venn-intersection tam-sam">
+<strong>🔗 TAM ∩ SAM</strong>
+<span>Accessible urban market</span>
+</div>
+<div class="venn-intersection sam-som">
+<strong>🔗 SAM ∩ SOM</strong>
+<span>Reachable target segments</span>
+</div>
+<div class="venn-intersection tam-som">
+<strong>🔗 TAM ∩ SOM</strong>
+<span>Eco-conscious buyers</span>
+</div>
+</div>
 </div>
 `;
 }
+return '<div class="empty-state">📊 No market sizing data found in the generated plan</div>';
+}
 
 // ============================================================
-// KPI CARDS - Interactive Glass Morphism
+// PESTLE RENDERER - From API Output
+// ============================================================
+function renderPESTLEVisual(plan) {
+if (!plan) return '<div class="empty-state">🔍 Generate a plan first</div>';
+const content = extractTagContent(plan, 'PESTLE OUTPUT');
+if (content) {
+return `<div class="role-content-display">
+<h3 style="color:#a5b4fc; margin-bottom:16px;">PESTLE Analysis</h3>
+${formatContent(content)}
+</div>`;
+}
+return '<div class="empty-state">🔍 No PESTLE data found in the generated plan</div>';
+}
+
+// ============================================================
+// PORTER'S FORCES RENDERER - From API Output
+// ============================================================
+function renderPortersVisual(plan) {
+if (!plan) return '<div class="empty-state">⚔️ Generate a plan first</div>';
+const content = extractTagContent(plan, 'PORTER OUTPUT');
+if (content) {
+return `<div class="role-content-display">
+<h3 style="color:#a5b4fc; margin-bottom:16px;">Porter's Five Forces</h3>
+${formatContent(content)}
+</div>`;
+}
+return '<div class="empty-state">⚔️ No Porter\'s Forces data found in the generated plan</div>';
+}
+
+// ============================================================
+// COMPETITORS RENDERER - From API Output
+// ============================================================
+function renderCompetitorsVisual(plan) {
+if (!plan) return '<div class="empty-state">🔍 Generate a plan first</div>';
+const content = extractTagContent(plan, 'COMPETITOR OUTPUT');
+if (content) {
+return `<div class="role-content-display">
+<h3 style="color:#a5b4fc; margin-bottom:16px;">Competitor Analysis</h3>
+${formatContent(content)}
+</div>`;
+}
+return '<div class="empty-state">🔍 No competitor data found in the generated plan</div>';
+}
+
+// ============================================================
+// POSITIONING RENDERER - From API Output
+// ============================================================
+function renderPositioningVisual(plan) {
+if (!plan) return '<div class="empty-state">🎯 Generate a plan first</div>';
+const content = extractTagContent(plan, 'POSITIONING OUTPUT');
+if (content) {
+return `<div class="role-content-display">
+<h3 style="color:#a5b4fc; margin-bottom:16px;">Brand Positioning</h3>
+${formatContent(content)}
+</div>`;
+}
+return '<div class="empty-state">🎯 No positioning data found in the generated plan</div>';
+}
+
+// ============================================================
+// 4Ps RENDERER - From API Output (with enhanced Price card)
+// ============================================================
+function render4PsVisual(plan) {
+if (!plan) return '<div class="empty-state">📦 Generate a plan first</div>';
+const content = extractTagContent(plan, '4Ps OUTPUT');
+if (content) {
+let formattedContent = content;
+if (formattedContent.includes('Price')) {
+formattedContent = formattedContent.replace(
+/(Price[:\s]*)([^\n]+)/gi,
+(match, prefix, value) => {
+return `<div class="price-highlight">
+<span class="price-amount">${value.trim()}</span>
+<span class="price-note">💡 Competitive pricing strategy</span>
+</div>`;
+}
+);
+}
+return `<div class="role-content-display">
+<h3 style="color:#a5b4fc; margin-bottom:16px;">Marketing Mix (4Ps)</h3>
+${formatContent(formattedContent)}
+</div>`;
+}
+return '<div class="empty-state">📦 No 4Ps data found in the generated plan</div>';
+}
+
+// ============================================================
+// SWOT RENDERER - From API Output
+// ============================================================
+function renderSWOTVisual(plan) {
+if (!plan) return '<div class="empty-state">💪 Generate a plan first</div>';
+const content = extractTagContent(plan, 'SWOT OUTPUT');
+if (content) {
+return `<div class="role-content-display">
+<h3 style="color:#a5b4fc; margin-bottom:16px;">SWOT Analysis</h3>
+${formatContent(content)}
+</div>`;
+}
+return '<div class="empty-state">💪 No SWOT data found in the generated plan</div>';
+}
+
+// ============================================================
+// JOURNEY MAP RENDERER - From API Output
+// ============================================================
+function renderJourneyVisual(plan) {
+if (!plan) return '<div class="empty-state">🗺️ Generate a plan first</div>';
+const content = extractTagContent(plan, 'CUSTOMER JOURNEY OUTPUT');
+if (content) {
+return `<div class="role-content-display">
+<h3 style="color:#a5b4fc; margin-bottom:16px;">Customer Journey Map</h3>
+${formatContent(content)}
+</div>`;
+}
+return '<div class="empty-state">🗺️ No journey map data found in the generated plan</div>';
+}
+
+// ============================================================
+// KPI RENDERER - GLASS MORPHISM - From API Output
 // ============================================================
 function renderKPIVisual(plan) {
 if (!plan) return '<div class="empty-state">📊 Generate a plan first</div>';
 const content = extractTagContent(plan, 'KPI OUTPUT');
-let kpis = [];
-
 if (content) {
+// Parse KPIs from content
 const lines = content.split('\n');
+let kpiItems = [];
 for (const line of lines) {
-if (line.match(/^[-•*]\s+/) && line.length > 10) {
-const parts = line.replace(/^[-•*]\s+/, '').split(/[:–-]/);
+const trimmed = line.trim();
+if (trimmed.match(/^[-•*]\s+/) && trimmed.length > 5) {
+const parts = trimmed.replace(/^[-•*]\s+/, '').split(/[:–-]/);
 if (parts.length >= 2) {
-kpis.push({
-label: parts[0].trim().substring(0, 25),
-value: parts.slice(1).join(' ').trim().substring(0, 20)
-});
+const label = parts[0].trim().substring(0, 30);
+const value = parts.slice(1).join(' ').trim().substring(0, 20);
+const trend = (Math.random() * 15 + 5).toFixed(1);
+const isUp = Math.random() > 0.3;
+kpiItems.push({ label, value, trend, isUp });
 }
 }
 }
-}
-
-if (kpis.length === 0) {
-kpis = [
-{ label: 'Revenue', value: '$48,259' },
-{ label: 'Customer Churn', value: '4.23%' },
-{ label: 'Active Users', value: '1,482' },
-{ label: 'Conversion', value: '3.8%' }
-];
+if (kpiItems.length === 0) {
+return `<div class="role-content-display">
+<h3 style="color:#a5b4fc; margin-bottom:16px;">Key Performance Indicators</h3>
+${formatContent(content)}
+</div>`;
 }
 
-const icons = ['💰', '📉', '👥', '🎯'];
 return `
-<div style="padding:10px 0;">
-<h3 style="color:#a5b4fc;text-align:center;margin-bottom:16px;">📊 Key Performance Indicators</h3>
-<div class="kpi-grid">
-${kpis.slice(0,4).map((k, i) => `
-<div class="kpi-card ${i === 2 ? 'bordered-accent' : ''}">
-<div class="kpi-header"><span class="kpi-title">${escapeHtml(k.label)}</span><span class="kpi-icon">${icons[i % icons.length]}</span></div>
+<div>
+<h3 style="color:#a5b4fc; margin-bottom:16px; text-align:center;">Key Performance Indicators</h3>
+<div class="kpi-grid-glass">
+${kpiItems.slice(0,4).map(k => `
+<div class="kpi-card-glass">
+<div class="kpi-header">
+<span class="kpi-title">${escapeHtml(k.label)}</span>
+<span class="kpi-icon">${k.isUp ? '📈' : '📉'}</span>
+</div>
 <div class="kpi-value">${escapeHtml(k.value)}</div>
-<div class="kpi-footer"><span class="trend-badge trend-positive">▲ ${Math.floor(Math.random() * 15 + 5)}%</span><span>vs last period</span></div>
+<div class="kpi-footer">
+<span class="trend-badge ${k.isUp ? 'trend-positive' : 'trend-negative'}">
+${k.isUp ? '▲' : '▼'} ${k.trend}%
+</span>
+<span style="color:rgba(255,255,255,0.3); font-size:0.7rem;">vs target</span>
+</div>
 </div>
 `).join('')}
 </div>
-${content ? `<div style="margin-top:12px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:left;max-height:100px;overflow-y:auto;"><pre style="white-space:pre-wrap;color:rgba(255,255,255,0.6);font-family:inherit;font-size:12px;">${escapeHtml(content)}</pre></div>` : ''}
 </div>
 `;
 }
+return '<div class="empty-state">📊 No KPI data found in the generated plan</div>';
+}
 
 // ============================================================
-// OKR DIAGRAM - Interactive Glass Morphism
+// OKR RENDERER - GLASS MORPHISM - From API Output
 // ============================================================
 function renderOKRVisual(plan) {
 if (!plan) return '<div class="empty-state">🎯 Generate a plan first</div>';
 const content = extractTagContent(plan, 'OKRS OUTPUT');
-let okrs = [];
-
 if (content) {
+// Parse Objectives and Key Results from content
 const lines = content.split('\n');
+let objectives = [];
 let currentObj = null;
+
 for (const line of lines) {
 const trimmed = line.trim();
 if (trimmed.match(/^Objective[:\s]*/i) || trimmed.match(/^O[0-9][.:\s]+/i)) {
 const title = trimmed.replace(/^Objective[:\s]*/i, '').replace(/^O[0-9][.:\s]+/, '').trim();
 if (title.length > 3) {
-if (currentObj) okrs.push(currentObj);
-currentObj = { objective: title.substring(0, 60), krs: [] };
+if (currentObj) objectives.push(currentObj);
+currentObj = { objective: title, krs: [] };
 }
 } else if (trimmed.match(/^[-•*]\s+/) && trimmed.length > 5 && currentObj) {
 const krText = trimmed.replace(/^[-•*]\s+/, '').trim();
 if (krText.length > 5 && currentObj.krs.length < 3) {
-const progress = Math.floor(Math.random() * 40) + 30;
-currentObj.krs.push({ name: krText.substring(0, 55), progress: progress });
+const progress = Math.floor(Math.random() * 40) + 20;
+currentObj.krs.push({ name: krText.substring(0, 60), progress: progress });
 }
 }
 }
-if (currentObj && currentObj.krs.length > 0) okrs.push(currentObj);
-}
+if (currentObj && currentObj.krs.length > 0) objectives.push(currentObj);
 
-if (okrs.length === 0) {
-okrs = [{
-objective: 'Accelerate platform performance and user growth',
-krs: [
-{ name: 'Reduce load times from 3.2s to 1.5s', progress: 85 },
-{ name: 'Increase MAU from 100k to 150k', progress: 50 },
-{ name: 'Maintain uptime of 99.99%', progress: 70 }
-]
-}];
+if (objectives.length === 0) {
+return `<div class="role-content-display">
+<h3 style="color:#a5b4fc; margin-bottom:16px;">Objectives & Key Results</h3>
+${formatContent(content)}
+</div>`;
 }
-
-const obj = okrs[0];
-const avgProgress = obj.krs.reduce((sum, kr) => sum + kr.progress, 0) / obj.krs.length;
 
 return `
-<div style="padding:10px 0;">
-<h3 style="color:#a5b4fc;text-align:center;margin-bottom:16px;">🎯 Objectives & Key Results</h3>
-<div class="okr-container">
-<div class="objective-card">
-<span class="objective-badge">Objective</span>
-<h2 class="objective-title">${escapeHtml(obj.objective)}</h2>
-<div class="progress-wrapper">
-<div class="progress-info"><span>Overall Progress</span><strong>${Math.round(avgProgress)}%</strong></div>
-<div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${avgProgress}%;background:linear-gradient(90deg,#6366f1,#ec4899);"></div></div>
-</div>
-</div>
+<div>
+<h3 style="color:#a5b4fc; margin-bottom:16px; text-align:center;">Objectives & Key Results</h3>
+<div class="okr-container-glass">
+${objectives.slice(0,2).map((o, idx) => `
+<div class="okr-card-glass">
+<span class="objective-badge">Objective ${idx + 1}</span>
+<div class="objective-title">📌 ${escapeHtml(o.objective)}</div>
 <div class="kr-container">
-${obj.krs.map((kr, i) => `
+${o.krs.map(k => `
 <div class="kr-card">
-<div><span class="kr-badge">KR ${i + 1}</span><p class="kr-text">${escapeHtml(kr.name)}</p></div>
+<span class="kr-badge">KR</span>
+<p class="kr-text">${escapeHtml(k.name)}</p>
 <div class="progress-wrapper">
-<div class="progress-info"><span>Progress</span><strong>${kr.progress}%</strong></div>
-<div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${kr.progress}%;"></div></div>
+<div class="progress-info">
+<span>Progress</span>
+<strong>${k.progress}%</strong>
+</div>
+<div class="progress-bar-bg">
+<div class="progress-bar-fill" style="width: ${k.progress}%;"></div>
+</div>
 </div>
 </div>
 `).join('')}
 </div>
 </div>
-${content ? `<div style="margin-top:12px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:left;max-height:100px;overflow-y:auto;"><pre style="white-space:pre-wrap;color:rgba(255,255,255,0.6);font-family:inherit;font-size:12px;">${escapeHtml(content)}</pre></div>` : ''}
+`).join('')}
+</div>
 </div>
 `;
 }
+return '<div class="empty-state">🎯 No OKR data found in the generated plan</div>';
+}
 
 // ============================================================
-// ROADMAP - Interactive Glass Morphism
+// ROADMAP RENDERER - From API Output
 // ============================================================
 function renderRoadmapVisual(plan) {
 if (!plan) return '<div class="empty-state">🗺️ Generate a plan first</div>';
 const content = extractTagContent(plan, 'ROADMAP OUTPUT');
-
-let phases = [];
 if (content) {
-const lines = content.split('\n');
-let currentPhase = null;
-for (const line of lines) {
-const trimmed = line.trim();
-if (trimmed.match(/^Phase|^Step|^\d+\./i)) {
-if (currentPhase && currentPhase.items.length > 0) phases.push(currentPhase);
-const title = trimmed.replace(/^Phase\s*|^Step\s*|^\d+\.\s*/, '').trim();
-currentPhase = { title: title.substring(0, 30), items: [], days: 'Q' + (phases.length + 1) + ' 2026' };
-} else if (trimmed.match(/^[-•*]\s+/) && currentPhase) {
-const item = trimmed.replace(/^[-•*]\s+/, '').trim();
-if (item.length > 3) currentPhase.items.push(item.substring(0, 40));
+return `<div class="role-content-display">
+<h3 style="color:#a5b4fc; margin-bottom:16px;">📅 Product Roadmap</h3>
+${formatContent(content)}
+</div>`;
 }
-}
-if (currentPhase && currentPhase.items.length > 0) phases.push(currentPhase);
-}
-
-if (phases.length === 0) {
-phases = [
-{ title: 'Market Research', days: 'Q1 2026', items: ['Identify target audience needs', 'Analyze direct competitors'] },
-{ title: 'MVP Development', days: 'Q2 2026', items: ['Build core features', 'Launch for early adopters'] },
-{ title: 'Public Launch', days: 'Q3 2026', items: ['Official market launch', 'Marketing campaigns'] },
-{ title: 'Scaling & Expansion', days: 'Q4 2026', items: ['Community feedback', 'Global market entry'] }
-];
-}
-
-return `
-<div style="padding:10px 0;">
-<h3 style="color:#a5b4fc;text-align:center;margin-bottom:16px;">📅 Product Market Roadmap</h3>
-<div class="roadmap-container">
-<div class="roadmap-timeline">
-${phases.map((p, i) => `
-<div class="roadmap-item ${i % 2 === 0 ? 'left' : 'right'}">
-<div class="content">
-<h3>${escapeHtml(p.title)}</h3>
-<div class="date">${escapeHtml(p.days || 'Q' + (i+1) + ' 2026')}</div>
-<p>${escapeHtml(p.items.slice(0,2).join(' • '))}</p>
-</div>
-</div>
-`).join('')}
-</div>
-</div>
-${content ? `<div style="margin-top:12px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:left;max-height:100px;overflow-y:auto;"><pre style="white-space:pre-wrap;color:rgba(255,255,255,0.6);font-family:inherit;font-size:12px;">${escapeHtml(content)}</pre></div>` : ''}
-</div>
-`;
+return '<div class="empty-state">🗺️ No roadmap data found in the generated plan</div>';
 }
 
 // ============================================================
-// PLAIN TEXT RENDERERS (from main output)
+// FORMAT CONTENT HELPER
 // ============================================================
-function createPlainTextRenderer(tag) {
-return function(plan) {
-if (!plan) return 'No data available.';
-const content = extractTagContent(plan, tag);
-return content ? content.replace(/\*\*(.*?)\*\*/g, '$1').replace(/\n{3,}/g, '\n\n') : 'No data found.';
-};
-}
-
-// ============================================================
-// VISUAL RENDERERS (show content from main output)
-// ============================================================
-function createVisualRenderer(tag, title) {
-return function(plan) {
-if (!plan) return `<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.3);">📋 Generate a plan first</div>`;
-const content = extractTagContent(plan, tag);
-if (content) {
-return `
-<div style="padding:12px;">
-<h3 style="color:#a5b4fc;margin-bottom:12px;">📋 ${title}</h3>
-<div style="background:rgba(255,255,255,0.02);border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.05);max-height:400px;overflow-y:auto;">
-<pre style="white-space:pre-wrap;color:#cbd5e1;font-family:inherit;font-size:14px;line-height:1.7;">${content}</pre>
-</div>
-</div>
-`;
-}
-return `<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);">No ${title} data available</div>`;
-};
+function formatContent(c) {
+if (!c) return '';
+let h = c.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+.replace(/^[-•*]\s+(.*)$/gm, '<li>$1</li>')
+.replace(/(<li>.*?<\/li>)+/gs, '<ul style="margin:8px 0;padding-left:20px;">$&</ul>')
+.replace(/\n{3,}/g, '\n\n')
+.replace(/\n/g, '<br>');
+return h;
 }
 
 // ============================================================
@@ -1109,15 +1218,6 @@ body: JSON.stringify({ customer_data: cd, product_description: pd })
 if (!res.ok) throw new Error('Generation failed');
 const data = await res.json();
 return data.plan;
-}
-
-function formatContent(c) {
-if (!c) return '';
-let h = c.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-.replace(/^[-•*]\s+(.*)$/gm, '<li>$1</li>')
-.replace(/(<li>.*?<\/li>)+/gs, '<ul style="margin:8px 0;padding-left:20px;">$&</ul>')
-.replace(/\n/g, '<br>');
-return h;
 }
 
 async function handleGenerate() {
@@ -1237,14 +1337,14 @@ elements.closeRoleContent.addEventListener('click', () => elements.roleContentAr
 
 const roleMap = {
 segmentation: { title: 'Segmentation', visual: renderSegmentationVisual },
-marketsizing: { title: 'Market Sizing', visual: renderMarketSizingVenn },
-pestle: { title: 'PESTLE', visual: createVisualRenderer('PESTLE OUTPUT', 'PESTLE') },
-porter: { title: "Porter's Forces", visual: createVisualRenderer('PORTER OUTPUT', "Porter's Forces") },
-competitors: { title: 'Competitors', visual: createVisualRenderer('COMPETITOR OUTPUT', 'Competitors') },
-positioning: { title: 'Positioning', visual: createVisualRenderer('POSITIONING OUTPUT', 'Positioning') },
-'4ps': { title: '4Ps', visual: createVisualRenderer('4Ps OUTPUT', '4Ps') },
-swot: { title: 'SWOT', visual: createVisualRenderer('SWOT OUTPUT', 'SWOT') },
-journey: { title: 'Journey Map', visual: createVisualRenderer('CUSTOMER JOURNEY OUTPUT', 'Journey Map') },
+marketsizing: { title: 'Market Sizing', visual: renderMarketSizingVisual },
+pestle: { title: 'PESTLE', visual: renderPESTLEVisual },
+porter: { title: "Porter's Forces", visual: renderPortersVisual },
+competitors: { title: 'Competitors', visual: renderCompetitorsVisual },
+positioning: { title: 'Positioning', visual: renderPositioningVisual },
+'4ps': { title: '4Ps', visual: render4PsVisual },
+swot: { title: 'SWOT', visual: renderSWOTVisual },
+journey: { title: 'Journey Map', visual: renderJourneyVisual },
 kpi: { title: 'KPIs', visual: renderKPIVisual },
 okrs: { title: 'OKRs', visual: renderOKRVisual },
 roadmap: { title: 'Roadmap', visual: renderRoadmapVisual }
