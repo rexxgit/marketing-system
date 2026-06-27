@@ -8,6 +8,10 @@ import {
   Award, TrendingDown
 } from 'lucide-react';
 
+// ===== NEW IMPORTS =====
+import ResultDisplay from './components/ResultDisplay';
+import PDFExport from './components/PDFExport';
+
 // Types
 interface Segment {
   name: string;
@@ -134,6 +138,9 @@ function App() {
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('');
 
+  // ===== NEW STATE FOR PDF EXPORT =====
+  const [showResult, setShowResult] = useState(false);
+
   // ===== AUTH HANDLERS =====
   const handleLogin = () => {
     setIsAuthenticated(true);
@@ -151,6 +158,7 @@ function App() {
     setIsAuthenticated(false);
     setPanelOpen(false);
     setActiveRole(null);
+    setShowResult(false);
     console.log('🚪 User logged out');
   };
 
@@ -188,6 +196,7 @@ function App() {
     setStatus('AI analyzing market data...');
     setCurrentPlan('');
     setActiveRole(null);
+    setShowResult(false);
 
     try {
       const response = await fetch(`${API_BASE}/generate`, {
@@ -211,6 +220,7 @@ function App() {
       setCurrentPlan(plan);
       setProgress(100);
       setStatus('Strategy generated successfully!');
+      setShowResult(true);
 
       setTimeout(() => {
         setProgress(0);
@@ -336,7 +346,13 @@ function App() {
                   {isGenerating ? 'Generating...' : 'Generate Strategic Plan'}
                 </button>
                 <button
-                  onClick={() => { setCustomerData(''); setProductDescription(''); setCurrentPlan(''); setActiveRole(null); }}
+                  onClick={() => { 
+                    setCustomerData(''); 
+                    setProductDescription(''); 
+                    setCurrentPlan(''); 
+                    setActiveRole(null);
+                    setShowResult(false);
+                  }}
                   className="btn-outline"
                 >
                   Clear All
@@ -360,6 +376,41 @@ function App() {
               </div>
             )}
 
+            {/* ===== RESULT DISPLAY ===== */}
+            {showResult && currentPlan && (
+              <div className="result-wrapper">
+                <ResultDisplay 
+                  content={currentPlan}
+                  title="Strategic Marketing Plan"
+                  onCopy={() => {
+                    setStatus('📋 Plan copied to clipboard!');
+                    setTimeout(() => setStatus(''), 3000);
+                  }}
+                  onPDFExport={() => {
+                    // PDF export is handled by the PDFExport component inside ResultDisplay
+                    console.log('PDF export triggered');
+                  }}
+                />
+                
+                {/* ===== PDF EXPORT BUTTON ===== */}
+                <div className="flex justify-end mt-4">
+                  <PDFExport 
+                    content={currentPlan}
+                    title="Strategic Marketing Plan"
+                    buttonText="📄 Export as PDF"
+                    onSuccess={() => {
+                      setStatus('✅ PDF downloaded successfully!');
+                      setTimeout(() => setStatus(''), 3000);
+                    }}
+                    onError={(error) => {
+                      setStatus(`❌ PDF Error: ${error.message}`);
+                      setTimeout(() => setStatus(''), 5000);
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
             {currentPlan && activeRole && (
               <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mt-6">
                 <div className="flex justify-between items-center mb-5 flex-wrap gap-3">
@@ -375,7 +426,7 @@ function App() {
               </div>
             )}
 
-            {currentPlan && !activeRole && (
+            {currentPlan && !activeRole && !showResult && (
               <div className="text-center py-10 text-white/50">
                 👈 Click a role in the sidebar to explore the analysis
               </div>
@@ -671,6 +722,9 @@ function App() {
         @keyframes pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.3; }
+        }
+        .result-wrapper {
+          margin-top: 24px;
         }
       `}</style>
     </div>
