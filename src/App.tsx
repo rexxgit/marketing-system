@@ -109,21 +109,20 @@ const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
   return icons[name] || <div style={{ width: size, height: size }} />;
 };
 
-// [KEEP ALL YOUR EXISTING VISUAL COMPONENTS HERE]
-// SegmentationVisual, MarketSizingVennDiagram, KPICards, OKRDiagram,
-// PESTLEVisual, PortersVisual, CompetitorsVisual, PositioningVisual,
-// FourPsVisual, SWOTVisual, CustomerJourneyVisual, RoadmapVisual
-// (Paste them here - they remain unchanged)
+// [KEEP ALL YOUR VISUAL COMPONENTS HERE - SegmentationVisual, MarketSizingVennDiagram, 
+// KPICards, OKRDiagram, PESTLEVisual, PortersVisual, CompetitorsVisual, 
+// PositioningVisual, FourPsVisual, SWOTVisual, CustomerJourneyVisual, RoadmapVisual]
+// They remain unchanged - paste them here
 
 // ============================================
-// MAIN APP COMPONENT - UPDATED WITH 
-// PROFESSIONAL CONSCIENTIOUSNESS LAYOUT
+// MAIN APP COMPONENT - UPDATED WITH PROFESSIONAL 
+// CONSCIENTIOUSNESS LAYOUT
 // ============================================
 
 function App() {
   const [currentPage, setCurrentPage] = useState<string>('home');
   
-  // ===== SIDEBAR VISIBILITY STATE (Hidden by Default) =====
+  // ===== AUTH STATE (Sidebar Hidden by Default) =====
   const [panelOpen, setPanelOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   
@@ -139,13 +138,13 @@ function App() {
   const handleLogin = () => {
     setIsAuthenticated(true);
     setPanelOpen(true);
-    console.log('🔐 User logged in - Unlocking 12 Expert Roles');
+    console.log('🔐 User logged in - Unlocking 13 Expert Roles');
   };
 
   const handleSignIn = () => {
     setIsAuthenticated(true);
     setPanelOpen(true);
-    console.log('👤 User signed in - Unlocking 12 Expert Roles');
+    console.log('👤 User signed in - Unlocking 13 Expert Roles');
   };
 
   const handleLogout = () => {
@@ -234,19 +233,248 @@ function App() {
       );
     }
 
-    // Keep all your existing renderRoleContent logic here
-    // (Paste your existing switch statement here)
-    return null;
+    switch (activeRole) {
+      case 'segmentation':
+        return <SegmentationVisual plan={currentPlan} />;
+      case 'marketsizing':
+        return <MarketSizingVennDiagram plan={currentPlan} />;
+      case 'pestle':
+        return <PESTLEVisual plan={currentPlan} />;
+      case 'porter':
+        return <PortersVisual plan={currentPlan} />;
+      case 'competitors':
+        return <CompetitorsVisual plan={currentPlan} />;
+      case 'positioning':
+        return <PositioningVisual plan={currentPlan} />;
+      case '4ps':
+        return <FourPsVisual plan={currentPlan} />;
+      case 'swot':
+        return <SWOTVisual plan={currentPlan} />;
+      case 'journey':
+        return <CustomerJourneyVisual plan={currentPlan} />;
+      case 'kpi':
+        return <KPICards plan={currentPlan} />;
+      case 'okrs':
+        return <OKRDiagram plan={currentPlan} />;
+      case 'roadmap':
+        return <RoadmapVisual plan={currentPlan} />;
+      case 'design':
+        return <div className="text-center py-10 text-white/60">Design guidelines coming soon...</div>;
+      default:
+        return null;
+    }
   };
 
   const renderPage = () => {
-    // Keep your existing renderPage logic here
-    return null;
+    switch (currentPage) {
+      case 'home':
+        return (
+          <div className="page-fade-in">
+            <div className="text-center py-16">
+              <h1 className="text-5xl font-bold mb-5 bg-gradient-to-r from-white via-indigo-300 to-pink-400 bg-clip-text text-transparent">
+                Stop second-guessing.<br />Start executing.
+              </h1>
+              <p className="text-lg text-white/70 max-w-2xl mx-auto mb-8">
+                A conscientious marketing system that delivers 13 disciplined roles—executed in precise sequence—so you get clarity, not confusion.
+              </p>
+              <button
+                onClick={() => setCurrentPage('app')}
+                className="btn-primary"
+              >
+                <Icon name="rocket" size={18} /> Start Your Free Plan
+              </button>
+            </div>
+
+            <h2 className="text-center text-2xl font-bold mb-8 text-white/80">How it works</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                { num: '1', title: 'Describe your audience', desc: 'Tell us who you want to sell to' },
+                { num: '2', title: 'Describe your product', desc: 'Tell us what you\'re selling' },
+                { num: '3', title: 'Get your full plan', desc: 'Receive 13 roles of strategic analysis' }
+              ].map((step) => (
+                <div key={step.num} className="bg-white/5 border border-white/10 rounded-2xl p-8 text-center transition-all hover:translate-y-[-5px] hover:border-indigo-500/30">
+                  <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-5 font-bold text-lg">
+                    {step.num}
+                  </div>
+                  <h3 className="text-lg font-bold mb-2">{step.title}</h3>
+                  <p className="text-white/60 text-sm">{step.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'app':
+        return (
+          <div className="page-fade-in">
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-8 mb-8">
+              <label className="block text-sm font-medium mb-2 text-white/80">Customer Data / Target Audience</label>
+              <textarea
+                value={customerData}
+                onChange={(e) => setCustomerData(e.target.value)}
+                rows={3}
+                placeholder="Example: Enterprise CTOs at mid-sized tech companies..."
+                className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white placeholder-white/30 resize-none focus:outline-none focus:border-indigo-500 transition-all"
+              />
+
+              <label className="block text-sm font-medium mb-2 mt-4 text-white/80">Product Description / Service</label>
+              <textarea
+                value={productDescription}
+                onChange={(e) => setProductDescription(e.target.value)}
+                rows={5}
+                placeholder="Example: An AI-powered marketing analytics platform..."
+                className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white placeholder-white/30 resize-none focus:outline-none focus:border-indigo-500 transition-all"
+              />
+
+              <div className="flex gap-3 mt-5 flex-wrap">
+                <button
+                  onClick={generatePlan}
+                  disabled={isGenerating}
+                  className="btn-primary disabled:opacity-50"
+                >
+                  <Icon name="rocket" size={18} />
+                  {isGenerating ? 'Generating...' : 'Generate Strategic Plan'}
+                </button>
+                <button
+                  onClick={() => { setCustomerData(''); setProductDescription(''); setCurrentPlan(''); setActiveRole(null); }}
+                  className="btn-outline"
+                >
+                  Clear All
+                </button>
+              </div>
+            </div>
+
+            {progress > 0 && (
+              <div className="bg-white/5 rounded-full h-1 mb-4 overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-indigo-500 to-pink-500 transition-all duration-300"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            )}
+
+            {status && (
+              <div className="bg-indigo-500/10 border border-indigo-500/30 rounded-xl px-5 py-3 mb-6 text-sm text-white/80">
+                {isGenerating && <span className="loader mr-2"></span>}
+                {status}
+              </div>
+            )}
+
+            {currentPlan && activeRole && (
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mt-6">
+                <div className="flex justify-between items-center mb-5 flex-wrap gap-3">
+                  <h3 className="text-xl font-bold text-indigo-300">{roles.find(r => r.id === activeRole)?.name}</h3>
+                  <button
+                    onClick={() => setActiveRole(null)}
+                    className="px-4 py-2 text-xs bg-indigo-500/20 border border-indigo-500/40 rounded-full text-indigo-300 hover:bg-indigo-500/30 transition-all"
+                  >
+                    Close
+                  </button>
+                </div>
+                {renderRoleContent()}
+              </div>
+            )}
+
+            {currentPlan && !activeRole && (
+              <div className="text-center py-10 text-white/50">
+                👈 Click a role in the sidebar to explore the analysis
+              </div>
+            )}
+          </div>
+        );
+
+      case 'about':
+        return (
+          <div className="page-fade-in">
+            <div className="text-center py-12">
+              <h1 className="text-4xl font-bold mb-4">
+                Built on <span className="text-indigo-500">Conscientiousness</span>
+              </h1>
+              <p className="text-lg text-white/70 max-w-2xl mx-auto">
+                We believe marketing strategy should be disciplined, not chaotic. 13 roles. One clear output. Every time.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-10">
+              {[
+                { icon: 'gear', title: 'Autonomy', desc: 'System works independently. No need to instruct next steps.' },
+                { icon: 'brain', title: 'Intelligence', desc: 'Smart analysis that learns and adapts to your business.' },
+                { icon: 'heart', title: 'Goodness', desc: 'Ethical strategies benefiting everyone, not just bottom line.' }
+              ].map((item) => (
+                <div key={item.title} className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-indigo-500/20 rounded-2xl p-8 text-center transition-all hover:translate-y-[-8px] hover:border-indigo-500/50 hover:shadow-xl cursor-pointer">
+                  <div className="w-16 h-16 mx-auto mb-5 bg-indigo-500/15 rounded-2xl flex items-center justify-center">
+                    <Icon name={item.icon} size={32} />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 bg-gradient-to-r from-white to-indigo-300 bg-clip-text text-transparent">{item.title}</h3>
+                  <p className="text-sm text-white/70">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-2xl p-8 text-center">
+              <h3 className="text-xl font-bold mb-3">Our Mission</h3>
+              <p className="text-white/70 max-w-2xl mx-auto">
+                To democratize strategic marketing by making professional-grade planning accessible, understandable, and actionable for everyone.
+              </p>
+            </div>
+          </div>
+        );
+
+      case 'pricing':
+        return (
+          <div className="page-fade-in">
+            <div className="text-center py-12">
+              <h1 className="text-4xl font-bold mb-4">Simple, Transparent Pricing</h1>
+              <p className="text-lg text-white/60">No hidden fees. Cancel anytime.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                { name: 'Free', price: '$0', period: '/month', desc: 'Perfect for getting started', features: ['5 plans/month', 'PDF export', 'Save to history'], popular: false },
+                { name: 'Pro', price: '$29', period: '/month', desc: 'For growing teams', features: ['Unlimited plans', 'Priority support', 'Advanced analytics'], popular: true },
+                { name: 'Enterprise', price: 'Custom', period: '', desc: 'For large organizations', features: ['Unlimited everything', 'API access', 'Dedicated support'], popular: false }
+              ].map((plan) => (
+                <div
+                  key={plan.name}
+                  className={`bg-gradient-to-br from-slate-800/90 to-slate-900/95 border rounded-2xl p-8 text-center transition-all hover:translate-y-[-12px] hover:shadow-xl cursor-pointer ${
+                    plan.popular ? 'border-indigo-500/60 scale-[1.02]' : 'border-white/10 hover:border-indigo-500/50'
+                  }`}
+                >
+                  {plan.popular && (
+                    <div className="absolute top-5 right-5 bg-gradient-to-r from-indigo-500 to-pink-500 px-3 py-1 rounded-full text-xs font-bold">
+                      ⭐ MOST POPULAR
+                    </div>
+                  )}
+                  <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-white to-indigo-300 bg-clip-text text-transparent">{plan.name}</h3>
+                  <div className="text-5xl font-bold text-indigo-300 mb-2">
+                    {plan.price}
+                    {plan.period && <span className="text-lg text-white/50">{plan.period}</span>}
+                  </div>
+                  <p className="text-sm text-white/40 mb-6">{plan.desc}</p>
+                  <ul className="text-left mb-8 space-y-3">
+                    {plan.features.map((f, i) => (
+                      <li key={i} className="text-sm text-white/80 flex items-center gap-2 border-b border-white/5 last:border-none pb-3 last:pb-0">
+                        <Check size={16} className="text-green-400" /> {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <button className={plan.popular ? 'btn-primary w-full justify-center' : 'btn-outline w-full justify-center'}>
+                    {plan.name === 'Enterprise' ? 'Contact Sales →' : 'Get Started →'}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#0a0e1a] text-white flex">
-      {/* ===== SIDEBAR: 12 ROLES (Hidden by Default) ===== */}
+      {/* ===== SIDEBAR: 13 ROLES (Hidden by Default) ===== */}
       <div
         className={`fixed h-screen w-72 bg-gradient-to-b from-[#0c1120] to-[#050810] border-r border-white/10 transition-transform duration-300 z-50 ${
           panelOpen && isAuthenticated ? 'translate-x-0' : '-translate-x-full'
@@ -383,7 +611,6 @@ function App() {
         </footer>
       </div>
 
-      {/* ===== GLOBAL STYLES ===== */}
       <style>{`
         .btn-primary {
           display: inline-flex;
