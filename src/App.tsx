@@ -113,14 +113,17 @@ const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
   return icons[name] || <div style={{ width: size, height: size }} />;
 };
 
-// [KEEP ALL YOUR VISUAL COMPONENTS HERE - SegmentationVisual, MarketSizingVennDiagram, 
-// KPICards, OKRDiagram, PESTLEVisual, PortersVisual, CompetitorsVisual, 
-// PositioningVisual, FourPsVisual, SWOTVisual, CustomerJourneyVisual, RoadmapVisual]
-// They remain unchanged - paste them here
+// ============================================
+// VISUAL COMPONENTS - PASTE ALL YOUR VISUAL COMPONENTS HERE
+// (SegmentationVisual, MarketSizingVennDiagram, KPICards, OKRDiagram,
+// PESTLEVisual, PortersVisual, CompetitorsVisual, PositioningVisual,
+// FourPsVisual, SWOTVisual, CustomerJourneyVisual, RoadmapVisual)
+// ============================================
+
+// [PASTE ALL YOUR VISUAL COMPONENTS HERE - They remain unchanged]
 
 // ============================================
-// MAIN APP COMPONENT - UPDATED WITH PROFESSIONAL 
-// CONSCIENTIOUSNESS LAYOUT
+// MAIN APP COMPONENT
 // ============================================
 
 function App() {
@@ -138,8 +141,9 @@ function App() {
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('');
 
-  // ===== NEW STATE FOR PDF EXPORT =====
+  // ===== NEW STATE FOR RESULT DISPLAY =====
   const [showResult, setShowResult] = useState(false);
+  const [resultContent, setResultContent] = useState<string>('');
 
   // ===== AUTH HANDLERS =====
   const handleLogin = () => {
@@ -159,6 +163,7 @@ function App() {
     setPanelOpen(false);
     setActiveRole(null);
     setShowResult(false);
+    setResultContent('');
     console.log('🚪 User logged out');
   };
 
@@ -197,6 +202,7 @@ function App() {
     setCurrentPlan('');
     setActiveRole(null);
     setShowResult(false);
+    setResultContent('');
 
     try {
       const response = await fetch(`${API_BASE}/generate`, {
@@ -217,7 +223,9 @@ function App() {
       setStatus('Processing strategy...');
       await new Promise(r => setTimeout(r, 500));
 
+      // Store the plan in both states
       setCurrentPlan(plan);
+      setResultContent(plan);
       setProgress(100);
       setStatus('Strategy generated successfully!');
       setShowResult(true);
@@ -352,6 +360,7 @@ function App() {
                     setCurrentPlan(''); 
                     setActiveRole(null);
                     setShowResult(false);
+                    setResultContent('');
                   }}
                   className="btn-outline"
                 >
@@ -376,41 +385,24 @@ function App() {
               </div>
             )}
 
-            {/* ===== RESULT DISPLAY ===== */}
-            {showResult && currentPlan && (
+            {/* ===== RESULT DISPLAY - Always visible when showResult is true ===== */}
+            {showResult && resultContent && (
               <div className="result-wrapper">
                 <ResultDisplay 
-                  content={currentPlan}
+                  content={resultContent}
                   title="Strategic Marketing Plan"
                   onCopy={() => {
                     setStatus('📋 Plan copied to clipboard!');
                     setTimeout(() => setStatus(''), 3000);
                   }}
                   onPDFExport={() => {
-                    // PDF export is handled by the PDFExport component inside ResultDisplay
                     console.log('PDF export triggered');
                   }}
                 />
-                
-                {/* ===== PDF EXPORT BUTTON ===== */}
-                <div className="flex justify-end mt-4">
-                  <PDFExport 
-                    content={currentPlan}
-                    title="Strategic Marketing Plan"
-                    buttonText="📄 Export as PDF"
-                    onSuccess={() => {
-                      setStatus('✅ PDF downloaded successfully!');
-                      setTimeout(() => setStatus(''), 3000);
-                    }}
-                    onError={(error) => {
-                      setStatus(`❌ PDF Error: ${error.message}`);
-                      setTimeout(() => setStatus(''), 5000);
-                    }}
-                  />
-                </div>
               </div>
             )}
 
+            {/* ===== SIDEBAR ROLE CONTENT ===== */}
             {currentPlan && activeRole && (
               <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mt-6">
                 <div className="flex justify-between items-center mb-5 flex-wrap gap-3">
