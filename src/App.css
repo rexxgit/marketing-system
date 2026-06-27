@@ -13,9 +13,20 @@
 
 body {
   background: #0a0e1a;
+  background-image: 
+    radial-gradient(circle at 20% 30%, #111827 0%, #0a0e1a 60%),
+    radial-gradient(circle at 80% 70%, #0f172a 0%, #0a0e1a 100%);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: #F1F5F9;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== SELECTION COLOR ===== */
+::selection {
+  background: rgba(99, 102, 241, 0.3);
+  color: #ffffff;
 }
 
 /* ===== SCROLLBAR STYLING ===== */
@@ -32,10 +43,18 @@ body {
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 3px;
+  transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
+}
+
+/* ===== FOCUS STYLES ===== */
+*:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* ===== GLASSMORPHISM UTILITY CLASSES ===== */
@@ -54,6 +73,14 @@ body {
   border-radius: 16px;
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(99, 102, 241, 0.2);
+  box-shadow: 
+    0 12px 48px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
@@ -101,8 +128,14 @@ body {
 
 /* ===== PULSE ANIMATION FOR STATUS DOTS ===== */
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+  0%, 100% { 
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
 }
 
 .pulse-dot {
@@ -125,6 +158,20 @@ body {
   animation: fadeIn 0.4s ease forwards;
 }
 
+/* ===== FLOAT ANIMATION ===== */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
 /* ===== BUTTON STYLES ===== */
 .btn-primary {
   display: inline-flex;
@@ -139,6 +186,23 @@ body {
   font-size: 14px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-primary:hover::before {
+  left: 100%;
 }
 
 .btn-primary:hover {
@@ -156,6 +220,10 @@ body {
   transform: none !important;
 }
 
+.btn-primary:disabled::before {
+  display: none;
+}
+
 .btn-outline {
   display: inline-flex;
   align-items: center;
@@ -169,6 +237,23 @@ body {
   font-size: 14px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-outline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.05), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-outline:hover::before {
+  left: 100%;
 }
 
 .btn-outline:hover {
@@ -192,6 +277,9 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .btn-auth-signin:hover {
@@ -216,6 +304,26 @@ body {
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 16px rgba(99, 102, 241, 0.25);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-auth-login::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-auth-login:hover::before {
+  left: 100%;
 }
 
 .btn-auth-login:hover {
@@ -225,6 +333,67 @@ body {
 
 .btn-auth-login:active {
   transform: translateY(0px) scale(0.98);
+}
+
+/* ===== SIDEBAR ROLE ITEMS ===== */
+.role-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #94A3B8;
+  font-size: 13px;
+  position: relative;
+}
+
+.role-item:hover {
+  background: rgba(99, 102, 241, 0.08);
+  color: #F1F5F9;
+  transform: translateX(4px);
+}
+
+.role-item.active {
+  background: rgba(99, 102, 241, 0.12);
+  color: #818cf8;
+  border-left: 2px solid #6366f1;
+}
+
+.role-item .role-icon {
+  font-size: 18px;
+  width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.role-item .role-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.role-item .role-name {
+  font-weight: 500;
+  display: block;
+  font-size: 13px;
+}
+
+.role-item .role-description {
+  font-size: 11px;
+  color: #64748B;
+  display: block;
+  margin-top: 1px;
+}
+
+.role-item.active .role-description {
+  color: #94A3B8;
+}
+
+.role-item .role-check {
+  color: #6366f1;
+  font-weight: 600;
+  font-size: 14px;
 }
 
 /* ===== LOADER ===== */
@@ -243,11 +412,30 @@ body {
 }
 
 /* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .glass-card {
+    border-radius: 14px;
+  }
+}
+
 @media (max-width: 768px) {
+  .glass-header {
+    border-radius: 12px;
+  }
+  
+  .glass-card {
+    border-radius: 12px;
+  }
+  
   .btn-auth-signin,
   .btn-auth-login {
     padding: 8px 16px;
     font-size: 12px;
+  }
+  
+  .btn-auth-signin .btn-icon,
+  .btn-auth-login .btn-icon {
+    display: none;
   }
   
   .btn-primary,
@@ -258,14 +446,55 @@ body {
 }
 
 @media (max-width: 480px) {
+  .glass-header {
+    border-radius: 10px;
+    padding: 12px 16px;
+  }
+  
+  .glass-card {
+    border-radius: 10px;
+    padding: 16px;
+  }
+  
   .btn-auth-signin,
   .btn-auth-login {
     padding: 6px 12px;
     font-size: 11px;
   }
   
+  .btn-auth-signin span,
+  .btn-auth-login span {
+    display: none;
+  }
+  
   .btn-auth-signin .btn-icon,
   .btn-auth-login .btn-icon {
-    display: none;
+    display: inline;
+    margin: 0;
+  }
+  
+  .btn-primary,
+  .btn-outline {
+    padding: 8px 16px;
+    font-size: 12px;
+    border-radius: 8px;
+  }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  .glass,
+  .glass-card,
+  .glass-header {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  
+  body {
+    background: #ffffff;
+    color: #000000;
   }
 }
