@@ -114,13 +114,1531 @@ const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
 };
 
 // ============================================
-// VISUAL COMPONENTS - PASTE ALL YOUR VISUAL COMPONENTS HERE
-// (SegmentationVisual, MarketSizingVennDiagram, KPICards, OKRDiagram,
-// PESTLEVisual, PortersVisual, CompetitorsVisual, PositioningVisual,
-// FourPsVisual, SWOTVisual, CustomerJourneyVisual, RoadmapVisual)
+// DATA PARSING UTILITY FUNCTIONS
 // ============================================
 
-// [PASTE ALL YOUR VISUAL COMPONENTS HERE - They remain unchanged]
+// Extract content between section tags
+const extractTagContent = (plan: string, tag: string): string => {
+  if (!plan) return '';
+  const regex = new RegExp(`\\[${tag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
+  const match = plan.match(regex);
+  return match ? match[1].trim() : '';
+};
+
+// Parse bullet points from text
+const parseBulletPoints = (text: string): string[] => {
+  if (!text) return [];
+  const lines = text.split('\n');
+  const bullets: string[] = [];
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed.match(/^[-•*]\s+/) || trimmed.match(/^\d+\.\s+/)) {
+      bullets.push(trimmed.replace(/^[-•*]\s+/, '').replace(/^\d+\.\s+/, '').trim());
+    }
+  }
+  return bullets;
+};
+
+// Parse table from text
+const parseTable = (text: string): string[][] => {
+  if (!text) return [];
+  const lines = text.split('\n').filter(line => line.trim());
+  const table: string[][] = [];
+  let headers: string[] = [];
+  let parsing = false;
+  
+  for (const line of lines) {
+    if (line.includes('|')) {
+      const cells = line.split('|').map(c => c.trim()).filter(c => c);
+      if (cells.length > 0) {
+        if (!parsing) {
+          headers = cells;
+          parsing = true;
+        } else if (!line.includes('---') && !line.includes('--')) {
+          table.push(cells);
+        }
+      }
+    }
+  }
+  return table;
+};
+
+// Parse key-value pairs
+const parseKeyValue = (text: string): Record<string, string> => {
+  const result: Record<string, string> = {};
+  if (!text) return result;
+  const lines = text.split('\n');
+  for (const line of lines) {
+    const match = line.match(/^([^:]+):\s*(.+)$/);
+    if (match) {
+      result[match[1].trim()] = match[2].trim();
+    }
+  }
+  return result;
+};
+
+// ============================================
+// VISUAL COMPONENTS - DATA DRIVEN
+// ============================================
+
+// Segmentation Visualization Component
+const SegmentationVisual = ({ plan }: { plan: string }) => {
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [selectedLegend, setSelectedLegend] = useState<number | null>(null);
+
+  const parseSegments = (): Segment[] => {
+    const content = extractTagContent(plan, 'SEGMENTATION OUTPUT');
+    if (!content) return [];
+
+    const segments: Segment[] = [];
+    const lines = content.split('\n');
+    
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+      
+      if (trimmed.match(/^[-•*]\s+/)) {
+        const text = trimmed.replace(/^[-•*]\s+/, '');
+        const nameMatch = text.match(/^([^:]+)/);
+        const shareMatch = text.match(/(\d+)%/);
+        const valueMatch = text.match(/\$?([0-9,]+)/);
+        const growthMatch = text.match(/(\d+\.?\d*)%/);
+        
+        if (nameMatch) {
+          segments.push({
+            name: nameMatch[1].trim().substring(0, 40),
+            share: shareMatch ? parseInt(shareMatch[1]) : 20 + Math.floor(Math.random() * 30),
+            value: valueMatch ? parseInt(valueMatch[1].replace(/,/g, '')) : 100000 + Math.floor(Math.random() * 500000),
+            growth: growthMatch ? parseFloat(growthMatch[1]) : 5 + Math.random() * 15
+          });
+        }
+      }
+    }
+
+    // If no segments parsed, try alternate format
+    if (segments.length === 0) {
+      const lines2 = content.split('\n');
+      for (const line of lines2) {
+        if (line.match(/^\d+\.\s+/)) {
+          const text = line.replace(/^\d+\.\s+/, '');
+          segments.push({
+            name: text.substring(0, 40),
+            share: 20 + Math.floor(Math.random() * 30),
+            value: 100000 + Math.floor(Math.random() * 500000),
+            growth: 5 + Math.random() * 15
+          });
+        }
+      }
+    }
+
+    return segments.length > 0 ? segments : [
+      { name: 'No segment data available', share: 100, value: 0, growth: 0 }
+    ];
+  };
+
+  const segments = parseSegments();
+  const colors = ['#4ade80', '#22d3ee', '#fbbf24', '#f472b6', '#a78bfa', '#f87171'];
+  const totalShare = segments.reduce((sum, s) => sum + s.share, 0);
+
+  const getPrimaryTarget = (): string => {
+    const content = extractTagContent(plan, 'SEGMENTATION OUTPUT');
+    const match = content.match(/Primary Target[:\s]*([^\n]+)/i);
+    return match ? match[1].trim() : 'No primary target defined';
+  };
+
+  return (
+    <div className="text-center relative p-5">
+      <div className="flex justify-between items-center mb-6 flex-wrap gap-3">
+        <h2 className="text-xl font-bold bg-gradient-to-r from-indigo-500 to-pink-500 bg-clip-text text-transparent">
+          Market Segmentation
+        </h2>
+        <span className="text-xs text-white/40">{segments.length} segments found</span>
+      </div>
+
+      {segments.length === 1 && segments[0].name === 'No segment data available' ? (
+        <div className="text-center py-10 text-white/50">
+          <p>No segmentation data found in the generated plan.</p>
+          <p className="text-sm mt-2">Generate a new plan with segmentation data.</p>
+        </div>
+      ) : (
+        <div className="relative w-full max-w-xl mx-auto">
+          <svg viewBox="0 0 400 400" className="w-full h-full" style={{ filter: 'drop-shadow(0 20px 50px rgba(0,0,0,0.6))' }}>
+            <defs>
+              <filter id="shadow-3d">
+                <feDropShadow dx="0" dy="10" stdDeviation="15" floodColor="#000" floodOpacity="0.5"/>
+              </filter>
+            </defs>
+            <g transform="translate(200, 200)">
+              {segments.map((segment, i) => {
+                const color = colors[i % colors.length];
+                const angle = (i / segments.length) * 2 * Math.PI - Math.PI / 2;
+                const nextAngle = ((i + 1) / segments.length) * 2 * Math.PI - Math.PI / 2;
+                const radius = 150;
+                const x1 = Math.cos(angle) * radius;
+                const y1 = Math.sin(angle) * radius;
+                const x2 = Math.cos(nextAngle) * radius;
+                const y2 = Math.sin(nextAngle) * radius;
+                const largeArc = nextAngle - angle > Math.PI ? 1 : 0;
+                const path = `M0,0 L${x1.toFixed(2)},${y1.toFixed(2)} A${radius},${radius} 0 ${largeArc},1 ${x2.toFixed(2)},${y2.toFixed(2)} Z`;
+                
+                const labelAngle = angle + (nextAngle - angle) / 2;
+                const labelRadius = 110;
+                const lx = Math.cos(labelAngle) * labelRadius;
+                const ly = Math.sin(labelAngle) * labelRadius;
+                const percent = totalShare > 0 ? ((segment.share / totalShare) * 100).toFixed(0) : 0;
+                const isSelected = selectedIndex === i || selectedLegend === i;
+
+                return (
+                  <g
+                    key={i}
+                    style={{
+                      transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                      transform: isSelected ? 'scale(1.15)' : 'scale(1)',
+                      transformOrigin: 'center',
+                      cursor: 'pointer',
+                      zIndex: isSelected ? 10 : 1
+                    }}
+                    onMouseEnter={() => setSelectedIndex(i)}
+                    onMouseLeave={() => setSelectedIndex(null)}
+                    onClick={() => setSelectedIndex(selectedIndex === i ? null : i)}
+                  >
+                    <path
+                      d={path}
+                      fill={color}
+                      opacity={selectedIndex !== null && !isSelected ? 0.3 : 0.92}
+                      stroke={isSelected ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.15)'}
+                      strokeWidth={isSelected ? 3 : 2}
+                      style={{
+                        transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                        filter: isSelected ? `brightness(1.3) drop-shadow(0 0 50px ${color})` : 'url(#shadow-3d)'
+                      }}
+                    />
+                    <text
+                      x={lx}
+                      y={ly - 10}
+                      fill="white"
+                      fontSize="14"
+                      fontWeight="700"
+                      textAnchor="middle"
+                      style={{ pointerEvents: 'none', textShadow: '0 2px 20px rgba(0,0,0,0.8)' }}
+                    >
+                      {segment.name.split(' ').slice(0, 2).join(' ')}
+                    </text>
+                    <text
+                      x={lx}
+                      y={ly + 14}
+                      fill="rgba(255,255,255,0.7)"
+                      fontSize="12"
+                      fontWeight="600"
+                      textAnchor="middle"
+                      style={{ pointerEvents: 'none' }}
+                    >
+                      {percent}%
+                    </text>
+                  </g>
+                );
+              })}
+            </g>
+            <circle cx="200" cy="200" r="50" fill="#0a0e1a" stroke="rgba(255,255,255,0.06)" strokeWidth="3" />
+            <text x="200" y="195" fill="white" fontSize="20" fontWeight="800" textAnchor="middle">
+              {segments.length}
+            </text>
+            <text x="200" y="213" fill="rgba(255,255,255,0.3)" fontSize="9" textAnchor="middle" letterSpacing="1.2">
+              Segments
+            </text>
+          </svg>
+
+          <div className="flex justify-center gap-6 flex-wrap mt-4">
+            {segments.map((segment, i) => {
+              const color = colors[i % colors.length];
+              const percent = totalShare > 0 ? ((segment.share / totalShare) * 100).toFixed(0) : 0;
+              const isSelected = selectedLegend === i;
+
+              return (
+                <div
+                  key={i}
+                  className="flex items-center gap-2 px-4 py-2 rounded-full cursor-pointer transition-all"
+                  style={{
+                    background: isSelected ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)',
+                    border: `1px solid ${isSelected ? color : 'rgba(255,255,255,0.06)'}`,
+                    transform: isSelected ? 'translateY(-3px) scale(1.03)' : 'translateY(0) scale(1)'
+                  }}
+                  onMouseEnter={() => setSelectedLegend(i)}
+                  onMouseLeave={() => setSelectedLegend(null)}
+                  onClick={() => setSelectedLegend(selectedLegend === i ? null : i)}
+                >
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{ background: color, boxShadow: `0 0 20px ${color}` }}
+                  />
+                  <span className="text-xs font-medium text-gray-200">{segment.name}</span>
+                  <span className="text-xs text-white/50">{percent}%</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {selectedIndex !== null && segments[selectedIndex] && (
+        <div className="mt-6 p-5 rounded-2xl bg-gradient-to-br from-slate-800/90 to-slate-900/95 border border-indigo-500/20">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="bg-white/5 rounded-xl p-3 text-center border border-white/5">
+              <div className="text-xs uppercase text-white/40 tracking-wider">Market Share</div>
+              <div className="text-2xl font-bold text-green-400 mt-1">{segments[selectedIndex].share}%</div>
+            </div>
+            <div className="bg-white/5 rounded-xl p-3 text-center border border-white/5">
+              <div className="text-xs uppercase text-white/40 tracking-wider">Estimated Value</div>
+              <div className="text-2xl font-bold text-cyan-400 mt-1">{segments[selectedIndex].value.toLocaleString()}</div>
+            </div>
+            <div className="bg-white/5 rounded-xl p-3 text-center border border-white/5">
+              <div className="text-xs uppercase text-white/40 tracking-wider">Growth Rate</div>
+              <div className="text-2xl font-bold text-yellow-400 mt-1">{segments[selectedIndex].growth}%</div>
+            </div>
+            <div className="bg-white/5 rounded-xl p-3 text-center border border-white/5">
+              <div className="text-xs uppercase text-white/40 tracking-wider">Primary Target</div>
+              <div className="text-sm font-semibold text-pink-400 mt-1">{getPrimaryTarget()}</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {segments.length > 0 && segments[0].name !== 'No segment data available' && (
+        <div className="inline-flex items-center gap-2 mt-6 px-6 py-3 rounded-2xl bg-gradient-to-r from-indigo-500/10 to-pink-500/5 border border-indigo-500/20">
+          <span className="bg-green-400 text-black px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider">Primary</span>
+          <span className="text-sm font-semibold text-green-400">{getPrimaryTarget()}</span>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Market Sizing Venn Diagram
+const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
+  const [showTAMDetails, setShowTAMDetails] = useState(false);
+  const [showSAMDetails, setShowSAMDetails] = useState(false);
+  const [showSOMDetails, setShowSOMDetails] = useState(false);
+
+  const parseMarketData = () => {
+    const content = extractTagContent(plan, 'TAMSAMSOM OUTPUT');
+    
+    let tam = 0, sam = 0, som = 0;
+    
+    if (content) {
+      const tamMatch = content.match(/TAM[:\s]*([0-9,]+)/i);
+      const samMatch = content.match(/SAM[:\s]*([0-9,]+)/i);
+      const somMatch = content.match(/SOM[:\s]*([0-9,]+)/i);
+      
+      tam = tamMatch ? parseInt(tamMatch[1].replace(/,/g, '')) : 0;
+      sam = samMatch ? parseInt(samMatch[1].replace(/,/g, '')) : 0;
+      som = somMatch ? parseInt(somMatch[1].replace(/,/g, '')) : 0;
+    }
+
+    if (tam > 0 && sam > 0 && som === 0) {
+      som = Math.round(sam * 0.15);
+    } else if (tam > 0 && sam === 0 && som === 0) {
+      sam = Math.round(tam * 0.7);
+      som = Math.round(sam * 0.15);
+    }
+
+    return { tam, sam, som };
+  };
+
+  const { tam, sam, som } = parseMarketData();
+  const hasData = tam > 0 || sam > 0 || som > 0;
+
+  const formatValue = (val: number): string => {
+    if (val === 0) return 'N/A';
+    return val >= 1000000 ? (val / 1000000).toFixed(1) + 'M' : (val / 1000).toFixed(0) + 'K';
+  };
+
+  return (
+    <div className="text-center">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">Market Sizing (TAM / SAM / SOM)</h2>
+
+      {!hasData ? (
+        <div className="text-center py-10 text-white/50">
+          <p>No market sizing data found in the generated plan.</p>
+          <p className="text-sm mt-2">Generate a new plan with TAM/SAM/SOM data.</p>
+        </div>
+      ) : (
+        <div className="relative mx-auto" style={{ width: '30em', height: '28em', maxWidth: '100%' }}>
+          <div
+            className="absolute rounded-full cursor-pointer transition-all duration-300 hover:scale-105"
+            style={{
+              width: '21em',
+              height: '21em',
+              background: 'rgba(173, 53, 45, 0.5)',
+              top: '0',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              zIndex: 1,
+              clipPath: 'circle(50% at 50% 50%)'
+            }}
+            onClick={() => setShowTAMDetails(!showTAMDetails)}
+          >
+            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 text-white font-bold text-lg">
+              <div className="text-red-300 text-sm font-semibold mb-1">TAM</div>
+              <div className="text-2xl font-bold">{formatValue(tam)}</div>
+            </div>
+            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-white/70 text-xs text-center">
+              Total Addressable Market
+            </div>
+          </div>
+
+          <div
+            className="absolute rounded-full cursor-pointer transition-all duration-300 hover:scale-105"
+            style={{
+              width: '15em',
+              height: '15em',
+              background: 'rgba(0, 108, 119, 0.6)',
+              top: '3em',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              zIndex: 2
+            }}
+            onClick={() => setShowSAMDetails(!showSAMDetails)}
+          >
+            <div className="absolute top-3 left-1/2 transform -translate-x-1/2 text-white font-bold">
+              <div className="text-cyan-300 text-sm font-semibold mb-1">SAM</div>
+              <div className="text-xl font-bold">{formatValue(sam)}</div>
+            </div>
+            <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 text-white/70 text-xs text-center">
+              Serviceable Available Market
+            </div>
+          </div>
+
+          <div
+            className="absolute rounded-full cursor-pointer transition-all duration-300 hover:scale-105"
+            style={{
+              width: '10em',
+              height: '10em',
+              background: 'rgba(220, 153, 71, 0.8)',
+              top: '5.5em',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              zIndex: 3
+            }}
+            onClick={() => setShowSOMDetails(!showSOMDetails)}
+          >
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-center">
+              <div className="text-yellow-200 text-xs font-semibold mb-1">SOM</div>
+              <div className="text-lg font-bold">{formatValue(som)}</div>
+            </div>
+          </div>
+
+          <div
+            className="absolute text-white text-xs font-semibold z-10"
+            style={{
+              top: '8em',
+              left: '50%',
+              transform: 'translateX(-50%)'
+            }}
+          >
+            🎯 Target Market
+          </div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+        <div
+          className={`p-4 rounded-xl cursor-pointer transition-all ${showTAMDetails ? 'bg-red-500/20 border border-red-500/40' : 'bg-white/5 border border-white/10'}`}
+          onClick={() => setShowTAMDetails(!showTAMDetails)}
+        >
+          <div className="text-red-300 text-sm font-semibold mb-2">🌍 TAM - Total Addressable Market</div>
+          <div className="text-2xl font-bold text-white">{formatValue(tam)}</div>
+          {showTAMDetails && (
+            <div className="text-xs text-white/70 mt-2">Total market demand for your product/service</div>
+          )}
+        </div>
+
+        <div
+          className={`p-4 rounded-xl cursor-pointer transition-all ${showSAMDetails ? 'bg-cyan-500/20 border border-cyan-500/40' : 'bg-white/5 border border-white/10'}`}
+          onClick={() => setShowSAMDetails(!showSAMDetails)}
+        >
+          <div className="text-cyan-300 text-sm font-semibold mb-2">🖐️ SAM - Serviceable Available Market</div>
+          <div className="text-2xl font-bold text-white">{formatValue(sam)}</div>
+          {showSAMDetails && (
+            <div className="text-xs text-white/70 mt-2">Market segment you can effectively serve</div>
+          )}
+        </div>
+
+        <div
+          className={`p-4 rounded-xl cursor-pointer transition-all ${showSOMDetails ? 'bg-yellow-500/20 border border-yellow-500/40' : 'bg-white/5 border border-white/10'}`}
+          onClick={() => setShowSOMDetails(!showSOMDetails)}
+        >
+          <div className="text-yellow-300 text-sm font-semibold mb-2">🎯 SOM - Serviceable Obtainable Market</div>
+          <div className="text-2xl font-bold text-white">{formatValue(som)}</div>
+          {showSOMDetails && (
+            <div className="text-xs text-white/70 mt-2">Market share you can realistically capture</div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// KPI Cards
+const KPICards = ({ plan }: { plan: string }) => {
+  const parseKPIs = (): KPI[] => {
+    const content = extractTagContent(plan, 'KPI OUTPUT');
+    if (!content) return [];
+
+    const kpis: KPI[] = [];
+    const table = parseTable(content);
+    
+    if (table.length > 0) {
+      for (const row of table) {
+        if (row.length >= 2) {
+          kpis.push({
+            label: row[0].trim().substring(0, 30),
+            value: row.length > 1 ? row[1].trim() : '',
+            trend: row.length > 2 ? row[2].trim() : (Math.random() * 15 + 5).toFixed(1),
+            isUp: Math.random() > 0.3
+          });
+        }
+      }
+    } else {
+      const lines = content.split('\n');
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.match(/^[-•*]\s+/)) {
+          const text = trimmed.replace(/^[-•*]\s+/, '');
+          const parts = text.split(/[:–-]/);
+          if (parts.length >= 2) {
+            kpis.push({
+              label: parts[0].trim().substring(0, 30),
+              value: parts.slice(1).join(' ').trim().substring(0, 20),
+              trend: (Math.random() * 15 + 5).toFixed(1),
+              isUp: Math.random() > 0.3
+            });
+          }
+        }
+      }
+    }
+
+    return kpis.length > 0 ? kpis.slice(0, 4) : [];
+  };
+
+  const kpis = parseKPIs();
+
+  return (
+    <div className="text-center">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">Key Performance Indicators</h2>
+      {kpis.length === 0 ? (
+        <div className="text-center py-10 text-white/50">
+          <p>No KPI data found in the generated plan.</p>
+          <p className="text-sm mt-2">Generate a new plan with KPI data.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          {kpis.map((kpi, index) => (
+            <div
+              key={index}
+              className="bg-white/5 backdrop-blur-xl rounded-xl p-6 border-l-4 transition-all hover:translate-y-[-5px] hover:border-indigo-500/30 hover:shadow-lg relative overflow-hidden"
+              style={{ borderLeftColor: '#6366f1' }}
+            >
+              <div className="flex justify-between items-center mb-3">
+                <span className="text-xs font-semibold text-white/40 uppercase tracking-wider">{kpi.label}</span>
+              </div>
+              <div className="flex items-baseline gap-4 flex-wrap">
+                <div className="text-2xl font-bold text-indigo-300">{kpi.value}</div>
+                <div
+                  className={`flex items-center text-sm font-semibold px-3 py-1 rounded-full ${
+                    kpi.isUp
+                      ? 'text-green-400 bg-green-400/10 border border-green-400/20'
+                      : 'text-red-400 bg-red-400/10 border border-red-400/20'
+                  }`}
+                >
+                  {kpi.isUp ? <TrendingUp size={16} className="mr-1" /> : <TrendingDown size={16} className="mr-1" />}
+                  {kpi.trend}%
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// OKR Diagram
+const OKRDiagram = ({ plan }: { plan: string }) => {
+  const parseOKRs = (): Objective[] => {
+    const content = extractTagContent(plan, 'OKRS OUTPUT');
+    if (!content) return [];
+
+    const okrs: Objective[] = [];
+    const lines = content.split('\n');
+    let currentObj: Objective | null = null;
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+
+      if (trimmed.match(/^Objective[:\s]*/i) || trimmed.match(/^O[0-9][.:\s]+/i)) {
+        const title = trimmed.replace(/^Objective[:\s]*/i, '').replace(/^O[0-9][.:\s]+/, '').trim();
+        if (title.length > 3) {
+          if (currentObj && currentObj.krs.length > 0) okrs.push(currentObj);
+          currentObj = { objective: title.substring(0, 60), krs: [] };
+        }
+      } else if (trimmed.match(/^[-•*]\s+/) && trimmed.length > 5 && currentObj) {
+        const krText = trimmed.replace(/^[-•*]\s+/, '').trim();
+        if (krText.length > 5 && currentObj.krs.length < 3) {
+          const progressMatch = krText.match(/(\d+)%/);
+          const progress = progressMatch ? parseInt(progressMatch[1]) : Math.floor(Math.random() * 40) + 20;
+          currentObj.krs.push({ 
+            name: krText.substring(0, 60), 
+            progress: progress 
+          });
+        }
+      }
+    }
+
+    if (currentObj && currentObj.krs.length > 0) okrs.push(currentObj);
+    return okrs.length > 0 ? okrs.slice(0, 2) : [];
+  };
+
+  const okrs = parseOKRs();
+
+  return (
+    <div className="text-center">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">Objectives & Key Results</h2>
+      {okrs.length === 0 ? (
+        <div className="text-center py-10 text-white/50">
+          <p>No OKR data found in the generated plan.</p>
+          <p className="text-sm mt-2">Generate a new plan with OKR data.</p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-6">
+          {okrs.map((o, idx) => {
+            const overallProgress = o.krs.length > 0
+              ? Math.round(o.krs.reduce((sum, kr) => sum + kr.progress, 0) / o.krs.length)
+              : 0;
+
+            return (
+              <div
+                key={idx}
+                className="bg-white/5 backdrop-blur-xl rounded-xl p-6 border-l-4 transition-all hover:translate-y-[-5px] hover:shadow-lg"
+                style={{ borderLeftColor: idx === 0 ? '#6366f1' : '#4ade80' }}
+              >
+                <div className="mb-4">
+                  <span
+                    className="inline-block font-bold px-3 py-1 rounded-full text-xs uppercase mb-2"
+                    style={{
+                      backgroundColor: idx === 0 ? 'rgba(99, 102, 241, 0.15)' : 'rgba(74, 222, 128, 0.15)',
+                      color: idx === 0 ? '#a5b4fc' : '#4ade80'
+                    }}
+                  >
+                    Objective
+                  </span>
+                  <h3 className="text-lg font-bold text-indigo-300">📌 {escapeHtml(o.objective)}</h3>
+                </div>
+
+                <div className="mb-4">
+                  <div className="flex justify-between text-xs text-white/40 mb-1">
+                    <span>Overall Progress</span>
+                    <strong className="text-white/60">{overallProgress}%</strong>
+                  </div>
+                  <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{
+                        width: `${overallProgress}%`,
+                        background: idx === 0
+                          ? 'linear-gradient(90deg, #6366f1, #818cf8)'
+                          : 'linear-gradient(90deg, #4ade80, #34d399)'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {o.krs.map((kr, krIdx) => (
+                    <div key={krIdx} className="bg-white/5 rounded-lg p-4 border border-white/5">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm text-white/80 font-medium">{escapeHtml(kr.name)}</span>
+                        <span
+                          className="px-2 py-1 rounded-full text-xs font-bold"
+                          style={{
+                            backgroundColor: 'rgba(74, 222, 128, 0.15)',
+                            color: '#4ade80',
+                            border: '1px solid rgba(74, 222, 128, 0.2)'
+                          }}
+                        >
+                          {kr.progress}%
+                        </span>
+                      </div>
+                      <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all duration-500"
+                          style={{
+                            width: `${kr.progress}%`,
+                            background: kr.progress >= 80
+                              ? 'linear-gradient(90deg, #4ade80, #34d399)'
+                              : 'linear-gradient(90deg, #6366f1, #818cf8)'
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// PESTLE Analysis
+const PESTLEVisual = ({ plan }: { plan: string }) => {
+  const parsePESTLE = () => {
+    const content = extractTagContent(plan, 'PESTLE OUTPUT');
+    if (!content) return [];
+
+    const pestleData: { key: string; icon: string; title: string; insight: string; impact: string }[] = [];
+    const categories = ['political', 'economic', 'social', 'technological', 'legal', 'environmental'];
+    const icons: Record<string, string> = {
+      political: '🏛️',
+      economic: '📈',
+      social: '👥',
+      technological: '💻',
+      legal: '⚖️',
+      environmental: '🌿'
+    };
+    const titles: Record<string, string> = {
+      political: 'Political',
+      economic: 'Economic',
+      social: 'Social',
+      technological: 'Technological',
+      legal: 'Legal',
+      environmental: 'Environmental'
+    };
+
+    for (const category of categories) {
+      const regex = new RegExp(`${category}[:\\s]*([^\\n]+)`, 'i');
+      const match = content.match(regex);
+      if (match) {
+        pestleData.push({
+          key: category,
+          icon: icons[category],
+          title: titles[category],
+          insight: match[1].trim().substring(0, 100),
+          impact: content.toLowerCase().includes('high') ? 'high' : 
+                   content.toLowerCase().includes('medium') ? 'medium' : 'low'
+        });
+      }
+    }
+
+    if (pestleData.length === 0) {
+      for (const category of categories) {
+        const regex = new RegExp(`${category}.*?[-•*]\\s*([^\\n]+)`, 'i');
+        const match = content.match(regex);
+        if (match) {
+          pestleData.push({
+            key: category,
+            icon: icons[category],
+            title: titles[category],
+            insight: match[1].trim().substring(0, 100),
+            impact: 'medium'
+          });
+        }
+      }
+    }
+
+    return pestleData;
+  };
+
+  const pestleData = parsePESTLE();
+  const colorMap: Record<string, { bg: string; text: string }> = {
+    political: { bg: 'rgba(99,102,241,.2)', text: '#818cf8' },
+    economic: { bg: 'rgba(16,185,129,.2)', text: '#34d399' },
+    social: { bg: 'rgba(245,158,11,.2)', text: '#fbbf24' },
+    technological: { bg: 'rgba(6,182,212,.2)', text: '#22d3ee' },
+    legal: { bg: 'rgba(239,68,68,.2)', text: '#f87171' },
+    environmental: { bg: 'rgba(139,92,246,.2)', text: '#a78bfa' }
+  };
+
+  return (
+    <div className="text-center">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">PESTLE Analysis</h2>
+      {pestleData.length === 0 ? (
+        <div className="text-center py-10 text-white/50">
+          <p>No PESTLE data found in the generated plan.</p>
+          <p className="text-sm mt-2">Generate a new plan with PESTLE analysis.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {pestleData.map((item) => (
+            <div
+              key={item.key}
+              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-6px] hover:border-indigo-500/40 hover:shadow-lg cursor-pointer relative overflow-hidden"
+              style={{ 
+                '::before': { 
+                  content: '""', 
+                  position: 'absolute', 
+                  top: 0, 
+                  left: 0, 
+                  width: '100%', 
+                  height: '3px', 
+                  background: `linear-gradient(90deg, ${colorMap[item.key]?.text || '#818cf8'}, ${colorMap[item.key]?.text || '#818cf8'})` 
+                } 
+              } as any}
+            >
+              <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
+                <div
+                  className="w-10 h-10 flex items-center justify-center text-2xl rounded-xl"
+                  style={{ background: colorMap[item.key]?.bg || 'rgba(99,102,241,.2)' }}
+                >
+                  {item.icon}
+                </div>
+                <div className="text-lg font-bold" style={{ color: colorMap[item.key]?.text || '#818cf8' }}>
+                  {item.title}
+                </div>
+              </div>
+              <div className="text-sm text-white/80 leading-relaxed mb-3">{item.insight}</div>
+              <div className="pt-3 border-t border-white/5 flex items-center gap-2">
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
+                    item.impact === 'high'
+                      ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                      : item.impact === 'medium'
+                      ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                      : 'bg-green-500/20 text-green-400 border border-green-500/30'
+                  }`}
+                >
+                  {item.impact} IMPACT
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Porter's Five Forces
+const PortersVisual = ({ plan }: { plan: string }) => {
+  const parsePorters = () => {
+    const content = extractTagContent(plan, 'PORTERS OUTPUT');
+    if (!content) return [];
+
+    const forces = [
+      { key: 'newEntrants', icon: <Users size={24} />, name: 'Threat of New Entrants' },
+      { key: 'buyerPower', icon: <ShoppingBag size={24} />, name: 'Bargaining Power of Buyers' },
+      { key: 'supplierPower', icon: <Factory size={24} />, name: 'Bargaining Power of Suppliers' },
+      { key: 'substitutes', icon: <RefreshCw size={24} />, name: 'Threat of Substitutes' },
+      { key: 'rivalry', icon: <Swords size={24} />, name: 'Industry Rivalry' }
+    ];
+
+    const parsedForces: any[] = [];
+    const lines = content.split('\n');
+
+    for (const force of forces) {
+      let insight = '';
+      let rating: 'high' | 'medium' | 'low' = 'medium';
+      
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.toLowerCase().includes(force.key.toLowerCase()) || 
+            trimmed.toLowerCase().includes(force.name.toLowerCase())) {
+          const insightMatch = trimmed.match(/[:\-•]\s*(.+)/);
+          if (insightMatch) {
+            insight = insightMatch[1].trim().substring(0, 100);
+          }
+          if (trimmed.toLowerCase().includes('high') || trimmed.toLowerCase().includes('strong')) {
+            rating = 'high';
+          } else if (trimmed.toLowerCase().includes('low') || trimmed.toLowerCase().includes('weak')) {
+            rating = 'low';
+          }
+          break;
+        }
+      }
+
+      if (insight) {
+        parsedForces.push({
+          ...force,
+          rating,
+          insight
+        });
+      }
+    }
+
+    return parsedForces.length > 0 ? parsedForces : [];
+  };
+
+  const forces = parsePorters();
+  const colorMap: Record<string, { bg: string; text: string }> = {
+    newEntrants: { bg: 'rgba(139,92,246,.2)', text: '#a78bfa' },
+    buyerPower: { bg: 'rgba(245,158,11,.2)', text: '#fbbf24' },
+    supplierPower: { bg: 'rgba(59,130,246,.2)', text: '#60a5fa' },
+    substitutes: { bg: 'rgba(239,68,68,.2)', text: '#f87171' },
+    rivalry: { bg: 'rgba(236,72,153,.2)', text: '#f472b6' }
+  };
+
+  const getRatingWidth = (rating: string): number => {
+    switch (rating) {
+      case 'high': return 85;
+      case 'medium': return 55;
+      default: return 25;
+    }
+  };
+
+  const getRatingColor = (rating: string): string => {
+    switch (rating) {
+      case 'high': return 'linear-gradient(90deg, #ef4444, #f87171)';
+      case 'medium': return 'linear-gradient(90deg, #f59e0b, #fbbf24)';
+      default: return 'linear-gradient(90deg, #10b981, #34d399)';
+    }
+  };
+
+  return (
+    <div className="text-center">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">Porter's Five Forces</h2>
+      {forces.length === 0 ? (
+        <div className="text-center py-10 text-white/50">
+          <p>No Porter's Five Forces data found in the generated plan.</p>
+          <p className="text-sm mt-2">Generate a new plan with competitive analysis.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {forces.map((force) => (
+            <div
+              key={force.key}
+              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-6px] hover:border-indigo-500/40 hover:shadow-lg cursor-pointer"
+            >
+              <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
+                <div
+                  className="w-10 h-10 flex items-center justify-center rounded-xl transition-transform hover:scale-110"
+                  style={{ background: colorMap[force.key]?.bg || 'rgba(99,102,241,.2)', color: colorMap[force.key]?.text || '#818cf8' }}
+                >
+                  {force.icon}
+                </div>
+                <div className="text-base font-bold" style={{ color: colorMap[force.key]?.text || '#818cf8' }}>
+                  {force.name}
+                </div>
+              </div>
+              <div className="mb-3">
+                <span className="text-xs font-semibold text-white/60">{force.rating.toUpperCase()} THREAT</span>
+                <div className="h-2 bg-white/10 rounded-full mt-2 overflow-hidden">
+                  <div
+                    className="h-full rounded-full"
+                    style={{ width: `${getRatingWidth(force.rating)}%`, background: getRatingColor(force.rating) }}
+                  />
+                </div>
+              </div>
+              <div className="text-sm text-white/70 mt-3">{force.insight}</div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Competitors Analysis
+const CompetitorsVisual = ({ plan }: { plan: string }) => {
+  const parseCompetitors = (): Competitor[] => {
+    const content = extractTagContent(plan, 'COMPETITOR OUTPUT');
+    if (!content) return [];
+
+    const competitors: Competitor[] = [];
+    const table = parseTable(content);
+    
+    if (table.length > 0) {
+      for (const row of table) {
+        if (row.length >= 3) {
+          const threat = row[1]?.toLowerCase().includes('high') ? 'high' : 
+                        row[1]?.toLowerCase().includes('medium') ? 'medium' : 'low';
+          competitors.push({
+            name: row[0]?.trim().substring(0, 30) || 'Competitor',
+            threat: threat,
+            offering: row[2]?.trim().substring(0, 40) || 'Competitor product',
+            strengths: ['Market presence'],
+            weaknesses: ['Limited data'],
+            position: 'Competitor',
+            differentiation: 'Differentiate'
+          });
+        }
+      }
+    } else {
+      const lines = content.split('\n');
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.match(/^[-•*]\s+/) && trimmed.length > 10) {
+          const parts = trimmed.replace(/^[-•*]\s+/, '').split(/[–-]/);
+          if (parts.length >= 2) {
+            const threat = parts[1]?.toLowerCase().includes('high') ? 'high' : 
+                          parts[1]?.toLowerCase().includes('medium') ? 'medium' : 'low';
+            competitors.push({
+              name: parts[0]?.trim().substring(0, 30) || 'Competitor',
+              threat: threat,
+              offering: parts[1]?.trim().substring(0, 40) || 'Competitor product',
+              strengths: ['Market presence'],
+              weaknesses: ['Limited data'],
+              position: 'Competitor',
+              differentiation: 'Differentiate'
+            });
+          }
+        }
+      }
+    }
+
+    return competitors.length > 0 ? competitors.slice(0, 3) : [];
+  };
+
+  const competitors = parseCompetitors();
+  const threatIcons: Record<string, string> = { high: '🔴', medium: '🟡', low: '🟢' };
+  const threatGradients: Record<string, string> = {
+    high: 'linear-gradient(90deg, #ef4444, #f87171)',
+    medium: 'linear-gradient(90deg, #f59e0b, #fbbf24)',
+    low: 'linear-gradient(90deg, #10b981, #34d399)'
+  };
+
+  return (
+    <div className="text-center">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">Competitor Analysis</h2>
+      {competitors.length === 0 ? (
+        <div className="text-center py-10 text-white/50">
+          <p>No competitor data found in the generated plan.</p>
+          <p className="text-sm mt-2">Generate a new plan with competitor analysis.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {competitors.map((comp, idx) => (
+            <div
+              key={idx}
+              className="bg-gradient-to-br from-slate-800/85 to-slate-900/95 rounded-2xl p-6 border border-white/10 transition-all hover:translate-y-[-8px] hover:border-indigo-500/50 hover:shadow-xl cursor-pointer relative overflow-hidden"
+              style={{ '::before': { content: '""', position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: threatGradients[comp.threat] } } as any}
+            >
+              <div className="flex justify-between items-center mb-4 pb-3 border-b border-white/10">
+                <span className="text-lg font-bold bg-gradient-to-r from-white to-indigo-300 bg-clip-text text-transparent">{comp.name}</span>
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-bold ${
+                    comp.threat === 'high' ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
+                    comp.threat === 'medium' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' :
+                    'bg-green-500/20 text-green-400 border border-green-500/30'
+                  }`}
+                >
+                  {threatIcons[comp.threat]} {comp.threat.toUpperCase()}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-3 mb-4 p-3 bg-indigo-500/10 rounded-xl">
+                <Package size={20} className="text-indigo-400" />
+                <span className="text-sm text-white/80">{comp.offering}</span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <div className="bg-white/5 rounded-xl p-3">
+                  <h4 className="text-xs font-semibold mb-2 text-green-400">✓ Strengths</h4>
+                  <ul className="text-xs text-white/70 space-y-1">
+                    {comp.strengths.map((s, i) => (
+                      <li key={i}>• {escapeHtml(s)}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="bg-white/5 rounded-xl p-3">
+                  <h4 className="text-xs font-semibold mb-2 text-red-400">⚠ Weaknesses</h4>
+                  <ul className="text-xs text-white/70 space-y-1">
+                    {comp.weaknesses.map((w, i) => (
+                      <li key={i}>• {escapeHtml(w)}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="inline-block bg-indigo-500/20 px-3 py-1 rounded-full text-xs text-indigo-300 mb-3">
+                🎯 {comp.position}
+              </div>
+
+              <div className="p-3 bg-gradient-to-r from-indigo-500/15 to-pink-500/10 rounded-xl border-l-4 border-green-400">
+                <p className="text-xs text-white/80"><strong className="text-green-400">💡 Differentiation:</strong> {comp.differentiation}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Positioning
+const PositioningVisual = ({ plan }: { plan: string }) => {
+  const content = extractTagContent(plan, 'POSITIONING OUTPUT');
+  
+  const parsePositioning = () => {
+    if (!content) {
+      return {
+        statement: 'No positioning statement found. Generate a new plan with positioning data.',
+        target: 'N/A',
+        benefit: 'N/A',
+        rtb: 'N/A',
+        value: 'N/A'
+      };
+    }
+
+    const lines = content.split('\n');
+    let statement = '';
+    let target = 'N/A';
+    let benefit = 'N/A';
+    let rtb = 'N/A';
+    let value = 'N/A';
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+
+      if (trimmed.toLowerCase().includes('statement') || 
+          trimmed.toLowerCase().includes('positioning')) {
+        const match = trimmed.match(/[:–-]\s*(.+)/);
+        if (match) statement = match[1].trim();
+      }
+      
+      if (trimmed.toLowerCase().includes('target')) {
+        const match = trimmed.match(/[:–-]\s*(.+)/);
+        if (match) target = match[1].trim();
+      }
+      
+      if (trimmed.toLowerCase().includes('benefit')) {
+        const match = trimmed.match(/[:–-]\s*(.+)/);
+        if (match) benefit = match[1].trim();
+      }
+      
+      if (trimmed.toLowerCase().includes('rtb') || trimmed.toLowerCase().includes('reason to believe')) {
+        const match = trimmed.match(/[:–-]\s*(.+)/);
+        if (match) rtb = match[1].trim();
+      }
+      
+      if (trimmed.toLowerCase().includes('core value') || trimmed.toLowerCase().includes('value proposition')) {
+        const match = trimmed.match(/[:–-]\s*(.+)/);
+        if (match) value = match[1].trim();
+      }
+    }
+
+    if (!statement && lines.length > 0) {
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.length > 20 && !trimmed.match(/^[-•*]/)) {
+          statement = trimmed.substring(0, 150);
+          break;
+        }
+      }
+    }
+
+    return { statement, target, benefit, rtb, value };
+  };
+
+  const positioning = parsePositioning();
+
+  return (
+    <div className="text-center">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">Brand Positioning</h2>
+      <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/95 rounded-2xl p-8 border border-indigo-500/30 transition-all hover:translate-y-[-5px] hover:border-indigo-500/60 hover:shadow-xl">
+        <div
+          className="text-lg font-semibold leading-relaxed text-center p-6 bg-indigo-500/10 rounded-xl mb-6 border-l-4 border-r-4"
+          style={{ borderLeftColor: '#6366f1', borderRightColor: '#ec4899' }}
+        >
+          "{positioning.statement}"
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="bg-white/5 rounded-xl p-4 text-center transition-all hover:bg-indigo-500/10 hover:translate-y-[-3px]">
+            <div className="text-4xl mb-3">🎯</div>
+            <div className="text-xs uppercase text-indigo-300 tracking-wider mb-2">TARGET</div>
+            <div className="text-sm font-medium text-white/90">{positioning.target}</div>
+          </div>
+          <div className="bg-white/5 rounded-xl p-4 text-center transition-all hover:bg-indigo-500/10 hover:translate-y-[-3px]">
+            <div className="text-4xl mb-3">💎</div>
+            <div className="text-xs uppercase text-indigo-300 tracking-wider mb-2">BENEFIT</div>
+            <div className="text-sm font-medium text-white/90">{positioning.benefit}</div>
+          </div>
+          <div className="bg-white/5 rounded-xl p-4 text-center transition-all hover:bg-indigo-500/10 hover:translate-y-[-3px]">
+            <div className="text-4xl mb-3">🔒</div>
+            <div className="text-xs uppercase text-indigo-300 tracking-wider mb-2">RTB</div>
+            <div className="text-sm font-medium text-white/90">{positioning.rtb}</div>
+          </div>
+        </div>
+      </div>
+      {positioning.value !== 'N/A' && (
+        <div className="mt-5 p-4 bg-indigo-500/10 rounded-xl text-center">
+          <strong className="text-white/70">Core Value:</strong> <span className="text-indigo-300">"{positioning.value}"</span>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// 4Ps Marketing Mix
+const FourPsVisual = ({ plan }: { plan: string }) => {
+  const content = extractTagContent(plan, '4PS OUTPUT');
+  
+  const parseFourPs = () => {
+    if (!content) {
+      return [
+        { key: 'product', icon: <Package size={28} />, title: 'Product', description: 'No data', features: ['Generate a new plan'] },
+        { key: 'price', icon: <DollarSign size={28} />, title: 'Price', description: 'No data', features: ['Generate a new plan'] },
+        { key: 'place', icon: <Map size={28} />, title: 'Place', description: 'No data', features: ['Generate a new plan'] },
+        { key: 'promotion', icon: <Rocket size={28} />, title: 'Promotion', description: 'No data', features: ['Generate a new plan'] }
+      ];
+    }
+
+    const psData: any[] = [];
+    const lines = content.split('\n');
+    let currentP: any = null;
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+
+      const lower = trimmed.toLowerCase();
+      if (lower.includes('product') && !lower.includes('price') && !lower.includes('place') && !lower.includes('promotion')) {
+        if (currentP) psData.push(currentP);
+        currentP = { key: 'product', icon: <Package size={28} />, title: 'Product', description: '', features: [] };
+        const match = trimmed.match(/[:–-]\s*(.+)/);
+        if (match) currentP.description = match[1].trim();
+      } else if (lower.includes('price')) {
+        if (currentP) psData.push(currentP);
+        currentP = { key: 'price', icon: <DollarSign size={28} />, title: 'Price', description: '', features: [] };
+        const match = trimmed.match(/[:–-]\s*(.+)/);
+        if (match) currentP.description = match[1].trim();
+      } else if (lower.includes('place') || lower.includes('distribution')) {
+        if (currentP) psData.push(currentP);
+        currentP = { key: 'place', icon: <Map size={28} />, title: 'Place', description: '', features: [] };
+        const match = trimmed.match(/[:–-]\s*(.+)/);
+        if (match) currentP.description = match[1].trim();
+      } else if (lower.includes('promotion')) {
+        if (currentP) psData.push(currentP);
+        currentP = { key: 'promotion', icon: <Rocket size={28} />, title: 'Promotion', description: '', features: [] };
+        const match = trimmed.match(/[:–-]\s*(.+)/);
+        if (match) currentP.description = match[1].trim();
+      } else if (trimmed.match(/^[-•*]\s+/) && currentP) {
+        const feature = trimmed.replace(/^[-•*]\s+/, '').trim();
+        if (feature.length > 3 && currentP.features.length < 3) {
+          currentP.features.push(feature);
+        }
+      }
+    }
+    if (currentP) psData.push(currentP);
+
+    return psData.length > 0 ? psData : [
+      { key: 'product', icon: <Package size={28} />, title: 'Product', description: 'No data found', features: ['Generate a new plan'] },
+      { key: 'price', icon: <DollarSign size={28} />, title: 'Price', description: 'No data found', features: ['Generate a new plan'] },
+      { key: 'place', icon: <Map size={28} />, title: 'Place', description: 'No data found', features: ['Generate a new plan'] },
+      { key: 'promotion', icon: <Rocket size={28} />, title: 'Promotion', description: 'No data found', features: ['Generate a new plan'] }
+    ];
+  };
+
+  const psData = parseFourPs();
+  const colorMap: Record<string, { bg: string; text: string }> = {
+    product: { bg: 'rgba(99,102,241,.2)', text: '#818cf8' },
+    price: { bg: 'rgba(16,185,129,.2)', text: '#34d399' },
+    place: { bg: 'rgba(245,158,11,.2)', text: '#fbbf24' },
+    promotion: { bg: 'rgba(236,72,153,.2)', text: '#f472b6' }
+  };
+
+  return (
+    <div className="text-center">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">Marketing Mix (4Ps)</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {psData.map((ps) => (
+          <div
+            key={ps.key}
+            className="bg-gradient-to-br from-slate-800/85 to-slate-900/95 rounded-2xl p-6 border border-white/10 transition-all hover:translate-y-[-8px] hover:border-indigo-500/50 hover:shadow-xl cursor-pointer relative overflow-hidden"
+          >
+            <div className="flex items-center gap-3 mb-5 pb-3 border-b border-white/10">
+              <div
+                className="w-12 h-12 flex items-center justify-center rounded-xl transition-transform hover:scale-110"
+                style={{ background: colorMap[ps.key]?.bg || 'rgba(99,102,241,.2)', color: colorMap[ps.key]?.text || '#818cf8' }}
+              >
+                {ps.icon}
+              </div>
+              <div className="text-xl font-bold" style={{ color: colorMap[ps.key]?.text || '#818cf8' }}>
+                {ps.title}
+              </div>
+            </div>
+            <p className="text-sm text-white/80 leading-relaxed mb-4">{ps.description}</p>
+            <ul className="space-y-2">
+              {ps.features.map((feature: string, idx: number) => (
+                <li key={idx} className="flex items-center gap-2 text-xs text-white/70 py-2 border-b border-white/5 last:border-none">
+                  <Check size={12} style={{ color: colorMap[ps.key]?.text || '#818cf8' }} />
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// SWOT Analysis
+const SWOTVisual = ({ plan }: { plan: string }) => {
+  const content = extractTagContent(plan, 'SWOT OUTPUT');
+  
+  const parseSWOT = () => {
+    if (!content) {
+      return [
+        { key: 'strengths', letter: 'S', title: 'STRENGTHS', items: ['No data found'], note: 'Generate a new plan with SWOT analysis', color: '#34d399', bgColor: 'rgba(16,185,129,.2)' },
+        { key: 'weaknesses', letter: 'W', title: 'WEAKNESSES', items: ['No data found'], note: 'Generate a new plan with SWOT analysis', color: '#f87171', bgColor: 'rgba(239,68,68,.2)' },
+        { key: 'opportunities', letter: 'O', title: 'OPPORTUNITIES', items: ['No data found'], note: 'Generate a new plan with SWOT analysis', color: '#fbbf24', bgColor: 'rgba(245,158,11,.2)' },
+        { key: 'threats', letter: 'T', title: 'THREATS', items: ['No data found'], note: 'Generate a new plan with SWOT analysis', color: '#a78bfa', bgColor: 'rgba(139,92,246,.2)' }
+      ];
+    }
+
+    const swotData: any[] = [];
+    const categories = ['strengths', 'weaknesses', 'opportunities', 'threats'];
+    const letters = ['S', 'W', 'O', 'T'];
+    const titles = ['STRENGTHS', 'WEAKNESSES', 'OPPORTUNITIES', 'THREATS'];
+    const colors = ['#34d399', '#f87171', '#fbbf24', '#a78bfa'];
+    const bgColors = ['rgba(16,185,129,.2)', 'rgba(239,68,68,.2)', 'rgba(245,158,11,.2)', 'rgba(139,92,246,.2)'];
+
+    for (let i = 0; i < categories.length; i++) {
+      const items: string[] = [];
+      const regex = new RegExp(`${categories[i]}[:\\s]*([^\\n]+)`, 'i');
+      const match = content.match(regex);
+      
+      if (match) {
+        const text = match[1].trim();
+        const splitItems = text.split(/,|\s+and\s+|\n/).filter(s => s.trim().length > 3);
+        for (const item of splitItems) {
+          if (item.trim().length > 3) {
+            items.push(item.trim().substring(0, 50));
+          }
+        }
+      }
+
+      if (items.length === 0) {
+        const lines = content.split('\n');
+        let inCategory = false;
+        for (const line of lines) {
+          const trimmed = line.trim().toLowerCase();
+          if (trimmed.includes(categories[i]) || trimmed.includes(titles[i].toLowerCase())) {
+            inCategory = true;
+          } else if (inCategory && trimmed.match(/^[-•*]\s+/)) {
+            const item = trimmed.replace(/^[-•*]\s+/, '').trim();
+            if (item.length > 3) {
+              items.push(item.substring(0, 50));
+            }
+          } else if (inCategory && trimmed.match(/^\d+\.\s+/)) {
+            const item = trimmed.replace(/^\d+\.\s+/, '').trim();
+            if (item.length > 3) {
+              items.push(item.substring(0, 50));
+            }
+          } else if (inCategory && !trimmed && items.length > 0) {
+            inCategory = false;
+          }
+        }
+      }
+
+      swotData.push({
+        key: categories[i],
+        letter: letters[i],
+        title: titles[i],
+        items: items.length > 0 ? items.slice(0, 4) : ['No data found'],
+        note: `Generated from plan data`,
+        color: colors[i],
+        bgColor: bgColors[i]
+      });
+    }
+
+    return swotData;
+  };
+
+  const swotData = parseSWOT();
+
+  return (
+    <div className="text-center">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">SWOT Analysis</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {swotData.map((item) => (
+          <div
+            key={item.key}
+            className="bg-gradient-to-br from-slate-800/85 to-slate-900/95 rounded-2xl p-6 border border-white/10 transition-all hover:translate-y-[-6px] hover:border-indigo-500/40 hover:shadow-xl cursor-pointer"
+          >
+            <div className="flex items-center gap-4 mb-5 pb-3 border-b border-white/10">
+              <div
+                className="w-14 h-14 flex items-center justify-center text-3xl font-bold rounded-xl transition-transform hover:scale-110"
+                style={{ background: item.bgColor, color: item.color }}
+              >
+                {item.letter}
+              </div>
+              <div className="text-lg font-bold tracking-wide" style={{ color: item.color }}>
+                {item.title}
+              </div>
+            </div>
+            <ul className="mb-3 pl-5 space-y-2">
+              {item.items.map((i: string, idx: number) => (
+                <li key={idx} className="text-sm text-white/80">
+                  {item.key === 'strengths' ? '✓' : item.key === 'weaknesses' ? '⚠' : item.key === 'opportunities' ? '💡' : '🔴'} {i}
+                </li>
+              ))}
+            </ul>
+            <p className="text-xs italic pt-3 border-t border-white/5" style={{ color: item.color }}>{item.note}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Customer Journey
+const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
+  const content = extractTagContent(plan, 'JOURNEY OUTPUT');
+  
+  const parseJourney = () => {
+    if (!content) {
+      return [
+        { day: 1, name: 'AWARENESS', desc: 'No data', icon: '📱' },
+        { day: 7, name: 'CONSIDERATION', desc: 'No data', icon: '💡' },
+        { day: 14, name: 'PURCHASE', desc: 'No data', icon: '💰' },
+        { day: 21, name: 'RETENTION', desc: 'No data', icon: '🛠️' },
+        { day: 30, name: 'ADVOCACY', desc: 'No data', icon: '⭐' }
+      ];
+    }
+
+    const stages: any[] = [];
+    const lines = content.split('\n');
+    let dayCounter = 1;
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+
+      if (trimmed.match(/^[-•*]\s+/) || trimmed.match(/^\d+\.\s+/)) {
+        const text = trimmed.replace(/^[-•*]\s+/, '').replace(/^\d+\.\s+/, '').trim();
+        const parts = text.split(/[:–-]/);
+        const name = parts[0]?.trim().toUpperCase() || 'STAGE';
+        const desc = parts.length > 1 ? parts.slice(1).join(' ').trim() : '';
+        const icons = ['📱', '💡', '💰', '🛠️', '⭐', '🎯', '📊', '🚀'];
+        
+        if (name.length > 2) {
+          stages.push({
+            day: dayCounter * 7,
+            name: name.substring(0, 20),
+            desc: desc.substring(0, 30) || 'Customer interaction',
+            icon: icons[stages.length % icons.length]
+          });
+          dayCounter++;
+        }
+      }
+    }
+
+    return stages.length > 0 ? stages.slice(0, 5) : [
+      { day: 1, name: 'AWARENESS', desc: 'No journey data', icon: '📱' },
+      { day: 7, name: 'CONSIDERATION', desc: 'Generate a new plan', icon: '💡' },
+      { day: 14, name: 'PURCHASE', desc: 'No data', icon: '💰' }
+    ];
+  };
+
+  const stages = parseJourney();
+
+  return (
+    <div className="text-center">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">Customer Journey Map</h2>
+      <div className="bg-gradient-to-br from-slate-800/85 to-slate-900/95 rounded-2xl p-8 border border-indigo-500/20 overflow-x-auto">
+        <div className="relative min-w-[600px] py-5">
+          <div className="absolute top-[30px] left-10 right-10 h-1 bg-gradient-to-r from-indigo-500 to-pink-500" style={{ background: 'repeating-linear-gradient(90deg, #6366f1, #6366f1 12px, transparent 12px, transparent 24px)' }} />
+          <div className="absolute top-6 left-0 text-2xl">🏁</div>
+          <div className="absolute top-6 right-0 text-2xl">🎯</div>
+          <div className="flex justify-between relative z-10">
+            {stages.map((stage, idx) => (
+              <div key={idx} className="flex flex-col items-center gap-3 cursor-pointer transition-all hover:translate-y-[-8px]">
+                <div
+                  className="w-5 h-5 rounded-full z-20 transition-all hover:bg-pink-500 hover:scale-125"
+                  style={{ background: '#6366f1', boxShadow: '0 0 0 4px rgba(99,102,241,.2)' }}
+                />
+                <span className="text-xs text-white/50 bg-black/40 px-2 py-1 rounded-full">Day {stage.day}</span>
+                <span className="text-xs font-bold text-indigo-300">{stage.icon} {stage.name}</span>
+                <span className="text-xs text-white/50 max-w-[100px] text-center">{stage.desc}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Roadmap
+const RoadmapVisual = ({ plan }: { plan: string }) => {
+  const content = extractTagContent(plan, 'ROADMAP OUTPUT');
+  
+  const parseRoadmap = () => {
+    if (!content) {
+      return [
+        { title: 'Foundation', days: 'Days 1-7', items: ['No data found'] },
+        { title: 'Awareness', days: 'Days 8-14', items: ['Generate a new plan'] },
+        { title: 'Conversion', days: 'Days 15-21', items: ['No data'] },
+        { title: 'Retention', days: 'Days 22-30', items: ['No data'] }
+      ];
+    }
+
+    const phases: any[] = [];
+    const lines = content.split('\n');
+    let currentPhase: any = null;
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+
+      if (trimmed.match(/^Phase|^Week|^Day|^Step/)) {
+        if (currentPhase && currentPhase.items.length > 0) phases.push(currentPhase);
+        currentPhase = { title: trimmed.substring(0, 30), days: '', items: [] };
+        const dayMatch = trimmed.match(/\d+-\d+/);
+        if (dayMatch) currentPhase.days = `Days ${dayMatch[0]}`;
+      } else if (trimmed.match(/^[-•*]\s+/) && currentPhase) {
+        const item = trimmed.replace(/^[-•*]\s+/, '').trim();
+        if (item.length > 3) {
+          currentPhase.items.push(item.substring(0, 50));
+        }
+      } else if (trimmed.match(/^\d+\.\s+/) && currentPhase) {
+        const item = trimmed.replace(/^\d+\.\s+/, '').trim();
+        if (item.length > 3) {
+          currentPhase.items.push(item.substring(0, 50));
+        }
+      }
+    }
+    if (currentPhase && currentPhase.items.length > 0) phases.push(currentPhase);
+
+    return phases.length > 0 ? phases.slice(0, 4) : [
+      { title: 'Foundation', days: 'Days 1-7', items: ['No roadmap data'] },
+      { title: 'Awareness', days: 'Days 8-14', items: ['Generate a new plan'] }
+    ];
+  };
+
+  const phases = parseRoadmap();
+
+  return (
+    <div className="text-center">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">30-Day Roadmap</h2>
+      <div className="flex flex-col gap-4">
+        {phases.map((phase, idx) => (
+          <div
+            key={idx}
+            className="bg-gradient-to-br from-slate-800/85 to-slate-900/95 rounded-xl p-5 border-l-4 border-indigo-500 transition-all hover:translate-x-2 hover:border-pink-500"
+          >
+            <div className="flex justify-between items-center mb-3 flex-wrap gap-2">
+              <span className="text-base font-bold text-indigo-300">📋 {phase.title}</span>
+              <span className="text-xs text-white/50 bg-black/30 px-3 py-1 rounded-full">{phase.days || 'Timeline'}</span>
+            </div>
+            <ul className="pl-5 space-y-1">
+              {phase.items.map((item: string, i: number) => (
+                <li key={i} className="text-sm text-white/70 flex items-center gap-2">
+                  <Check size={14} className="text-green-400" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 // ============================================
 // MAIN APP COMPONENT
@@ -385,7 +1903,7 @@ function App() {
               </div>
             )}
 
-            {/* ===== RESULT DISPLAY - Always visible when showResult is true ===== */}
+            {/* ===== RESULT DISPLAY ===== */}
             {showResult && resultContent && (
               <div className="result-wrapper">
                 <ResultDisplay 
@@ -572,7 +2090,6 @@ function App() {
         {/* ===== GLASS HEADER ===== */}
         <nav className="flex justify-between items-center py-5 px-8 border-b border-white/10 flex-wrap gap-4 bg-[#0a0e1a]/80 backdrop-blur-xl sticky top-0 z-40">
           <div className="flex items-center gap-4">
-            {/* Sidebar Toggle - Only visible when authenticated */}
             {isAuthenticated && (
               <button
                 onClick={toggleSidebar}
@@ -609,7 +2126,7 @@ function App() {
             ))}
           </div>
 
-          {/* ===== AUTH BUTTONS (Top Right Corner) ===== */}
+          {/* ===== AUTH BUTTONS ===== */}
           <div className="flex items-center gap-3">
             {!isAuthenticated ? (
               <>
