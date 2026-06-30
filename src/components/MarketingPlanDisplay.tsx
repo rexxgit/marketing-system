@@ -1,11 +1,12 @@
 // ============================================
 // MARKETING PLAN DISPLAY - PROFESSIONAL CARDS
+// DIRECT PARSING - MATCHES YOUR EXACT PLAN FORMAT
 // ============================================
 
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Users, BarChart3, Zap, Building2, Search, MapPin, Grid3X3, Diamond,
-  Route, TrendingUp, Crosshair, Calendar, Paintbrush, ClipboardList,
+  Route, TrendingUp, Crosshair, Calendar, Paintbrush, 
   Lightbulb, DollarSign, Rocket, User, ArrowRight, Lock, Check,
   Star, Heart, Brain, Settings, Menu, X, Download, Copy,
   Users as UsersIcon, ShoppingBag, Factory, RefreshCw, Swords, Package, Map
@@ -21,82 +22,48 @@ interface SectionData {
 }
 
 // ============================================
-// DIRECT PARSING - MATCHES YOUR EXACT FORMAT
+// DIRECT PARSING - EXACT MATCH FOR YOUR FORMAT
 // ============================================
 
-const extractSectionContent = (plan: string, sectionName: string): string => {
-  if (!plan) return '';
-  
-  // Your tags look like: [SEGMENTATION OUTPUT]  
-  // The regex needs to match exactly that format
-  const escapedName = sectionName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const regex = new RegExp(`\\[${escapedName}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
-  const match = plan.match(regex);
-  
-  if (match) {
-    return match[1].trim();
-  }
-  
-  // Try without the word "OUTPUT"
-  const shortName = sectionName.replace(/\s+OUTPUT$/i, '');
-  if (shortName !== sectionName) {
-    const regex2 = new RegExp(`\\[${shortName}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
-    const match2 = plan.match(regex2);
-    if (match2) return match2[1].trim();
-  }
-  
-  return '';
-};
-
 const parseSections = (plan: string): SectionData[] => {
-  const sections = [
-    { id: 'segmentation', title: 'Market Segmentation', icon: <Users size={20} />, color: '#4ade80' },
-    { id: 'tamsamsom', title: 'Market Sizing (TAM/SAM/SOM)', icon: <BarChart3 size={20} />, color: '#22d3ee' },
-    { id: 'pestle', title: 'PESTLE Analysis', icon: <Zap size={20} />, color: '#fbbf24' },
-    { id: 'porter', title: "Porter's Five Forces", icon: <Building2 size={20} />, color: '#f472b6' },
-    { id: 'competitor', title: 'Competitor Analysis', icon: <Search size={20} />, color: '#a78bfa' },
-    { id: 'positioning', title: 'Brand Positioning', icon: <MapPin size={20} />, color: '#f87171' },
-    { id: '4ps', title: 'Marketing Mix (4Ps)', icon: <Grid3X3 size={20} />, color: '#34d399' },
-    { id: 'swot', title: 'SWOT Analysis', icon: <Diamond size={20} />, color: '#f59e0b' },
-    { id: 'journey', title: 'Customer Journey Map', icon: <Route size={20} />, color: '#818cf8' },
-    { id: 'kpi', title: 'Key Performance Indicators', icon: <TrendingUp size={20} />, color: '#ec4899' },
-    { id: 'okrs', title: 'Objectives & Key Results', icon: <Crosshair size={20} />, color: '#10b981' },
-    { id: 'roadmap', title: '30-Day Roadmap', icon: <Calendar size={20} />, color: '#f472b6' },
-    { id: 'design', title: 'Design Guidelines', icon: <Paintbrush size={20} />, color: '#8b5cf6' }
+  if (!plan) return [];
+
+  // Define sections with their exact tag names from your plan
+  const sectionConfigs = [
+    { id: 'segmentation', title: 'Market Segmentation', tag: 'SEGMENTATION OUTPUT', icon: <Users size={20} />, color: '#4ade80' },
+    { id: 'tamsamsom', title: 'Market Sizing (TAM/SAM/SOM)', tag: 'TAMSAMSOM OUTPUT', icon: <BarChart3 size={20} />, color: '#22d3ee' },
+    { id: 'pestle', title: 'PESTLE Analysis', tag: 'PESTLE OUTPUT', icon: <Zap size={20} />, color: '#fbbf24' },
+    { id: 'porter', title: "Porter's Five Forces", tag: 'PORTER OUTPUT', icon: <Building2 size={20} />, color: '#f472b6' },
+    { id: 'competitor', title: 'Competitor Analysis', tag: 'COMPETITOR OUTPUT', icon: <Search size={20} />, color: '#a78bfa' },
+    { id: 'positioning', title: 'Brand Positioning', tag: 'POSITIONING OUTPUT', icon: <MapPin size={20} />, color: '#f87171' },
+    { id: '4ps', title: 'Marketing Mix (4Ps)', tag: '4Ps OUTPUT', icon: <Grid3X3 size={20} />, color: '#34d399' },
+    { id: 'swot', title: 'SWOT Analysis', tag: 'SWOT OUTPUT', icon: <Diamond size={20} />, color: '#f59e0b' },
+    { id: 'journey', title: 'Customer Journey Map', tag: 'CUSTOMER JOURNEY OUTPUT', icon: <Route size={20} />, color: '#818cf8' },
+    { id: 'kpi', title: 'Key Performance Indicators', tag: 'KPI OUTPUT', icon: <TrendingUp size={20} />, color: '#ec4899' },
+    { id: 'okrs', title: 'Objectives & Key Results', tag: 'OKRS OUTPUT', icon: <Crosshair size={20} />, color: '#10b981' },
+    { id: 'roadmap', title: '30-Day Roadmap', tag: 'ROADMAP OUTPUT', icon: <Calendar size={20} />, color: '#f472b6' },
+    { id: 'design', title: 'Design Guidelines', tag: 'DESIGN OUTPUT', icon: <Paintbrush size={20} />, color: '#8b5cf6' }
   ];
 
   const results: SectionData[] = [];
 
-  // The exact tag names from your plan
-  const tagMap: Record<string, string> = {
-    'segmentation': 'SEGMENTATION OUTPUT',
-    'tamsamsom': 'TAMSAMSOM OUTPUT',
-    'pestle': 'PESTLE OUTPUT',
-    'porter': 'PORTER OUTPUT',
-    'competitor': 'COMPETITOR OUTPUT',
-    'positioning': 'POSITIONING OUTPUT',
-    '4ps': '4Ps OUTPUT',
-    'swot': 'SWOT OUTPUT',
-    'journey': 'CUSTOMER JOURNEY OUTPUT',
-    'kpi': 'KPI OUTPUT',
-    'okrs': 'OKRS OUTPUT',
-    'roadmap': 'ROADMAP OUTPUT',
-    'design': 'DESIGN OUTPUT'
-  };
-
-  for (const section of sections) {
-    const tag = tagMap[section.id] || section.id.toUpperCase() + ' OUTPUT';
-    const content = extractSectionContent(plan, tag);
-
-    if (content) {
-      results.push({
-        id: section.id,
-        title: section.title,
-        icon: section.icon,
-        color: section.color,
-        content: formatContent(content),
-        rawContent: content
-      });
+  for (const config of sectionConfigs) {
+    // Build regex to match [TAG] and capture everything until next [ or ---
+    const regex = new RegExp(`\\[${config.tag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
+    const match = plan.match(regex);
+    
+    if (match) {
+      const rawContent = match[1].trim();
+      if (rawContent.length > 10) {
+        results.push({
+          id: config.id,
+          title: config.title,
+          icon: config.icon,
+          color: config.color,
+          content: formatContent(rawContent),
+          rawContent: rawContent
+        });
+      }
     }
   }
 
@@ -106,12 +73,21 @@ const parseSections = (plan: string): SectionData[] => {
 const formatContent = (content: string): string => {
   let formatted = content;
 
+  // Bold
   formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  
+  // Bullet points
   formatted = formatted.replace(/^[-•*]\s+(.*)$/gm, '<li>$1</li>');
+  
+  // Numbered lists
   formatted = formatted.replace(/^\d+\.\s+(.*)$/gm, '<li class="numbered">$1</li>');
+  
+  // Wrap list items in ul
   formatted = formatted.replace(/(<li.*?>.*?<\/li>\s*)+/g, (match) => {
     return `<ul>${match}</ul>`;
   });
+  
+  // Tables
   formatted = formatted.replace(/\|(.+)\|\n\|[-:| ]+\|\n((?:\|.+\|\n?)+)/g, (match, header, rows) => {
     const headerCells = header.split('|').map(c => c.trim()).filter(c => c);
     const rowCells = rows.split('\n').filter(r => r.trim()).map(r => 
@@ -133,6 +109,8 @@ const formatContent = (content: string): string => {
     tableHtml += '</tbody></table>';
     return tableHtml;
   });
+
+  // Line breaks
   formatted = formatted.replace(/\n/g, '<br>');
   
   return formatted;
@@ -151,7 +129,6 @@ const MarketingPlanDisplay: React.FC<MarketingPlanDisplayProps> = ({ plan, onSec
   const [sections, setSections] = useState<SectionData[]>([]);
   const [visibleSections, setVisibleSections] = useState<string[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
-  const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   useEffect(() => {
     if (plan) {
@@ -159,6 +136,7 @@ const MarketingPlanDisplay: React.FC<MarketingPlanDisplayProps> = ({ plan, onSec
       const parsed = parseSections(plan);
       setSections(parsed);
       
+      // Animate sections appearing one by one
       let delay = 0;
       const interval = 300;
       
@@ -176,6 +154,10 @@ const MarketingPlanDisplay: React.FC<MarketingPlanDisplayProps> = ({ plan, onSec
     }
   }, [plan, onSectionVisible]);
 
+  // Debug: Log what we found
+  console.log('📊 MarketingPlanDisplay - Sections found:', sections.length);
+  console.log('📊 Section IDs:', sections.map(s => s.id));
+
   if (!plan) {
     return (
       <div className="plan-empty-state">
@@ -191,11 +173,11 @@ const MarketingPlanDisplay: React.FC<MarketingPlanDisplayProps> = ({ plan, onSec
       <div className="plan-empty-state">
         <div className="plan-empty-icon">🔍</div>
         <h3>No Sections Found</h3>
-        <p>The generated plan doesn't contain recognizable sections. Please try regenerating.</p>
+        <p>The generated plan doesn't contain recognizable sections.</p>
         <details style={{ marginTop: 12, textAlign: 'left', maxWidth: 500, margin: '12px auto 0', fontSize: 12, color: '#94A3B8' }}>
-          <summary>Debug: Show first 500 chars of plan</summary>
-          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', marginTop: 8, background: 'rgba(255,255,255,0.05)', padding: 12, borderRadius: 8 }}>
-            {plan.substring(0, 500)}
+          <summary>Debug: Show plan preview</summary>
+          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', marginTop: 8, background: 'rgba(255,255,255,0.05)', padding: 12, borderRadius: 8, maxHeight: 200, overflowY: 'auto' }}>
+            {plan.substring(0, 600)}
           </pre>
         </details>
       </div>
@@ -215,7 +197,6 @@ const MarketingPlanDisplay: React.FC<MarketingPlanDisplayProps> = ({ plan, onSec
         {sections.map((section, index) => (
           <div
             key={section.id}
-            ref={el => sectionRefs.current[section.id] = el}
             className={`plan-section-card ${visibleSections.includes(section.id) ? 'visible' : 'hidden'}`}
             style={{
               animationDelay: `${index * 150}ms`,
