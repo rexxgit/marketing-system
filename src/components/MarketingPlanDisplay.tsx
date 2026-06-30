@@ -1,14 +1,16 @@
 // ============================================
-// MARKETING PLAN DISPLAY - SIMPLE VERSION
+// MARKETING PLAN DISPLAY - WITH COPY & IMPROVED FORMATTING
 // ============================================
 
 import React, { useState, useEffect } from 'react';
+import { Copy, Check, FileText } from 'lucide-react';
 
 interface SectionData {
   id: string;
   title: string;
   color: string;
   content: string;
+  rawContent: string;
 }
 
 // ============================================
@@ -18,6 +20,7 @@ interface SectionData {
 const parseSections = (plan: string): SectionData[] => {
   if (!plan) return [];
 
+  // DESIGN section removed
   const sectionConfigs = [
     { id: 'segmentation', title: 'Market Segmentation', tag: 'SEGMENTATION OUTPUT', color: '#4ade80' },
     { id: 'tamsamsom', title: 'Market Sizing (TAM/SAM/SOM)', tag: 'TAMSAMSOM OUTPUT', color: '#22d3ee' },
@@ -30,8 +33,7 @@ const parseSections = (plan: string): SectionData[] => {
     { id: 'journey', title: 'Customer Journey Map', tag: 'CUSTOMER JOURNEY OUTPUT', color: '#818cf8' },
     { id: 'kpi', title: 'Key Performance Indicators', tag: 'KPI OUTPUT', color: '#ec4899' },
     { id: 'okrs', title: 'Objectives & Key Results', tag: 'OKRS OUTPUT', color: '#10b981' },
-    { id: 'roadmap', title: '30-Day Roadmap', tag: 'ROADMAP OUTPUT', color: '#f472b6' },
-    { id: 'design', title: 'Design Guidelines', tag: 'DESIGN OUTPUT', color: '#8b5cf6' }
+    { id: 'roadmap', title: '30-Day Roadmap', tag: 'ROADMAP OUTPUT', color: '#f472b6' }
   ];
 
   const results: SectionData[] = [];
@@ -45,7 +47,8 @@ const parseSections = (plan: string): SectionData[] => {
         id: config.id,
         title: config.title,
         color: config.color,
-        content: formatContent(match[1].trim())
+        content: formatContent(match[1].trim(), config.id),
+        rawContent: match[1].trim()
       });
     }
   }
@@ -53,22 +56,32 @@ const parseSections = (plan: string): SectionData[] => {
   return results;
 };
 
-const formatContent = (content: string): string => {
+const formatContent = (content: string, sectionId: string): string => {
   let formatted = content;
 
+  // Bold
   formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  
+  // Bullet points
   formatted = formatted.replace(/^[-•*]\s+(.*)$/gm, '<li>$1</li>');
+  
+  // Numbered lists
   formatted = formatted.replace(/^\d+\.\s+(.*)$/gm, '<li class="numbered">$1</li>');
+  
+  // Wrap list items in ul
   formatted = formatted.replace(/(<li.*?>.*?<\/li>\s*)+/g, (match) => {
     return `<ul>${match}</ul>`;
   });
+  
+  // ===== IMPROVED TABLE FORMATTING =====
   formatted = formatted.replace(/\|(.+)\|\n\|[-:| ]+\|\n((?:\|.+\|\n?)+)/g, (match, header, rows) => {
     const headerCells = header.split('|').map(c => c.trim()).filter(c => c);
     const rowCells = rows.split('\n').filter(r => r.trim()).map(r => 
       r.split('|').map(c => c.trim()).filter(c => c)
     );
     
-    let tableHtml = '<table><thead><tr>';
+    let tableHtml = '<div class="table-wrapper"><table>';
+    tableHtml += '<thead><tr>';
     headerCells.forEach(cell => {
       tableHtml += `<th>${cell}</th>`;
     });
@@ -80,12 +93,59 @@ const formatContent = (content: string): string => {
       });
       tableHtml += '</tr>';
     });
-    tableHtml += '</tbody></table>';
+    tableHtml += '</tbody></table></div>';
     return tableHtml;
   });
+
+  // ===== IMPROVED PESTLE FORMATTING =====
+  if (sectionId === 'pestle') {
+    formatted = formatted.replace(/\*\*(.*?)Drivers:\*\*/g, '<h4>$1 Drivers</h4>');
+    formatted = formatted.replace(/^([A-Z][a-z]+) Drivers:/gm, '<h4>$1 Drivers</h4>');
+  }
+
+  // ===== IMPROVED TAM/SAM/SOM FORMATTING =====
+  if (sectionId === 'tamsamsom') {
+    formatted = formatted.replace(/\|\s*(TAM|SAM|SOM)\s*\|/g, '|<strong>$1</strong>|');
+    formatted = formatted.replace(/\*\*Growth Targets:\*\*/g, '<h4>📈 Growth Targets</h4>');
+    formatted = formatted.replace(/\*Validation:\*/g, '<span class="validation-badge">✅ Validation</span>');
+  }
+
+  // ===== IMPROVED KPI FORMATTING =====
+  if (sectionId === 'kpi') {
+    formatted = formatted.replace(/\|\s*Objective\s*\|/g, '|<strong>Objective</strong>|');
+    formatted = formatted.replace(/\|\s*Target\s*\|/g, '|<strong>Target</strong>|');
+  }
+
+  // ===== IMPROVED COMPETITOR FORMATTING =====
+  if (sectionId === 'competitor') {
+    formatted = formatted.replace(/\|\s*(High|Medium|Low)\s*\|/g, (match, level) => {
+      const colors: Record<string, string> = {
+        'High': '#ef4444',
+        'Medium': '#f59e0b',
+        'Low': '#10b981'
+      };
+      return `|<span class="threat-badge" style="background:${colors[level]}20;color:${colors[level]};padding:2px 10px;border-radius:12px;font-size:12px;font-weight:600;">${level}</span>|`;
+    });
+  }
+
+  // Line breaks
   formatted = formatted.replace(/\n/g, '<br>');
   
   return formatted;
+};
+
+// ============================================
+// COPY TO CLIPBOARD FUNCTION
+// ============================================
+
+const copyToClipboard = async (text: string, setCopied: (state: boolean) => void) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  } catch (err) {
+    console.error('Failed to copy:', err);
+  }
 };
 
 // ============================================
@@ -100,13 +160,14 @@ interface MarketingPlanDisplayProps {
 const MarketingPlanDisplay: React.FC<MarketingPlanDisplayProps> = ({ plan, onSectionVisible }) => {
   const [sections, setSections] = useState<SectionData[]>([]);
   const [visibleSections, setVisibleSections] = useState<string[]>([]);
+  const [copiedSection, setCopiedSection] = useState<string | null>(null);
+  const [copiedAll, setCopiedAll] = useState(false);
 
   useEffect(() => {
     if (plan) {
       const parsed = parseSections(plan);
       setSections(parsed);
       
-      // Animate sections appearing one by one
       let delay = 0;
       const interval = 300;
       
@@ -120,8 +181,18 @@ const MarketingPlanDisplay: React.FC<MarketingPlanDisplayProps> = ({ plan, onSec
     }
   }, [plan, onSectionVisible]);
 
-  // Debug
-  console.log('📊 Sections found:', sections.length);
+  const handleCopySection = async (section: SectionData) => {
+    await copyToClipboard(section.rawContent, (state) => {
+      setCopiedSection(state ? section.id : null);
+    });
+  };
+
+  const handleCopyAll = async () => {
+    const allContent = sections.map(s => 
+      `=== ${s.title.toUpperCase()} ===\n${s.rawContent}\n`
+    ).join('\n---\n\n');
+    await copyToClipboard(allContent, setCopiedAll);
+  };
 
   if (!plan) {
     return (
@@ -150,6 +221,38 @@ const MarketingPlanDisplay: React.FC<MarketingPlanDisplayProps> = ({ plan, onSec
 
   return (
     <div style={{ width: '100%', padding: '8px 0' }}>
+      {/* Copy All Button */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
+        <button
+          onClick={handleCopyAll}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '8px 20px',
+            borderRadius: '10px',
+            fontSize: '14px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            border: '1px solid rgba(255,255,255,0.1)',
+            background: 'rgba(255,255,255,0.05)',
+            color: '#CBD5E1',
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+            e.currentTarget.style.borderColor = 'rgba(99,102,241,0.4)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+          }}
+        >
+          {copiedAll ? <Check size={18} color="#10b981" /> : <FileText size={18} />}
+          {copiedAll ? 'Copied All!' : 'Copy All Sections'}
+        </button>
+      </div>
+
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         {sections.map((section, index) => (
           <div
@@ -167,7 +270,14 @@ const MarketingPlanDisplay: React.FC<MarketingPlanDisplayProps> = ({ plan, onSec
               overflow: 'hidden'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '16px', paddingBottom: '14px', borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '14px', 
+              marginBottom: '16px', 
+              paddingBottom: '14px', 
+              borderBottom: '1px solid rgba(255, 255, 255, 0.06)' 
+            }}>
               <div style={{ 
                 width: '36px', 
                 height: '36px', 
@@ -177,12 +287,43 @@ const MarketingPlanDisplay: React.FC<MarketingPlanDisplayProps> = ({ plan, onSec
                 justifyContent: 'center',
                 background: `${section.color}20`,
                 color: section.color,
-                fontSize: '18px',
+                fontSize: '14px',
                 fontWeight: 'bold'
               }}>
                 {index + 1}
               </div>
               <h3 style={{ flex: 1, fontSize: '16px', fontWeight: 600, color: '#F1F5F9', margin: 0 }}>{section.title}</h3>
+              
+              {/* Copy Section Button */}
+              <button
+                onClick={() => handleCopySection(section)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '4px 12px',
+                  borderRadius: '8px',
+                  fontSize: '12px',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  background: 'rgba(255,255,255,0.03)',
+                  color: '#94A3B8',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
+                  e.currentTarget.style.color = '#CBD5E1';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
+                  e.currentTarget.style.color = '#94A3B8';
+                }}
+              >
+                {copiedSection === section.id ? <Check size={14} color="#10b981" /> : <Copy size={14} />}
+                {copiedSection === section.id ? 'Copied!' : 'Copy'}
+              </button>
+              
               <span style={{ 
                 fontSize: '10px', 
                 fontWeight: 600, 
@@ -201,6 +342,86 @@ const MarketingPlanDisplay: React.FC<MarketingPlanDisplayProps> = ({ plan, onSec
           </div>
         ))}
       </div>
+
+      <style>{`
+        .table-wrapper {
+          overflow-x: auto;
+          margin: 12px 0;
+          border-radius: 10px;
+          border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .table-wrapper table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 13px;
+        }
+        .table-wrapper table thead {
+          background: rgba(99, 102, 241, 0.12);
+        }
+        .table-wrapper table th {
+          padding: 10px 14px;
+          text-align: left;
+          font-weight: 600;
+          color: #818cf8;
+          border-bottom: 2px solid rgba(99, 102, 241, 0.2);
+        }
+        .table-wrapper table td {
+          padding: 8px 14px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+          color: #CBD5E1;
+        }
+        .table-wrapper table tr:hover td {
+          background: rgba(255, 255, 255, 0.02);
+        }
+        .validation-badge {
+          display: inline-block;
+          padding: 4px 12px;
+          border-radius: 20px;
+          background: rgba(16, 185, 129, 0.15);
+          color: #10b981;
+          font-size: 12px;
+          font-weight: 600;
+          margin: 8px 0;
+        }
+        h4 {
+          font-size: 15px;
+          font-weight: 600;
+          color: #818cf8;
+          margin: 16px 0 8px;
+        }
+        strong {
+          color: #818cf8;
+        }
+        ul {
+          margin: 8px 0;
+          padding-left: 24px;
+          list-style: none;
+        }
+        li {
+          position: relative;
+          padding: 4px 0 4px 20px;
+          color: #CBD5E1;
+          line-height: 1.6;
+        }
+        li::before {
+          content: '▸';
+          position: absolute;
+          left: 0;
+          color: #6366f1;
+          font-weight: bold;
+        }
+        li.numbered::before {
+          content: '•';
+          color: #818cf8;
+        }
+        .threat-badge {
+          display: inline-block;
+          padding: 2px 10px;
+          border-radius: 12px;
+          font-size: 12px;
+          font-weight: 600;
+        }
+      `}</style>
     </div>
   );
 };
