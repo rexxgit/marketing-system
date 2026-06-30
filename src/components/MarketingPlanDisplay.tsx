@@ -6,15 +6,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Users, BarChart3, Zap, Building2, Search, MapPin, Grid3X3, Diamond,
-  Route, TrendingUp, Crosshair, Calendar, Paintbrush, Home, ClipboardList,
+  Route, TrendingUp, Crosshair, Calendar, Paintbrush, ClipboardList,
   Lightbulb, DollarSign, Rocket, User, ArrowRight, Lock, Check,
   Star, Heart, Brain, Settings, Menu, X, Download, Copy,
   Users as UsersIcon, ShoppingBag, Factory, RefreshCw, Swords, Package, Map
 } from 'lucide-react';
-
-// ============================================
-// SECTION TYPES
-// ============================================
 
 interface SectionData {
   id: string;
@@ -26,13 +22,30 @@ interface SectionData {
 }
 
 // ============================================
-// PARSING UTILITIES
+// FLEXIBLE PARSING UTILITIES
 // ============================================
 
 const extractSectionContent = (plan: string, sectionName: string): string => {
-  const regex = new RegExp(`\\[${sectionName}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
-  const match = plan.match(regex);
-  return match ? match[1].trim() : '';
+  if (!plan) return '';
+  
+  // Try multiple patterns
+  const patterns = [
+    // Exact match with optional spaces
+    new RegExp(`\\[\\s*${sectionName.replace(/\s+/g, '\\s*')}\\s*\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i'),
+    // Case insensitive with flexible spaces
+    new RegExp(`\\[\\s*${sectionName.split(' ').join('\\s*')}\\s*\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i'),
+    // Just the first word
+    new RegExp(`\\[\\s*${sectionName.split(' ')[0]}\\s*\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i')
+  ];
+  
+  for (const pattern of patterns) {
+    const match = plan.match(pattern);
+    if (match && match[1].trim().length > 10) {
+      return match[1].trim();
+    }
+  }
+  
+  return '';
 };
 
 const parseSections = (plan: string): SectionData[] => {
@@ -55,27 +68,29 @@ const parseSections = (plan: string): SectionData[] => {
   const results: SectionData[] = [];
 
   for (const section of sections) {
-    let content = '';
+    // Try multiple tag variations
+    const tagVariations = [
+      section.id.toUpperCase() + ' OUTPUT',
+      section.id.charAt(0).toUpperCase() + section.id.slice(1) + ' OUTPUT',
+      section.id.toUpperCase(),
+      section.id
+    ];
     
-    // Map internal IDs to actual tag names
-    const tagMap: Record<string, string> = {
-      'segmentation': 'SEGMENTATION OUTPUT',
-      'tamsamsom': 'TAMSAMSOM OUTPUT',
-      'pestle': 'PESTLE OUTPUT',
-      'porter': 'PORTER OUTPUT',
-      'competitor': 'COMPETITOR OUTPUT',
-      'positioning': 'POSITIONING OUTPUT',
-      '4ps': '4Ps OUTPUT',
-      'swot': 'SWOT OUTPUT',
-      'journey': 'CUSTOMER JOURNEY OUTPUT',
-      'kpi': 'KPI OUTPUT',
-      'okrs': 'OKRS OUTPUT',
-      'roadmap': 'ROADMAP OUTPUT',
-      'design': 'DESIGN OUTPUT'
-    };
-
-    const tag = tagMap[section.id] || section.id.toUpperCase() + ' OUTPUT';
-    content = extractSectionContent(plan, tag);
+    let content = '';
+    for (const tag of tagVariations) {
+      content = extractSectionContent(plan, tag);
+      if (content) break;
+    }
+    
+    // If still no content, try section title
+    if (!content) {
+      const titleWords = section.title.split(' ');
+      for (let i = 0; i < Math.min(titleWords.length, 3); i++) {
+        const partial = titleWords.slice(0, i + 1).join(' ').toUpperCase();
+        content = extractSectionContent(plan, partial);
+        if (content) break;
+      }
+    }
 
     if (content) {
       results.push({
@@ -95,21 +110,12 @@ const parseSections = (plan: string): SectionData[] => {
 const formatContent = (content: string): string => {
   let formatted = content;
 
-  // Bold text
   formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  
-  // Bullet points
   formatted = formatted.replace(/^[-•*]\s+(.*)$/gm, '<li>$1</li>');
-  
-  // Numbered lists
   formatted = formatted.replace(/^\d+\.\s+(.*)$/gm, '<li class="numbered">$1</li>');
-  
-  // Wrap list items
   formatted = formatted.replace(/(<li.*?>.*?<\/li>\s*)+/g, (match) => {
     return `<ul>${match}</ul>`;
   });
-  
-  // Tables
   formatted = formatted.replace(/\|(.+)\|\n\|[-:| ]+\|\n((?:\|.+\|\n?)+)/g, (match, header, rows) => {
     const headerCells = header.split('|').map(c => c.trim()).filter(c => c);
     const rowCells = rows.split('\n').filter(r => r.trim()).map(r => 
@@ -131,8 +137,6 @@ const formatContent = (content: string): string => {
     tableHtml += '</tbody></table>';
     return tableHtml;
   });
-
-  // Line breaks
   formatted = formatted.replace(/\n/g, '<br>');
   
   return formatted;
@@ -159,7 +163,6 @@ const MarketingPlanDisplay: React.FC<MarketingPlanDisplayProps> = ({ plan, onSec
       const parsed = parseSections(plan);
       setSections(parsed);
       
-      // Animate sections appearing one by one
       let delay = 0;
       const interval = 300;
       
@@ -193,6 +196,12 @@ const MarketingPlanDisplay: React.FC<MarketingPlanDisplayProps> = ({ plan, onSec
         <div className="plan-empty-icon">🔍</div>
         <h3>No Sections Found</h3>
         <p>The generated plan doesn't contain recognizable sections. Please try regenerating.</p>
+        <details style={{ marginTop: 12, textAlign: 'left', maxWidth: 500, margin: '12px auto 0', fontSize: 12, color: '#94A3B8' }}>
+          <summary>Debug: Show first 500 chars of plan</summary>
+          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', marginTop: 8, background: 'rgba(255,255,255,0.05)', padding: 12, borderRadius: 8 }}>
+            {plan.substring(0, 500)}
+          </pre>
+        </details>
       </div>
     );
   }
@@ -458,7 +467,6 @@ const MarketingPlanDisplay: React.FC<MarketingPlanDisplayProps> = ({ plan, onSec
           margin: 4px 0;
         }
 
-        /* Empty State */
         .plan-empty-state {
           text-align: center;
           padding: 60px 32px;
@@ -487,7 +495,26 @@ const MarketingPlanDisplay: React.FC<MarketingPlanDisplayProps> = ({ plan, onSec
           line-height: 1.6;
         }
 
-        /* Responsive */
+        .plan-empty-state details {
+          text-align: left;
+          max-width: 500px;
+          margin: 12px auto 0;
+          font-size: 12px;
+          color: #94A3B8;
+        }
+
+        .plan-empty-state details pre {
+          white-space: pre-wrap;
+          word-break: break-all;
+          margin-top: 8px;
+          background: rgba(255, 255, 255, 0.05);
+          padding: 12px;
+          border-radius: 8px;
+          font-size: 11px;
+          max-height: 200px;
+          overflow-y: auto;
+        }
+
         @media (max-width: 768px) {
           .plan-section-card {
             padding: 18px 20px;
