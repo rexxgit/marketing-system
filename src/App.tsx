@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 
 // ===== NEW IMPORTS =====
-import ResultDisplay from './components/ResultDisplay';
+import MarketingPlanDisplay from './components/MarketingPlanDisplay';
 import PDFExport from './components/PDFExport';
 
 // Types
@@ -2105,20 +2105,32 @@ function App() {
               </div>
             )}
 
-            {/* ===== RESULT DISPLAY ===== */}
+            {/* ===== RESULT DISPLAY - PROFESSIONAL CARDS ===== */}
             {showResult && resultContent && (
               <div className="result-wrapper">
-                <ResultDisplay 
-                  content={resultContent}
-                  title="Strategic Marketing Plan"
-                  onCopy={() => {
-                    setStatus('📋 Plan copied to clipboard!');
-                    setTimeout(() => setStatus(''), 3000);
-                  }}
-                  onPDFExport={() => {
-                    console.log('PDF export triggered');
+                <MarketingPlanDisplay 
+                  plan={resultContent}
+                  onSectionVisible={(sectionId) => {
+                    console.log(`Section ${sectionId} is now visible`);
                   }}
                 />
+                
+                {/* ===== PDF EXPORT BUTTON ===== */}
+                <div className="flex justify-end mt-6">
+                  <PDFExport 
+                    content={resultContent}
+                    title="Strategic Marketing Plan"
+                    buttonText="📄 Export as PDF"
+                    onSuccess={() => {
+                      setStatus('✅ PDF downloaded successfully!');
+                      setTimeout(() => setStatus(''), 3000);
+                    }}
+                    onError={(error) => {
+                      setStatus(`❌ PDF Error: ${error.message}`);
+                      setTimeout(() => setStatus(''), 5000);
+                    }}
+                  />
+                </div>
               </div>
             )}
 
