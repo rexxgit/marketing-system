@@ -1,6 +1,5 @@
 // ============================================
 // MARKETING PLAN DISPLAY - PROFESSIONAL CARDS
-// Conscientiousness Design with Glow Effects
 // ============================================
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -22,27 +21,28 @@ interface SectionData {
 }
 
 // ============================================
-// FLEXIBLE PARSING UTILITIES
+// DIRECT PARSING - MATCHES YOUR EXACT FORMAT
 // ============================================
 
 const extractSectionContent = (plan: string, sectionName: string): string => {
   if (!plan) return '';
   
-  // Try multiple patterns
-  const patterns = [
-    // Exact match with optional spaces
-    new RegExp(`\\[\\s*${sectionName.replace(/\s+/g, '\\s*')}\\s*\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i'),
-    // Case insensitive with flexible spaces
-    new RegExp(`\\[\\s*${sectionName.split(' ').join('\\s*')}\\s*\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i'),
-    // Just the first word
-    new RegExp(`\\[\\s*${sectionName.split(' ')[0]}\\s*\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i')
-  ];
+  // Your tags look like: [SEGMENTATION OUTPUT]  
+  // The regex needs to match exactly that format
+  const escapedName = sectionName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`\\[${escapedName}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
+  const match = plan.match(regex);
   
-  for (const pattern of patterns) {
-    const match = plan.match(pattern);
-    if (match && match[1].trim().length > 10) {
-      return match[1].trim();
-    }
+  if (match) {
+    return match[1].trim();
+  }
+  
+  // Try without the word "OUTPUT"
+  const shortName = sectionName.replace(/\s+OUTPUT$/i, '');
+  if (shortName !== sectionName) {
+    const regex2 = new RegExp(`\\[${shortName}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
+    const match2 = plan.match(regex2);
+    if (match2) return match2[1].trim();
   }
   
   return '';
@@ -67,30 +67,26 @@ const parseSections = (plan: string): SectionData[] => {
 
   const results: SectionData[] = [];
 
+  // The exact tag names from your plan
+  const tagMap: Record<string, string> = {
+    'segmentation': 'SEGMENTATION OUTPUT',
+    'tamsamsom': 'TAMSAMSOM OUTPUT',
+    'pestle': 'PESTLE OUTPUT',
+    'porter': 'PORTER OUTPUT',
+    'competitor': 'COMPETITOR OUTPUT',
+    'positioning': 'POSITIONING OUTPUT',
+    '4ps': '4Ps OUTPUT',
+    'swot': 'SWOT OUTPUT',
+    'journey': 'CUSTOMER JOURNEY OUTPUT',
+    'kpi': 'KPI OUTPUT',
+    'okrs': 'OKRS OUTPUT',
+    'roadmap': 'ROADMAP OUTPUT',
+    'design': 'DESIGN OUTPUT'
+  };
+
   for (const section of sections) {
-    // Try multiple tag variations
-    const tagVariations = [
-      section.id.toUpperCase() + ' OUTPUT',
-      section.id.charAt(0).toUpperCase() + section.id.slice(1) + ' OUTPUT',
-      section.id.toUpperCase(),
-      section.id
-    ];
-    
-    let content = '';
-    for (const tag of tagVariations) {
-      content = extractSectionContent(plan, tag);
-      if (content) break;
-    }
-    
-    // If still no content, try section title
-    if (!content) {
-      const titleWords = section.title.split(' ');
-      for (let i = 0; i < Math.min(titleWords.length, 3); i++) {
-        const partial = titleWords.slice(0, i + 1).join(' ').toUpperCase();
-        content = extractSectionContent(plan, partial);
-        if (content) break;
-      }
-    }
+    const tag = tagMap[section.id] || section.id.toUpperCase() + ' OUTPUT';
+    const content = extractSectionContent(plan, tag);
 
     if (content) {
       results.push({
