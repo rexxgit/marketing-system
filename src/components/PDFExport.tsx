@@ -27,21 +27,34 @@ const PDFExport: React.FC<PDFExportProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   const formatContentForPDF = (text: string): string => {
-    if (!text) return '';
+    if (!text) return '<p>No content available</p>';
 
     let formatted = text;
 
+    // Headings - match your plan format
     formatted = formatted.replace(/^# (.*$)/gm, '<h1>$1</h1>');
     formatted = formatted.replace(/^## (.*$)/gm, '<h2>$2</h2>');
     formatted = formatted.replace(/^### (.*$)/gm, '<h3>$3</h3>');
     formatted = formatted.replace(/^#### (.*$)/gm, '<h4>$4</h4>');
+    
+    // Bold
     formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // Italic
     formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    
+    // Bullet points
     formatted = formatted.replace(/^[-•*]\s+(.*)$/gm, '<li>$1</li>');
+    
+    // Numbered lists
     formatted = formatted.replace(/^\d+\.\s+(.*)$/gm, '<li class="numbered">$1</li>');
+    
+    // Wrap lists
     formatted = formatted.replace(/(<li.*?>.*?<\/li>\s*)+/g, (match) => {
       return `<ul>${match}</ul>`;
     });
+    
+    // Tables - match your plan's table format
     formatted = formatted.replace(/\|(.+)\|\n\|[-:| ]+\|\n((?:\|.+\|\n?)+)/g, (match, header, rows) => {
       const headerCells = header.split('|').map(c => c.trim()).filter(c => c);
       const rowCells = rows.split('\n').filter(r => r.trim()).map(r => 
@@ -63,9 +76,11 @@ const PDFExport: React.FC<PDFExportProps> = ({
       tableHtml += '</tbody></table>';
       return tableHtml;
     });
+
+    // Line breaks
     formatted = formatted.replace(/\n/g, '<br>');
     
-    return formatted;
+    return formatted || '<p>No content to display</p>';
   };
 
   const generatePDF = async () => {
@@ -79,7 +94,14 @@ const PDFExport: React.FC<PDFExportProps> = ({
     setIsSuccess(false);
 
     try {
-      const html2pdf = (await import('html2pdf.js')).default;
+      // Check if html2pdf is available
+      let html2pdf;
+      try {
+        const module = await import('html2pdf.js');
+        html2pdf = module.default;
+      } catch (importError) {
+        throw new Error('html2pdf.js library not installed. Run: npm install html2pdf.js');
+      }
 
       const tempDiv = document.createElement('div');
       tempDiv.style.cssText = `
@@ -92,33 +114,47 @@ const PDFExport: React.FC<PDFExportProps> = ({
         line-height: 1.6;
       `;
 
+      // Get the formatted content
+      const formattedContent = formatContentForPDF(content);
+
       tempDiv.innerHTML = `
         <style>
           * { margin: 0; padding: 0; box-sizing: border-box; }
           body { font-family: 'Inter', sans-serif; color: #1a1a2e; }
+          
           h1 { font-size: 28px; font-weight: 700; color: #1a1a2e; margin: 24px 0 16px; padding-bottom: 12px; border-bottom: 3px solid #6366f1; }
           h2 { font-size: 22px; font-weight: 600; color: #1a1a2e; margin: 20px 0 12px; padding-left: 12px; border-left: 4px solid #6366f1; }
           h3 { font-size: 18px; font-weight: 600; color: #2d2d44; margin: 16px 0 10px; }
           h4 { font-size: 15px; font-weight: 600; color: #4a4a6a; margin: 12px 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+          
           strong { color: #4f46e5; font-weight: 600; }
           em { font-style: italic; }
+          
           p { margin: 6px 0; color: #2d2d44; line-height: 1.8; }
+          
           ul { margin: 8px 0; padding-left: 24px; list-style: none; }
           li { position: relative; padding: 4px 0 4px 24px; color: #2d2d44; line-height: 1.6; }
           li::before { content: '▸'; position: absolute; left: 0; color: #6366f1; font-weight: bold; }
           li.numbered::before { content: '•'; color: #818cf8; }
+          
           table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; border-radius: 8px; overflow: hidden; }
           table thead { background: #eef2ff; }
           table th { padding: 10px 14px; text-align: left; font-weight: 600; color: #4f46e5; border-bottom: 2px solid #c7d2fe; }
           table td { padding: 8px 14px; border-bottom: 1px solid #e5e7eb; color: #2d2d44; }
           table tr:hover td { background: #f8fafc; }
+          
           hr { border: none; border-top: 1px solid #e5e7eb; margin: 20px 0; }
+          
           .pdf-header { text-align: center; padding-bottom: 24px; border-bottom: 3px solid #6366f1; margin-bottom: 24px; }
           .pdf-header h1 { font-size: 32px; font-weight: 700; color: #1a1a2e; margin: 0; padding: 0; border: none; }
           .pdf-header .subtitle { font-size: 13px; color: #6b7280; margin: 8px 0 0; }
           .pdf-header .meta { font-size: 11px; color: #9ca3af; margin: 4px 0 0; }
+          
           .pdf-footer { text-align: center; padding-top: 24px; border-top: 2px solid #e5e7eb; margin-top: 32px; font-size: 11px; color: #9ca3af; }
+          
           .pdf-section { margin-bottom: 8px; }
+          
+          .section-title { font-size: 20px; font-weight: 700; color: #1a1a2e; margin: 20px 0 12px; padding-bottom: 8px; border-bottom: 2px solid #6366f1; }
         </style>
         
         <div class="pdf-header">
@@ -128,7 +164,7 @@ const PDFExport: React.FC<PDFExportProps> = ({
         </div>
         
         <div class="pdf-section">
-          ${formatContentForPDF(content)}
+          ${formattedContent}
         </div>
         
         <div class="pdf-footer">
@@ -219,4 +255,4 @@ const PDFExport: React.FC<PDFExportProps> = ({
   );
 };
 
-export default PDFExport;  // ← MAKE SURE THIS LINE EXISTS
+export default PDFExport;
