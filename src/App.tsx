@@ -1587,3 +1587,4 @@ const RoadmapVisual = ({ plan }: { plan: string }) => {
     </div>
   );
 };
+export default App;
