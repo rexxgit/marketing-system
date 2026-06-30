@@ -3,13 +3,10 @@
 // DIRECT PARSING - MATCHES YOUR EXACT PLAN FORMAT
 // ============================================
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Users, BarChart3, Zap, Building2, Search, MapPin, Grid3X3, Diamond,
-  Route, TrendingUp, Crosshair, Calendar, Paintbrush, 
-  Lightbulb, DollarSign, Rocket, User, ArrowRight, Lock, Check,
-  Star, Heart, Brain, Settings, Menu, X, Download, Copy,
-  Users as UsersIcon, ShoppingBag, Factory, RefreshCw, Swords, Package, Map
+  Route, TrendingUp, Crosshair, Calendar, Paintbrush
 } from 'lucide-react';
 
 interface SectionData {
