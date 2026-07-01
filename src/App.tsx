@@ -125,7 +125,7 @@ const extractTagContent = (plan: string, tag: string): string => {
     'TAMSAMSOM OUTPUT': ['TAMSAMSOM OUTPUT', 'TAM/SAM/SOM', 'MARKET SIZING'],
     'KPI OUTPUT': ['KPI OUTPUT', 'KPIS OUTPUT', 'KPI'],
     'OKRS OUTPUT': ['OKRS OUTPUT', 'OKR OUTPUT', 'OKR'],
-    'PESTLE OUTPUT': ['PESTLE OUTPUT', 'PESTLE'],
+    'PESTLE OUTPUT': ['PESTLE OUTPUT', 'PESTLE', 'PESTEL OUTPUT', 'PESTEL', 'PESTLE ANALYSIS', 'PESTEL ANALYSIS'],
     'PORTERS OUTPUT': ['PORTER OUTPUT', 'PORTERS OUTPUT', 'PORTER'],
     'COMPETITOR OUTPUT': ['COMPETITOR OUTPUT', 'COMPETITORS OUTPUT', 'COMPETITOR'],
     'POSITIONING OUTPUT': ['POSITIONING OUTPUT', 'POSITIONING'],
@@ -138,10 +138,18 @@ const extractTagContent = (plan: string, tag: string): string => {
   const possibleTags = tagMap[tag] || [tag];
   
   for (const possibleTag of possibleTags) {
+    // Try standard format: [TAG]
     const regex = new RegExp(`\\[${possibleTag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
     const match = plan.match(regex);
     if (match && match[1].trim().length > 10) {
       return match[1].trim();
+    }
+    
+    // Try bold format: **TAG** (for PESTLE)
+    const boldRegex = new RegExp(`\\*\\*${possibleTag}\\*\\*\\s*\\n([\\s\\S]*?)(?=\\n\\n---|\\n\\[|\\n\\*\\*|$)`, 'i');
+    const boldMatch = plan.match(boldRegex);
+    if (boldMatch && boldMatch[1].trim().length > 10) {
+      return boldMatch[1].trim();
     }
   }
   
@@ -697,7 +705,7 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
 };
 
 // ============================================
-// ROLE 4: PESTLE EXPERT
+// ROLE 4: PESTLE EXPERT (FIXED)
 // ============================================
 
 const PESTLEVisual = ({ plan }: { plan: string }) => {
@@ -715,28 +723,53 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
       { key: 'environmental', icon: '🌿', title: 'Environmental' }
     ];
 
+    // Try to parse from content first, fallback to full plan
+    let searchText = content || fullPlan;
+    
     for (const cat of categories) {
       let insight = '';
       
-      const regex = new RegExp(`${cat.key}[:\\s]*([^\\n]+)`, 'i');
-      let match = content.match(regex);
+      // Pattern 1: **Economic Drivers:** or **Economic Drivers** with bold
+      const boldPattern = new RegExp(`\\*\\*${cat.title}\\s+Drivers\\*\\*[:\\s]*([^\\n]+)`, 'i');
+      const boldMatch = searchText.match(boldPattern);
+      if (boldMatch) {
+        insight = boldMatch[1].trim();
+      }
       
-      if (match) {
-        insight = match[1].trim().substring(0, 100);
-      } else {
-        const regex2 = new RegExp(`${cat.key}.*?[:\\-•]\\s*([^\\n]+)`, 'i');
-        const match2 = fullPlan.match(regex2);
-        if (match2) {
-          insight = match2[1].trim().substring(0, 100);
+      // Pattern 2: Economic Drivers: (without bold)
+      if (!insight) {
+        const plainPattern = new RegExp(`${cat.title}\\s+Drivers[:\\s]*([^\\n]+)`, 'i');
+        const plainMatch = searchText.match(plainPattern);
+        if (plainMatch) {
+          insight = plainMatch[1].trim();
         }
       }
       
+      // Pattern 3: **Political:** or Political: (key format)
       if (!insight) {
-        const lines = fullPlan.split('\n');
+        const keyPattern = new RegExp(`\\*\\*${cat.key}\\*\\*[:\\s]*([^\\n]+)`, 'i');
+        const keyMatch = searchText.match(keyPattern);
+        if (keyMatch) {
+          insight = keyMatch[1].trim();
+        }
+      }
+      
+      // Pattern 4: political: (without bold)
+      if (!insight) {
+        const plainKeyPattern = new RegExp(`${cat.key}[:\\s]*([^\\n]+)`, 'i');
+        const plainKeyMatch = searchText.match(plainKeyPattern);
+        if (plainKeyMatch) {
+          insight = plainKeyMatch[1].trim();
+        }
+      }
+      
+      // Pattern 5: Look for bullet points with category name
+      if (!insight) {
+        const lines = searchText.split('\n');
         for (const line of lines) {
           const lower = line.toLowerCase();
-          if (lower.includes(cat.key) || lower.includes(cat.title.toLowerCase())) {
-            const clean = line.replace(/^[-•*]\s+/, '').replace(/^[A-Z]+:?\s*/, '');
+          if ((lower.includes(cat.key) || lower.includes(cat.title.toLowerCase())) && line.match(/^[-•*]\s+/)) {
+            const clean = line.replace(/^[-•*]\s+/, '').trim();
             if (clean.length > 10 && clean.length < 150) {
               insight = clean;
               break;
@@ -745,19 +778,25 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
         }
       }
       
-      let impact = 'medium';
-      if (insight.toLowerCase().includes('high') || insight.toLowerCase().includes('significant') || insight.toLowerCase().includes('major')) {
-        impact = 'high';
-      } else if (insight.toLowerCase().includes('low') || insight.toLowerCase().includes('minor') || insight.toLowerCase().includes('negligible')) {
-        impact = 'low';
-      }
-      
+      // If we found insight, clean it up and add to data
       if (insight) {
+        // Clean up - remove any markdown artifacts
+        insight = insight.replace(/\*\*/g, '').trim();
+        
+        // Determine impact level
+        let impact = 'medium';
+        const lowerInsight = insight.toLowerCase();
+        if (lowerInsight.includes('high') || lowerInsight.includes('significant') || lowerInsight.includes('major') || lowerInsight.includes('strong')) {
+          impact = 'high';
+        } else if (lowerInsight.includes('low') || lowerInsight.includes('minor') || lowerInsight.includes('weak') || lowerInsight.includes('negligible')) {
+          impact = 'low';
+        }
+        
         pestleData.push({
           key: cat.key,
           icon: cat.icon,
           title: cat.title,
-          insight: insight,
+          insight: insight.substring(0, 120),
           impact: impact
         });
       }
