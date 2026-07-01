@@ -141,15 +141,32 @@ const extractTagContent = (plan: string, tag: string): string => {
     // Try standard format: [TAG]
     const regex = new RegExp(`\\[${possibleTag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
     const match = plan.match(regex);
-    if (match && match[1].trim().length > 10) {
-      return match[1].trim();
+    if (match && match[1]) {
+      const trimmed = match[1].trim();
+      if (trimmed.length > 5) {
+        return trimmed;
+      }
     }
     
     // Try bold format: **TAG** (for PESTLE)
     const boldRegex = new RegExp(`\\*\\*${possibleTag}\\*\\*\\s*\\n([\\s\\S]*?)(?=\\n\\n---|\\n\\[|\\n\\*\\*|$)`, 'i');
     const boldMatch = plan.match(boldRegex);
-    if (boldMatch && boldMatch[1].trim().length > 10) {
-      return boldMatch[1].trim();
+    if (boldMatch && boldMatch[1]) {
+      const trimmed = boldMatch[1].trim();
+      if (trimmed.length > 5) {
+        return trimmed;
+      }
+    }
+  }
+  
+  // Fallback: Try to find the tag without exact matching
+  const tagWords = tag.split(' ');
+  if (tagWords.length > 0) {
+    const firstWord = tagWords[0];
+    const fallbackRegex = new RegExp(`\\[.*?${firstWord}.*?\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
+    const fallbackMatch = plan.match(fallbackRegex);
+    if (fallbackMatch && fallbackMatch[1] && fallbackMatch[1].trim().length > 5) {
+      return fallbackMatch[1].trim();
     }
   }
   
@@ -705,14 +722,17 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
 };
 
 // ============================================
-// ROLE 4: PESTLE EXPERT (FIXED)
+// ROLE 4: PESTLE EXPERT (AGGRESSIVE DEBUG)
 // ============================================
 
 const PESTLEVisual = ({ plan }: { plan: string }) => {
+  // Debug: Log the entire plan first 1000 chars
+  console.log('📄 Full plan preview:', plan.substring(0, 1000));
+  
+  // Check if PESTLE tag exists using multiple methods
+  console.log('🔍 Checking for PESTLE tag...');
+  
   const parsePESTLE = () => {
-    const content = extractTagContent(plan, 'PESTLE OUTPUT');
-    const fullPlan = plan;
-    
     const pestleData: { key: string; icon: string; title: string; insight: string; impact: string }[] = [];
     const categories = [
       { key: 'political', icon: '🏛️', title: 'Political' },
@@ -723,62 +743,96 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
       { key: 'environmental', icon: '🌿', title: 'Environmental' }
     ];
 
-    let searchText = content || fullPlan;
+    // DIRECT APPROACH: Look for PESTLE section in the plan
+    const pestleSection = plan.match(/\[PESTLE\s+OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+    let searchText = '';
     
-    // Debug: Log what we're searching
-    console.log('🔍 PESTLE search text length:', searchText.length);
-    console.log('🔍 PESTLE first 500 chars:', searchText.substring(0, 500));
+    if (pestleSection && pestleSection[1]) {
+      searchText = pestleSection[1].trim();
+      console.log('✅ Found PESTLE section via [PESTLE OUTPUT]!');
+      console.log('📝 PESTLE content length:', searchText.length);
+      console.log('📝 PESTLE content preview:', searchText.substring(0, 300));
+    } else {
+      // Try bold format
+      const boldSection = plan.match(/\*\*PESTLE\s+OUTPUT\*\*([\s\S]*?)(?=\n\n---|\n\*\*|$)/i);
+      if (boldSection && boldSection[1]) {
+        searchText = boldSection[1].trim();
+        console.log('✅ Found PESTLE section via **PESTLE OUTPUT**!');
+        console.log('📝 PESTLE content length:', searchText.length);
+        console.log('📝 PESTLE content preview:', searchText.substring(0, 300));
+      } else {
+        // Try to find PESTLE without exact tag
+        const anySection = plan.match(/PESTLE\s+OUTPUT\s*\n([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+        if (anySection && anySection[1]) {
+          searchText = anySection[1].trim();
+          console.log('✅ Found PESTLE section via loose match!');
+        }
+      }
+    }
     
+    if (!searchText) {
+      console.log('❌ No PESTLE section found in plan');
+      // Try to find category keywords directly in the plan
+      console.log('🔍 Searching for category keywords in full plan...');
+      for (const cat of categories) {
+        const found = plan.toLowerCase().includes(cat.key) || plan.toLowerCase().includes(cat.title.toLowerCase());
+        console.log(`   ${cat.title}: ${found ? 'FOUND' : 'NOT FOUND'}`);
+      }
+      return [];
+    }
+    
+    console.log('🔍 Parsing PESTLE categories...');
+
     for (const cat of categories) {
       let insight = '';
-      let impact = 'medium';
       
-      // Try multiple patterns for each category
+      // Try to find content for each category
       const patterns = [
-        // Pattern 1: **Economic Drivers:** followed by content
-        new RegExp(`\\*\\*${cat.title}\\s+Drivers\\*\\*[\\s\\S]*?[-•*]\\s*([^\\n]+)`, 'i'),
-        // Pattern 2: **Economic Drivers:** with colon
-        new RegExp(`\\*\\*${cat.title}\\s+Drivers:\\*\\*\\s*([^\\n]+)`, 'i'),
-        // Pattern 3: Economic Drivers: (without bold)
+        // **Economic Drivers:** followed by content on the next line or same line
+        new RegExp(`\\*\\*${cat.title}\\s+Drivers\\*\\*[\\s\\n]*([^\\n]+)`, 'i'),
+        // **Economic Drivers** (without colon)
+        new RegExp(`\\*\\*${cat.title}\\s+Drivers\\*\\*\\s*\\n([^\\n]+)`, 'i'),
+        // Economic Drivers: (without bold)
         new RegExp(`${cat.title}\\s+Drivers[:\\s]*([^\\n]+)`, 'i'),
-        // Pattern 4: **Political:** format
+        // **Political:** format
         new RegExp(`\\*\\*${cat.key}\\*\\*[:\\s]*([^\\n]+)`, 'i'),
-        // Pattern 5: political: format
+        // political: format
         new RegExp(`${cat.key}[:\\s]*([^\\n]+)`, 'i'),
-        // Pattern 6: Look for bullet points with category name
-        new RegExp(`[-•*]\\s*${cat.key}\\s*[:\\-]\\s*([^\\n]+)`, 'i'),
+        // Look for category name and take the next sentence
+        new RegExp(`${cat.title}.*?\\n\\s*([^\\n]+)`, 'i'),
+        new RegExp(`${cat.key}.*?\\n\\s*([^\\n]+)`, 'i'),
+        // Just the category name followed by any text
+        new RegExp(`${cat.title}\\s*([^\\n]+)`, 'i'),
+        new RegExp(`${cat.key}\\s*([^\\n]+)`, 'i'),
       ];
       
       for (const pattern of patterns) {
         const match = searchText.match(pattern);
-        if (match && match[1] && match[1].trim().length > 5) {
+        if (match && match[1] && match[1].trim().length > 3) {
           insight = match[1].trim();
+          console.log(`✅ Found insight for ${cat.title}:`, insight);
           break;
         }
       }
       
-      // If still no insight, try to find the category in the text and get the next sentence
+      // If still no insight, try to find the category name and get the next line
       if (!insight) {
-        const lowerText = searchText.toLowerCase();
-        const catIndex = lowerText.indexOf(cat.key);
-        const titleIndex = lowerText.indexOf(cat.title.toLowerCase());
-        const startIndex = Math.max(catIndex, titleIndex);
-        
-        if (startIndex !== -1) {
-          // Get the next 200 characters after the category
-          const snippet = searchText.substring(startIndex, startIndex + 200);
-          // Try to extract a sentence
-          const sentenceMatch = snippet.match(/[:\\-•]\\s*([^\\n]+)/);
-          if (sentenceMatch && sentenceMatch[1].trim().length > 10) {
-            insight = sentenceMatch[1].trim();
-          } else {
-            // Try to get the first sentence
-            const firstSentence = snippet.match(/^[^\\n]+/);
-            if (firstSentence) {
-              const cleaned = firstSentence[0].replace(/^\\*\\*.*?\\*\\*/, '').trim();
-              if (cleaned.length > 10) {
-                insight = cleaned;
-              }
+        const lines = searchText.split('\n');
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i].toLowerCase();
+          if (line.includes(cat.key) || line.includes(cat.title.toLowerCase())) {
+            // Check the next line for content
+            if (i + 1 < lines.length && lines[i + 1].trim().length > 5) {
+              insight = lines[i + 1].trim();
+              console.log(`✅ Found insight for ${cat.title} via next line:`, insight);
+              break;
+            }
+            // Check the same line for content after the category
+            const remaining = lines[i].replace(new RegExp(cat.key, 'i'), '').replace(new RegExp(cat.title, 'i'), '').trim();
+            if (remaining.length > 5) {
+              insight = remaining;
+              console.log(`✅ Found insight for ${cat.title} via same line:`, insight);
+              break;
             }
           }
         }
@@ -786,15 +840,16 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
       
       // Determine impact based on insight content
       if (insight) {
+        // Clean up insight
+        insight = insight.replace(/\*\*/g, '').replace(/^\\s*[-•*]\\s*/, '').trim();
+        
+        let impact = 'medium';
         const lowerInsight = insight.toLowerCase();
         if (lowerInsight.includes('high') || lowerInsight.includes('significant') || lowerInsight.includes('major') || lowerInsight.includes('strong') || lowerInsight.includes('growth')) {
           impact = 'high';
         } else if (lowerInsight.includes('low') || lowerInsight.includes('minor') || lowerInsight.includes('weak') || lowerInsight.includes('negligible')) {
           impact = 'low';
         }
-        
-        // Clean up insight
-        insight = insight.replace(/\*\*/g, '').replace(/^\\s*[-•*]\\s*/, '').trim();
         
         pestleData.push({
           key: cat.key,
@@ -806,72 +861,10 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
       }
     }
 
-    // If still no data, try to extract from full plan using simpler method
-    if (pestleData.length === 0) {
-      const lines = fullPlan.split('\n');
-      let currentCategory = '';
-      let currentInsight = '';
-      
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (!trimmed) continue;
-        
-        // Check if line contains a category
-        for (const cat of categories) {
-          if (trimmed.toLowerCase().includes(cat.key) || 
-              trimmed.toLowerCase().includes(cat.title.toLowerCase())) {
-            // If we have a previous category with insight, save it
-            if (currentCategory && currentInsight) {
-              const existing = pestleData.find(p => p.key === currentCategory);
-              if (!existing) {
-                const impact = currentInsight.toLowerCase().includes('high') ? 'high' : 
-                              currentInsight.toLowerCase().includes('low') ? 'low' : 'medium';
-                pestleData.push({
-                  key: currentCategory,
-                  icon: categories.find(c => c.key === currentCategory)?.icon || '📌',
-                  title: categories.find(c => c.key === currentCategory)?.title || currentCategory,
-                  insight: currentInsight.substring(0, 120),
-                  impact: impact
-                });
-              }
-            }
-            currentCategory = cat.key;
-            currentInsight = '';
-            break;
-          }
-        }
-        
-        // If we're in a category and line has content, add it
-        if (currentCategory && trimmed.length > 5 && !trimmed.match(/^\\[/) && !trimmed.match(/^---/)) {
-          const cleaned = trimmed.replace(/^[-•*]\\s*/, '').replace(/^\\*\\*/, '').replace(/\\*\\*$/, '');
-          if (cleaned.length > 5 && !cleaned.match(/^\\w+ Drivers/i)) {
-            if (currentInsight) {
-              currentInsight += ' ' + cleaned;
-            } else {
-              currentInsight = cleaned;
-            }
-          }
-        }
-      }
-      
-      // Save the last category
-      if (currentCategory && currentInsight) {
-        const existing = pestleData.find(p => p.key === currentCategory);
-        if (!existing) {
-          const impact = currentInsight.toLowerCase().includes('high') ? 'high' : 
-                        currentInsight.toLowerCase().includes('low') ? 'low' : 'medium';
-          pestleData.push({
-            key: currentCategory,
-            icon: categories.find(c => c.key === currentCategory)?.icon || '📌',
-            title: categories.find(c => c.key === currentCategory)?.title || currentCategory,
-            insight: currentInsight.substring(0, 120),
-            impact: impact
-          });
-        }
-      }
-    }
-
     console.log('📊 PESTLE data found:', pestleData.length);
+    if (pestleData.length > 0) {
+      console.log('📊 Sample PESTLE item:', pestleData[0]);
+    }
     return pestleData;
   };
 
@@ -893,9 +886,9 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
           <p>No PESTLE data found in the generated plan.</p>
           <p className="text-sm mt-2">The plan may not contain PESTLE analysis. Try regenerating.</p>
           <details className="mt-4 text-left text-xs text-white/30 max-w-md mx-auto">
-            <summary>Debug: Show plan section</summary>
-            <pre className="mt-2 p-2 bg-white/5 rounded overflow-auto max-h-40">
-              {extractTagContent(plan, 'PESTLE OUTPUT') || 'No PESTLE section found'}
+            <summary>Debug: Show plan preview</summary>
+            <pre className="mt-2 p-2 bg-white/5 rounded overflow-auto max-h-60 whitespace-pre-wrap text-xs">
+              {plan.substring(0, 1500)}
             </pre>
           </details>
         </div>
@@ -928,7 +921,7 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
                   {item.title}
                 </div>
               </div>
-              <div className="text-sm text-white/80 leading-relaxed mb-3">{item.insight}</div>
+              <div className="text-sm text-white/80 leading-relaxed mb-3">{item.insight || 'No insight available'}</div>
               <div className="pt-3 border-t border-white/5 flex items-center gap-2">
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
@@ -1120,13 +1113,11 @@ const CompetitorsVisual = ({ plan }: { plan: string }) => {
         const threat = row[2]?.toLowerCase().includes('high') ? 'high' : 
                       row[2]?.toLowerCase().includes('medium') ? 'medium' : 'low';
         
-        // Extract actual strengths and weaknesses from the plan
         let strengths = ['Market presence'];
         let weaknesses = ['Limited data'];
         let position = 'Competitor';
         let differentiation = 'Differentiate';
         
-        // Try to find more specific data in the plan
         const compName = row[0]?.trim() || '';
         if (compName) {
           const compRegex = new RegExp(`${compName}.*?(?:strengths?|advantages?)[:•-]\\s*([^\\n]+)`, 'i');
@@ -1168,7 +1159,6 @@ const CompetitorsVisual = ({ plan }: { plan: string }) => {
                           text.toLowerCase().includes('medium') ? 'medium' : 'low';
             const compName = parts[0].trim();
             
-            // Try to extract strengths and weaknesses
             let strengths = ['Market presence'];
             let weaknesses = ['Limited data'];
             
@@ -1433,7 +1423,6 @@ const FourPsVisual = ({ plan }: { plan: string }) => {
     }
     if (currentP) psData.push(currentP);
 
-    // Remove duplicate 'place' entries
     const uniquePsData = psData.filter((p, index, self) => 
       index === self.findIndex((t) => t.key === p.key)
     );
@@ -1626,7 +1615,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
           const parts = line.split(/[:–-]/);
           const desc = parts.length > 1 ? parts.slice(1).join(' ').trim().substring(0, 40) : '';
           
-          // Generate actionable suggestions based on stage
           let action = '';
           switch(name) {
             case 'AWARENESS':
@@ -1753,7 +1741,6 @@ const KPICards = ({ plan }: { plan: string }) => {
     }
     
     if (kpis.length === 0) {
-      // Generate KPIs based on plan content
       const planContent = plan.toLowerCase();
       const generatedKpis: KPI[] = [];
       
@@ -1797,7 +1784,6 @@ const KPICards = ({ plan }: { plan: string }) => {
         return generatedKpis;
       }
       
-      // Fallback KPIs
       return [
         { label: 'Revenue Growth', value: 'ETB 850K', trend: '15.2', isUp: true },
         { label: 'Customer Acquisition Cost', value: 'ETB 45', trend: '7.8', isUp: false },
@@ -1896,7 +1882,6 @@ const OKRDiagram = ({ plan }: { plan: string }) => {
     }
     
     if (okrs.length === 0) {
-      // Generate OKRs based on plan content
       const planContent = plan.toLowerCase();
       const generatedOkrs: Objective[] = [];
       
