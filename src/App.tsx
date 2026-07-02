@@ -115,7 +115,6 @@ const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
  // Icon Component
  const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
    const icons: Record<string, JSX.Element> = {
-     ...
    };
    return icons[name] || <div style={{ width: size, height: size }} />;
  };
