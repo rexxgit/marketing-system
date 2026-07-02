@@ -120,142 +120,39 @@ const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
    return icons[name] || <div style={{ width: size, height: size }} />;
  };
 
-+// ============================================
-+// PLACEHOLDER VISUAL COMPONENTS
-+// ============================================
-+
-+const SegmentationVisual = ({ plan }: { plan: string }) => {
-+  return (
-+    <div className="text-center py-10 text-white/70">
-+      <p className="text-xl font-semibold">📊 Segmentation Analysis</p>
-+      <p className="text-sm text-white/50 mt-2">
-+        Plan data received: {plan?.length || 0} characters
-+      </p>
-+      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-+        <pre className="whitespace-pre-wrap">
-+          {plan?.substring(0, 300)}...
-+        </pre>
-+      </div>
-+    </div>
-+  );
-+};
-+
-+const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
-+  return (
-+    <div className="text-center py-10 text-white/70">
-+      <p className="text-xl font-semibold">
-+        📈 Market Sizing (TAM/SAM/SOM)
-+      </p>
-+      <p className="text-sm text-white/50 mt-2">
-+        Plan data received: {plan?.length || 0} characters
-+      </p>
-+    </div>
-+  );
-+};
-+
-+const PortersVisual = ({ plan }: { plan: string }) => {
-+  return (
-+    <div className="text-center py-10 text-white/70">
-+      <p className="text-xl font-semibold">🏛️ Porter's Five Forces</p>
-+      <p className="text-sm text-white/50 mt-2">
-+        Plan data received: {plan?.length || 0} characters
-+      </p>
-+    </div>
-+  );
-+};
-+
-+const CompetitorsVisual = ({ plan }: { plan: string }) => {
-+  return (
-+    <div className="text-center py-10 text-white/70">
-+      <p className="text-xl font-semibold">👥 Competitor Analysis</p>
-+      <p className="text-sm text-white/50 mt-2">
-+        Plan data received: {plan?.length || 0} characters
-+      </p>
-+    </div>
-+  );
-+};
-+
-+const PositioningVisual = ({ plan }: { plan: string }) => {
-+  return (
-+    <div className="text-center py-10 text-white/70">
-+      <p className="text-xl font-semibold">🎯 Brand Positioning</p>
-+      <p className="text-sm text-white/50 mt-2">
-+        Plan data received: {plan?.length || 0} characters
-+      </p>
-+    </div>
-+  );
-+};
-+
-+const FourPsVisual = ({ plan }: { plan: string }) => {
-+  return (
-+    <div className="text-center py-10 text-white/70">
-+      <p className="text-xl font-semibold">📦 Marketing Mix (4Ps)</p>
-+      <p className="text-sm text-white/50 mt-2">
-+        Plan data received: {plan?.length || 0} characters
-+      </p>
-+    </div>
-+  );
-+};
-+
-+const SWOTVisual = ({ plan }: { plan: string }) => {
-+  return (
-+    <div className="text-center py-10 text-white/70">
-+      <p className="text-xl font-semibold">⚡ SWOT Analysis</p>
-+      <p className="text-sm text-white/50 mt-2">
-+        Plan data received: {plan?.length || 0} characters
-+      </p>
-+    </div>
-+  );
-+};
-+
-+const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
-+  return (
-+    <div className="text-center py-10 text-white/70">
-+      <p className="text-xl font-semibold">🗺️ Customer Journey Map</p>
-+      <p className="text-sm text-white/50 mt-2">
-+        Plan data received: {plan?.length || 0} characters
-+      </p>
-+    </div>
-+  );
-+};
-+
-+const KPICards = ({ plan }: { plan: string }) => {
-+  return (
-+    <div className="text-center py-10 text-white/70">
-+      <p className="text-xl font-semibold">
-+        📊 Key Performance Indicators
-+      </p>
-+      <p className="text-sm text-white/50 mt-2">
-+        Plan data received: {plan?.length || 0} characters
-+      </p>
-+    </div>
-+  );
-+};
-+
-+const OKRDiagram = ({ plan }: { plan: string }) => {
-+  return (
-+    <div className="text-center py-10 text-white/70">
-+      <p className="text-xl font-semibold">
-+        🎯 Objectives & Key Results
-+      </p>
-+      <p className="text-sm text-white/50 mt-2">
-+        Plan data received: {plan?.length || 0} characters
-+      </p>
-+    </div>
-+  );
-+};
-+
-+const RoadmapVisual = ({ plan }: { plan: string }) => {
-+  return (
-+    <div className="text-center py-10 text-white/70">
-+      <p className="text-xl font-semibold">🗓️ 30-Day Roadmap</p>
-+      <p className="text-sm text-white/50 mt-2">
-+        Plan data received: {plan?.length || 0} characters
-+      </p>
-+    </div>
-+  );
-+};
-+
+const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
+  const icons: Record<string, JSX.Element> = {
+    target: <Target size={size} />,
+    bars: <BarChart3 size={size} />,
+    lightning: <Zap size={size} />,
+    building: <Building2 size={size} />,
+    search: <Search size={size} />,
+    pin: <MapPin size={size} />,
+    grid: <Grid3X3 size={size} />,
+    diamond: <Diamond size={size} />,
+    path: <Route size={size} />,
+    linechart: <TrendingUp size={size} />,
+    bullseye: <Crosshair size={size} />,
+    calendar: <Calendar size={size} />,
+    paintbrush: <Paintbrush size={size} />,
+    home: <Home size={size} />,
+    clipboard: <ClipboardList size={size} />,
+    lightbulb: <Lightbulb size={size} />,
+    dollar: <DollarSign size={size} />,
+    rocket: <Rocket size={size} />,
+    user: <User size={size} />,
+    arrow: <ArrowRight size={size} />,
+    lock: <Lock size={size} />,
+    data: <Database size={size} />,
+    check: <Check size={size} />,
+    star: <Star size={size} />,
+    heart: <Heart size={size} />,
+    brain: <Brain size={size} />,
+    gear: <Settings size={size} />,
+  };
+
+  return icons[name] || <div style={{ width: size, height: size }} />;
+};
  // ============================================
  // SMART PARSING UTILITY FUNCTIONS
  // ============================================
