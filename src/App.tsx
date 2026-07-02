@@ -114,7 +114,7 @@ const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
 };
 
 // ============================================
-// VISUAL COMPONENTS FOR EACH ROLE
+// PLACEHOLDER VISUAL COMPONENTS
 // ============================================
 
 const SegmentationVisual = ({ plan }: { plan: string }) => {
@@ -134,9 +134,6 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
     <div className="text-center py-10 text-white/70">
       <p className="text-xl font-semibold">📈 Market Sizing (TAM/SAM/SOM)</p>
       <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
     </div>
   );
 };
@@ -146,9 +143,6 @@ const PortersVisual = ({ plan }: { plan: string }) => {
     <div className="text-center py-10 text-white/70">
       <p className="text-xl font-semibold">🏛️ Porter's Five Forces</p>
       <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
     </div>
   );
 };
@@ -158,9 +152,6 @@ const CompetitorsVisual = ({ plan }: { plan: string }) => {
     <div className="text-center py-10 text-white/70">
       <p className="text-xl font-semibold">👥 Competitor Analysis</p>
       <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
     </div>
   );
 };
@@ -170,9 +161,6 @@ const PositioningVisual = ({ plan }: { plan: string }) => {
     <div className="text-center py-10 text-white/70">
       <p className="text-xl font-semibold">🎯 Brand Positioning</p>
       <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
     </div>
   );
 };
@@ -182,9 +170,6 @@ const FourPsVisual = ({ plan }: { plan: string }) => {
     <div className="text-center py-10 text-white/70">
       <p className="text-xl font-semibold">📦 Marketing Mix (4Ps)</p>
       <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
     </div>
   );
 };
@@ -194,9 +179,6 @@ const SWOTVisual = ({ plan }: { plan: string }) => {
     <div className="text-center py-10 text-white/70">
       <p className="text-xl font-semibold">⚡ SWOT Analysis</p>
       <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
     </div>
   );
 };
@@ -206,9 +188,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
     <div className="text-center py-10 text-white/70">
       <p className="text-xl font-semibold">🗺️ Customer Journey Map</p>
       <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
     </div>
   );
 };
@@ -218,9 +197,6 @@ const KPICards = ({ plan }: { plan: string }) => {
     <div className="text-center py-10 text-white/70">
       <p className="text-xl font-semibold">📊 Key Performance Indicators</p>
       <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
     </div>
   );
 };
@@ -230,9 +206,6 @@ const OKRDiagram = ({ plan }: { plan: string }) => {
     <div className="text-center py-10 text-white/70">
       <p className="text-xl font-semibold">🎯 Objectives & Key Results</p>
       <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
     </div>
   );
 };
@@ -242,9 +215,6 @@ const RoadmapVisual = ({ plan }: { plan: string }) => {
     <div className="text-center py-10 text-white/70">
       <p className="text-xl font-semibold">🗓️ 30-Day Roadmap</p>
       <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
     </div>
   );
 };
@@ -332,15 +302,6 @@ const parseMarketSizing = (plan: string): { tam: number; sam: number; som: numbe
   
   return { tam, sam, som };
 };
-
-// ============================================
-// ROLE 2: SEGMENTATION PIE CHART VISUALIZER
-// ============================================
-
-// [KEEP YOUR EXISTING SegmentationVisual, MarketSizingVennDiagram, 
-// PortersVisual, CompetitorsVisual, PositioningVisual, FourPsVisual, 
-// SWOTVisual, CustomerJourneyVisual, KPICards, OKRDiagram, RoadmapVisual]
-// They remain unchanged
 
 // ============================================
 // ROLE 4: PESTLE EXPERT (FIXED - CAPTURES BULLET POINTS)
