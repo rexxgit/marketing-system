@@ -79,6 +79,39 @@ const escapeHtml = (s: string): string => {
   return String(s).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
 };
 
+// Icon Component
+const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
+  const icons: Record<string, JSX.Element> = {
+    target: <Target size={size} />,
+    bars: <BarChart3 size={size} />,
+    lightning: <Zap size={size} />,
+    building: <Building2 size={size} />,
+    search: <Search size={size} />,
+    pin: <MapPin size={size} />,
+    grid: <Grid3X3 size={size} />,
+    diamond: <Diamond size={size} />,
+    path: <Route size={size} />,
+    linechart: <TrendingUp size={size} />,
+    bullseye: <Crosshair size={size} />,
+    calendar: <Calendar size={size} />,
+    paintbrush: <Paintbrush size={size} />,
+    home: <Home size={size} />,
+    clipboard: <ClipboardList size={size} />,
+    lightbulb: <Lightbulb size={size} />,
+    dollar: <DollarSign size={size} />,
+    rocket: <Rocket size={size} />,
+    user: <User size={size} />,
+    arrow: <ArrowRight size={size} />,
+    lock: <Lock size={size} />,
+    data: <Database size={size} />,
+    check: <Check size={size} />,
+    star: <Star size={size} />,
+    heart: <Heart size={size} />,
+    brain: <Brain size={size} />,
+    gear: <Settings size={size} />,
+  };
+  return icons[name] || <div style={{ width: size, height: size }} />;
+};
  // Icon Component
  const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
    const icons: Record<string, JSX.Element> = {
@@ -226,6 +259,10 @@ const escapeHtml = (s: string): string => {
  // ============================================
  // SMART PARSING UTILITY FUNCTIONS
  // ============================================
+
+// ============================================
+// SMART PARSING UTILITY FUNCTIONS
+// ============================================
 
 const extractTagContent = (plan: string, tag: string): string => {
   if (!plan) return '';
