@@ -79,179 +79,153 @@ const escapeHtml = (s: string): string => {
   return String(s).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
 };
 
-// Icon Component
-const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
-  const icons: Record<string, JSX.Element> = {
-    target: <Target size={size} />,
-    bars: <BarChart3 size={size} />,
-    lightning: <Zap size={size} />,
-    building: <Building2 size={size} />,
-    search: <Search size={size} />,
-    pin: <MapPin size={size} />,
-    grid: <Grid3X3 size={size} />,
-    diamond: <Diamond size={size} />,
-    path: <Route size={size} />,
-    linechart: <TrendingUp size={size} />,
-    bullseye: <Crosshair size={size} />,
-    calendar: <Calendar size={size} />,
-    paintbrush: <Paintbrush size={size} />,
-    home: <Home size={size} />,
-    clipboard: <ClipboardList size={size} />,
-    lightbulb: <Lightbulb size={size} />,
-    dollar: <DollarSign size={size} />,
-    rocket: <Rocket size={size} />,
-    user: <User size={size} />,
-    arrow: <ArrowRight size={size} />,
-    lock: <Lock size={size} />,
-    data: <Database size={size} />,
-    check: <Check size={size} />,
-    star: <Star size={size} />,
-    heart: <Heart size={size} />,
-    brain: <Brain size={size} />,
-    gear: <Settings size={size} />,
-  };
-  return icons[name] || <div style={{ width: size, height: size }} />;
-};
+ // Icon Component
+ const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
+   const icons: Record<string, JSX.Element> = {
+     ...
+   };
+   return icons[name] || <div style={{ width: size, height: size }} />;
+ };
 
-// ============================================
-// VISUAL COMPONENTS FOR EACH ROLE
-// ============================================
-
-const SegmentationVisual = ({ plan }: { plan: string }) => {
-  return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">📊 Segmentation Analysis</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
-    </div>
-  );
-};
-
-const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
-  return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">📈 Market Sizing (TAM/SAM/SOM)</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
-    </div>
-  );
-};
-
-const PortersVisual = ({ plan }: { plan: string }) => {
-  return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">🏛️ Porter's Five Forces</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
-    </div>
-  );
-};
-
-const CompetitorsVisual = ({ plan }: { plan: string }) => {
-  return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">👥 Competitor Analysis</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
-    </div>
-  );
-};
-
-const PositioningVisual = ({ plan }: { plan: string }) => {
-  return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">🎯 Brand Positioning</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
-    </div>
-  );
-};
-
-const FourPsVisual = ({ plan }: { plan: string }) => {
-  return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">📦 Marketing Mix (4Ps)</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
-    </div>
-  );
-};
-
-const SWOTVisual = ({ plan }: { plan: string }) => {
-  return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">⚡ SWOT Analysis</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
-    </div>
-  );
-};
-
-const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
-  return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">🗺️ Customer Journey Map</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
-    </div>
-  );
-};
-
-const KPICards = ({ plan }: { plan: string }) => {
-  return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">📊 Key Performance Indicators</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
-    </div>
-  );
-};
-
-const OKRDiagram = ({ plan }: { plan: string }) => {
-  return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">🎯 Objectives & Key Results</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
-    </div>
-  );
-};
-
-const RoadmapVisual = ({ plan }: { plan: string }) => {
-  return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">🗓️ 30-Day Roadmap</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
-    </div>
-  );
-};
-
-// ============================================
-// SMART PARSING UTILITY FUNCTIONS
-// ============================================
++// ============================================
++// PLACEHOLDER VISUAL COMPONENTS
++// ============================================
++
++const SegmentationVisual = ({ plan }: { plan: string }) => {
++  return (
++    <div className="text-center py-10 text-white/70">
++      <p className="text-xl font-semibold">📊 Segmentation Analysis</p>
++      <p className="text-sm text-white/50 mt-2">
++        Plan data received: {plan?.length || 0} characters
++      </p>
++      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
++        <pre className="whitespace-pre-wrap">
++          {plan?.substring(0, 300)}...
++        </pre>
++      </div>
++    </div>
++  );
++};
++
++const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
++  return (
++    <div className="text-center py-10 text-white/70">
++      <p className="text-xl font-semibold">
++        📈 Market Sizing (TAM/SAM/SOM)
++      </p>
++      <p className="text-sm text-white/50 mt-2">
++        Plan data received: {plan?.length || 0} characters
++      </p>
++    </div>
++  );
++};
++
++const PortersVisual = ({ plan }: { plan: string }) => {
++  return (
++    <div className="text-center py-10 text-white/70">
++      <p className="text-xl font-semibold">🏛️ Porter's Five Forces</p>
++      <p className="text-sm text-white/50 mt-2">
++        Plan data received: {plan?.length || 0} characters
++      </p>
++    </div>
++  );
++};
++
++const CompetitorsVisual = ({ plan }: { plan: string }) => {
++  return (
++    <div className="text-center py-10 text-white/70">
++      <p className="text-xl font-semibold">👥 Competitor Analysis</p>
++      <p className="text-sm text-white/50 mt-2">
++        Plan data received: {plan?.length || 0} characters
++      </p>
++    </div>
++  );
++};
++
++const PositioningVisual = ({ plan }: { plan: string }) => {
++  return (
++    <div className="text-center py-10 text-white/70">
++      <p className="text-xl font-semibold">🎯 Brand Positioning</p>
++      <p className="text-sm text-white/50 mt-2">
++        Plan data received: {plan?.length || 0} characters
++      </p>
++    </div>
++  );
++};
++
++const FourPsVisual = ({ plan }: { plan: string }) => {
++  return (
++    <div className="text-center py-10 text-white/70">
++      <p className="text-xl font-semibold">📦 Marketing Mix (4Ps)</p>
++      <p className="text-sm text-white/50 mt-2">
++        Plan data received: {plan?.length || 0} characters
++      </p>
++    </div>
++  );
++};
++
++const SWOTVisual = ({ plan }: { plan: string }) => {
++  return (
++    <div className="text-center py-10 text-white/70">
++      <p className="text-xl font-semibold">⚡ SWOT Analysis</p>
++      <p className="text-sm text-white/50 mt-2">
++        Plan data received: {plan?.length || 0} characters
++      </p>
++    </div>
++  );
++};
++
++const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
++  return (
++    <div className="text-center py-10 text-white/70">
++      <p className="text-xl font-semibold">🗺️ Customer Journey Map</p>
++      <p className="text-sm text-white/50 mt-2">
++        Plan data received: {plan?.length || 0} characters
++      </p>
++    </div>
++  );
++};
++
++const KPICards = ({ plan }: { plan: string }) => {
++  return (
++    <div className="text-center py-10 text-white/70">
++      <p className="text-xl font-semibold">
++        📊 Key Performance Indicators
++      </p>
++      <p className="text-sm text-white/50 mt-2">
++        Plan data received: {plan?.length || 0} characters
++      </p>
++    </div>
++  );
++};
++
++const OKRDiagram = ({ plan }: { plan: string }) => {
++  return (
++    <div className="text-center py-10 text-white/70">
++      <p className="text-xl font-semibold">
++        🎯 Objectives & Key Results
++      </p>
++      <p className="text-sm text-white/50 mt-2">
++        Plan data received: {plan?.length || 0} characters
++      </p>
++    </div>
++  );
++};
++
++const RoadmapVisual = ({ plan }: { plan: string }) => {
++  return (
++    <div className="text-center py-10 text-white/70">
++      <p className="text-xl font-semibold">🗓️ 30-Day Roadmap</p>
++      <p className="text-sm text-white/50 mt-2">
++        Plan data received: {plan?.length || 0} characters
++      </p>
++    </div>
++  );
++};
++
+ // ============================================
+ // SMART PARSING UTILITY FUNCTIONS
+ // ============================================
 
 const extractTagContent = (plan: string, tag: string): string => {
   if (!plan) return '';
@@ -274,6 +248,7 @@ const extractTagContent = (plan: string, tag: string): string => {
   const possibleTags = tagMap[tag] || [tag];
   
   for (const possibleTag of possibleTags) {
+    // Try standard format: [TAG]
     const regex = new RegExp(`\\[${possibleTag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
     const match = plan.match(regex);
     if (match && match[1]) {
@@ -283,6 +258,7 @@ const extractTagContent = (plan: string, tag: string): string => {
       }
     }
     
+    // Try bold format: **TAG** (for PESTLE)
     const boldRegex = new RegExp(`\\*\\*${possibleTag}\\*\\*\\s*\\n([\\s\\S]*?)(?=\\n\\n---|\\n\\[|\\n\\*\\*|$)`, 'i');
     const boldMatch = plan.match(boldRegex);
     if (boldMatch && boldMatch[1]) {
@@ -293,6 +269,7 @@ const extractTagContent = (plan: string, tag: string): string => {
     }
   }
   
+  // Fallback: Try to find the tag without exact matching
   const tagWords = tag.split(' ');
   if (tagWords.length > 0) {
     const firstWord = tagWords[0];
@@ -331,7 +308,16 @@ const parseMarketSizing = (plan: string): { tam: number; sam: number; som: numbe
 };
 
 // ============================================
-// ROLE 4: PESTLE EXPERT (FULL WORKING IMPLEMENTATION)
+// ROLE 2: SEGMENTATION PIE CHART VISUALIZER
+// ============================================
+
+// [KEEP YOUR EXISTING SegmentationVisual, MarketSizingVennDiagram, 
+// PortersVisual, CompetitorsVisual, PositioningVisual, FourPsVisual, 
+// SWOTVisual, CustomerJourneyVisual, KPICards, OKRDiagram, RoadmapVisual]
+// They remain unchanged
+
+// ============================================
+// ROLE 4: PESTLE EXPERT (FIXED - CAPTURES BULLET POINTS)
 // ============================================
 
 const PESTLEVisual = ({ plan }: { plan: string }) => {
@@ -346,14 +332,17 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
       { key: 'environmental', icon: '🌿', title: 'Environmental' }
     ];
 
+    // Get the PESTLE section
     const pestleSection = plan.match(/\[PESTLE\s+OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
     let searchText = '';
     
     if (pestleSection && pestleSection[1]) {
       searchText = pestleSection[1].trim();
+      console.log('✅ Found PESTLE section, length:', searchText.length);
     }
     
     if (!searchText) {
+      console.log('❌ No PESTLE section found');
       return [];
     }
 
@@ -361,6 +350,7 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
       let insight = '';
       let impact = 'medium';
       
+      // Pattern: **Economic Drivers:** followed by bullet points
       const pattern = new RegExp(
         `\\*\\*${cat.title}\\s+Drivers\\*\\*[\\s\\n]*([\\s\\S]*?)(?=\\n\\*\\*|\\n\\n|$)`,
         'i'
@@ -369,20 +359,25 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
       const match = searchText.match(pattern);
       if (match && match[1]) {
         const content = match[1].trim();
+        // Extract bullet points from the content
         const bulletPoints = content.split('\n')
           .filter(line => line.trim().match(/^[-•*]\s+/))
           .map(line => line.replace(/^[-•*]\s+/, '').trim());
         
         if (bulletPoints.length > 0) {
           insight = bulletPoints.join(' ');
+          console.log(`✅ Found ${cat.title}:`, insight);
         } else {
+          // If no bullet points, take the first sentence
           const firstLine = content.split('\n')[0]?.trim() || '';
           if (firstLine.length > 10) {
             insight = firstLine;
+            console.log(`✅ Found ${cat.title} (no bullets):`, insight);
           }
         }
       }
       
+      // If still no insight, try a simpler approach
       if (!insight) {
         const simplePattern = new RegExp(
           `${cat.title}\\s+Drivers[\\s\\n]*([\\s\\S]*?)(?=\\n[A-Z]|\\n\\*\\*|$)`,
@@ -397,15 +392,18 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
           
           if (bulletPoints.length > 0) {
             insight = bulletPoints.join(' ');
+            console.log(`✅ Found ${cat.title} via simple pattern:`, insight);
           } else {
             const firstLine = content.split('\n')[0]?.trim() || '';
             if (firstLine.length > 10) {
               insight = firstLine;
+              console.log(`✅ Found ${cat.title} via simple pattern (no bullets):`, insight);
             }
           }
         }
       }
       
+      // Determine impact based on insight content
       if (insight) {
         insight = insight.replace(/\*\*/g, '').trim();
         
@@ -426,6 +424,10 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
       }
     }
 
+    console.log('📊 PESTLE data found:', pestleData.length);
+    if (pestleData.length > 0) {
+      console.log('📊 Sample:', pestleData[0]);
+    }
     return pestleData;
   };
 
@@ -446,6 +448,12 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
         <div className="text-center py-10 text-white/50">
           <p>No PESTLE data found in the generated plan.</p>
           <p className="text-sm mt-2">Try regenerating the plan.</p>
+          <details className="mt-4 text-left text-xs text-white/30 max-w-md mx-auto">
+            <summary>Debug: Show plan section</summary>
+            <pre className="mt-2 p-2 bg-white/5 rounded overflow-auto max-h-40 whitespace-pre-wrap text-xs">
+              {plan.substring(0, 1000)}
+            </pre>
+          </details>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -453,6 +461,17 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
             <div
               key={item.key}
               className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-6px] hover:border-indigo-500/40 hover:shadow-lg cursor-pointer relative overflow-hidden"
+              style={{ 
+                '::before': { 
+                  content: '""', 
+                  position: 'absolute', 
+                  top: 0, 
+                  left: 0, 
+                  width: '100%', 
+                  height: '3px', 
+                  background: `linear-gradient(90deg, ${colorMap[item.key]?.text || '#818cf8'}, ${colorMap[item.key]?.text || '#818cf8'})` 
+                } 
+              } as any}
             >
               <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
                 <div
@@ -511,11 +530,13 @@ function App() {
   const handleLogin = () => {
     setIsAuthenticated(true);
     setPanelOpen(true);
+    console.log('🔐 User logged in - Unlocking Expert Roles');
   };
 
   const handleSignIn = () => {
     setIsAuthenticated(true);
     setPanelOpen(true);
+    console.log('👤 User signed in - Unlocking Expert Roles');
   };
 
   const handleLogout = () => {
@@ -524,6 +545,7 @@ function App() {
     setActiveRole(null);
     setShowResult(false);
     setResultContent('');
+    console.log('🚪 User logged out');
   };
 
   const toggleSidebar = () => {
