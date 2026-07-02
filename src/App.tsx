@@ -112,7 +112,6 @@ const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
   };
   return icons[name] || <div style={{ width: size, height: size }} />;
 };
-const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
   const icons: Record<string, JSX.Element> = {
     target: <Target size={size} />,
     bars: <BarChart3 size={size} />,
