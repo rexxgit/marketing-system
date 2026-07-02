@@ -112,13 +112,6 @@ const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
   };
   return icons[name] || <div style={{ width: size, height: size }} />;
 };
- // Icon Component
- const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
-   const icons: Record<string, JSX.Element> = {
-   };
-   return icons[name] || <div style={{ width: size, height: size }} />;
- };
-
 const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
   const icons: Record<string, JSX.Element> = {
     target: <Target size={size} />,
@@ -155,10 +148,6 @@ const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
  // ============================================
  // SMART PARSING UTILITY FUNCTIONS
  // ============================================
-
-// ============================================
-// SMART PARSING UTILITY FUNCTIONS
-// ============================================
 
 const extractTagContent = (plan: string, tag: string): string => {
   if (!plan) return '';
