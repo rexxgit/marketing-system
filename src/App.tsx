@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Target, BarChart3, Zap, Building2, Search, MapPin, Grid3X3, Diamond,
   Route, TrendingUp, Crosshair, Calendar, Paintbrush, Home, ClipboardList,
@@ -11,6 +11,16 @@ import {
 // ===== IMPORTS =====
 import MarketingPlanDisplay from './components/MarketingPlanDisplay';
 import PDFExport from './components/PDFExport';
+
+// ===== ENVIRONMENT VARIABLES =====
+declare global {
+  interface ImportMetaEnv {
+    readonly VITE_API_BASE: string;
+  }
+  interface ImportMeta {
+    readonly env: ImportMetaEnv;
+  }
+}
 
 // Types
 interface Segment {
@@ -63,7 +73,7 @@ interface MarketingPlan {
   design?: string;
 }
 
-const API_BASE = 'https://Bisratprompt-marketing-system-api.hf.space';
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://Bisratprompt-marketing-system-api.hf.space';
 
 // Utility Functions
 const formatContent = (c: string): string => {
@@ -198,13 +208,182 @@ const parseMarketSizing = (plan: string): { tam: number; sam: number; som: numbe
 };
 
 // ============================================
-// ROLE 2: SEGMENTATION PIE CHART VISUALIZER
+// ERROR BOUNDARY
 // ============================================
 
-// [KEEP YOUR EXISTING SegmentationVisual, MarketSizingVennDiagram, 
-// PortersVisual, CompetitorsVisual, PositioningVisual, FourPsVisual, 
-// SWOTVisual, CustomerJourneyVisual, KPICards, OKRDiagram, RoadmapVisual]
-// They remain unchanged
+class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean; error: Error | null }> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('Marketing App Error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-[#0a0e1a] text-white flex items-center justify-center p-8">
+          <div className="bg-white/5 border border-red-500/30 rounded-2xl p-8 max-w-md text-center">
+            <div className="text-4xl mb-4">⚠️</div>
+            <h2 className="text-xl font-bold text-red-400 mb-3">Something went wrong</h2>
+            <p className="text-white/60 text-sm mb-4">The marketing strategy system encountered an error.</p>
+            <details className="text-xs text-white/40 text-left">
+              <summary>View error details</summary>
+              <pre className="mt-2 p-2 bg-white/5 rounded overflow-auto max-h-40 whitespace-pre-wrap">
+                {this.state.error?.message || 'Unknown error'}
+              </pre>
+            </details>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 px-6 py-2 bg-gradient-to-r from-indigo-500 to-pink-500 rounded-lg text-sm font-medium hover:opacity-80 transition-all"
+            >
+              Refresh Application
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+// ============================================
+// LOADING SKELETON
+// ============================================
+
+const LoadingSkeleton = () => (
+  <div className="animate-pulse space-y-6">
+    <div className="bg-white/5 rounded-2xl p-8">
+      <div className="h-8 bg-white/10 rounded w-3/4 mb-4"></div>
+      <div className="space-y-3">
+        <div className="h-4 bg-white/10 rounded w-full"></div>
+        <div className="h-4 bg-white/10 rounded w-5/6"></div>
+        <div className="h-4 bg-white/10 rounded w-4/6"></div>
+      </div>
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {[1, 2, 3].map(i => (
+        <div key={i} className="bg-white/5 rounded-2xl p-6">
+          <div className="h-20 bg-white/10 rounded mb-4"></div>
+          <div className="h-4 bg-white/10 rounded w-3/4 mb-2"></div>
+          <div className="h-3 bg-white/10 rounded w-1/2"></div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// ============================================
+// PLACEHOLDER VISUAL COMPONENTS
+// ============================================
+
+const SegmentationVisual = ({ plan }: { plan: string }) => {
+  return (
+    <div className="text-center py-10 text-white/70">
+      <p className="text-xl font-semibold">📊 Segmentation Analysis</p>
+      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
+        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
+      </div>
+    </div>
+  );
+};
+
+const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
+  return (
+    <div className="text-center py-10 text-white/70">
+      <p className="text-xl font-semibold">📈 Market Sizing (TAM/SAM/SOM)</p>
+      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    </div>
+  );
+};
+
+const PortersVisual = ({ plan }: { plan: string }) => {
+  return (
+    <div className="text-center py-10 text-white/70">
+      <p className="text-xl font-semibold">🏛️ Porter's Five Forces</p>
+      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    </div>
+  );
+};
+
+const CompetitorsVisual = ({ plan }: { plan: string }) => {
+  return (
+    <div className="text-center py-10 text-white/70">
+      <p className="text-xl font-semibold">👥 Competitor Analysis</p>
+      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    </div>
+  );
+};
+
+const PositioningVisual = ({ plan }: { plan: string }) => {
+  return (
+    <div className="text-center py-10 text-white/70">
+      <p className="text-xl font-semibold">🎯 Brand Positioning</p>
+      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    </div>
+  );
+};
+
+const FourPsVisual = ({ plan }: { plan: string }) => {
+  return (
+    <div className="text-center py-10 text-white/70">
+      <p className="text-xl font-semibold">📦 Marketing Mix (4Ps)</p>
+      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    </div>
+  );
+};
+
+const SWOTVisual = ({ plan }: { plan: string }) => {
+  return (
+    <div className="text-center py-10 text-white/70">
+      <p className="text-xl font-semibold">⚡ SWOT Analysis</p>
+      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    </div>
+  );
+};
+
+const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
+  return (
+    <div className="text-center py-10 text-white/70">
+      <p className="text-xl font-semibold">🗺️ Customer Journey Map</p>
+      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    </div>
+  );
+};
+
+const KPICards = ({ plan }: { plan: string }) => {
+  return (
+    <div className="text-center py-10 text-white/70">
+      <p className="text-xl font-semibold">📊 Key Performance Indicators</p>
+      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    </div>
+  );
+};
+
+const OKRDiagram = ({ plan }: { plan: string }) => {
+  return (
+    <div className="text-center py-10 text-white/70">
+      <p className="text-xl font-semibold">🎯 Objectives & Key Results</p>
+      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    </div>
+  );
+};
+
+const RoadmapVisual = ({ plan }: { plan: string }) => {
+  return (
+    <div className="text-center py-10 text-white/70">
+      <p className="text-xl font-semibold">🗓️ 30-Day Roadmap</p>
+      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    </div>
+  );
+};
 
 // ============================================
 // ROLE 4: PESTLE EXPERT (FIXED - CAPTURES BULLET POINTS)
@@ -511,6 +690,10 @@ function App() {
   };
 
   const renderRoleContent = () => {
+    if (isGenerating) {
+      return <LoadingSkeleton />;
+    }
+    
     if (!currentPlan) {
       return (
         <div className="text-center py-10 text-white/40">
@@ -991,4 +1174,27 @@ function App() {
   );
 }
 
-export default App;
+// ============================================
+// MEMOIZED EXPORTS
+// ============================================
+
+export const MemoizedSegmentationVisual = React.memo(SegmentationVisual);
+export const MemoizedMarketSizingVennDiagram = React.memo(MarketSizingVennDiagram);
+export const MemoizedPortersVisual = React.memo(PortersVisual);
+export const MemoizedCompetitorsVisual = React.memo(CompetitorsVisual);
+export const MemoizedPositioningVisual = React.memo(PositioningVisual);
+export const MemoizedFourPsVisual = React.memo(FourPsVisual);
+export const MemoizedSWOTVisual = React.memo(SWOTVisual);
+export const MemoizedCustomerJourneyVisual = React.memo(CustomerJourneyVisual);
+export const MemoizedKPICards = React.memo(KPICards);
+export const MemoizedOKRDiagram = React.memo(OKRDiagram);
+export const MemoizedRoadmapVisual = React.memo(RoadmapVisual);
+export const MemoizedPESTLEVisual = React.memo(PESTLEVisual);
+
+export default function AppWithErrorBoundary() {
+  return (
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
+  );
+}
