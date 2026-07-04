@@ -202,103 +202,310 @@ const parseMarketSizing = (plan: string): { tam: number; sam: number; som: numbe
 // ============================================
 
 const SegmentationVisual = ({ plan }: { plan: string }) => {
+  const content = extractTagContent(plan, 'SEGMENTATION OUTPUT');
+  
   return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">📊 Segmentation Analysis</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-      <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-        <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-      </div>
+    <div className="text-center py-6">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">🎯 Segmentation Analysis</h2>
+      {content ? (
+        <div className="bg-white/5 rounded-xl p-6 text-left">
+          <div 
+            className="prose prose-invert max-w-none text-white/80"
+            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
+          />
+        </div>
+      ) : (
+        <>
+          <p className="text-white/70">No segmentation data found in the generated plan.</p>
+          <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+          <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
+            <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
+          </div>
+        </>
+      )}
     </div>
   );
 };
 
 const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
+  const { tam, sam, som } = parseMarketSizing(plan);
+  const content = extractTagContent(plan, 'TAMSAMSOM OUTPUT');
+  
   return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">📈 Market Sizing (TAM/SAM/SOM)</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    <div className="text-center py-6">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">📈 Market Sizing (TAM/SAM/SOM)</h2>
+      {tam > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+          <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/30 rounded-xl p-6">
+            <div className="text-3xl font-bold text-blue-400">{tam.toLocaleString()}</div>
+            <div className="text-sm text-white/60 mt-1">TAM</div>
+            <div className="text-xs text-white/40 mt-2">Total Addressable Market</div>
+          </div>
+          <div className="bg-gradient-to-br from-indigo-500/20 to-indigo-600/10 border border-indigo-500/30 rounded-xl p-6">
+            <div className="text-3xl font-bold text-indigo-400">{sam.toLocaleString()}</div>
+            <div className="text-sm text-white/60 mt-1">SAM</div>
+            <div className="text-xs text-white/40 mt-2">Serviceable Addressable Market</div>
+          </div>
+          <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/10 border border-purple-500/30 rounded-xl p-6">
+            <div className="text-3xl font-bold text-purple-400">{som.toLocaleString()}</div>
+            <div className="text-sm text-white/60 mt-1">SOM</div>
+            <div className="text-xs text-white/40 mt-2">Serviceable Obtainable Market</div>
+          </div>
+        </div>
+      ) : (
+        <>
+          <p className="text-white/70">No market sizing data found in the generated plan.</p>
+          <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+          {content && (
+            <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
+              <pre className="whitespace-pre-wrap">{content}</pre>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 };
 
 const PortersVisual = ({ plan }: { plan: string }) => {
+  const content = extractTagContent(plan, 'PORTERS OUTPUT');
+  const forces = ['Threat of New Entrants', 'Bargaining Power of Buyers', 'Bargaining Power of Suppliers', 'Threat of Substitutes', 'Industry Rivalry'];
+  
   return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">🏛️ Porter's Five Forces</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    <div className="text-center py-6">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">🏛️ Porter's Five Forces</h2>
+      {content ? (
+        <div className="bg-white/5 rounded-xl p-6 text-left">
+          <div 
+            className="prose prose-invert max-w-none text-white/80"
+            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
+          />
+        </div>
+      ) : (
+        <>
+          <p className="text-white/70">No Porter's Forces data found in the generated plan.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-4 max-w-4xl mx-auto">
+            {forces.map((force, i) => (
+              <div key={i} className="bg-white/5 border border-white/10 rounded-lg p-4 text-sm text-white/60">
+                {force}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };
 
 const CompetitorsVisual = ({ plan }: { plan: string }) => {
+  const content = extractTagContent(plan, 'COMPETITOR OUTPUT');
+  
   return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">👥 Competitor Analysis</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    <div className="text-center py-6">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">👥 Competitor Analysis</h2>
+      {content ? (
+        <div className="bg-white/5 rounded-xl p-6 text-left">
+          <div 
+            className="prose prose-invert max-w-none text-white/80"
+            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
+          />
+        </div>
+      ) : (
+        <>
+          <p className="text-white/70">No competitor data found in the generated plan.</p>
+          <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+        </>
+      )}
     </div>
   );
 };
 
 const PositioningVisual = ({ plan }: { plan: string }) => {
+  const content = extractTagContent(plan, 'POSITIONING OUTPUT');
+  
   return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">🎯 Brand Positioning</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    <div className="text-center py-6">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">🎯 Brand Positioning</h2>
+      {content ? (
+        <div className="bg-white/5 rounded-xl p-6 text-left">
+          <div 
+            className="prose prose-invert max-w-none text-white/80"
+            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
+          />
+        </div>
+      ) : (
+        <>
+          <p className="text-white/70">No positioning data found in the generated plan.</p>
+          <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+        </>
+      )}
     </div>
   );
 };
 
 const FourPsVisual = ({ plan }: { plan: string }) => {
+  const content = extractTagContent(plan, '4PS OUTPUT');
+  const ps = ['Product', 'Price', 'Place', 'Promotion'];
+  
   return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">📦 Marketing Mix (4Ps)</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    <div className="text-center py-6">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">📦 Marketing Mix (4Ps)</h2>
+      {content ? (
+        <div className="bg-white/5 rounded-xl p-6 text-left">
+          <div 
+            className="prose prose-invert max-w-none text-white/80"
+            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
+          />
+        </div>
+      ) : (
+        <>
+          <p className="text-white/70">No 4Ps data found in the generated plan.</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 max-w-3xl mx-auto">
+            {ps.map((p, i) => (
+              <div key={i} className="bg-gradient-to-br from-indigo-500/20 to-pink-500/10 border border-indigo-500/30 rounded-lg p-4 text-sm text-white/80 font-semibold">
+                {p}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };
 
 const SWOTVisual = ({ plan }: { plan: string }) => {
+  const content = extractTagContent(plan, 'SWOT OUTPUT');
+  const quadrants = ['Strengths', 'Weaknesses', 'Opportunities', 'Threats'];
+  const colors = ['text-green-400 border-green-500/30', 'text-red-400 border-red-500/30', 'text-blue-400 border-blue-500/30', 'text-yellow-400 border-yellow-500/30'];
+  
   return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">⚡ SWOT Analysis</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    <div className="text-center py-6">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">⚡ SWOT Analysis</h2>
+      {content ? (
+        <div className="bg-white/5 rounded-xl p-6 text-left">
+          <div 
+            className="prose prose-invert max-w-none text-white/80"
+            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
+          />
+        </div>
+      ) : (
+        <>
+          <p className="text-white/70">No SWOT data found in the generated plan.</p>
+          <div className="grid grid-cols-2 gap-3 mt-4 max-w-2xl mx-auto">
+            {quadrants.map((q, i) => (
+              <div key={i} className={`bg-white/5 border rounded-lg p-4 text-sm ${colors[i]}`}>
+                {q}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };
 
 const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
+  const content = extractTagContent(plan, 'JOURNEY OUTPUT');
+  const stages = ['Awareness', 'Consideration', 'Purchase', 'Retention', 'Advocacy'];
+  
   return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">🗺️ Customer Journey Map</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    <div className="text-center py-6">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">🗺️ Customer Journey Map</h2>
+      {content ? (
+        <div className="bg-white/5 rounded-xl p-6 text-left">
+          <div 
+            className="prose prose-invert max-w-none text-white/80"
+            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
+          />
+        </div>
+      ) : (
+        <>
+          <p className="text-white/70">No customer journey data found in the generated plan.</p>
+          <div className="flex flex-wrap justify-center gap-2 mt-4">
+            {stages.map((stage, i) => (
+              <div key={i} className="bg-gradient-to-r from-indigo-500/20 to-purple-500/10 border border-indigo-500/30 rounded-full px-4 py-2 text-sm text-white/70">
+                {i+1}. {stage}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };
 
 const KPICards = ({ plan }: { plan: string }) => {
+  const content = extractTagContent(plan, 'KPI OUTPUT');
+  
   return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">📊 Key Performance Indicators</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    <div className="text-center py-6">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">📊 Key Performance Indicators</h2>
+      {content ? (
+        <div className="bg-white/5 rounded-xl p-6 text-left">
+          <div 
+            className="prose prose-invert max-w-none text-white/80"
+            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
+          />
+        </div>
+      ) : (
+        <>
+          <p className="text-white/70">No KPI data found in the generated plan.</p>
+          <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+        </>
+      )}
     </div>
   );
 };
 
 const OKRDiagram = ({ plan }: { plan: string }) => {
+  const content = extractTagContent(plan, 'OKRS OUTPUT');
+  
   return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">🎯 Objectives & Key Results</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    <div className="text-center py-6">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">🎯 Objectives & Key Results</h2>
+      {content ? (
+        <div className="bg-white/5 rounded-xl p-6 text-left">
+          <div 
+            className="prose prose-invert max-w-none text-white/80"
+            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
+          />
+        </div>
+      ) : (
+        <>
+          <p className="text-white/70">No OKR data found in the generated plan.</p>
+          <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+        </>
+      )}
     </div>
   );
 };
 
 const RoadmapVisual = ({ plan }: { plan: string }) => {
+  const content = extractTagContent(plan, 'ROADMAP OUTPUT');
+  const weeks = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+  
   return (
-    <div className="text-center py-10 text-white/70">
-      <p className="text-xl font-semibold">🗓️ 30-Day Roadmap</p>
-      <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
+    <div className="text-center py-6">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">🗓️ 30-Day Roadmap</h2>
+      {content ? (
+        <div className="bg-white/5 rounded-xl p-6 text-left">
+          <div 
+            className="prose prose-invert max-w-none text-white/80"
+            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
+          />
+        </div>
+      ) : (
+        <>
+          <p className="text-white/70">No roadmap data found in the generated plan.</p>
+          <div className="flex flex-wrap justify-center gap-3 mt-4">
+            {weeks.map((week, i) => (
+              <div key={i} className="bg-white/5 border border-white/10 rounded-lg p-3 min-w-[100px] text-sm text-white/60">
+                {week}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };
@@ -448,18 +655,11 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
             <div
               key={item.key}
               className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-6px] hover:border-indigo-500/40 hover:shadow-lg cursor-pointer relative overflow-hidden"
-              style={{ 
-                '::before': { 
-                  content: '""', 
-                  position: 'absolute', 
-                  top: 0, 
-                  left: 0, 
-                  width: '100%', 
-                  height: '3px', 
-                  background: `linear-gradient(90deg, ${colorMap[item.key]?.text || '#818cf8'}, ${colorMap[item.key]?.text || '#818cf8'})` 
-                } 
-              } as any}
             >
+              <div 
+                className="absolute top-0 left-0 w-full h-1"
+                style={{ background: `linear-gradient(90deg, ${colorMap[item.key]?.text || '#818cf8'}, ${colorMap[item.key]?.text || '#818cf8'})` }}
+              />
               <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
                 <div
                   className="w-10 h-10 flex items-center justify-center text-2xl rounded-xl"
@@ -851,7 +1051,7 @@ function App() {
               ].map((plan) => (
                 <div
                   key={plan.name}
-                  className={`bg-gradient-to-br from-slate-800/90 to-slate-900/95 border rounded-2xl p-8 text-center transition-all hover:translate-y-[-12px] hover:shadow-xl cursor-pointer ${
+                  className={`bg-gradient-to-br from-slate-800/90 to-slate-900/95 border rounded-2xl p-8 text-center transition-all hover:translate-y-[-12px] hover:shadow-xl cursor-pointer relative ${
                     plan.popular ? 'border-indigo-500/60 scale-[1.02]' : 'border-white/10 hover:border-indigo-500/50'
                   }`}
                 >
