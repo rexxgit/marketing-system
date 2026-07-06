@@ -12,7 +12,10 @@ import {
 import MarketingPlanDisplay from './components/MarketingPlanDisplay';
 import PDFExport from './components/PDFExport';
 
-// Types
+// ============================================
+// TYPES
+// ============================================
+
 interface Segment {
   name: string;
   share: number;
@@ -63,9 +66,28 @@ interface MarketingPlan {
   design?: string;
 }
 
+interface ParsedSegment {
+  name: string;
+  description: string;
+  size: string;
+  characteristics: string[];
+  percentage?: number;
+}
+
+interface PESTLEItem {
+  key: string;
+  icon: string;
+  title: string;
+  insight: string;
+  impact: 'high' | 'medium' | 'low';
+}
+
+// ============================================
+// UTILITY FUNCTIONS
+// ============================================
+
 const API_BASE = 'https://Bisratprompt-marketing-system-api.hf.space';
 
-// Utility Functions
 const formatContent = (c: string): string => {
   if (!c) return '';
   return c
@@ -78,44 +100,6 @@ const formatContent = (c: string): string => {
 const escapeHtml = (s: string): string => {
   return String(s).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
 };
-
-// Icon Component
-const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
-  const icons: Record<string, JSX.Element> = {
-    target: <Target size={size} />,
-    bars: <BarChart3 size={size} />,
-    lightning: <Zap size={size} />,
-    building: <Building2 size={size} />,
-    search: <Search size={size} />,
-    pin: <MapPin size={size} />,
-    grid: <Grid3X3 size={size} />,
-    diamond: <Diamond size={size} />,
-    path: <Route size={size} />,
-    linechart: <TrendingUp size={size} />,
-    bullseye: <Crosshair size={size} />,
-    calendar: <Calendar size={size} />,
-    paintbrush: <Paintbrush size={size} />,
-    home: <Home size={size} />,
-    clipboard: <ClipboardList size={size} />,
-    lightbulb: <Lightbulb size={size} />,
-    dollar: <DollarSign size={size} />,
-    rocket: <Rocket size={size} />,
-    user: <User size={size} />,
-    arrow: <ArrowRight size={size} />,
-    lock: <Lock size={size} />,
-    data: <Database size={size} />,
-    check: <Check size={size} />,
-    star: <Star size={size} />,
-    heart: <Heart size={size} />,
-    brain: <Brain size={size} />,
-    gear: <Settings size={size} />,
-  };
-  return icons[name] || <div style={{ width: size, height: size }} />;
-};
-
-// ============================================
-// SMART PARSING UTILITY FUNCTIONS
-// ============================================
 
 const extractTagContent = (plan: string, tag: string): string => {
   if (!plan) return '';
@@ -138,7 +122,6 @@ const extractTagContent = (plan: string, tag: string): string => {
   const possibleTags = tagMap[tag] || [tag];
   
   for (const possibleTag of possibleTags) {
-    // Try standard format: [TAG]
     const regex = new RegExp(`\\[${possibleTag}\\]([\\s\\S]*?)(?=\\n\\n---|\\n\\[|$)`, 'i');
     const match = plan.match(regex);
     if (match && match[1]) {
@@ -148,7 +131,6 @@ const extractTagContent = (plan: string, tag: string): string => {
       }
     }
     
-    // Try bold format: **TAG** (for PESTLE)
     const boldRegex = new RegExp(`\\*\\*${possibleTag}\\*\\*\\s*\\n([\\s\\S]*?)(?=\\n\\n---|\\n\\[|\\n\\*\\*|$)`, 'i');
     const boldMatch = plan.match(boldRegex);
     if (boldMatch && boldMatch[1]) {
@@ -159,7 +141,6 @@ const extractTagContent = (plan: string, tag: string): string => {
     }
   }
   
-  // Fallback: Try to find the tag without exact matching
   const tagWords = tag.split(' ');
   if (tagWords.length > 0) {
     const firstWord = tagWords[0];
@@ -198,18 +179,54 @@ const parseMarketSizing = (plan: string): { tam: number; sam: number; som: numbe
 };
 
 // ============================================
-// ROLE 1: SEGMENTATION VISUALIZER (ENHANCED)
+// ICON COMPONENT
 // ============================================
 
+const Icon = ({ name, size = 20 }: { name: string; size?: number }) => {
+  const icons: Record<string, JSX.Element> = {
+    target: <Target size={size} />,
+    bars: <BarChart3 size={size} />,
+    lightning: <Zap size={size} />,
+    building: <Building2 size={size} />,
+    search: <Search size={size} />,
+    pin: <MapPin size={size} />,
+    grid: <Grid3X3 size={size} />,
+    diamond: <Diamond size={size} />,
+    path: <Route size={size} />,
+    linechart: <TrendingUp size={size} />,
+    bullseye: <Crosshair size={size} />,
+    calendar: <Calendar size={size} />,
+    paintbrush: <Paintbrush size={size} />,
+    home: <Home size={size} />,
+    clipboard: <ClipboardList size={size} />,
+    lightbulb: <Lightbulb size={size} />,
+    dollar: <DollarSign size={size} />,
+    rocket: <Rocket size={size} />,
+    user: <User size={size} />,
+    arrow: <ArrowRight size={size} />,
+    lock: <Lock size={size} />,
+    data: <Database size={size} />,
+    check: <Check size={size} />,
+    star: <Star size={size} />,
+    heart: <Heart size={size} />,
+    brain: <Brain size={size} />,
+    gear: <Settings size={size} />,
+  };
+  return icons[name] || <div style={{ width: size, height: size }} />;
+};
+
+// ============================================
+// VISUALIZATION COMPONENTS
+// ============================================
+
+// ===== SEGMENTATION VISUAL =====
 const SegmentationVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'SEGMENTATION OUTPUT');
   
-  // Parse segments from content
-  const parseSegments = (text: string): { name: string; description: string; size: string; characteristics: string[] }[] => {
-    const segments: { name: string; description: string; size: string; characteristics: string[] }[] = [];
+  const parseSegments = (text: string): ParsedSegment[] => {
+    const segments: ParsedSegment[] = [];
     if (!text) return segments;
     
-    // Try to find primary segment
     const primaryMatch = text.match(/Primary Target Segment:?\s*([^\n]+)/i);
     if (primaryMatch) {
       const desc = primaryMatch[1].trim();
@@ -222,7 +239,6 @@ const SegmentationVisual = ({ plan }: { plan: string }) => {
       });
     }
     
-    // Try to find secondary segments
     const secondaryMatch = text.match(/Secondary Segments?:?\s*([\s\S]*?)(?=\n\n|\n\d\.|\n•|$)/i);
     if (secondaryMatch) {
       const secText = secondaryMatch[1];
@@ -239,109 +255,176 @@ const SegmentationVisual = ({ plan }: { plan: string }) => {
       });
     }
     
+    // Calculate percentages if not present
+    if (segments.length > 0) {
+      const total = segments.length;
+      segments.forEach((seg, idx) => {
+        seg.percentage = Math.round(((total - idx) / total) * 100 / (total > 1 ? 1.5 : 1));
+      });
+    }
+    
     return segments;
   };
 
   const segments = parseSegments(content);
   const colors = ['#818cf8', '#34d399', '#fbbf24', '#f87171', '#a78bfa'];
+  const categoryIcons = ['👤', '🌍', '🧠', '🔄'];
+
+  if (!content || segments.length === 0) {
+    return (
+      <div className="text-center py-10 text-white/50">
+        <p>No segmentation data found in the generated plan.</p>
+        <p className="text-sm mt-2">Try regenerating the plan.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">🎯 Segmentation Analysis</h2>
-      {segments.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
-          {segments.map((seg, idx) => (
-            <div
-              key={idx}
-              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
-              style={{ borderTop: `3px solid ${colors[idx % colors.length]}` }}
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
-                  style={{ background: `${colors[idx % colors.length]}30`, color: colors[idx % colors.length] }}
+      
+      {/* Pie Chart */}
+      <div className="relative max-w-xs mx-auto mb-8">
+        <svg viewBox="0 0 200 200" className="w-full h-auto">
+          {segments.map((seg, idx) => {
+            const percentage = seg.percentage || 0;
+            const startAngle = segments.slice(0, idx).reduce((acc, s) => acc + (s.percentage || 0), 0) * 3.6;
+            const endAngle = startAngle + percentage * 3.6;
+            const startRad = (startAngle - 90) * Math.PI / 180;
+            const endRad = (endAngle - 90) * Math.PI / 180;
+            const x1 = 100 + 80 * Math.cos(startRad);
+            const y1 = 100 + 80 * Math.sin(startRad);
+            const x2 = 100 + 80 * Math.cos(endRad);
+            const y2 = 100 + 80 * Math.sin(endRad);
+            const largeArc = percentage > 50 ? 1 : 0;
+            
+            return (
+              <g key={idx}>
+                <path
+                  d={`M 100 100 L ${x1} ${y1} A 80 80 0 ${largeArc} 1 ${x2} ${y2} Z`}
+                  fill={colors[idx % colors.length]}
+                  opacity="0.85"
+                  className="transition-all duration-300 hover:opacity-100 hover:scale-105 cursor-pointer"
+                  stroke="#0a0e1a"
+                  strokeWidth="2"
+                />
+                <text
+                  x={100 + 55 * Math.cos((startRad + endRad) / 2)}
+                  y={100 + 55 * Math.sin((startRad + endRad) / 2)}
+                  fill="white"
+                  fontSize="12"
+                  fontWeight="bold"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
                 >
-                  {idx + 1}
-                </div>
-                <h3 className="text-lg font-semibold text-white">{seg.name}</h3>
-              </div>
-              <p className="text-sm text-white/70 leading-relaxed mb-2">{seg.description}</p>
-              {seg.characteristics.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-2">
-                  {seg.characteristics.slice(0, 3).map((char, i) => (
-                    <span key={i} className="text-xs bg-white/10 px-2 py-1 rounded-full text-white/60">
-                      {char}
-                    </span>
-                  ))}
-                </div>
-              )}
-              <div className="mt-3 pt-3 border-t border-white/10 text-xs text-white/40">
-                Segment size: {seg.size}
-              </div>
+                  {percentage}%
+                </text>
+              </g>
+            );
+          })}
+          <circle cx="100" cy="100" r="30" fill="#0a0e1a" stroke="#818cf8" strokeWidth="2" />
+          <text x="100" y="95" fill="white" fontSize="12" fontWeight="bold" textAnchor="middle">
+            {segments.length}
+          </text>
+          <text x="100" y="110" fill="white" fontSize="8" textAnchor="middle" opacity="0.6">
+            Segments
+          </text>
+        </svg>
+      </div>
+
+      {/* Category Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+        {['Demographic', 'Geographic', 'Psychographic', 'Behavioral'].map((category, idx) => (
+          <div
+            key={idx}
+            className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-4 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
+            style={{ borderTop: `3px solid ${colors[idx % colors.length]}` }}
+          >
+            <div className="text-2xl mb-2">{categoryIcons[idx]}</div>
+            <h3 className="text-sm font-semibold text-white mb-1">{category}</h3>
+            <p className="text-xs text-white/50">
+              {segments.length > idx ? segments[idx]?.description?.substring(0, 30) || 'N/A' : 'N/A'}
+            </p>
+            <div className="mt-2 text-xs text-indigo-400">
+              {segments.length > idx ? `${segments[idx]?.percentage || 0}%` : '0%'}
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className="bg-white/5 rounded-xl p-6 text-left max-w-4xl mx-auto">
-          <div 
-            className="prose prose-invert max-w-none text-white/80"
-            dangerouslySetInnerHTML={{ __html: formatContent(content || 'No segmentation data found.') }}
-          />
-        </div>
-      )}
+          </div>
+        ))}
+      </div>
+
+      {/* Segment Details */}
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-3 max-w-4xl mx-auto text-left">
+        {segments.map((seg, idx) => (
+          <div key={idx} className="bg-white/5 rounded-lg p-3 border border-white/10">
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-semibold text-white">{seg.name}</span>
+              <span className="text-xs text-indigo-400">{seg.percentage}%</span>
+            </div>
+            <p className="text-xs text-white/60 mt-1">{seg.description}</p>
+            {seg.characteristics.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-2">
+                {seg.characteristics.slice(0, 2).map((char, i) => (
+                  <span key={i} className="text-xs bg-white/10 px-2 py-0.5 rounded-full text-white/50">
+                    {char}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-// ============================================
-// ROLE 2: MARKET SIZING VISUALIZER (ENHANCED)
-// ============================================
-
+// ===== MARKET SIZING VENN DIAGRAM =====
 const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
   const { tam, sam, som } = parseMarketSizing(plan);
   const content = extractTagContent(plan, 'TAMSAMSOM OUTPUT');
   
-  // Calculate percentages for visualization
   const maxVal = Math.max(tam, 1);
   const samPct = (sam / maxVal) * 100;
   const somPct = (som / maxVal) * 100;
-  
+
+  if (!content && tam === 0) {
+    return (
+      <div className="text-center py-10 text-white/50">
+        <p>No market sizing data found in the generated plan.</p>
+        <p className="text-sm mt-2">Try regenerating the plan.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">📈 Market Sizing (TAM/SAM/SOM)</h2>
       
       {tam > 0 ? (
         <>
-          {/* Venn Diagram Style Visualization */}
           <div className="relative max-w-3xl mx-auto h-64 mb-8">
             <div className="absolute inset-0 flex items-center justify-center">
-              {/* TAM - Outer circle */}
               <div 
-                className="absolute rounded-full border-2 border-blue-500/30 bg-blue-500/10"
+                className="absolute rounded-full border-2 border-blue-500/30 bg-blue-500/10 transition-all duration-500 hover:scale-105"
                 style={{ width: '100%', height: '100%', maxWidth: '300px', maxHeight: '300px' }}
               />
-              {/* SAM - Middle circle */}
               <div 
-                className="absolute rounded-full border-2 border-indigo-500/40 bg-indigo-500/15"
+                className="absolute rounded-full border-2 border-indigo-500/40 bg-indigo-500/15 transition-all duration-500 hover:scale-105"
                 style={{ width: '70%', height: '70%', maxWidth: '210px', maxHeight: '210px' }}
               />
-              {/* SOM - Inner circle */}
               <div 
-                className="absolute rounded-full border-2 border-purple-500/50 bg-purple-500/20 flex items-center justify-center"
+                className="absolute rounded-full border-2 border-purple-500/50 bg-purple-500/20 flex items-center justify-center transition-all duration-500 hover:scale-105"
                 style={{ width: '35%', height: '35%', maxWidth: '105px', maxHeight: '105px' }}
               >
                 <span className="text-2xl font-bold text-purple-400">{som.toLocaleString()}</span>
               </div>
-              {/* Labels */}
               <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-sm font-semibold text-blue-400">TAM</div>
               <div className="absolute top-1/2 -translate-y-1/2 -right-16 text-sm font-semibold text-indigo-400">SAM</div>
               <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm font-semibold text-purple-400">SOM</div>
             </div>
           </div>
           
-          {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
-            <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/30 rounded-xl p-5">
+            <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/30 rounded-xl p-5 transition-all hover:translate-y-[-4px]">
               <div className="text-2xl font-bold text-blue-400">{tam.toLocaleString()}</div>
               <div className="text-sm text-white/60 mt-1">TAM</div>
               <div className="text-xs text-white/40 mt-1">Total Addressable Market</div>
@@ -349,7 +432,7 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
                 <div className="bg-blue-400 h-1.5 rounded-full" style={{ width: '100%' }} />
               </div>
             </div>
-            <div className="bg-gradient-to-br from-indigo-500/20 to-indigo-600/10 border border-indigo-500/30 rounded-xl p-5">
+            <div className="bg-gradient-to-br from-indigo-500/20 to-indigo-600/10 border border-indigo-500/30 rounded-xl p-5 transition-all hover:translate-y-[-4px]">
               <div className="text-2xl font-bold text-indigo-400">{sam.toLocaleString()}</div>
               <div className="text-sm text-white/60 mt-1">SAM</div>
               <div className="text-xs text-white/40 mt-1">Serviceable Addressable Market</div>
@@ -357,7 +440,7 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
                 <div className="bg-indigo-400 h-1.5 rounded-full" style={{ width: `${samPct}%` }} />
               </div>
             </div>
-            <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/10 border border-purple-500/30 rounded-xl p-5">
+            <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/10 border border-purple-500/30 rounded-xl p-5 transition-all hover:translate-y-[-4px]">
               <div className="text-2xl font-bold text-purple-400">{som.toLocaleString()}</div>
               <div className="text-sm text-white/60 mt-1">SOM</div>
               <div className="text-xs text-white/40 mt-1">Serviceable Obtainable Market</div>
@@ -379,10 +462,165 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
   );
 };
 
-// ============================================
-// ROLE 3: PORTER'S FORCES VISUALIZER (ENHANCED)
-// ============================================
+// ===== PESTLE VISUAL =====
+const PESTLEVisual = ({ plan }: { plan: string }) => {
+  const parsePESTLE = (): PESTLEItem[] => {
+    const pestleData: PESTLEItem[] = [];
+    const categories = [
+      { key: 'political', icon: '🏛️', title: 'Political' },
+      { key: 'economic', icon: '📈', title: 'Economic' },
+      { key: 'social', icon: '👥', title: 'Social' },
+      { key: 'technological', icon: '💻', title: 'Technological' },
+      { key: 'legal', icon: '⚖️', title: 'Legal' },
+      { key: 'environmental', icon: '🌿', title: 'Environmental' }
+    ];
 
+    const pestleSection = plan.match(/\[PESTLE\s+OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+    let searchText = '';
+    
+    if (pestleSection && pestleSection[1]) {
+      searchText = pestleSection[1].trim();
+    }
+    
+    if (!searchText) return [];
+
+    for (const cat of categories) {
+      let insight = '';
+      let impact: 'high' | 'medium' | 'low' = 'medium';
+      
+      const pattern = new RegExp(
+        `\\*\\*${cat.title}\\s+Drivers\\*\\*[\\s\\n]*([\\s\\S]*?)(?=\\n\\*\\*|\\n\\n|$)`,
+        'i'
+      );
+      
+      const match = searchText.match(pattern);
+      if (match && match[1]) {
+        const content = match[1].trim();
+        const bulletPoints = content.split('\n')
+          .filter(line => line.trim().match(/^[-•*]\s+/))
+          .map(line => line.replace(/^[-•*]\s+/, '').trim());
+        
+        if (bulletPoints.length > 0) {
+          insight = bulletPoints.join(' ');
+        } else {
+          const firstLine = content.split('\n')[0]?.trim() || '';
+          if (firstLine.length > 10) {
+            insight = firstLine;
+          }
+        }
+      }
+      
+      if (!insight) {
+        const simplePattern = new RegExp(
+          `${cat.title}\\s+Drivers[\\s\\n]*([\\s\\S]*?)(?=\\n[A-Z]|\\n\\*\\*|$)`,
+          'i'
+        );
+        const simpleMatch = searchText.match(simplePattern);
+        if (simpleMatch && simpleMatch[1]) {
+          const content = simpleMatch[1].trim();
+          const bulletPoints = content.split('\n')
+            .filter(line => line.trim().match(/^[-•*]\s+/))
+            .map(line => line.replace(/^[-•*]\s+/, '').trim());
+          
+          if (bulletPoints.length > 0) {
+            insight = bulletPoints.join(' ');
+          } else {
+            const firstLine = content.split('\n')[0]?.trim() || '';
+            if (firstLine.length > 10) {
+              insight = firstLine;
+            }
+          }
+        }
+      }
+      
+      if (insight) {
+        insight = insight.replace(/\*\*/g, '').trim();
+        
+        const lowerInsight = insight.toLowerCase();
+        if (lowerInsight.includes('high') || lowerInsight.includes('significant') || lowerInsight.includes('major') || lowerInsight.includes('strong')) {
+          impact = 'high';
+        } else if (lowerInsight.includes('low') || lowerInsight.includes('minor') || lowerInsight.includes('weak')) {
+          impact = 'low';
+        }
+        
+        pestleData.push({
+          key: cat.key,
+          icon: cat.icon,
+          title: cat.title,
+          insight: insight.substring(0, 150),
+          impact: impact
+        });
+      }
+    }
+
+    return pestleData;
+  };
+
+  const pestleData = parsePESTLE();
+  const colorMap: Record<string, { bg: string; text: string }> = {
+    political: { bg: 'rgba(99,102,241,.2)', text: '#818cf8' },
+    economic: { bg: 'rgba(16,185,129,.2)', text: '#34d399' },
+    social: { bg: 'rgba(245,158,11,.2)', text: '#fbbf24' },
+    technological: { bg: 'rgba(6,182,212,.2)', text: '#22d3ee' },
+    legal: { bg: 'rgba(239,68,68,.2)', text: '#f87171' },
+    environmental: { bg: 'rgba(139,92,246,.2)', text: '#a78bfa' }
+  };
+
+  if (pestleData.length === 0) {
+    return (
+      <div className="text-center py-10 text-white/50">
+        <p>No PESTLE data found in the generated plan.</p>
+        <p className="text-sm mt-2">Try regenerating the plan.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="text-center py-6">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">PESTLE Analysis</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {pestleData.map((item) => (
+          <div
+            key={item.key}
+            className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-6px] hover:border-indigo-500/40 hover:shadow-lg cursor-pointer relative overflow-hidden"
+          >
+            <div 
+              className="absolute top-0 left-0 w-full h-1"
+              style={{ background: `linear-gradient(90deg, ${colorMap[item.key]?.text || '#818cf8'}, ${colorMap[item.key]?.text || '#818cf8'})` }}
+            />
+            <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
+              <div
+                className="w-10 h-10 flex items-center justify-center text-2xl rounded-xl"
+                style={{ background: colorMap[item.key]?.bg || 'rgba(99,102,241,.2)' }}
+              >
+                {item.icon}
+              </div>
+              <div className="text-lg font-bold" style={{ color: colorMap[item.key]?.text || '#818cf8' }}>
+                {item.title}
+              </div>
+            </div>
+            <div className="text-sm text-white/80 leading-relaxed mb-3">{item.insight}</div>
+            <div className="pt-3 border-t border-white/5 flex items-center gap-2">
+              <span
+                className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
+                  item.impact === 'high'
+                    ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                    : item.impact === 'medium'
+                    ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                    : 'bg-green-500/20 text-green-400 border border-green-500/30'
+                }`}
+              >
+                {item.impact} IMPACT
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ===== PORTER'S FORCES VISUAL =====
 const PortersVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'PORTERS OUTPUT');
   
@@ -394,7 +632,6 @@ const PortersVisual = ({ plan }: { plan: string }) => {
     { name: 'Industry Rivalry', icon: '⚔️', color: '#a78bfa' }
   ];
 
-  // Try to extract force ratings from content
   const getForceRating = (text: string, forceName: string): 'High' | 'Medium' | 'Low' => {
     const lower = text?.toLowerCase() || '';
     if (lower.includes(forceName.toLowerCase())) {
@@ -408,57 +645,48 @@ const PortersVisual = ({ plan }: { plan: string }) => {
     return 'Medium';
   };
 
+  if (!content) {
+    return (
+      <div className="text-center py-10 text-white/50">
+        <p>No Porter's Forces data found in the generated plan.</p>
+        <p className="text-sm mt-2">Try regenerating the plan.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">🏛️ Porter's Five Forces</h2>
-      
-      {content ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
-          {forces.map((force, idx) => {
-            const rating = getForceRating(content, force.name);
-            const color = rating === 'High' ? 'text-red-400 border-red-500/30' : 
-                         rating === 'Medium' ? 'text-yellow-400 border-yellow-500/30' : 
-                         'text-green-400 border-green-500/30';
-            return (
-              <div
-                key={idx}
-                className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-4 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-2xl">{force.icon}</span>
-                  <span className="text-sm font-semibold text-white">{force.name}</span>
-                </div>
-                <div className={`text-xs font-bold uppercase px-2 py-1 rounded-full inline-block ${color} bg-white/5`}>
-                  {rating} Impact
-                </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
+        {forces.map((force, idx) => {
+          const rating = getForceRating(content, force.name);
+          const color = rating === 'High' ? 'text-red-400 border-red-500/30' : 
+                       rating === 'Medium' ? 'text-yellow-400 border-yellow-500/30' : 
+                       'text-green-400 border-green-500/30';
+          return (
+            <div
+              key={idx}
+              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-4 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-2xl">{force.icon}</span>
+                <span className="text-sm font-semibold text-white">{force.name}</span>
               </div>
-            );
-          })}
-        </div>
-      ) : (
-        <div className="bg-white/5 rounded-xl p-6 text-left max-w-4xl mx-auto">
-          <p className="text-white/70">No Porter's Forces data found.</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-4">
-            {forces.map((force, i) => (
-              <div key={i} className="bg-white/5 border border-white/10 rounded-lg p-3 text-sm text-white/60">
-                {force.icon} {force.name}
+              <div className={`text-xs font-bold uppercase px-2 py-1 rounded-full inline-block ${color} bg-white/5`}>
+                {rating} Impact
               </div>
-            ))}
-          </div>
-        </div>
-      )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
 
-// ============================================
-// ROLE 4: COMPETITORS VISUALIZER (ENHANCED)
-// ============================================
-
+// ===== COMPETITORS VISUAL =====
 const CompetitorsVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'COMPETITOR OUTPUT');
   
-  // Parse competitors from content
   const parseCompetitors = (text: string): { name: string; threat: string; strengths: string[]; weaknesses: string[] }[] => {
     const competitors: { name: string; threat: string; strengths: string[]; weaknesses: string[] }[] = [];
     if (!text) return competitors;
@@ -499,74 +727,76 @@ const CompetitorsVisual = ({ plan }: { plan: string }) => {
     low: 'text-green-400 border-green-500/30 bg-green-500/10'
   };
 
+  if (competitors.length === 0) {
+    return (
+      <div className="text-center py-10 text-white/50">
+        <p>No competitor data found in the generated plan.</p>
+        <p className="text-sm mt-2">Try regenerating the plan.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">👥 Competitor Analysis</h2>
-      
-      {competitors.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
-          {competitors.map((comp, idx) => (
-            <div
-              key={idx}
-              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
-            >
-              <div className="flex justify-between items-start mb-3">
-                <h3 className="text-lg font-semibold text-white">{comp.name}</h3>
-                <span className={`text-xs font-bold uppercase px-2 py-1 rounded-full border ${threatColors[comp.threat as keyof typeof threatColors] || threatColors.medium}`}>
-                  {comp.threat} Threat
-                </span>
-              </div>
-              {comp.strengths.length > 0 && (
-                <div className="mb-2">
-                  <span className="text-xs text-green-400 font-semibold">Strengths: </span>
-                  <span className="text-sm text-white/70">{comp.strengths.join(', ')}</span>
-                </div>
-              )}
-              {comp.weaknesses.length > 0 && (
-                <div>
-                  <span className="text-xs text-red-400 font-semibold">Weaknesses: </span>
-                  <span className="text-sm text-white/70">{comp.weaknesses.join(', ')}</span>
-                </div>
-              )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
+        {competitors.map((comp, idx) => (
+          <div
+            key={idx}
+            className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
+          >
+            <div className="flex justify-between items-start mb-3">
+              <h3 className="text-lg font-semibold text-white">{comp.name}</h3>
+              <span className={`text-xs font-bold uppercase px-2 py-1 rounded-full border ${threatColors[comp.threat as keyof typeof threatColors] || threatColors.medium}`}>
+                {comp.threat} Threat
+              </span>
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className="bg-white/5 rounded-xl p-6 text-left max-w-4xl mx-auto">
-          <div 
-            className="prose prose-invert max-w-none text-white/80"
-            dangerouslySetInnerHTML={{ __html: formatContent(content || 'No competitor data found.') }}
-          />
-        </div>
-      )}
+            {comp.strengths.length > 0 && (
+              <div className="mb-2">
+                <span className="text-xs text-green-400 font-semibold">Strengths: </span>
+                <span className="text-sm text-white/70">{comp.strengths.join(', ')}</span>
+              </div>
+            )}
+            {comp.weaknesses.length > 0 && (
+              <div>
+                <span className="text-xs text-red-400 font-semibold">Weaknesses: </span>
+                <span className="text-sm text-white/70">{comp.weaknesses.join(', ')}</span>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-// ============================================
-// ROLE 5: POSITIONING VISUALIZER (ENHANCED)
-// ============================================
-
+// ===== POSITIONING VISUAL =====
 const PositioningVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'POSITIONING OUTPUT');
-  
+
+  if (!content) {
+    return (
+      <div className="text-center py-10 text-white/50">
+        <p>No positioning data found in the generated plan.</p>
+        <p className="text-sm mt-2">Try regenerating the plan.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">🎯 Brand Positioning</h2>
       <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-6 border border-white/10 max-w-3xl mx-auto">
         <div 
           className="prose prose-invert max-w-none text-white/80 text-left"
-          dangerouslySetInnerHTML={{ __html: formatContent(content || 'No positioning data found.') }}
+          dangerouslySetInnerHTML={{ __html: formatContent(content) }}
         />
       </div>
     </div>
   );
 };
 
-// ============================================
-// ROLE 6: 4Ps VISUALIZER (ENHANCED)
-// ============================================
-
+// ===== 4Ps VISUAL =====
 const FourPsVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, '4PS OUTPUT');
   
@@ -577,7 +807,6 @@ const FourPsVisual = ({ plan }: { plan: string }) => {
     { name: 'Promotion', icon: '📣', color: '#f87171' }
   ];
 
-  // Extract 4P content from the full text
   const getPContent = (text: string, pName: string): string => {
     if (!text) return '';
     const regex = new RegExp(`${pName}[\\s\\S]*?(?=\\n\\s*${psData.map(p => p.name).join('|')}|$)`, 'i');
@@ -585,51 +814,41 @@ const FourPsVisual = ({ plan }: { plan: string }) => {
     return match ? match[0].substring(0, 120) + (match[0].length > 120 ? '...' : '') : '';
   };
 
+  if (!content) {
+    return (
+      <div className="text-center py-10 text-white/50">
+        <p>No 4Ps data found in the generated plan.</p>
+        <p className="text-sm mt-2">Try regenerating the plan.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">📦 Marketing Mix (4Ps)</h2>
-      
-      {content ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
-          {psData.map((p, idx) => (
-            <div
-              key={idx}
-              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
-              style={{ borderTop: `3px solid ${p.color}` }}
-            >
-              <div className="text-3xl mb-2">{p.icon}</div>
-              <h3 className="text-lg font-semibold text-white mb-2">{p.name}</h3>
-              <p className="text-sm text-white/60 leading-relaxed">
-                {getPContent(content, p.name) || `Key ${p.name} strategy details...`}
-              </p>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="bg-white/5 rounded-xl p-6 text-left max-w-4xl mx-auto">
-          <p className="text-white/70">No 4Ps data found.</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
-            {psData.map((p, i) => (
-              <div key={i} className="bg-white/5 border border-white/10 rounded-lg p-4 text-center text-sm text-white/60">
-                <div className="text-2xl mb-1">{p.icon}</div>
-                {p.name}
-              </div>
-            ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
+        {psData.map((p, idx) => (
+          <div
+            key={idx}
+            className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
+            style={{ borderTop: `3px solid ${p.color}` }}
+          >
+            <div className="text-3xl mb-2">{p.icon}</div>
+            <h3 className="text-lg font-semibold text-white mb-2">{p.name}</h3>
+            <p className="text-sm text-white/60 leading-relaxed">
+              {getPContent(content, p.name) || `Key ${p.name} strategy details...`}
+            </p>
           </div>
-        </div>
-      )}
+        ))}
+      </div>
     </div>
   );
 };
 
-// ============================================
-// ROLE 7: SWOT VISUALIZER (ENHANCED)
-// ============================================
-
+// ===== SWOT VISUAL =====
 const SWOTVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'SWOT OUTPUT');
   
-  // Parse SWOT items
   const parseSWOT = (text: string) => {
     const swot = { strengths: [], weaknesses: [], opportunities: [], threats: [] };
     if (!text) return swot;
@@ -659,52 +878,48 @@ const SWOTVisual = ({ plan }: { plan: string }) => {
 
   const hasData = Object.values(swot).some(arr => arr.length > 0);
 
+  if (!hasData) {
+    return (
+      <div className="text-center py-10 text-white/50">
+        <p>No SWOT data found in the generated plan.</p>
+        <p className="text-sm mt-2">Try regenerating the plan.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">⚡ SWOT Analysis</h2>
-      
-      {hasData ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
-          {quadrants.map((q) => (
-            <div
-              key={q.key}
-              className={`bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border ${q.color} transition-all hover:translate-y-[-4px]`}
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-2xl">{q.icon}</span>
-                <h3 className="text-lg font-semibold text-white">{q.label}</h3>
-                <span className="text-xs text-white/40 ml-auto">{swot[q.key as keyof typeof swot].length} items</span>
-              </div>
-              <ul className="text-left space-y-1">
-                {(swot[q.key as keyof typeof swot] as string[]).slice(0, 4).map((item, i) => (
-                  <li key={i} className="text-sm text-white/70 flex items-start gap-2">
-                    <span className="text-white/30 mt-1">•</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-                {(swot[q.key as keyof typeof swot] as string[]).length === 0 && (
-                  <li className="text-sm text-white/40 italic">No items listed</li>
-                )}
-              </ul>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
+        {quadrants.map((q) => (
+          <div
+            key={q.key}
+            className={`bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border ${q.color} transition-all hover:translate-y-[-4px]`}
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-2xl">{q.icon}</span>
+              <h3 className="text-lg font-semibold text-white">{q.label}</h3>
+              <span className="text-xs text-white/40 ml-auto">{swot[q.key as keyof typeof swot].length} items</span>
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className="bg-white/5 rounded-xl p-6 text-left max-w-4xl mx-auto">
-          <div 
-            className="prose prose-invert max-w-none text-white/80"
-            dangerouslySetInnerHTML={{ __html: formatContent(content || 'No SWOT data found.') }}
-          />
-        </div>
-      )}
+            <ul className="text-left space-y-1">
+              {(swot[q.key as keyof typeof swot] as string[]).slice(0, 4).map((item, i) => (
+                <li key={i} className="text-sm text-white/70 flex items-start gap-2">
+                  <span className="text-white/30 mt-1">•</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+              {(swot[q.key as keyof typeof swot] as string[]).length === 0 && (
+                <li className="text-sm text-white/40 italic">No items listed</li>
+              )}
+            </ul>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-// ============================================
-// ROLE 8: CUSTOMER JOURNEY VISUALIZER (ENHANCED)
-// ============================================
-
+// ===== CUSTOMER JOURNEY VISUAL =====
 const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'JOURNEY OUTPUT');
   
@@ -716,59 +931,50 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
     { name: 'Advocacy', icon: '📣', color: '#a78bfa' }
   ];
 
+  if (!content) {
+    return (
+      <div className="text-center py-10 text-white/50">
+        <p>No customer journey data found in the generated plan.</p>
+        <p className="text-sm mt-2">Try regenerating the plan.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">🗺️ Customer Journey Map</h2>
-      
-      {content ? (
-        <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-6 border border-white/10 max-w-5xl mx-auto">
-          <div className="flex flex-wrap justify-between items-center gap-2 mb-6">
-            {stages.map((stage, idx) => (
-              <div key={idx} className="flex items-center">
-                <div className="text-center">
-                  <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center text-2xl mx-auto mb-1"
-                    style={{ background: `${stage.color}30`, border: `2px solid ${stage.color}` }}
-                  >
-                    {stage.icon}
-                  </div>
-                  <span className="text-xs text-white/60 font-medium">{stage.name}</span>
+      <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-6 border border-white/10 max-w-5xl mx-auto">
+        <div className="flex flex-wrap justify-between items-center gap-2 mb-6">
+          {stages.map((stage, idx) => (
+            <div key={idx} className="flex items-center">
+              <div className="text-center">
+                <div
+                  className="w-12 h-12 rounded-full flex items-center justify-center text-2xl mx-auto mb-1 transition-all duration-300 hover:scale-110"
+                  style={{ background: `${stage.color}30`, border: `2px solid ${stage.color}` }}
+                >
+                  {stage.icon}
                 </div>
-                {idx < stages.length - 1 && (
-                  <div className="w-8 h-0.5 bg-white/20 mx-1" />
-                )}
+                <span className="text-xs text-white/60 font-medium">{stage.name}</span>
               </div>
-            ))}
-          </div>
-          <div 
-            className="prose prose-invert max-w-none text-white/80 text-left"
-            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
-          />
+              {idx < stages.length - 1 && (
+                <div className="w-8 h-0.5 bg-white/20 mx-1" />
+              )}
+            </div>
+          ))}
         </div>
-      ) : (
-        <div className="bg-white/5 rounded-xl p-6 max-w-4xl mx-auto">
-          <p className="text-white/70">No customer journey data found.</p>
-          <div className="flex flex-wrap justify-center gap-2 mt-4">
-            {stages.map((stage, i) => (
-              <div key={i} className="bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-white/60">
-                {stage.icon} {stage.name}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+        <div 
+          className="prose prose-invert max-w-none text-white/80 text-left"
+          dangerouslySetInnerHTML={{ __html: formatContent(content) }}
+        />
+      </div>
     </div>
   );
 };
 
-// ============================================
-// ROLE 9: KPI VISUALIZER (ENHANCED)
-// ============================================
-
+// ===== KPI CARDS VISUAL =====
 const KPICards = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'KPI OUTPUT');
   
-  // Parse KPIs from content
   const parseKPIs = (text: string): { label: string; value: string; trend: string; isUp: boolean }[] => {
     const kpis: { label: string; value: string; trend: string; isUp: boolean }[] = [];
     if (!text) return kpis;
@@ -792,57 +998,52 @@ const KPICards = ({ plan }: { plan: string }) => {
   const kpis = parseKPIs(content);
   const colors = ['#818cf8', '#34d399', '#fbbf24', '#f87171', '#a78bfa'];
 
+  if (kpis.length === 0) {
+    return (
+      <div className="text-center py-10 text-white/50">
+        <p>No KPI data found in the generated plan.</p>
+        <p className="text-sm mt-2">Try regenerating the plan.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">📊 Key Performance Indicators</h2>
-      
-      {kpis.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
-          {kpis.map((kpi, idx) => (
-            <div
-              key={idx}
-              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
-              style={{ borderTop: `3px solid ${colors[idx % colors.length]}` }}
-            >
-              <div className="flex justify-between items-start mb-2">
-                <span className="text-sm font-medium text-white/70">{kpi.label}</span>
-                <span className={`text-sm font-bold ${kpi.isUp ? 'text-green-400' : 'text-red-400'}`}>
-                  {kpi.trend}
-                </span>
-              </div>
-              <div className="text-2xl font-bold text-white">{kpi.value}</div>
-              <div className="mt-2 w-full bg-white/10 rounded-full h-1.5">
-                <div
-                  className="h-1.5 rounded-full"
-                  style={{
-                    width: `${Math.min(100, parseInt(kpi.value) || 50)}%`,
-                    background: `linear-gradient(90deg, ${colors[idx % colors.length]}, ${colors[(idx + 1) % colors.length]})`
-                  }}
-                />
-              </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
+        {kpis.map((kpi, idx) => (
+          <div
+            key={idx}
+            className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
+            style={{ borderTop: `3px solid ${colors[idx % colors.length]}` }}
+          >
+            <div className="flex justify-between items-start mb-2">
+              <span className="text-sm font-medium text-white/70">{kpi.label}</span>
+              <span className={`text-sm font-bold ${kpi.isUp ? 'text-green-400' : 'text-red-400'}`}>
+                {kpi.trend}
+              </span>
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className="bg-white/5 rounded-xl p-6 text-left max-w-4xl mx-auto">
-          <div 
-            className="prose prose-invert max-w-none text-white/80"
-            dangerouslySetInnerHTML={{ __html: formatContent(content || 'No KPI data found.') }}
-          />
-        </div>
-      )}
+            <div className="text-2xl font-bold text-white">{kpi.value}</div>
+            <div className="mt-2 w-full bg-white/10 rounded-full h-1.5">
+              <div
+                className="h-1.5 rounded-full transition-all duration-1000"
+                style={{
+                  width: `${Math.min(100, parseInt(kpi.value) || 50)}%`,
+                  background: `linear-gradient(90deg, ${colors[idx % colors.length]}, ${colors[(idx + 1) % colors.length]})`
+                }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-// ============================================
-// ROLE 10: OKR VISUALIZER (ENHANCED)
-// ============================================
-
+// ===== OKR DIAGRAM VISUAL =====
 const OKRDiagram = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'OKRS OUTPUT');
   
-  // Parse OKRs from content
   const parseOKRs = (text: string): { objective: string; krs: string[] }[] => {
     const okrs: { objective: string; krs: string[] }[] = [];
     if (!text) return okrs;
@@ -863,7 +1064,6 @@ const OKRDiagram = ({ plan }: { plan: string }) => {
         const krMatch = trimmed.match(/^[-•*]\s*Key Result[:\s]*(.+)/i);
         if (krMatch) current.krs.push(krMatch[1].trim());
       } else if (current && trimmed.match(/^[-•*]\s*(?![Objective|OKR|Goal|KR|Key])/)) {
-        // Could be a KR without label
         current.krs.push(trimmed.replace(/^[-•*]\s*/, '').trim());
       }
     }
@@ -874,57 +1074,52 @@ const OKRDiagram = ({ plan }: { plan: string }) => {
   const okrs = parseOKRs(content);
   const colors = ['#818cf8', '#34d399', '#fbbf24', '#f87171'];
 
+  if (okrs.length === 0) {
+    return (
+      <div className="text-center py-10 text-white/50">
+        <p>No OKR data found in the generated plan.</p>
+        <p className="text-sm mt-2">Try regenerating the plan.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">🎯 Objectives & Key Results</h2>
-      
-      {okrs.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
-          {okrs.map((okr, idx) => (
-            <div
-              key={idx}
-              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
-              style={{ borderTop: `3px solid ${colors[idx % colors.length]}` }}
-            >
-              <h3 className="text-md font-semibold text-white mb-3">🎯 {okr.objective}</h3>
-              <ul className="text-left space-y-2">
-                {okr.krs.slice(0, 4).map((kr, i) => (
-                  <li key={i} className="text-sm text-white/70 flex items-start gap-2">
-                    <span className="text-white/30 mt-0.5">✓</span>
-                    <span>{kr}</span>
-                  </li>
-                ))}
-                {okr.krs.length === 0 && (
-                  <li className="text-sm text-white/40 italic">No key results listed</li>
-                )}
-              </ul>
-              <div className="mt-3 pt-3 border-t border-white/10 flex justify-between text-xs text-white/40">
-                <span>{okr.krs.length} Key Results</span>
-                <span>Progress: {Math.min(100, okr.krs.length * 25)}%</span>
-              </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
+        {okrs.map((okr, idx) => (
+          <div
+            key={idx}
+            className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
+            style={{ borderTop: `3px solid ${colors[idx % colors.length]}` }}
+          >
+            <h3 className="text-md font-semibold text-white mb-3">🎯 {okr.objective}</h3>
+            <ul className="text-left space-y-2">
+              {okr.krs.slice(0, 4).map((kr, i) => (
+                <li key={i} className="text-sm text-white/70 flex items-start gap-2">
+                  <span className="text-white/30 mt-0.5">✓</span>
+                  <span>{kr}</span>
+                </li>
+              ))}
+              {okr.krs.length === 0 && (
+                <li className="text-sm text-white/40 italic">No key results listed</li>
+              )}
+            </ul>
+            <div className="mt-3 pt-3 border-t border-white/10 flex justify-between text-xs text-white/40">
+              <span>{okr.krs.length} Key Results</span>
+              <span>Progress: {Math.min(100, okr.krs.length * 25)}%</span>
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className="bg-white/5 rounded-xl p-6 text-left max-w-4xl mx-auto">
-          <div 
-            className="prose prose-invert max-w-none text-white/80"
-            dangerouslySetInnerHTML={{ __html: formatContent(content || 'No OKR data found.') }}
-          />
-        </div>
-      )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-// ============================================
-// ROLE 11: ROADMAP VISUALIZER (ENHANCED)
-// ============================================
-
+// ===== ROADMAP VISUAL =====
 const RoadmapVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'ROADMAP OUTPUT');
   
-  // Parse roadmap items
   const parseRoadmap = (text: string): { week: string; items: string[] }[] => {
     const roadmap: { week: string; items: string[] }[] = [];
     if (!text) return roadmap;
@@ -949,234 +1144,43 @@ const RoadmapVisual = ({ plan }: { plan: string }) => {
   const roadmap = parseRoadmap(content);
   const colors = ['#818cf8', '#34d399', '#fbbf24', '#f87171'];
 
+  if (roadmap.length === 0) {
+    return (
+      <div className="text-center py-10 text-white/50">
+        <p>No roadmap data found in the generated plan.</p>
+        <p className="text-sm mt-2">Try regenerating the plan.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">🗓️ 30-Day Roadmap</h2>
-      
-      {roadmap.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
-          {roadmap.map((phase, idx) => (
-            <div
-              key={idx}
-              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
-              style={{ borderTop: `3px solid ${colors[idx % colors.length]}` }}
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-xs font-bold text-white/40">#{idx + 1}</span>
-                <h3 className="text-sm font-semibold text-white">{phase.week}</h3>
-              </div>
-              <ul className="text-left space-y-1">
-                {phase.items.slice(0, 4).map((item, i) => (
-                  <li key={i} className="text-xs text-white/70 flex items-start gap-2">
-                    <span className="text-white/20 mt-0.5">▸</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-                {phase.items.length === 0 && (
-                  <li className="text-xs text-white/40 italic">No tasks listed</li>
-                )}
-              </ul>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+        {roadmap.map((phase, idx) => (
+          <div
+            key={idx}
+            className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
+            style={{ borderTop: `3px solid ${colors[idx % colors.length]}` }}
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs font-bold text-white/40">#{idx + 1}</span>
+              <h3 className="text-sm font-semibold text-white">{phase.week}</h3>
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className="bg-white/5 rounded-xl p-6 text-left max-w-4xl mx-auto">
-          <div 
-            className="prose prose-invert max-w-none text-white/80"
-            dangerouslySetInnerHTML={{ __html: formatContent(content || 'No roadmap data found.') }}
-          />
-        </div>
-      )}
-    </div>
-  );
-};
-
-// ============================================
-// ROLE 12: PESTLE EXPERT (EXISTING - UNCHANGED)
-// ============================================
-
-const PESTLEVisual = ({ plan }: { plan: string }) => {
-  const parsePESTLE = () => {
-    const pestleData: { key: string; icon: string; title: string; insight: string; impact: string }[] = [];
-    const categories = [
-      { key: 'political', icon: '🏛️', title: 'Political' },
-      { key: 'economic', icon: '📈', title: 'Economic' },
-      { key: 'social', icon: '👥', title: 'Social' },
-      { key: 'technological', icon: '💻', title: 'Technological' },
-      { key: 'legal', icon: '⚖️', title: 'Legal' },
-      { key: 'environmental', icon: '🌿', title: 'Environmental' }
-    ];
-
-    // Get the PESTLE section
-    const pestleSection = plan.match(/\[PESTLE\s+OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-    let searchText = '';
-    
-    if (pestleSection && pestleSection[1]) {
-      searchText = pestleSection[1].trim();
-      console.log('✅ Found PESTLE section, length:', searchText.length);
-    }
-    
-    if (!searchText) {
-      console.log('❌ No PESTLE section found');
-      return [];
-    }
-
-    for (const cat of categories) {
-      let insight = '';
-      let impact = 'medium';
-      
-      // Pattern: **Economic Drivers:** followed by bullet points
-      const pattern = new RegExp(
-        `\\*\\*${cat.title}\\s+Drivers\\*\\*[\\s\\n]*([\\s\\S]*?)(?=\\n\\*\\*|\\n\\n|$)`,
-        'i'
-      );
-      
-      const match = searchText.match(pattern);
-      if (match && match[1]) {
-        const content = match[1].trim();
-        // Extract bullet points from the content
-        const bulletPoints = content.split('\n')
-          .filter(line => line.trim().match(/^[-•*]\s+/))
-          .map(line => line.replace(/^[-•*]\s+/, '').trim());
-        
-        if (bulletPoints.length > 0) {
-          insight = bulletPoints.join(' ');
-          console.log(`✅ Found ${cat.title}:`, insight);
-        } else {
-          // If no bullet points, take the first sentence
-          const firstLine = content.split('\n')[0]?.trim() || '';
-          if (firstLine.length > 10) {
-            insight = firstLine;
-            console.log(`✅ Found ${cat.title} (no bullets):`, insight);
-          }
-        }
-      }
-      
-      // If still no insight, try a simpler approach
-      if (!insight) {
-        const simplePattern = new RegExp(
-          `${cat.title}\\s+Drivers[\\s\\n]*([\\s\\S]*?)(?=\\n[A-Z]|\\n\\*\\*|$)`,
-          'i'
-        );
-        const simpleMatch = searchText.match(simplePattern);
-        if (simpleMatch && simpleMatch[1]) {
-          const content = simpleMatch[1].trim();
-          const bulletPoints = content.split('\n')
-            .filter(line => line.trim().match(/^[-•*]\s+/))
-            .map(line => line.replace(/^[-•*]\s+/, '').trim());
-          
-          if (bulletPoints.length > 0) {
-            insight = bulletPoints.join(' ');
-            console.log(`✅ Found ${cat.title} via simple pattern:`, insight);
-          } else {
-            const firstLine = content.split('\n')[0]?.trim() || '';
-            if (firstLine.length > 10) {
-              insight = firstLine;
-              console.log(`✅ Found ${cat.title} via simple pattern (no bullets):`, insight);
-            }
-          }
-        }
-      }
-      
-      // Determine impact based on insight content
-      if (insight) {
-        insight = insight.replace(/\*\*/g, '').trim();
-        
-        const lowerInsight = insight.toLowerCase();
-        if (lowerInsight.includes('high') || lowerInsight.includes('significant') || lowerInsight.includes('major') || lowerInsight.includes('strong')) {
-          impact = 'high';
-        } else if (lowerInsight.includes('low') || lowerInsight.includes('minor') || lowerInsight.includes('weak')) {
-          impact = 'low';
-        }
-        
-        pestleData.push({
-          key: cat.key,
-          icon: cat.icon,
-          title: cat.title,
-          insight: insight.substring(0, 150),
-          impact: impact
-        });
-      }
-    }
-
-    console.log('📊 PESTLE data found:', pestleData.length);
-    if (pestleData.length > 0) {
-      console.log('📊 Sample:', pestleData[0]);
-    }
-    return pestleData;
-  };
-
-  const pestleData = parsePESTLE();
-  const colorMap: Record<string, { bg: string; text: string }> = {
-    political: { bg: 'rgba(99,102,241,.2)', text: '#818cf8' },
-    economic: { bg: 'rgba(16,185,129,.2)', text: '#34d399' },
-    social: { bg: 'rgba(245,158,11,.2)', text: '#fbbf24' },
-    technological: { bg: 'rgba(6,182,212,.2)', text: '#22d3ee' },
-    legal: { bg: 'rgba(239,68,68,.2)', text: '#f87171' },
-    environmental: { bg: 'rgba(139,92,246,.2)', text: '#a78bfa' }
-  };
-
-  return (
-    <div className="text-center">
-      <h2 className="text-xl font-bold text-indigo-300 mb-6">PESTLE Analysis</h2>
-      {pestleData.length === 0 ? (
-        <div className="text-center py-10 text-white/50">
-          <p>No PESTLE data found in the generated plan.</p>
-          <p className="text-sm mt-2">Try regenerating the plan.</p>
-          <details className="mt-4 text-left text-xs text-white/30 max-w-md mx-auto">
-            <summary>Debug: Show plan section</summary>
-            <pre className="mt-2 p-2 bg-white/5 rounded overflow-auto max-h-40 whitespace-pre-wrap text-xs">
-              {plan.substring(0, 1000)}
-            </pre>
-          </details>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {pestleData.map((item) => (
-            <div
-              key={item.key}
-              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-6px] hover:border-indigo-500/40 hover:shadow-lg cursor-pointer relative overflow-hidden"
-              style={{ 
-                '::before': { 
-                  content: '""', 
-                  position: 'absolute', 
-                  top: 0, 
-                  left: 0, 
-                  width: '100%', 
-                  height: '3px', 
-                  background: `linear-gradient(90deg, ${colorMap[item.key]?.text || '#818cf8'}, ${colorMap[item.key]?.text || '#818cf8'})` 
-                } 
-              } as any}
-            >
-              <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
-                <div
-                  className="w-10 h-10 flex items-center justify-center text-2xl rounded-xl"
-                  style={{ background: colorMap[item.key]?.bg || 'rgba(99,102,241,.2)' }}
-                >
-                  {item.icon}
-                </div>
-                <div className="text-lg font-bold" style={{ color: colorMap[item.key]?.text || '#818cf8' }}>
-                  {item.title}
-                </div>
-              </div>
-              <div className="text-sm text-white/80 leading-relaxed mb-3">{item.insight}</div>
-              <div className="pt-3 border-t border-white/5 flex items-center gap-2">
-                <span
-                  className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
-                    item.impact === 'high'
-                      ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                      : item.impact === 'medium'
-                      ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
-                      : 'bg-green-500/20 text-green-400 border border-green-500/30'
-                  }`}
-                >
-                  {item.impact} IMPACT
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+            <ul className="text-left space-y-1">
+              {phase.items.slice(0, 4).map((item, i) => (
+                <li key={i} className="text-xs text-white/70 flex items-start gap-2">
+                  <span className="text-white/20 mt-0.5">▸</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+              {phase.items.length === 0 && (
+                <li className="text-xs text-white/40 italic">No tasks listed</li>
+              )}
+            </ul>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
