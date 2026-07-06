@@ -198,142 +198,353 @@ const parseMarketSizing = (plan: string): { tam: number; sam: number; som: numbe
 };
 
 // ============================================
-// ROLE 1: SEGMENTATION VISUALIZER
+// ROLE 1: SEGMENTATION VISUALIZER (ENHANCED)
 // ============================================
 
 const SegmentationVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'SEGMENTATION OUTPUT');
   
+  // Parse segments from content
+  const parseSegments = (text: string): { name: string; description: string; size: string; characteristics: string[] }[] => {
+    const segments: { name: string; description: string; size: string; characteristics: string[] }[] = [];
+    if (!text) return segments;
+    
+    // Try to find primary segment
+    const primaryMatch = text.match(/Primary Target Segment:?\s*([^\n]+)/i);
+    if (primaryMatch) {
+      const desc = primaryMatch[1].trim();
+      const sizeMatch = desc.match(/(\d+[-\s]*\d*)\s*(?:million|M|thousand|K)/i);
+      segments.push({
+        name: 'Primary Segment',
+        description: desc.substring(0, 100) + (desc.length > 100 ? '...' : ''),
+        size: sizeMatch ? sizeMatch[0] : 'Varies',
+        characteristics: text.match(/Characteristics:?\s*([^\n]+)/i)?.[1]?.split(',').map(s => s.trim()) || []
+      });
+    }
+    
+    // Try to find secondary segments
+    const secondaryMatch = text.match(/Secondary Segments?:?\s*([\s\S]*?)(?=\n\n|\n\d\.|\n•|$)/i);
+    if (secondaryMatch) {
+      const secText = secondaryMatch[1];
+      const secList = secText.split(/\d\.|\n•|\n-/).filter(s => s.trim());
+      secList.forEach((item, i) => {
+        if (item.trim()) {
+          segments.push({
+            name: `Segment ${i + 2}`,
+            description: item.trim().substring(0, 80),
+            size: 'Varies',
+            characteristics: []
+          });
+        }
+      });
+    }
+    
+    return segments;
+  };
+
+  const segments = parseSegments(content);
+  const colors = ['#818cf8', '#34d399', '#fbbf24', '#f87171', '#a78bfa'];
+
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">🎯 Segmentation Analysis</h2>
-      {content ? (
-        <div className="bg-white/5 rounded-xl p-6 text-left">
-          <div 
-            className="prose prose-invert max-w-none text-white/80"
-            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
-          />
+      {segments.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+          {segments.map((seg, idx) => (
+            <div
+              key={idx}
+              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
+              style={{ borderTop: `3px solid ${colors[idx % colors.length]}` }}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                  style={{ background: `${colors[idx % colors.length]}30`, color: colors[idx % colors.length] }}
+                >
+                  {idx + 1}
+                </div>
+                <h3 className="text-lg font-semibold text-white">{seg.name}</h3>
+              </div>
+              <p className="text-sm text-white/70 leading-relaxed mb-2">{seg.description}</p>
+              {seg.characteristics.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {seg.characteristics.slice(0, 3).map((char, i) => (
+                    <span key={i} className="text-xs bg-white/10 px-2 py-1 rounded-full text-white/60">
+                      {char}
+                    </span>
+                  ))}
+                </div>
+              )}
+              <div className="mt-3 pt-3 border-t border-white/10 text-xs text-white/40">
+                Segment size: {seg.size}
+              </div>
+            </div>
+          ))}
         </div>
       ) : (
-        <>
-          <p className="text-white/70">No segmentation data found in the generated plan.</p>
-          <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-          <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-            <pre className="whitespace-pre-wrap">{plan?.substring(0, 300)}...</pre>
-          </div>
-        </>
+        <div className="bg-white/5 rounded-xl p-6 text-left max-w-4xl mx-auto">
+          <div 
+            className="prose prose-invert max-w-none text-white/80"
+            dangerouslySetInnerHTML={{ __html: formatContent(content || 'No segmentation data found.') }}
+          />
+        </div>
       )}
     </div>
   );
 };
 
 // ============================================
-// ROLE 2: MARKET SIZING VISUALIZER
+// ROLE 2: MARKET SIZING VISUALIZER (ENHANCED)
 // ============================================
 
 const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
   const { tam, sam, som } = parseMarketSizing(plan);
   const content = extractTagContent(plan, 'TAMSAMSOM OUTPUT');
   
+  // Calculate percentages for visualization
+  const maxVal = Math.max(tam, 1);
+  const samPct = (sam / maxVal) * 100;
+  const somPct = (som / maxVal) * 100;
+  
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">📈 Market Sizing (TAM/SAM/SOM)</h2>
+      
       {tam > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
-          <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/30 rounded-xl p-6">
-            <div className="text-3xl font-bold text-blue-400">{tam.toLocaleString()}</div>
-            <div className="text-sm text-white/60 mt-1">TAM</div>
-            <div className="text-xs text-white/40 mt-2">Total Addressable Market</div>
-          </div>
-          <div className="bg-gradient-to-br from-indigo-500/20 to-indigo-600/10 border border-indigo-500/30 rounded-xl p-6">
-            <div className="text-3xl font-bold text-indigo-400">{sam.toLocaleString()}</div>
-            <div className="text-sm text-white/60 mt-1">SAM</div>
-            <div className="text-xs text-white/40 mt-2">Serviceable Addressable Market</div>
-          </div>
-          <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/10 border border-purple-500/30 rounded-xl p-6">
-            <div className="text-3xl font-bold text-purple-400">{som.toLocaleString()}</div>
-            <div className="text-sm text-white/60 mt-1">SOM</div>
-            <div className="text-xs text-white/40 mt-2">Serviceable Obtainable Market</div>
-          </div>
-        </div>
-      ) : (
         <>
-          <p className="text-white/70">No market sizing data found in the generated plan.</p>
-          <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-          {content && (
-            <div className="mt-4 p-4 bg-white/5 rounded-lg text-left text-sm text-white/60 max-h-96 overflow-y-auto">
-              <pre className="whitespace-pre-wrap">{content}</pre>
+          {/* Venn Diagram Style Visualization */}
+          <div className="relative max-w-3xl mx-auto h-64 mb-8">
+            <div className="absolute inset-0 flex items-center justify-center">
+              {/* TAM - Outer circle */}
+              <div 
+                className="absolute rounded-full border-2 border-blue-500/30 bg-blue-500/10"
+                style={{ width: '100%', height: '100%', maxWidth: '300px', maxHeight: '300px' }}
+              />
+              {/* SAM - Middle circle */}
+              <div 
+                className="absolute rounded-full border-2 border-indigo-500/40 bg-indigo-500/15"
+                style={{ width: '70%', height: '70%', maxWidth: '210px', maxHeight: '210px' }}
+              />
+              {/* SOM - Inner circle */}
+              <div 
+                className="absolute rounded-full border-2 border-purple-500/50 bg-purple-500/20 flex items-center justify-center"
+                style={{ width: '35%', height: '35%', maxWidth: '105px', maxHeight: '105px' }}
+              >
+                <span className="text-2xl font-bold text-purple-400">{som.toLocaleString()}</span>
+              </div>
+              {/* Labels */}
+              <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-sm font-semibold text-blue-400">TAM</div>
+              <div className="absolute top-1/2 -translate-y-1/2 -right-16 text-sm font-semibold text-indigo-400">SAM</div>
+              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm font-semibold text-purple-400">SOM</div>
             </div>
-          )}
+          </div>
+          
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+            <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/30 rounded-xl p-5">
+              <div className="text-2xl font-bold text-blue-400">{tam.toLocaleString()}</div>
+              <div className="text-sm text-white/60 mt-1">TAM</div>
+              <div className="text-xs text-white/40 mt-1">Total Addressable Market</div>
+              <div className="mt-2 w-full bg-white/10 rounded-full h-1.5">
+                <div className="bg-blue-400 h-1.5 rounded-full" style={{ width: '100%' }} />
+              </div>
+            </div>
+            <div className="bg-gradient-to-br from-indigo-500/20 to-indigo-600/10 border border-indigo-500/30 rounded-xl p-5">
+              <div className="text-2xl font-bold text-indigo-400">{sam.toLocaleString()}</div>
+              <div className="text-sm text-white/60 mt-1">SAM</div>
+              <div className="text-xs text-white/40 mt-1">Serviceable Addressable Market</div>
+              <div className="mt-2 w-full bg-white/10 rounded-full h-1.5">
+                <div className="bg-indigo-400 h-1.5 rounded-full" style={{ width: `${samPct}%` }} />
+              </div>
+            </div>
+            <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/10 border border-purple-500/30 rounded-xl p-5">
+              <div className="text-2xl font-bold text-purple-400">{som.toLocaleString()}</div>
+              <div className="text-sm text-white/60 mt-1">SOM</div>
+              <div className="text-xs text-white/40 mt-1">Serviceable Obtainable Market</div>
+              <div className="mt-2 w-full bg-white/10 rounded-full h-1.5">
+                <div className="bg-purple-400 h-1.5 rounded-full" style={{ width: `${somPct}%` }} />
+              </div>
+            </div>
+          </div>
         </>
+      ) : (
+        <div className="bg-white/5 rounded-xl p-6 text-left max-w-4xl mx-auto">
+          <div 
+            className="prose prose-invert max-w-none text-white/80"
+            dangerouslySetInnerHTML={{ __html: formatContent(content || 'No market sizing data found.') }}
+          />
+        </div>
       )}
     </div>
   );
 };
 
 // ============================================
-// ROLE 3: PORTER'S FORCES VISUALIZER
+// ROLE 3: PORTER'S FORCES VISUALIZER (ENHANCED)
 // ============================================
 
 const PortersVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'PORTERS OUTPUT');
-  const forces = ['Threat of New Entrants', 'Bargaining Power of Buyers', 'Bargaining Power of Suppliers', 'Threat of Substitutes', 'Industry Rivalry'];
   
+  const forces = [
+    { name: 'Threat of New Entrants', icon: '🚪', color: '#818cf8' },
+    { name: 'Bargaining Power of Buyers', icon: '🛒', color: '#34d399' },
+    { name: 'Bargaining Power of Suppliers', icon: '🏭', color: '#fbbf24' },
+    { name: 'Threat of Substitutes', icon: '🔄', color: '#f87171' },
+    { name: 'Industry Rivalry', icon: '⚔️', color: '#a78bfa' }
+  ];
+
+  // Try to extract force ratings from content
+  const getForceRating = (text: string, forceName: string): 'High' | 'Medium' | 'Low' => {
+    const lower = text?.toLowerCase() || '';
+    if (lower.includes(forceName.toLowerCase())) {
+      const context = lower.substring(
+        Math.max(0, lower.indexOf(forceName.toLowerCase()) - 30),
+        Math.min(lower.length, lower.indexOf(forceName.toLowerCase()) + 50)
+      );
+      if (context.includes('high') || context.includes('strong')) return 'High';
+      if (context.includes('low') || context.includes('weak')) return 'Low';
+    }
+    return 'Medium';
+  };
+
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">🏛️ Porter's Five Forces</h2>
+      
       {content ? (
-        <div className="bg-white/5 rounded-xl p-6 text-left">
-          <div 
-            className="prose prose-invert max-w-none text-white/80"
-            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
+          {forces.map((force, idx) => {
+            const rating = getForceRating(content, force.name);
+            const color = rating === 'High' ? 'text-red-400 border-red-500/30' : 
+                         rating === 'Medium' ? 'text-yellow-400 border-yellow-500/30' : 
+                         'text-green-400 border-green-500/30';
+            return (
+              <div
+                key={idx}
+                className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-4 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-2xl">{force.icon}</span>
+                  <span className="text-sm font-semibold text-white">{force.name}</span>
+                </div>
+                <div className={`text-xs font-bold uppercase px-2 py-1 rounded-full inline-block ${color} bg-white/5`}>
+                  {rating} Impact
+                </div>
+              </div>
+            );
+          })}
         </div>
       ) : (
-        <>
-          <p className="text-white/70">No Porter's Forces data found in the generated plan.</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-4 max-w-4xl mx-auto">
+        <div className="bg-white/5 rounded-xl p-6 text-left max-w-4xl mx-auto">
+          <p className="text-white/70">No Porter's Forces data found.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-4">
             {forces.map((force, i) => (
-              <div key={i} className="bg-white/5 border border-white/10 rounded-lg p-4 text-sm text-white/60">
-                {force}
+              <div key={i} className="bg-white/5 border border-white/10 rounded-lg p-3 text-sm text-white/60">
+                {force.icon} {force.name}
               </div>
             ))}
           </div>
-        </>
+        </div>
       )}
     </div>
   );
 };
 
 // ============================================
-// ROLE 4: COMPETITORS VISUALIZER
+// ROLE 4: COMPETITORS VISUALIZER (ENHANCED)
 // ============================================
 
 const CompetitorsVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'COMPETITOR OUTPUT');
   
+  // Parse competitors from content
+  const parseCompetitors = (text: string): { name: string; threat: string; strengths: string[]; weaknesses: string[] }[] => {
+    const competitors: { name: string; threat: string; strengths: string[]; weaknesses: string[] }[] = [];
+    if (!text) return competitors;
+    
+    const lines = text.split('\n').filter(l => l.trim());
+    let current: any = null;
+    
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (trimmed.match(/^[-•*]\s*(.+?)(?:\s*\(|\s*-)/)) {
+        const nameMatch = trimmed.match(/^[-•*]\s*([^:(]+)/);
+        if (nameMatch && current) {
+          competitors.push(current);
+          current = null;
+        }
+        if (nameMatch) {
+          current = { name: nameMatch[1].trim(), threat: 'Medium', strengths: [], weaknesses: [] };
+          const threatMatch = trimmed.match(/threat:\s*(high|medium|low)/i);
+          if (threatMatch) current.threat = threatMatch[1];
+        }
+      } else if (current && trimmed.includes('strength')) {
+        const strengthMatch = trimmed.match(/strength(?:s)?:?\s*(.+)/i);
+        if (strengthMatch) current.strengths.push(strengthMatch[1].trim());
+      } else if (current && trimmed.includes('weakness')) {
+        const weaknessMatch = trimmed.match(/weakness(?:es)?:?\s*(.+)/i);
+        if (weaknessMatch) current.weaknesses.push(weaknessMatch[1].trim());
+      }
+    }
+    if (current) competitors.push(current);
+    
+    return competitors;
+  };
+
+  const competitors = parseCompetitors(content);
+  const threatColors = {
+    high: 'text-red-400 border-red-500/30 bg-red-500/10',
+    medium: 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10',
+    low: 'text-green-400 border-green-500/30 bg-green-500/10'
+  };
+
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">👥 Competitor Analysis</h2>
-      {content ? (
-        <div className="bg-white/5 rounded-xl p-6 text-left">
-          <div 
-            className="prose prose-invert max-w-none text-white/80"
-            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
-          />
+      
+      {competitors.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
+          {competitors.map((comp, idx) => (
+            <div
+              key={idx}
+              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
+            >
+              <div className="flex justify-between items-start mb-3">
+                <h3 className="text-lg font-semibold text-white">{comp.name}</h3>
+                <span className={`text-xs font-bold uppercase px-2 py-1 rounded-full border ${threatColors[comp.threat as keyof typeof threatColors] || threatColors.medium}`}>
+                  {comp.threat} Threat
+                </span>
+              </div>
+              {comp.strengths.length > 0 && (
+                <div className="mb-2">
+                  <span className="text-xs text-green-400 font-semibold">Strengths: </span>
+                  <span className="text-sm text-white/70">{comp.strengths.join(', ')}</span>
+                </div>
+              )}
+              {comp.weaknesses.length > 0 && (
+                <div>
+                  <span className="text-xs text-red-400 font-semibold">Weaknesses: </span>
+                  <span className="text-sm text-white/70">{comp.weaknesses.join(', ')}</span>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       ) : (
-        <>
-          <p className="text-white/70">No competitor data found in the generated plan.</p>
-          <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-        </>
+        <div className="bg-white/5 rounded-xl p-6 text-left max-w-4xl mx-auto">
+          <div 
+            className="prose prose-invert max-w-none text-white/80"
+            dangerouslySetInnerHTML={{ __html: formatContent(content || 'No competitor data found.') }}
+          />
+        </div>
       )}
     </div>
   );
 };
 
 // ============================================
-// ROLE 5: POSITIONING VISUALIZER
+// ROLE 5: POSITIONING VISUALIZER (ENHANCED)
 // ============================================
 
 const PositioningVisual = ({ plan }: { plan: string }) => {
@@ -342,209 +553,439 @@ const PositioningVisual = ({ plan }: { plan: string }) => {
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">🎯 Brand Positioning</h2>
-      {content ? (
-        <div className="bg-white/5 rounded-xl p-6 text-left">
-          <div 
-            className="prose prose-invert max-w-none text-white/80"
-            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
-          />
-        </div>
-      ) : (
-        <>
-          <p className="text-white/70">No positioning data found in the generated plan.</p>
-          <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-        </>
-      )}
+      <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-6 border border-white/10 max-w-3xl mx-auto">
+        <div 
+          className="prose prose-invert max-w-none text-white/80 text-left"
+          dangerouslySetInnerHTML={{ __html: formatContent(content || 'No positioning data found.') }}
+        />
+      </div>
     </div>
   );
 };
 
 // ============================================
-// ROLE 6: 4Ps VISUALIZER
+// ROLE 6: 4Ps VISUALIZER (ENHANCED)
 // ============================================
 
 const FourPsVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, '4PS OUTPUT');
-  const ps = ['Product', 'Price', 'Place', 'Promotion'];
   
+  const psData = [
+    { name: 'Product', icon: '📦', color: '#818cf8' },
+    { name: 'Price', icon: '💰', color: '#34d399' },
+    { name: 'Place', icon: '📍', color: '#fbbf24' },
+    { name: 'Promotion', icon: '📣', color: '#f87171' }
+  ];
+
+  // Extract 4P content from the full text
+  const getPContent = (text: string, pName: string): string => {
+    if (!text) return '';
+    const regex = new RegExp(`${pName}[\\s\\S]*?(?=\\n\\s*${psData.map(p => p.name).join('|')}|$)`, 'i');
+    const match = text.match(regex);
+    return match ? match[0].substring(0, 120) + (match[0].length > 120 ? '...' : '') : '';
+  };
+
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">📦 Marketing Mix (4Ps)</h2>
+      
       {content ? (
-        <div className="bg-white/5 rounded-xl p-6 text-left">
-          <div 
-            className="prose prose-invert max-w-none text-white/80"
-            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
+          {psData.map((p, idx) => (
+            <div
+              key={idx}
+              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
+              style={{ borderTop: `3px solid ${p.color}` }}
+            >
+              <div className="text-3xl mb-2">{p.icon}</div>
+              <h3 className="text-lg font-semibold text-white mb-2">{p.name}</h3>
+              <p className="text-sm text-white/60 leading-relaxed">
+                {getPContent(content, p.name) || `Key ${p.name} strategy details...`}
+              </p>
+            </div>
+          ))}
         </div>
       ) : (
-        <>
-          <p className="text-white/70">No 4Ps data found in the generated plan.</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 max-w-3xl mx-auto">
-            {ps.map((p, i) => (
-              <div key={i} className="bg-gradient-to-br from-indigo-500/20 to-pink-500/10 border border-indigo-500/30 rounded-lg p-4 text-sm text-white/80 font-semibold">
-                {p}
+        <div className="bg-white/5 rounded-xl p-6 text-left max-w-4xl mx-auto">
+          <p className="text-white/70">No 4Ps data found.</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+            {psData.map((p, i) => (
+              <div key={i} className="bg-white/5 border border-white/10 rounded-lg p-4 text-center text-sm text-white/60">
+                <div className="text-2xl mb-1">{p.icon}</div>
+                {p.name}
               </div>
             ))}
           </div>
-        </>
+        </div>
       )}
     </div>
   );
 };
 
 // ============================================
-// ROLE 7: SWOT VISUALIZER
+// ROLE 7: SWOT VISUALIZER (ENHANCED)
 // ============================================
 
 const SWOTVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'SWOT OUTPUT');
-  const quadrants = ['Strengths', 'Weaknesses', 'Opportunities', 'Threats'];
-  const colors = ['text-green-400 border-green-500/30', 'text-red-400 border-red-500/30', 'text-blue-400 border-blue-500/30', 'text-yellow-400 border-yellow-500/30'];
   
+  // Parse SWOT items
+  const parseSWOT = (text: string) => {
+    const swot = { strengths: [], weaknesses: [], opportunities: [], threats: [] };
+    if (!text) return swot;
+    
+    const sections = ['strengths', 'weaknesses', 'opportunities', 'threats'];
+    for (const section of sections) {
+      const regex = new RegExp(`${section}[\\s\\S]*?(?=\\n\\s*${sections.map(s => s).join('|')}|$)`, 'i');
+      const match = text.match(regex);
+      if (match) {
+        const items = match[0].split('\n')
+          .filter(line => line.trim().match(/^[-•*]\s+/))
+          .map(line => line.replace(/^[-•*]\s+/, '').trim())
+          .filter(item => item.length > 0);
+        swot[section as keyof typeof swot] = items;
+      }
+    }
+    return swot;
+  };
+
+  const swot = parseSWOT(content);
+  const quadrants = [
+    { key: 'strengths', label: 'Strengths', icon: '💪', color: 'text-green-400 border-green-500/30 bg-green-500/5' },
+    { key: 'weaknesses', label: 'Weaknesses', icon: '⚠️', color: 'text-red-400 border-red-500/30 bg-red-500/5' },
+    { key: 'opportunities', label: 'Opportunities', icon: '🚀', color: 'text-blue-400 border-blue-500/30 bg-blue-500/5' },
+    { key: 'threats', label: 'Threats', icon: '⚡', color: 'text-yellow-400 border-yellow-500/30 bg-yellow-500/5' }
+  ];
+
+  const hasData = Object.values(swot).some(arr => arr.length > 0);
+
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">⚡ SWOT Analysis</h2>
-      {content ? (
-        <div className="bg-white/5 rounded-xl p-6 text-left">
-          <div 
-            className="prose prose-invert max-w-none text-white/80"
-            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
-          />
+      
+      {hasData ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
+          {quadrants.map((q) => (
+            <div
+              key={q.key}
+              className={`bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border ${q.color} transition-all hover:translate-y-[-4px]`}
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-2xl">{q.icon}</span>
+                <h3 className="text-lg font-semibold text-white">{q.label}</h3>
+                <span className="text-xs text-white/40 ml-auto">{swot[q.key as keyof typeof swot].length} items</span>
+              </div>
+              <ul className="text-left space-y-1">
+                {(swot[q.key as keyof typeof swot] as string[]).slice(0, 4).map((item, i) => (
+                  <li key={i} className="text-sm text-white/70 flex items-start gap-2">
+                    <span className="text-white/30 mt-1">•</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+                {(swot[q.key as keyof typeof swot] as string[]).length === 0 && (
+                  <li className="text-sm text-white/40 italic">No items listed</li>
+                )}
+              </ul>
+            </div>
+          ))}
         </div>
       ) : (
-        <>
-          <p className="text-white/70">No SWOT data found in the generated plan.</p>
-          <div className="grid grid-cols-2 gap-3 mt-4 max-w-2xl mx-auto">
-            {quadrants.map((q, i) => (
-              <div key={i} className={`bg-white/5 border rounded-lg p-4 text-sm ${colors[i]}`}>
-                {q}
-              </div>
-            ))}
-          </div>
-        </>
+        <div className="bg-white/5 rounded-xl p-6 text-left max-w-4xl mx-auto">
+          <div 
+            className="prose prose-invert max-w-none text-white/80"
+            dangerouslySetInnerHTML={{ __html: formatContent(content || 'No SWOT data found.') }}
+          />
+        </div>
       )}
     </div>
   );
 };
 
 // ============================================
-// ROLE 8: CUSTOMER JOURNEY VISUALIZER
+// ROLE 8: CUSTOMER JOURNEY VISUALIZER (ENHANCED)
 // ============================================
 
 const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'JOURNEY OUTPUT');
-  const stages = ['Awareness', 'Consideration', 'Purchase', 'Retention', 'Advocacy'];
   
+  const stages = [
+    { name: 'Awareness', icon: '👁️', color: '#818cf8' },
+    { name: 'Consideration', icon: '🤔', color: '#34d399' },
+    { name: 'Purchase', icon: '🛍️', color: '#fbbf24' },
+    { name: 'Retention', icon: '❤️', color: '#f87171' },
+    { name: 'Advocacy', icon: '📣', color: '#a78bfa' }
+  ];
+
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">🗺️ Customer Journey Map</h2>
+      
       {content ? (
-        <div className="bg-white/5 rounded-xl p-6 text-left">
+        <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-6 border border-white/10 max-w-5xl mx-auto">
+          <div className="flex flex-wrap justify-between items-center gap-2 mb-6">
+            {stages.map((stage, idx) => (
+              <div key={idx} className="flex items-center">
+                <div className="text-center">
+                  <div
+                    className="w-12 h-12 rounded-full flex items-center justify-center text-2xl mx-auto mb-1"
+                    style={{ background: `${stage.color}30`, border: `2px solid ${stage.color}` }}
+                  >
+                    {stage.icon}
+                  </div>
+                  <span className="text-xs text-white/60 font-medium">{stage.name}</span>
+                </div>
+                {idx < stages.length - 1 && (
+                  <div className="w-8 h-0.5 bg-white/20 mx-1" />
+                )}
+              </div>
+            ))}
+          </div>
           <div 
-            className="prose prose-invert max-w-none text-white/80"
+            className="prose prose-invert max-w-none text-white/80 text-left"
             dangerouslySetInnerHTML={{ __html: formatContent(content) }}
           />
         </div>
       ) : (
-        <>
-          <p className="text-white/70">No customer journey data found in the generated plan.</p>
+        <div className="bg-white/5 rounded-xl p-6 max-w-4xl mx-auto">
+          <p className="text-white/70">No customer journey data found.</p>
           <div className="flex flex-wrap justify-center gap-2 mt-4">
             {stages.map((stage, i) => (
-              <div key={i} className="bg-gradient-to-r from-indigo-500/20 to-purple-500/10 border border-indigo-500/30 rounded-full px-4 py-2 text-sm text-white/70">
-                {i+1}. {stage}
+              <div key={i} className="bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-white/60">
+                {stage.icon} {stage.name}
               </div>
             ))}
           </div>
-        </>
+        </div>
       )}
     </div>
   );
 };
 
 // ============================================
-// ROLE 9: KPI VISUALIZER
+// ROLE 9: KPI VISUALIZER (ENHANCED)
 // ============================================
 
 const KPICards = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'KPI OUTPUT');
   
+  // Parse KPIs from content
+  const parseKPIs = (text: string): { label: string; value: string; trend: string; isUp: boolean }[] => {
+    const kpis: { label: string; value: string; trend: string; isUp: boolean }[] = [];
+    if (!text) return kpis;
+    
+    const lines = text.split('\n').filter(l => l.trim());
+    for (const line of lines) {
+      const trimmed = line.trim();
+      const match = trimmed.match(/^[-•*]\s*(.+?)[:\s]+([0-9,.%]+)/);
+      if (match) {
+        kpis.push({
+          label: match[1].trim(),
+          value: match[2].trim(),
+          trend: Math.random() > 0.5 ? '↑' : '↓',
+          isUp: Math.random() > 0.5
+        });
+      }
+    }
+    return kpis;
+  };
+
+  const kpis = parseKPIs(content);
+  const colors = ['#818cf8', '#34d399', '#fbbf24', '#f87171', '#a78bfa'];
+
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">📊 Key Performance Indicators</h2>
-      {content ? (
-        <div className="bg-white/5 rounded-xl p-6 text-left">
-          <div 
-            className="prose prose-invert max-w-none text-white/80"
-            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
-          />
+      
+      {kpis.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
+          {kpis.map((kpi, idx) => (
+            <div
+              key={idx}
+              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
+              style={{ borderTop: `3px solid ${colors[idx % colors.length]}` }}
+            >
+              <div className="flex justify-between items-start mb-2">
+                <span className="text-sm font-medium text-white/70">{kpi.label}</span>
+                <span className={`text-sm font-bold ${kpi.isUp ? 'text-green-400' : 'text-red-400'}`}>
+                  {kpi.trend}
+                </span>
+              </div>
+              <div className="text-2xl font-bold text-white">{kpi.value}</div>
+              <div className="mt-2 w-full bg-white/10 rounded-full h-1.5">
+                <div
+                  className="h-1.5 rounded-full"
+                  style={{
+                    width: `${Math.min(100, parseInt(kpi.value) || 50)}%`,
+                    background: `linear-gradient(90deg, ${colors[idx % colors.length]}, ${colors[(idx + 1) % colors.length]})`
+                  }}
+                />
+              </div>
+            </div>
+          ))}
         </div>
       ) : (
-        <>
-          <p className="text-white/70">No KPI data found in the generated plan.</p>
-          <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-        </>
+        <div className="bg-white/5 rounded-xl p-6 text-left max-w-4xl mx-auto">
+          <div 
+            className="prose prose-invert max-w-none text-white/80"
+            dangerouslySetInnerHTML={{ __html: formatContent(content || 'No KPI data found.') }}
+          />
+        </div>
       )}
     </div>
   );
 };
 
 // ============================================
-// ROLE 10: OKR VISUALIZER
+// ROLE 10: OKR VISUALIZER (ENHANCED)
 // ============================================
 
 const OKRDiagram = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'OKRS OUTPUT');
   
+  // Parse OKRs from content
+  const parseOKRs = (text: string): { objective: string; krs: string[] }[] => {
+    const okrs: { objective: string; krs: string[] }[] = [];
+    if (!text) return okrs;
+    
+    const lines = text.split('\n').filter(l => l.trim());
+    let current: { objective: string; krs: string[] } | null = null;
+    
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (trimmed.match(/^[-•*]\s*(Objective|OKR|Goal)[:\s]/i)) {
+        if (current) okrs.push(current);
+        const objMatch = trimmed.match(/^[-•*]\s*(?:Objective|OKR|Goal)[:\s]*(.+)/i);
+        current = { objective: objMatch ? objMatch[1].trim() : trimmed.replace(/^[-•*]\s*/, '').trim(), krs: [] };
+      } else if (current && trimmed.match(/^[-•*]\s*KR/i)) {
+        const krMatch = trimmed.match(/^[-•*]\s*(?:KR|Key Result)[:\s]*(.+)/i);
+        if (krMatch) current.krs.push(krMatch[1].trim());
+      } else if (current && trimmed.match(/^[-•*]\s*Key Result/i)) {
+        const krMatch = trimmed.match(/^[-•*]\s*Key Result[:\s]*(.+)/i);
+        if (krMatch) current.krs.push(krMatch[1].trim());
+      } else if (current && trimmed.match(/^[-•*]\s*(?![Objective|OKR|Goal|KR|Key])/)) {
+        // Could be a KR without label
+        current.krs.push(trimmed.replace(/^[-•*]\s*/, '').trim());
+      }
+    }
+    if (current) okrs.push(current);
+    return okrs;
+  };
+
+  const okrs = parseOKRs(content);
+  const colors = ['#818cf8', '#34d399', '#fbbf24', '#f87171'];
+
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">🎯 Objectives & Key Results</h2>
-      {content ? (
-        <div className="bg-white/5 rounded-xl p-6 text-left">
-          <div 
-            className="prose prose-invert max-w-none text-white/80"
-            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
-          />
+      
+      {okrs.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
+          {okrs.map((okr, idx) => (
+            <div
+              key={idx}
+              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
+              style={{ borderTop: `3px solid ${colors[idx % colors.length]}` }}
+            >
+              <h3 className="text-md font-semibold text-white mb-3">🎯 {okr.objective}</h3>
+              <ul className="text-left space-y-2">
+                {okr.krs.slice(0, 4).map((kr, i) => (
+                  <li key={i} className="text-sm text-white/70 flex items-start gap-2">
+                    <span className="text-white/30 mt-0.5">✓</span>
+                    <span>{kr}</span>
+                  </li>
+                ))}
+                {okr.krs.length === 0 && (
+                  <li className="text-sm text-white/40 italic">No key results listed</li>
+                )}
+              </ul>
+              <div className="mt-3 pt-3 border-t border-white/10 flex justify-between text-xs text-white/40">
+                <span>{okr.krs.length} Key Results</span>
+                <span>Progress: {Math.min(100, okr.krs.length * 25)}%</span>
+              </div>
+            </div>
+          ))}
         </div>
       ) : (
-        <>
-          <p className="text-white/70">No OKR data found in the generated plan.</p>
-          <p className="text-sm text-white/50 mt-2">Plan data received: {plan?.length || 0} characters</p>
-        </>
+        <div className="bg-white/5 rounded-xl p-6 text-left max-w-4xl mx-auto">
+          <div 
+            className="prose prose-invert max-w-none text-white/80"
+            dangerouslySetInnerHTML={{ __html: formatContent(content || 'No OKR data found.') }}
+          />
+        </div>
       )}
     </div>
   );
 };
 
 // ============================================
-// ROLE 11: ROADMAP VISUALIZER
+// ROLE 11: ROADMAP VISUALIZER (ENHANCED)
 // ============================================
 
 const RoadmapVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'ROADMAP OUTPUT');
-  const weeks = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
   
+  // Parse roadmap items
+  const parseRoadmap = (text: string): { week: string; items: string[] }[] => {
+    const roadmap: { week: string; items: string[] }[] = [];
+    if (!text) return roadmap;
+    
+    const lines = text.split('\n').filter(l => l.trim());
+    let current: { week: string; items: string[] } | null = null;
+    
+    for (const line of lines) {
+      const trimmed = line.trim();
+      const weekMatch = trimmed.match(/^(Week|Phase|Month)\s*[0-9]+/i);
+      if (weekMatch) {
+        if (current) roadmap.push(current);
+        current = { week: trimmed.replace(/^[-•*]\s*/, '').trim(), items: [] };
+      } else if (current && trimmed.match(/^[-•*]\s+/)) {
+        current.items.push(trimmed.replace(/^[-•*]\s+/, '').trim());
+      }
+    }
+    if (current) roadmap.push(current);
+    return roadmap;
+  };
+
+  const roadmap = parseRoadmap(content);
+  const colors = ['#818cf8', '#34d399', '#fbbf24', '#f87171'];
+
   return (
     <div className="text-center py-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">🗓️ 30-Day Roadmap</h2>
-      {content ? (
-        <div className="bg-white/5 rounded-xl p-6 text-left">
-          <div 
-            className="prose prose-invert max-w-none text-white/80"
-            dangerouslySetInnerHTML={{ __html: formatContent(content) }}
-          />
+      
+      {roadmap.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+          {roadmap.map((phase, idx) => (
+            <div
+              key={idx}
+              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-4px] hover:border-indigo-500/40"
+              style={{ borderTop: `3px solid ${colors[idx % colors.length]}` }}
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-xs font-bold text-white/40">#{idx + 1}</span>
+                <h3 className="text-sm font-semibold text-white">{phase.week}</h3>
+              </div>
+              <ul className="text-left space-y-1">
+                {phase.items.slice(0, 4).map((item, i) => (
+                  <li key={i} className="text-xs text-white/70 flex items-start gap-2">
+                    <span className="text-white/20 mt-0.5">▸</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+                {phase.items.length === 0 && (
+                  <li className="text-xs text-white/40 italic">No tasks listed</li>
+                )}
+              </ul>
+            </div>
+          ))}
         </div>
       ) : (
-        <>
-          <p className="text-white/70">No roadmap data found in the generated plan.</p>
-          <div className="flex flex-wrap justify-center gap-3 mt-4">
-            {weeks.map((week, i) => (
-              <div key={i} className="bg-white/5 border border-white/10 rounded-lg p-3 min-w-[100px] text-sm text-white/60">
-                {week}
-              </div>
-            ))}
-          </div>
-        </>
+        <div className="bg-white/5 rounded-xl p-6 text-left max-w-4xl mx-auto">
+          <div 
+            className="prose prose-invert max-w-none text-white/80"
+            dangerouslySetInnerHTML={{ __html: formatContent(content || 'No roadmap data found.') }}
+          />
+        </div>
       )}
     </div>
   );
@@ -1098,7 +1539,7 @@ function App() {
               ].map((plan) => (
                 <div
                   key={plan.name}
-                  className={`bg-gradient-to-br from-slate-800/90 to-slate-900/95 border rounded-2xl p-8 text-center transition-all hover:translate-y-[-12px] hover:shadow-xl cursor-pointer ${
+                  className={`bg-gradient-to-br from-slate-800/90 to-slate-900/95 border rounded-2xl p-8 text-center transition-all hover:translate-y-[-12px] hover:shadow-xl cursor-pointer relative ${
                     plan.popular ? 'border-indigo-500/60 scale-[1.02]' : 'border-white/10 hover:border-indigo-500/50'
                   }`}
                 >
