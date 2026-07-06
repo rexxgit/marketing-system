@@ -584,123 +584,138 @@ const SegmentationVisual = ({ plan }: { plan: string }) => {
 // ROLE 3: MARKET SIZING EXPERT (FIXED PARSING)
 // ============================================
 
+// ============================================
+// ROLE 3: MARKET SIZING EXPERT (COMPLETE REWRITE)
+// ============================================
+
 const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
   const [showTAMDetails, setShowTAMDetails] = useState(false);
   const [showSAMDetails, setShowSAMDetails] = useState(false);
   const [showSOMDetails, setShowSOMDetails] = useState(false);
 
-  const parseMarketSizingData = (): { tam: number; sam: number; som: number } => {
+  const extractMarketSizingData = (): { tam: number; sam: number; som: number } => {
     let tam = 0, sam = 0, som = 0;
     
-    if (!plan) return { tam, sam, som };
-    
-    // Try multiple approaches to find TAM/SAM/SOM data
-    
-    // Approach 1: Look for [TAMSAMSOM OUTPUT] tag
-    let content = extractTagContent(plan, 'TAMSAMSOM OUTPUT');
-    
-    // Approach 2: Look for [MARKET SIZING] tag
-    if (!content) {
-      content = extractTagContent(plan, 'MARKET SIZING');
+    if (!plan || typeof plan !== 'string') {
+      console.log('❌ No plan data available');
+      return { tam, sam, som };
     }
+
+    console.log('🔍 Searching for market sizing data in plan...');
+    console.log('📄 Plan length:', plan.length);
     
-    // Approach 3: Look for bold headers
-    if (!content) {
-      const boldMatch = plan.match(/\*\*TAMSAMSOM OUTPUT\*\*([\s\S]*?)(?=\n\n---|\n\*\*|$)/i);
-      if (boldMatch && boldMatch[1]) {
-        content = boldMatch[1].trim();
-      }
-    }
+    // Search the entire plan for any numbers that might be market sizing
+    // Look for common patterns
     
-    // Approach 4: Search the entire plan for TAM/SAM/SOM patterns
-    const fullPlanSearch = (text: string) => {
-      // Look for patterns like "TAM: 1,500,000" or "TAM - 1.5M" or "TAM = 1500000"
-      const patterns = [
-        /TAM\s*[:=]\s*([0-9,]+(?:\.[0-9]+)?)/i,
-        /TAM\s*[-–—]\s*([0-9,]+(?:\.[0-9]+)?)/i,
-        /TAM\s*:\s*([0-9,]+(?:\.[0-9]+)?)/i,
-        /Total Addressable Market\s*[:=]\s*([0-9,]+(?:\.[0-9]+)?)/i,
-        /Total Addressable Market\s*[-–—]\s*([0-9,]+(?:\.[0-9]+)?)/i,
-        /Addressable Market\s*[:=]\s*([0-9,]+(?:\.[0-9]+)?)/i,
-      ];
-      
-      for (const pattern of patterns) {
-        const match = text.match(pattern);
-        if (match) {
-          const val = parseFloat(match[1].replace(/,/g, ''));
-          if (!isNaN(val) && val > 0) return val;
+    // 1. Look for TAM with various formats
+    const tamPatterns = [
+      /TAM\s*[:=]\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /TAM\s*[-–—]\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /TAM\s*:\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /TAM\s*=\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /TAM\s+([0-9,]+(?:\.[0-9]+)?)/i,
+      /Total Addressable Market\s*[:=]\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /Total Addressable Market\s*[-–—]\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /Addressable Market\s*[:=]\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /Total Market\s*[:=]\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /\[TAMSAMSOM OUTPUT\][\s\S]*?TAM[:\s]*([0-9,]+(?:\.[0-9]+)?)/i,
+      /\[MARKET SIZING\][\s\S]*?TAM[:\s]*([0-9,]+(?:\.[0-9]+)?)/i,
+    ];
+    
+    for (const pattern of tamPatterns) {
+      const match = plan.match(pattern);
+      if (match && match[1]) {
+        const val = parseFloat(match[1].replace(/,/g, ''));
+        if (!isNaN(val) && val > 0) {
+          tam = val;
+          console.log(`✅ Found TAM: ${tam} via pattern: ${pattern}`);
+          break;
         }
       }
-      return 0;
-    };
+    }
     
-    // Try to parse from content first
-    if (content) {
-      // Extract TAM
-      const tamMatch = content.match(/TAM[:\s]*([0-9,]+(?:\.[0-9]+)?)/i);
-      if (tamMatch) {
-        tam = parseFloat(tamMatch[1].replace(/,/g, ''));
-        if (isNaN(tam)) tam = 0;
+    // 2. Look for SAM with various formats
+    const samPatterns = [
+      /SAM\s*[:=]\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /SAM\s*[-–—]\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /SAM\s*:\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /SAM\s*=\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /SAM\s+([0-9,]+(?:\.[0-9]+)?)/i,
+      /Serviceable Available Market\s*[:=]\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /Serviceable Available Market\s*[-–—]\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /\[TAMSAMSOM OUTPUT\][\s\S]*?SAM[:\s]*([0-9,]+(?:\.[0-9]+)?)/i,
+      /\[MARKET SIZING\][\s\S]*?SAM[:\s]*([0-9,]+(?:\.[0-9]+)?)/i,
+    ];
+    
+    for (const pattern of samPatterns) {
+      const match = plan.match(pattern);
+      if (match && match[1]) {
+        const val = parseFloat(match[1].replace(/,/g, ''));
+        if (!isNaN(val) && val > 0) {
+          sam = val;
+          console.log(`✅ Found SAM: ${sam} via pattern: ${pattern}`);
+          break;
+        }
       }
-      
-      // Extract SAM
-      const samMatch = content.match(/SAM[:\s]*([0-9,]+(?:\.[0-9]+)?)/i);
-      if (samMatch) {
-        sam = parseFloat(samMatch[1].replace(/,/g, ''));
-        if (isNaN(sam)) sam = 0;
+    }
+    
+    // 3. Look for SOM with various formats
+    const somPatterns = [
+      /SOM\s*[:=]\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /SOM\s*[-–—]\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /SOM\s*:\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /SOM\s*=\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /SOM\s+([0-9,]+(?:\.[0-9]+)?)/i,
+      /Serviceable Obtainable Market\s*[:=]\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /Serviceable Obtainable Market\s*[-–—]\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      /\[TAMSAMSOM OUTPUT\][\s\S]*?SOM[:\s]*([0-9,]+(?:\.[0-9]+)?)/i,
+      /\[MARKET SIZING\][\s\S]*?SOM[:\s]*([0-9,]+(?:\.[0-9]+)?)/i,
+    ];
+    
+    for (const pattern of somPatterns) {
+      const match = plan.match(pattern);
+      if (match && match[1]) {
+        const val = parseFloat(match[1].replace(/,/g, ''));
+        if (!isNaN(val) && val > 0) {
+          som = val;
+          console.log(`✅ Found SOM: ${som} via pattern: ${pattern}`);
+          break;
+        }
       }
-      
-      // Extract SOM
-      const somMatch = content.match(/SOM[:\s]*([0-9,]+(?:\.[0-9]+)?)/i);
-      if (somMatch) {
-        som = parseFloat(somMatch[1].replace(/,/g, ''));
-        if (isNaN(som)) som = 0;
-      }
     }
     
-    // If still no data, search the full plan
-    if (tam === 0) {
-      const tamVal = fullPlanSearch(plan);
-      if (tamVal > 0) tam = tamVal;
-    }
-    
-    if (sam === 0) {
-      const samVal = fullPlanSearch(plan.replace(/TAM/g, 'SAM'));
-      if (samVal > 0) sam = samVal;
-    }
-    
-    if (som === 0) {
-      const somVal = fullPlanSearch(plan.replace(/TAM/g, 'SOM'));
-      if (somVal > 0) som = somVal;
-    }
-    
-    // If only TAM is found, calculate SAM and SOM
-    if (tam > 0 && sam === 0 && som === 0) {
+    // If we found TAM but not SAM/SOM, estimate them
+    if (tam > 0 && sam === 0) {
       sam = Math.round(tam * 0.6);
-      som = Math.round(sam * 0.15);
-    } else if (tam > 0 && sam > 0 && som === 0) {
-      som = Math.round(sam * 0.15);
+      console.log(`📊 Estimated SAM: ${sam} (60% of TAM)`);
     }
     
-    // If we have SAM but no TAM, estimate TAM
+    if (sam > 0 && som === 0) {
+      som = Math.round(sam * 0.15);
+      console.log(`📊 Estimated SOM: ${som} (15% of SAM)`);
+    }
+    
+    // If we found SAM but not TAM, estimate TAM
     if (sam > 0 && tam === 0) {
       tam = Math.round(sam * 1.67);
+      console.log(`📊 Estimated TAM: ${tam} (from SAM)`);
     }
     
-    // If we have SOM but no SAM, estimate SAM
-    if (som > 0 && sam === 0 && tam > 0) {
+    // If we found SOM but not SAM, estimate SAM
+    if (som > 0 && sam === 0) {
       sam = Math.round(som * 6.67);
+      console.log(`📊 Estimated SAM: ${sam} (from SOM)`);
+      if (tam === 0) {
+        tam = Math.round(sam * 1.67);
+        console.log(`📊 Estimated TAM: ${tam} (from SAM)`);
+      }
     }
     
-    // Ensure minimum values for display (but only if we have some data)
-    if (tam > 0 && sam === 0) sam = Math.round(tam * 0.6);
-    if (tam > 0 && som === 0) som = Math.round((sam || tam * 0.6) * 0.15);
-    
-    console.log('📊 Parsed Market Sizing:', { tam, sam, som });
+    console.log(`📊 Final market sizing data: TAM=${tam}, SAM=${sam}, SOM=${som}`);
     return { tam, sam, som };
   };
 
-  const { tam, sam, som } = parseMarketSizingData();
+  const { tam, sam, som } = extractMarketSizingData();
   const hasData = tam > 0 || sam > 0 || som > 0;
 
   const formatValue = (val: number): string => {
@@ -723,24 +738,24 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
       {!hasData ? (
         <div className="text-center py-10 text-white/50">
           <p>No market sizing data found in the generated plan.</p>
-          <p className="text-sm mt-2">The plan should contain TAM/SAM/SOM data in one of these formats:</p>
-          <div className="mt-4 text-xs text-white/30 max-w-md mx-auto text-left bg-white/5 p-4 rounded-lg">
-            <p>• <strong>TAM:</strong> 2,500,000</p>
-            <p>• <strong>TAM -</strong> 2.5M</p>
-            <p>• <strong>Total Addressable Market:</strong> $2,500,000</p>
-            <p className="mt-2">Or with tags:</p>
-            <p>• <strong>[TAMSAMSOM OUTPUT]</strong></p>
-            <p>• <strong>[MARKET SIZING]</strong></p>
-          </div>
+          <p className="text-sm mt-2">The plan should contain TAM/SAM/SOM data.</p>
           <details className="mt-4 text-left text-xs text-white/30 max-w-md mx-auto">
-            <summary>Debug: Show plan preview</summary>
-            <pre className="mt-2 p-2 bg-white/5 rounded overflow-auto max-h-60 whitespace-pre-wrap text-xs">
-              {plan?.substring(0, 1500) || 'No plan data'}
+            <summary>🔍 Click to see what the plan contains</summary>
+            <pre className="mt-2 p-3 bg-white/5 rounded overflow-auto max-h-80 whitespace-pre-wrap text-xs text-white/50">
+              {plan?.substring(0, 2000) || 'No plan data'}
             </pre>
           </details>
         </div>
       ) : (
         <>
+          <div className="flex justify-center items-center gap-4 mb-4 text-sm text-white/40">
+            <span>✅ Data found: TAM {formatValue(tam)}</span>
+            <span>|</span>
+            <span>✅ SAM {formatValue(sam)}</span>
+            <span>|</span>
+            <span>✅ SOM {formatValue(som)}</span>
+          </div>
+          
           <div className="relative mx-auto" style={{ width: '30em', height: '28em', maxWidth: '100%' }}>
             {/* TAM - Outer circle */}
             <div
