@@ -580,17 +580,140 @@ const SegmentationVisual = ({ plan }: { plan: string }) => {
 // ROLE 3: MARKET SIZING EXPERT
 // ============================================
 
+// ============================================
+// ROLE 3: MARKET SIZING EXPERT (FIXED PARSING)
+// ============================================
+
 const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
   const [showTAMDetails, setShowTAMDetails] = useState(false);
   const [showSAMDetails, setShowSAMDetails] = useState(false);
   const [showSOMDetails, setShowSOMDetails] = useState(false);
 
-  const { tam, sam, som } = parseMarketSizing(plan);
+  const parseMarketSizingData = (): { tam: number; sam: number; som: number } => {
+    let tam = 0, sam = 0, som = 0;
+    
+    if (!plan) return { tam, sam, som };
+    
+    // Try multiple approaches to find TAM/SAM/SOM data
+    
+    // Approach 1: Look for [TAMSAMSOM OUTPUT] tag
+    let content = extractTagContent(plan, 'TAMSAMSOM OUTPUT');
+    
+    // Approach 2: Look for [MARKET SIZING] tag
+    if (!content) {
+      content = extractTagContent(plan, 'MARKET SIZING');
+    }
+    
+    // Approach 3: Look for bold headers
+    if (!content) {
+      const boldMatch = plan.match(/\*\*TAMSAMSOM OUTPUT\*\*([\s\S]*?)(?=\n\n---|\n\*\*|$)/i);
+      if (boldMatch && boldMatch[1]) {
+        content = boldMatch[1].trim();
+      }
+    }
+    
+    // Approach 4: Search the entire plan for TAM/SAM/SOM patterns
+    const fullPlanSearch = (text: string) => {
+      // Look for patterns like "TAM: 1,500,000" or "TAM - 1.5M" or "TAM = 1500000"
+      const patterns = [
+        /TAM\s*[:=]\s*([0-9,]+(?:\.[0-9]+)?)/i,
+        /TAM\s*[-–—]\s*([0-9,]+(?:\.[0-9]+)?)/i,
+        /TAM\s*:\s*([0-9,]+(?:\.[0-9]+)?)/i,
+        /Total Addressable Market\s*[:=]\s*([0-9,]+(?:\.[0-9]+)?)/i,
+        /Total Addressable Market\s*[-–—]\s*([0-9,]+(?:\.[0-9]+)?)/i,
+        /Addressable Market\s*[:=]\s*([0-9,]+(?:\.[0-9]+)?)/i,
+      ];
+      
+      for (const pattern of patterns) {
+        const match = text.match(pattern);
+        if (match) {
+          const val = parseFloat(match[1].replace(/,/g, ''));
+          if (!isNaN(val) && val > 0) return val;
+        }
+      }
+      return 0;
+    };
+    
+    // Try to parse from content first
+    if (content) {
+      // Extract TAM
+      const tamMatch = content.match(/TAM[:\s]*([0-9,]+(?:\.[0-9]+)?)/i);
+      if (tamMatch) {
+        tam = parseFloat(tamMatch[1].replace(/,/g, ''));
+        if (isNaN(tam)) tam = 0;
+      }
+      
+      // Extract SAM
+      const samMatch = content.match(/SAM[:\s]*([0-9,]+(?:\.[0-9]+)?)/i);
+      if (samMatch) {
+        sam = parseFloat(samMatch[1].replace(/,/g, ''));
+        if (isNaN(sam)) sam = 0;
+      }
+      
+      // Extract SOM
+      const somMatch = content.match(/SOM[:\s]*([0-9,]+(?:\.[0-9]+)?)/i);
+      if (somMatch) {
+        som = parseFloat(somMatch[1].replace(/,/g, ''));
+        if (isNaN(som)) som = 0;
+      }
+    }
+    
+    // If still no data, search the full plan
+    if (tam === 0) {
+      const tamVal = fullPlanSearch(plan);
+      if (tamVal > 0) tam = tamVal;
+    }
+    
+    if (sam === 0) {
+      const samVal = fullPlanSearch(plan.replace(/TAM/g, 'SAM'));
+      if (samVal > 0) sam = samVal;
+    }
+    
+    if (som === 0) {
+      const somVal = fullPlanSearch(plan.replace(/TAM/g, 'SOM'));
+      if (somVal > 0) som = somVal;
+    }
+    
+    // If only TAM is found, calculate SAM and SOM
+    if (tam > 0 && sam === 0 && som === 0) {
+      sam = Math.round(tam * 0.6);
+      som = Math.round(sam * 0.15);
+    } else if (tam > 0 && sam > 0 && som === 0) {
+      som = Math.round(sam * 0.15);
+    }
+    
+    // If we have SAM but no TAM, estimate TAM
+    if (sam > 0 && tam === 0) {
+      tam = Math.round(sam * 1.67);
+    }
+    
+    // If we have SOM but no SAM, estimate SAM
+    if (som > 0 && sam === 0 && tam > 0) {
+      sam = Math.round(som * 6.67);
+    }
+    
+    // Ensure minimum values for display (but only if we have some data)
+    if (tam > 0 && sam === 0) sam = Math.round(tam * 0.6);
+    if (tam > 0 && som === 0) som = Math.round((sam || tam * 0.6) * 0.15);
+    
+    console.log('📊 Parsed Market Sizing:', { tam, sam, som });
+    return { tam, sam, som };
+  };
+
+  const { tam, sam, som } = parseMarketSizingData();
   const hasData = tam > 0 || sam > 0 || som > 0;
 
   const formatValue = (val: number): string => {
     if (val === 0) return 'N/A';
-    return val >= 1000000 ? (val / 1000000).toFixed(1) + 'M' : (val / 1000).toFixed(0) + 'K';
+    if (val >= 1000000000) return (val / 1000000000).toFixed(1) + 'B';
+    if (val >= 1000000) return (val / 1000000).toFixed(1) + 'M';
+    if (val >= 1000) return (val / 1000).toFixed(0) + 'K';
+    return val.toString();
+  };
+
+  const formatFullValue = (val: number): string => {
+    if (val === 0) return 'N/A';
+    return 'ETB ' + val.toLocaleString();
   };
 
   return (
@@ -600,11 +723,26 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
       {!hasData ? (
         <div className="text-center py-10 text-white/50">
           <p>No market sizing data found in the generated plan.</p>
-          <p className="text-sm mt-2">Generate a new plan with TAM/SAM/SOM data.</p>
+          <p className="text-sm mt-2">The plan should contain TAM/SAM/SOM data in one of these formats:</p>
+          <div className="mt-4 text-xs text-white/30 max-w-md mx-auto text-left bg-white/5 p-4 rounded-lg">
+            <p>• <strong>TAM:</strong> 2,500,000</p>
+            <p>• <strong>TAM -</strong> 2.5M</p>
+            <p>• <strong>Total Addressable Market:</strong> $2,500,000</p>
+            <p className="mt-2">Or with tags:</p>
+            <p>• <strong>[TAMSAMSOM OUTPUT]</strong></p>
+            <p>• <strong>[MARKET SIZING]</strong></p>
+          </div>
+          <details className="mt-4 text-left text-xs text-white/30 max-w-md mx-auto">
+            <summary>Debug: Show plan preview</summary>
+            <pre className="mt-2 p-2 bg-white/5 rounded overflow-auto max-h-60 whitespace-pre-wrap text-xs">
+              {plan?.substring(0, 1500) || 'No plan data'}
+            </pre>
+          </details>
         </div>
       ) : (
         <>
           <div className="relative mx-auto" style={{ width: '30em', height: '28em', maxWidth: '100%' }}>
+            {/* TAM - Outer circle */}
             <div
               className="absolute rounded-full cursor-pointer transition-all duration-300 hover:scale-105"
               style={{
@@ -628,6 +766,7 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
               </div>
             </div>
 
+            {/* SAM - Middle circle */}
             <div
               className="absolute rounded-full cursor-pointer transition-all duration-300 hover:scale-105"
               style={{
@@ -650,6 +789,7 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
               </div>
             </div>
 
+            {/* SOM - Inner circle */}
             <div
               className="absolute rounded-full cursor-pointer transition-all duration-300 hover:scale-105"
               style={{
@@ -686,10 +826,10 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
               className={`p-4 rounded-xl cursor-pointer transition-all ${showTAMDetails ? 'bg-red-500/20 border border-red-500/40' : 'bg-white/5 border border-white/10'}`}
               onClick={() => setShowTAMDetails(!showTAMDetails)}
             >
-              <div className="text-red-300 text-sm font-semibold mb-2">🌍 TAM - Total Addressable Market</div>
-              <div className="text-2xl font-bold text-white">{formatValue(tam)}</div>
+              <div className="text-red-300 text-sm font-semibold mb-2">🌍 TAM</div>
+              <div className="text-2xl font-bold text-white">{formatFullValue(tam)}</div>
               {showTAMDetails && (
-                <div className="text-xs text-white/70 mt-2">Total market demand for your product/service</div>
+                <div className="text-xs text-white/70 mt-2">Total Addressable Market</div>
               )}
             </div>
 
@@ -697,10 +837,10 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
               className={`p-4 rounded-xl cursor-pointer transition-all ${showSAMDetails ? 'bg-cyan-500/20 border border-cyan-500/40' : 'bg-white/5 border border-white/10'}`}
               onClick={() => setShowSAMDetails(!showSAMDetails)}
             >
-              <div className="text-cyan-300 text-sm font-semibold mb-2">🖐️ SAM - Serviceable Available Market</div>
-              <div className="text-2xl font-bold text-white">{formatValue(sam)}</div>
+              <div className="text-cyan-300 text-sm font-semibold mb-2">🖐️ SAM</div>
+              <div className="text-2xl font-bold text-white">{formatFullValue(sam)}</div>
               {showSAMDetails && (
-                <div className="text-xs text-white/70 mt-2">Market segment you can effectively serve</div>
+                <div className="text-xs text-white/70 mt-2">Serviceable Available Market</div>
               )}
             </div>
 
@@ -708,10 +848,10 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
               className={`p-4 rounded-xl cursor-pointer transition-all ${showSOMDetails ? 'bg-yellow-500/20 border border-yellow-500/40' : 'bg-white/5 border border-white/10'}`}
               onClick={() => setShowSOMDetails(!showSOMDetails)}
             >
-              <div className="text-yellow-300 text-sm font-semibold mb-2">🎯 SOM - Serviceable Obtainable Market</div>
-              <div className="text-2xl font-bold text-white">{formatValue(som)}</div>
+              <div className="text-yellow-300 text-sm font-semibold mb-2">🎯 SOM</div>
+              <div className="text-2xl font-bold text-white">{formatFullValue(som)}</div>
               {showSOMDetails && (
-                <div className="text-xs text-white/70 mt-2">Market share you can realistically capture</div>
+                <div className="text-xs text-white/70 mt-2">Serviceable Obtainable Market</div>
               )}
             </div>
           </div>
@@ -720,7 +860,6 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
     </div>
   );
 };
-
 // ============================================
 // ROLE 4: PESTLE EXPERT (AGGRESSIVE DEBUG)
 // ============================================
