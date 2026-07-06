@@ -198,7 +198,7 @@ const parseMarketSizing = (plan: string): { tam: number; sam: number; som: numbe
 };
 
 // ============================================
-// PLACEHOLDER VISUAL COMPONENTS
+// ROLE 1: SEGMENTATION VISUALIZER
 // ============================================
 
 const SegmentationVisual = ({ plan }: { plan: string }) => {
@@ -226,6 +226,10 @@ const SegmentationVisual = ({ plan }: { plan: string }) => {
     </div>
   );
 };
+
+// ============================================
+// ROLE 2: MARKET SIZING VISUALIZER
+// ============================================
 
 const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
   const { tam, sam, som } = parseMarketSizing(plan);
@@ -267,6 +271,10 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
   );
 };
 
+// ============================================
+// ROLE 3: PORTER'S FORCES VISUALIZER
+// ============================================
+
 const PortersVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'PORTERS OUTPUT');
   const forces = ['Threat of New Entrants', 'Bargaining Power of Buyers', 'Bargaining Power of Suppliers', 'Threat of Substitutes', 'Industry Rivalry'];
@@ -297,6 +305,10 @@ const PortersVisual = ({ plan }: { plan: string }) => {
   );
 };
 
+// ============================================
+// ROLE 4: COMPETITORS VISUALIZER
+// ============================================
+
 const CompetitorsVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'COMPETITOR OUTPUT');
   
@@ -320,6 +332,10 @@ const CompetitorsVisual = ({ plan }: { plan: string }) => {
   );
 };
 
+// ============================================
+// ROLE 5: POSITIONING VISUALIZER
+// ============================================
+
 const PositioningVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'POSITIONING OUTPUT');
   
@@ -342,6 +358,10 @@ const PositioningVisual = ({ plan }: { plan: string }) => {
     </div>
   );
 };
+
+// ============================================
+// ROLE 6: 4Ps VISUALIZER
+// ============================================
 
 const FourPsVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, '4PS OUTPUT');
@@ -372,6 +392,10 @@ const FourPsVisual = ({ plan }: { plan: string }) => {
     </div>
   );
 };
+
+// ============================================
+// ROLE 7: SWOT VISUALIZER
+// ============================================
 
 const SWOTVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'SWOT OUTPUT');
@@ -404,6 +428,10 @@ const SWOTVisual = ({ plan }: { plan: string }) => {
   );
 };
 
+// ============================================
+// ROLE 8: CUSTOMER JOURNEY VISUALIZER
+// ============================================
+
 const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'JOURNEY OUTPUT');
   const stages = ['Awareness', 'Consideration', 'Purchase', 'Retention', 'Advocacy'];
@@ -434,6 +462,10 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
   );
 };
 
+// ============================================
+// ROLE 9: KPI VISUALIZER
+// ============================================
+
 const KPICards = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'KPI OUTPUT');
   
@@ -457,6 +489,10 @@ const KPICards = ({ plan }: { plan: string }) => {
   );
 };
 
+// ============================================
+// ROLE 10: OKR VISUALIZER
+// ============================================
+
 const OKRDiagram = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'OKRS OUTPUT');
   
@@ -479,6 +515,10 @@ const OKRDiagram = ({ plan }: { plan: string }) => {
     </div>
   );
 };
+
+// ============================================
+// ROLE 11: ROADMAP VISUALIZER
+// ============================================
 
 const RoadmapVisual = ({ plan }: { plan: string }) => {
   const content = extractTagContent(plan, 'ROADMAP OUTPUT');
@@ -511,7 +551,7 @@ const RoadmapVisual = ({ plan }: { plan: string }) => {
 };
 
 // ============================================
-// ROLE 4: PESTLE EXPERT (FIXED - CAPTURES BULLET POINTS)
+// ROLE 12: PESTLE EXPERT (EXISTING - UNCHANGED)
 // ============================================
 
 const PESTLEVisual = ({ plan }: { plan: string }) => {
@@ -655,11 +695,18 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
             <div
               key={item.key}
               className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-6px] hover:border-indigo-500/40 hover:shadow-lg cursor-pointer relative overflow-hidden"
+              style={{ 
+                '::before': { 
+                  content: '""', 
+                  position: 'absolute', 
+                  top: 0, 
+                  left: 0, 
+                  width: '100%', 
+                  height: '3px', 
+                  background: `linear-gradient(90deg, ${colorMap[item.key]?.text || '#818cf8'}, ${colorMap[item.key]?.text || '#818cf8'})` 
+                } 
+              } as any}
             >
-              <div 
-                className="absolute top-0 left-0 w-full h-1"
-                style={{ background: `linear-gradient(90deg, ${colorMap[item.key]?.text || '#818cf8'}, ${colorMap[item.key]?.text || '#818cf8'})` }}
-              />
               <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
                 <div
                   className="w-10 h-10 flex items-center justify-center text-2xl rounded-xl"
@@ -1051,7 +1098,7 @@ function App() {
               ].map((plan) => (
                 <div
                   key={plan.name}
-                  className={`bg-gradient-to-br from-slate-800/90 to-slate-900/95 border rounded-2xl p-8 text-center transition-all hover:translate-y-[-12px] hover:shadow-xl cursor-pointer relative ${
+                  className={`bg-gradient-to-br from-slate-800/90 to-slate-900/95 border rounded-2xl p-8 text-center transition-all hover:translate-y-[-12px] hover:shadow-xl cursor-pointer ${
                     plan.popular ? 'border-indigo-500/60 scale-[1.02]' : 'border-white/10 hover:border-indigo-500/50'
                   }`}
                 >
