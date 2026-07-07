@@ -577,7 +577,7 @@ const SegmentationVisual = ({ plan }: { plan: string }) => {
 };
 
 // ============================================
-// ROLE 3: MARKET SIZING EXPERT (SIMPLIFIED & FIXED)
+// ROLE 3: MARKET SIZING EXPERT (FIXED SPACING)
 // ============================================
 
 const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
@@ -585,7 +585,6 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
   const [showSAMDetails, setShowSAMDetails] = useState(false);
   const [showSOMDetails, setShowSOMDetails] = useState(false);
 
-  // PURE FUNCTION - No state updates, just returns data
   const extractMarketSizingData = (): { tam: number; sam: number; som: number } => {
     let tam = 0, sam = 0, som = 0;
     
@@ -593,7 +592,6 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
       return { tam, sam, som };
     }
 
-    // Try to find the TAMSAMSOM section
     let section = '';
     const sectionMatch = plan.match(/\[TAMSAMSOM OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
     if (sectionMatch && sectionMatch[1]) {
@@ -604,7 +602,6 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
       section = plan;
     }
     
-    // Parse table rows
     const lines = section.split('\n');
     let inTable = false;
     let tableRows: string[] = [];
@@ -628,7 +625,6 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
       }
     }
     
-    // Parse values from table
     for (const row of tableRows) {
       const cells = row.split('|').map(c => c.trim()).filter(c => c);
       if (cells.length >= 2) {
@@ -648,7 +644,6 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
       }
     }
     
-    // Fallback calculations if needed
     if (tam > 0 && sam === 0) {
       sam = Math.round(tam * 0.4);
     }
@@ -671,7 +666,6 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
     return { tam, sam, som };
   };
 
-  // Call the pure function during render (safe - no state updates)
   const { tam, sam, som } = extractMarketSizingData();
   const hasData = tam > 0 || sam > 0 || som > 0;
 
@@ -687,11 +681,6 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
     if (val === 0) return 'N/A';
     return val.toLocaleString();
   };
-
-  const maxValue = Math.max(tam, sam, som, 1);
-  const tamSize = Math.max(70, (tam / maxValue) * 100);
-  const samSize = Math.max(50, (sam / maxValue) * 80);
-  const somSize = Math.max(30, (som / maxValue) * 60);
 
   // SVG Icon components
   const GlobeIcon = () => (
@@ -758,15 +747,15 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
         </span>
       </div>
       
-      <div className="relative mx-auto" style={{ width: '100%', maxWidth: '550px', height: '500px' }}>
-        {/* TAM - Outer circle */}
+      <div className="relative mx-auto" style={{ width: '100%', maxWidth: '550px', height: '480px' }}>
+        {/* TAM - Outer circle - FIXED SIZE */}
         <div
           className="absolute rounded-full cursor-pointer transition-all duration-300 hover:scale-105"
           style={{
-            width: `${tamSize * 1.8}px`,
-            height: `${tamSize * 1.8}px`,
-            background: 'rgba(173, 53, 45, 0.35)',
-            border: '3px solid rgba(239, 68, 68, 0.5)',
+            width: '380px',
+            height: '380px',
+            background: 'rgba(173, 53, 45, 0.25)',
+            border: '3px solid rgba(239, 68, 68, 0.6)',
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
@@ -774,21 +763,21 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
           }}
           onClick={() => setShowTAMDetails(!showTAMDetails)}
         >
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-center">
-            <div className="text-red-300 text-xs font-semibold mb-1">TAM</div>
-            <div className="text-xl font-bold">{formatValue(tam)}</div>
-            <div className="text-[8px] text-white/50 mt-1">Total Addressable</div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-center w-full px-4">
+            <div className="text-red-400 text-sm font-semibold mb-1">TAM</div>
+            <div className="text-2xl font-bold">{formatValue(tam)}</div>
+            <div className="text-[10px] text-white/50 mt-1">Total Addressable Market</div>
           </div>
         </div>
 
-        {/* SAM - Middle circle */}
+        {/* SAM - Middle circle - FIXED SIZE */}
         <div
           className="absolute rounded-full cursor-pointer transition-all duration-300 hover:scale-105"
           style={{
-            width: `${samSize * 1.4}px`,
-            height: `${samSize * 1.4}px`,
-            background: 'rgba(0, 108, 119, 0.45)',
-            border: '3px solid rgba(34, 211, 238, 0.5)',
+            width: '270px',
+            height: '270px',
+            background: 'rgba(0, 108, 119, 0.35)',
+            border: '3px solid rgba(34, 211, 238, 0.6)',
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
@@ -796,21 +785,21 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
           }}
           onClick={() => setShowSAMDetails(!showSAMDetails)}
         >
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-center">
-            <div className="text-cyan-300 text-xs font-semibold mb-1">SAM</div>
-            <div className="text-lg font-bold">{formatValue(sam)}</div>
-            <div className="text-[8px] text-white/50 mt-1">Serviceable Available</div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-center w-full px-4">
+            <div className="text-cyan-400 text-sm font-semibold mb-1">SAM</div>
+            <div className="text-xl font-bold">{formatValue(sam)}</div>
+            <div className="text-[10px] text-white/50 mt-1">Serviceable Available Market</div>
           </div>
         </div>
 
-        {/* SOM - Inner circle */}
+        {/* SOM - Inner circle - FIXED SIZE */}
         <div
           className="absolute rounded-full cursor-pointer transition-all duration-300 hover:scale-105"
           style={{
-            width: `${somSize * 1}px`,
-            height: `${somSize * 1}px`,
-            background: 'rgba(220, 153, 71, 0.6)',
-            border: '3px solid rgba(251, 191, 36, 0.6)',
+            width: '165px',
+            height: '165px',
+            background: 'rgba(220, 153, 71, 0.5)',
+            border: '3px solid rgba(251, 191, 36, 0.7)',
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
@@ -818,17 +807,17 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
           }}
           onClick={() => setShowSOMDetails(!showSOMDetails)}
         >
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-center">
-            <div className="text-yellow-200 text-xs font-semibold mb-1">SOM</div>
-            <div className="text-base font-bold">{formatValue(som)}</div>
-            <div className="text-[8px] text-white/50 mt-1">Serviceable Obtainable</div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-center w-full px-2">
+            <div className="text-yellow-300 text-sm font-semibold mb-1">SOM</div>
+            <div className="text-lg font-bold">{formatValue(som)}</div>
+            <div className="text-[9px] text-white/50 mt-1">Serviceable Obtainable</div>
           </div>
         </div>
 
         <div
           className="absolute text-white text-[10px] font-semibold z-10 flex items-center gap-1"
           style={{
-            bottom: '10px',
+            bottom: '5px',
             left: '50%',
             transform: 'translateX(-50%)'
           }}
