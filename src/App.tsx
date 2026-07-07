@@ -577,10 +577,11 @@ const SegmentationVisual = ({ plan }: { plan: string }) => {
 };
 
 // ============================================
-// ROLE 3: MARKET SIZING EXPERT (FIXED SPACING)
+// ROLE 3: MARKET SIZING EXPERT (POP-OUT ON CLICK)
 // ============================================
 
 const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
+  const [activeCircle, setActiveCircle] = useState<'tam' | 'sam' | 'som' | null>(null);
   const [showTAMDetails, setShowTAMDetails] = useState(false);
   const [showSAMDetails, setShowSAMDetails] = useState(false);
   const [showSOMDetails, setShowSOMDetails] = useState(false);
@@ -682,6 +683,23 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
     return val.toLocaleString();
   };
 
+  // Handle circle click - pop out the clicked circle and show details
+  const handleCircleClick = (circle: 'tam' | 'sam' | 'som') => {
+    if (activeCircle === circle) {
+      // If already active, close it
+      setActiveCircle(null);
+      setShowTAMDetails(false);
+      setShowSAMDetails(false);
+      setShowSOMDetails(false);
+    } else {
+      // Open the clicked circle
+      setActiveCircle(circle);
+      setShowTAMDetails(circle === 'tam');
+      setShowSAMDetails(circle === 'sam');
+      setShowSOMDetails(circle === 'som');
+    }
+  };
+
   // SVG Icon components
   const GlobeIcon = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -708,6 +726,49 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
     </svg>
   );
 
+  // Circle data for rendering
+  const circles = [
+    {
+      id: 'tam' as const,
+      label: 'TAM',
+      value: tam,
+      fullName: 'Total Addressable Market',
+      color: 'red',
+      colorClass: 'text-red-400',
+      borderColor: 'rgba(239, 68, 68, 0.6)',
+      bgColor: 'rgba(173, 53, 45, 0.25)',
+      size: 380,
+      zIndex: 1,
+      details: 'Total Addressable Market - The entire market demand for your product/service.'
+    },
+    {
+      id: 'sam' as const,
+      label: 'SAM',
+      value: sam,
+      fullName: 'Serviceable Available Market',
+      color: 'cyan',
+      colorClass: 'text-cyan-400',
+      borderColor: 'rgba(34, 211, 238, 0.6)',
+      bgColor: 'rgba(0, 108, 119, 0.35)',
+      size: 270,
+      zIndex: 2,
+      details: 'Serviceable Available Market - The segment of TAM you can effectively serve.'
+    },
+    {
+      id: 'som' as const,
+      label: 'SOM',
+      value: som,
+      fullName: 'Serviceable Obtainable Market',
+      color: 'yellow',
+      colorClass: 'text-yellow-300',
+      borderColor: 'rgba(251, 191, 36, 0.7)',
+      bgColor: 'rgba(220, 153, 71, 0.5)',
+      size: 165,
+      zIndex: 3,
+      details: 'Serviceable Obtainable Market - The market share you can realistically capture.'
+    }
+  ];
+
   if (!hasData) {
     return (
       <div className="text-center">
@@ -728,7 +789,9 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
 
   return (
     <div className="text-center">
-      <h2 className="text-xl font-bold text-indigo-300 mb-6">Market Sizing (TAM / SAM / SOM)</h2>
+      <h2 className="text-xl font-bold text-indigo-300 mb-4">Market Sizing (TAM / SAM / SOM)</h2>
+      
+      <p className="text-sm text-white/40 mb-4">Click any circle to expand and see details</p>
 
       <div className="flex justify-center items-center gap-4 mb-6 text-sm text-white/40 flex-wrap">
         <span className="text-red-300 flex items-center gap-1">
@@ -748,71 +811,60 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
       </div>
       
       <div className="relative mx-auto" style={{ width: '100%', maxWidth: '550px', height: '480px' }}>
-        {/* TAM - Outer circle - FIXED SIZE */}
-        <div
-          className="absolute rounded-full cursor-pointer transition-all duration-300 hover:scale-105"
-          style={{
-            width: '380px',
-            height: '380px',
-            background: 'rgba(173, 53, 45, 0.25)',
-            border: '3px solid rgba(239, 68, 68, 0.6)',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            zIndex: 1,
-          }}
-          onClick={() => setShowTAMDetails(!showTAMDetails)}
-        >
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-center w-full px-4">
-            <div className="text-red-400 text-sm font-semibold mb-1">TAM</div>
-            <div className="text-2xl font-bold">{formatValue(tam)}</div>
-            <div className="text-[10px] text-white/50 mt-1">Total Addressable Market</div>
-          </div>
-        </div>
-
-        {/* SAM - Middle circle - FIXED SIZE */}
-        <div
-          className="absolute rounded-full cursor-pointer transition-all duration-300 hover:scale-105"
-          style={{
-            width: '270px',
-            height: '270px',
-            background: 'rgba(0, 108, 119, 0.35)',
-            border: '3px solid rgba(34, 211, 238, 0.6)',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            zIndex: 2,
-          }}
-          onClick={() => setShowSAMDetails(!showSAMDetails)}
-        >
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-center w-full px-4">
-            <div className="text-cyan-400 text-sm font-semibold mb-1">SAM</div>
-            <div className="text-xl font-bold">{formatValue(sam)}</div>
-            <div className="text-[10px] text-white/50 mt-1">Serviceable Available Market</div>
-          </div>
-        </div>
-
-        {/* SOM - Inner circle - FIXED SIZE */}
-        <div
-          className="absolute rounded-full cursor-pointer transition-all duration-300 hover:scale-105"
-          style={{
-            width: '165px',
-            height: '165px',
-            background: 'rgba(220, 153, 71, 0.5)',
-            border: '3px solid rgba(251, 191, 36, 0.7)',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            zIndex: 3,
-          }}
-          onClick={() => setShowSOMDetails(!showSOMDetails)}
-        >
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-center w-full px-2">
-            <div className="text-yellow-300 text-sm font-semibold mb-1">SOM</div>
-            <div className="text-lg font-bold">{formatValue(som)}</div>
-            <div className="text-[9px] text-white/50 mt-1">Serviceable Obtainable</div>
-          </div>
-        </div>
+        {circles.map((circle) => {
+          const isActive = activeCircle === circle.id;
+          const scale = isActive ? 1.15 : 1;
+          const opacity = activeCircle && !isActive ? 0.4 : 1;
+          
+          return (
+            <div
+              key={circle.id}
+              className="absolute rounded-full cursor-pointer transition-all duration-500 ease-in-out"
+              style={{
+                width: `${circle.size}px`,
+                height: `${circle.size}px`,
+                background: circle.bgColor,
+                border: `3px solid ${circle.borderColor}`,
+                top: '50%',
+                left: '50%',
+                transform: `translate(-50%, -50%) scale(${scale})`,
+                zIndex: isActive ? 10 : circle.zIndex,
+                opacity: opacity,
+                boxShadow: isActive ? `0 0 60px ${circle.borderColor}` : 'none',
+              }}
+              onClick={() => handleCircleClick(circle.id)}
+            >
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-center w-full px-4">
+                <div className={`${circle.colorClass} text-sm font-semibold mb-1`}>
+                  {circle.label}
+                  {isActive && ' 🔍'}
+                </div>
+                <div className={`text-2xl font-bold transition-all duration-300 ${isActive ? 'text-3xl' : ''}`}>
+                  {formatValue(circle.value)}
+                </div>
+                <div className="text-[10px] text-white/50 mt-1">
+                  {isActive ? circle.fullName : circle.fullName.split(' ').slice(0, 2).join(' ')}
+                </div>
+                {isActive && (
+                  <div className="mt-3 text-xs text-white/70 bg-black/30 rounded-lg p-2 animate-fadeIn">
+                    {circle.details}
+                  </div>
+                )}
+              </div>
+              
+              {/* Glow effect when active */}
+              {isActive && (
+                <div 
+                  className="absolute inset-0 rounded-full animate-pulse"
+                  style={{
+                    background: `radial-gradient(circle, ${circle.borderColor}33, transparent 70%)`,
+                    zIndex: -1,
+                  }}
+                />
+              )}
+            </div>
+          );
+        })}
 
         <div
           className="absolute text-white text-[10px] font-semibold z-10 flex items-center gap-1"
@@ -823,15 +875,15 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
           }}
         >
           <TargetIcon />
-          <span>Target Market</span>
+          <span>Click a circle to expand</span>
         </div>
       </div>
 
-      {/* Info cards */}
+      {/* Info cards with click handlers */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
         <div
-          className={`p-4 rounded-xl cursor-pointer transition-all ${showTAMDetails ? 'bg-red-500/20 border border-red-500/40' : 'bg-white/5 border border-white/10'}`}
-          onClick={() => setShowTAMDetails(!showTAMDetails)}
+          className={`p-4 rounded-xl cursor-pointer transition-all ${showTAMDetails ? 'bg-red-500/20 border border-red-500/40 scale-105' : 'bg-white/5 border border-white/10 hover:bg-white/10'}`}
+          onClick={() => handleCircleClick('tam')}
         >
           <div className="text-red-300 text-sm font-semibold mb-2 flex items-center gap-2">
             <GlobeIcon />
@@ -844,8 +896,8 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
         </div>
 
         <div
-          className={`p-4 rounded-xl cursor-pointer transition-all ${showSAMDetails ? 'bg-cyan-500/20 border border-cyan-500/40' : 'bg-white/5 border border-white/10'}`}
-          onClick={() => setShowSAMDetails(!showSAMDetails)}
+          className={`p-4 rounded-xl cursor-pointer transition-all ${showSAMDetails ? 'bg-cyan-500/20 border border-cyan-500/40 scale-105' : 'bg-white/5 border border-white/10 hover:bg-white/10'}`}
+          onClick={() => handleCircleClick('sam')}
         >
           <div className="text-cyan-300 text-sm font-semibold mb-2 flex items-center gap-2">
             <HandIcon />
@@ -858,8 +910,8 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
         </div>
 
         <div
-          className={`p-4 rounded-xl cursor-pointer transition-all ${showSOMDetails ? 'bg-yellow-500/20 border border-yellow-500/40' : 'bg-white/5 border border-white/10'}`}
-          onClick={() => setShowSOMDetails(!showSOMDetails)}
+          className={`p-4 rounded-xl cursor-pointer transition-all ${showSOMDetails ? 'bg-yellow-500/20 border border-yellow-500/40 scale-105' : 'bg-white/5 border border-white/10 hover:bg-white/10'}`}
+          onClick={() => handleCircleClick('som')}
         >
           <div className="text-yellow-300 text-sm font-semibold mb-2 flex items-center gap-2">
             <TargetIcon />
