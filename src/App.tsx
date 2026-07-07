@@ -596,20 +596,23 @@ const SegmentationVisual = ({ plan }: { plan: string }) => {
 // ROLE 3: MARKET SIZING EXPERT (CSS ICONS)
 // ============================================
 
+// ============================================
+// ROLE 3: MARKET SIZING EXPERT (FIXED - NO INFINITE LOOP)
+// ============================================
+
 const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
   const [showTAMDetails, setShowTAMDetails] = useState(false);
   const [showSAMDetails, setShowSAMDetails] = useState(false);
   const [showSOMDetails, setShowSOMDetails] = useState(false);
   const [debugInfo, setDebugInfo] = useState<string>('');
 
-  const extractMarketSizingData = (): { tam: number; sam: number; som: number } => {
+  const extractMarketSizingData = (): { tam: number; sam: number; som: number; debug: string } => {
     let tam = 0, sam = 0, som = 0;
     let debug = '';
     
     if (!plan || typeof plan !== 'string') {
       debug = '❌ No plan data available';
-      setDebugInfo(debug);
-      return { tam, sam, som };
+      return { tam, sam, som, debug };
     }
 
     debug += `📄 Plan length: ${plan.length}\n`;
@@ -673,6 +676,7 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
       }
     }
     
+    // If we found TAM but not SAM/SOM, estimate them
     if (tam > 0 && sam === 0) {
       sam = Math.round(tam * 0.4);
       debug += `📊 Estimated SAM: ${sam} (40% of TAM)\n`;
@@ -698,12 +702,18 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
     }
     
     debug += `📊 Final: TAM=${tam}, SAM=${sam}, SOM=${som}`;
-    setDebugInfo(debug);
-    return { tam, sam, som };
+    return { tam, sam, som, debug };
   };
 
-  const { tam, sam, som } = extractMarketSizingData();
+  const { tam, sam, som, debug } = extractMarketSizingData();
   const hasData = tam > 0 || sam > 0 || som > 0;
+
+  // ✅ FIX: Use useEffect to update debug info
+  useEffect(() => {
+    if (debug) {
+      setDebugInfo(debug);
+    }
+  }, [debug]);
 
   const formatValue = (val: number): string => {
     if (val === 0) return 'N/A';
@@ -718,6 +728,7 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
     return val.toLocaleString();
   };
 
+  // Calculate percentages for the diagram
   const maxValue = Math.max(tam, sam, som, 1);
   const tamSize = Math.max(70, (tam / maxValue) * 100);
   const samSize = Math.max(50, (sam / maxValue) * 80);
