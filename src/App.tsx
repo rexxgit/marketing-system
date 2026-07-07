@@ -592,70 +592,65 @@ const SegmentationVisual = ({ plan }: { plan: string }) => {
 // ROLE 3: MARKET SIZING EXPERT (PARSES TABLE DATA)
 // ============================================
 
+// ============================================
+// ROLE 3: MARKET SIZING EXPERT (CSS ICONS)
+// ============================================
+
 const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
   const [showTAMDetails, setShowTAMDetails] = useState(false);
   const [showSAMDetails, setShowSAMDetails] = useState(false);
   const [showSOMDetails, setShowSOMDetails] = useState(false);
+  const [debugInfo, setDebugInfo] = useState<string>('');
 
   const extractMarketSizingData = (): { tam: number; sam: number; som: number } => {
     let tam = 0, sam = 0, som = 0;
+    let debug = '';
     
     if (!plan || typeof plan !== 'string') {
-      console.log('❌ No plan data available');
+      debug = '❌ No plan data available';
+      setDebugInfo(debug);
       return { tam, sam, som };
     }
 
-    console.log('🔍 Searching for market sizing data in plan...');
-    console.log('📄 Plan length:', plan.length);
+    debug += `📄 Plan length: ${plan.length}\n`;
     
-    // First, try to extract the TAMSAMSOM section
     let section = '';
-    
-    // Look for [TAMSAMSOM OUTPUT] section
     const sectionMatch = plan.match(/\[TAMSAMSOM OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
     if (sectionMatch && sectionMatch[1]) {
       section = sectionMatch[1].trim();
-      console.log('✅ Found [TAMSAMSOM OUTPUT] section');
+      debug += '✅ Found [TAMSAMSOM OUTPUT] section\n';
     }
     
-    // If no tagged section, search the whole plan
     if (!section) {
       section = plan;
+      debug += '⚠️ No [TAMSAMSOM OUTPUT] tag found, searching entire plan\n';
     }
     
-    // Try to parse table format with pipes
     const lines = section.split('\n');
     let inTable = false;
-    let headerFound = false;
     let tableRows: string[] = [];
     
     for (const line of lines) {
       const trimmed = line.trim();
       if (trimmed.includes('|') && trimmed.includes('---')) {
-        // This is the table separator line
         inTable = true;
-        headerFound = true;
         continue;
       }
       
       if (inTable && trimmed.includes('|')) {
-        // This is a table row
         const cells = trimmed.split('|').map(c => c.trim()).filter(c => c);
         if (cells.length >= 2) {
           tableRows.push(trimmed);
         }
       }
       
-      // If we hit a non-table line after being in table, stop
       if (inTable && !trimmed.includes('|') && trimmed.length > 0) {
-        // Only stop if we already have rows
         if (tableRows.length > 0) break;
       }
     }
     
-    console.log('📊 Table rows found:', tableRows.length);
+    debug += `📊 Table rows found: ${tableRows.length}\n`;
     
-    // Parse the table rows
     for (const row of tableRows) {
       const cells = row.split('|').map(c => c.trim()).filter(c => c);
       if (cells.length >= 2) {
@@ -666,46 +661,44 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
         if (!isNaN(numValue) && numValue > 0) {
           if (label.includes('TAM')) {
             tam = numValue;
-            console.log(`✅ Found TAM: ${tam}`);
+            debug += `✅ Found TAM: ${tam}\n`;
           } else if (label.includes('SAM')) {
             sam = numValue;
-            console.log(`✅ Found SAM: ${sam}`);
+            debug += `✅ Found SAM: ${sam}\n`;
           } else if (label.includes('SOM')) {
             som = numValue;
-            console.log(`✅ Found SOM: ${som}`);
+            debug += `✅ Found SOM: ${som}\n`;
           }
         }
       }
     }
     
-    // If we found TAM but not SAM/SOM, estimate them
     if (tam > 0 && sam === 0) {
       sam = Math.round(tam * 0.4);
-      console.log(`📊 Estimated SAM: ${sam} (40% of TAM)`);
+      debug += `📊 Estimated SAM: ${sam} (40% of TAM)\n`;
     }
     
     if (sam > 0 && som === 0) {
       som = Math.round(sam * 0.15);
-      console.log(`📊 Estimated SOM: ${som} (15% of SAM)`);
+      debug += `📊 Estimated SOM: ${som} (15% of SAM)\n`;
     }
     
-    // If we found SAM but not TAM, estimate TAM
     if (sam > 0 && tam === 0) {
       tam = Math.round(sam * 2.5);
-      console.log(`📊 Estimated TAM: ${tam} (from SAM)`);
+      debug += `📊 Estimated TAM: ${tam} (from SAM)\n`;
     }
     
-    // If we found SOM but not SAM, estimate SAM
     if (som > 0 && sam === 0) {
       sam = Math.round(som * 6.67);
-      console.log(`📊 Estimated SAM: ${sam} (from SOM)`);
+      debug += `📊 Estimated SAM: ${sam} (from SOM)\n`;
       if (tam === 0) {
         tam = Math.round(sam * 2.5);
-        console.log(`📊 Estimated TAM: ${tam} (from SAM)`);
+        debug += `📊 Estimated TAM: ${tam} (from SAM)\n`;
       }
     }
     
-    console.log(`📊 Final market sizing data: TAM=${tam}, SAM=${sam}, SOM=${som}`);
+    debug += `📊 Final: TAM=${tam}, SAM=${sam}, SOM=${som}`;
+    setDebugInfo(debug);
     return { tam, sam, som };
   };
 
@@ -725,6 +718,37 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
     return val.toLocaleString();
   };
 
+  const maxValue = Math.max(tam, sam, som, 1);
+  const tamSize = Math.max(70, (tam / maxValue) * 100);
+  const samSize = Math.max(50, (sam / maxValue) * 80);
+  const somSize = Math.max(30, (som / maxValue) * 60);
+
+  // CSS Icon components
+  const GlobeIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="2" y1="12" x2="22" y2="12"/>
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+    </svg>
+  );
+
+  const HandIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M18 11.5V5a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v6.5"/>
+      <path d="M14 10V3a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v7"/>
+      <path d="M10 10V5a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v5"/>
+      <path d="M6 9V6.5A2.5 2.5 0 0 0 3.5 4v0A2.5 2.5 0 0 0 1 6.5V12a6 6 0 0 0 6 6h3a6 6 0 0 0 6-6v-1"/>
+    </svg>
+  );
+
+  const TargetIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <circle cx="12" cy="12" r="6"/>
+      <circle cx="12" cy="12" r="2"/>
+    </svg>
+  );
+
   return (
     <div className="text-center">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">Market Sizing (TAM / SAM / SOM)</h2>
@@ -734,44 +758,51 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
           <p>No market sizing data found in the generated plan.</p>
           <p className="text-sm mt-2">The plan should contain TAM/SAM/SOM data in a table or list format.</p>
           <details className="mt-4 text-left text-xs text-white/30 max-w-md mx-auto">
-            <summary>🔍 Click to see what the plan contains</summary>
+            <summary>🔍 Debug Info</summary>
             <pre className="mt-2 p-3 bg-white/5 rounded overflow-auto max-h-80 whitespace-pre-wrap text-xs text-white/50">
-              {plan?.substring(0, 2000) || 'No plan data'}
+              {debugInfo || 'No debug info'}
             </pre>
           </details>
         </div>
       ) : (
         <>
-          <div className="flex justify-center items-center gap-4 mb-4 text-sm text-white/40">
-            <span className="text-red-300">🔴 TAM: {formatValue(tam)}</span>
+          <div className="flex justify-center items-center gap-4 mb-6 text-sm text-white/40 flex-wrap">
+            <span className="text-red-300 flex items-center gap-1">
+              <span className="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
+              TAM: {formatValue(tam)}
+            </span>
             <span>|</span>
-            <span className="text-cyan-300">🟦 SAM: {formatValue(sam)}</span>
+            <span className="text-cyan-300 flex items-center gap-1">
+              <span className="w-3 h-3 rounded-full bg-cyan-500 inline-block"></span>
+              SAM: {formatValue(sam)}
+            </span>
             <span>|</span>
-            <span className="text-yellow-300">🟡 SOM: {formatValue(som)}</span>
+            <span className="text-yellow-300 flex items-center gap-1">
+              <span className="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
+              SOM: {formatValue(som)}
+            </span>
           </div>
           
-          <div className="relative mx-auto" style={{ width: '30em', height: '28em', maxWidth: '100%' }}>
+          <div className="relative mx-auto" style={{ width: '100%', maxWidth: '550px', height: '500px' }}>
             {/* TAM - Outer circle */}
             <div
               className="absolute rounded-full cursor-pointer transition-all duration-300 hover:scale-105"
               style={{
-                width: '21em',
-                height: '21em',
-                background: 'rgba(173, 53, 45, 0.5)',
-                top: '0',
+                width: `${tamSize * 1.8}px`,
+                height: `${tamSize * 1.8}px`,
+                background: 'rgba(173, 53, 45, 0.35)',
+                border: '3px solid rgba(239, 68, 68, 0.5)',
+                top: '50%',
                 left: '50%',
-                transform: 'translateX(-50%)',
+                transform: 'translate(-50%, -50%)',
                 zIndex: 1,
-                clipPath: 'circle(50% at 50% 50%)'
               }}
               onClick={() => setShowTAMDetails(!showTAMDetails)}
             >
-              <div className="absolute top-4 left-1/2 transform -translate-x-1/2 text-white font-bold text-lg">
-                <div className="text-red-300 text-sm font-semibold mb-1">TAM</div>
-                <div className="text-2xl font-bold">{formatValue(tam)}</div>
-              </div>
-              <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-white/70 text-xs text-center">
-                Total Addressable Market
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-center">
+                <div className="text-red-300 text-xs font-semibold mb-1">TAM</div>
+                <div className="text-xl font-bold">{formatValue(tam)}</div>
+                <div className="text-[8px] text-white/50 mt-1">Total Addressable</div>
               </div>
             </div>
 
@@ -779,22 +810,21 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
             <div
               className="absolute rounded-full cursor-pointer transition-all duration-300 hover:scale-105"
               style={{
-                width: '15em',
-                height: '15em',
-                background: 'rgba(0, 108, 119, 0.6)',
-                top: '3em',
+                width: `${samSize * 1.4}px`,
+                height: `${samSize * 1.4}px`,
+                background: 'rgba(0, 108, 119, 0.45)',
+                border: '3px solid rgba(34, 211, 238, 0.5)',
+                top: '50%',
                 left: '50%',
-                transform: 'translateX(-50%)',
-                zIndex: 2
+                transform: 'translate(-50%, -50%)',
+                zIndex: 2,
               }}
               onClick={() => setShowSAMDetails(!showSAMDetails)}
             >
-              <div className="absolute top-3 left-1/2 transform -translate-x-1/2 text-white font-bold">
-                <div className="text-cyan-300 text-sm font-semibold mb-1">SAM</div>
-                <div className="text-xl font-bold">{formatValue(sam)}</div>
-              </div>
-              <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 text-white/70 text-xs text-center">
-                Serviceable Available Market
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-center">
+                <div className="text-cyan-300 text-xs font-semibold mb-1">SAM</div>
+                <div className="text-lg font-bold">{formatValue(sam)}</div>
+                <div className="text-[8px] text-white/50 mt-1">Serviceable Available</div>
               </div>
             </div>
 
@@ -802,40 +832,47 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
             <div
               className="absolute rounded-full cursor-pointer transition-all duration-300 hover:scale-105"
               style={{
-                width: '10em',
-                height: '10em',
-                background: 'rgba(220, 153, 71, 0.8)',
-                top: '5.5em',
+                width: `${somSize * 1}px`,
+                height: `${somSize * 1}px`,
+                background: 'rgba(220, 153, 71, 0.6)',
+                border: '3px solid rgba(251, 191, 36, 0.6)',
+                top: '50%',
                 left: '50%',
-                transform: 'translateX(-50%)',
-                zIndex: 3
+                transform: 'translate(-50%, -50%)',
+                zIndex: 3,
               }}
               onClick={() => setShowSOMDetails(!showSOMDetails)}
             >
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-center">
                 <div className="text-yellow-200 text-xs font-semibold mb-1">SOM</div>
-                <div className="text-lg font-bold">{formatValue(som)}</div>
+                <div className="text-base font-bold">{formatValue(som)}</div>
+                <div className="text-[8px] text-white/50 mt-1">Serviceable Obtainable</div>
               </div>
             </div>
 
             <div
-              className="absolute text-white text-xs font-semibold z-10"
+              className="absolute text-white text-[10px] font-semibold z-10 flex items-center gap-1"
               style={{
-                top: '8em',
+                bottom: '10px',
                 left: '50%',
                 transform: 'translateX(-50%)'
               }}
             >
-              🎯 Target Market
+              <TargetIcon />
+              <span>Target Market</span>
             </div>
           </div>
 
+          {/* Info cards with CSS icons */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
             <div
               className={`p-4 rounded-xl cursor-pointer transition-all ${showTAMDetails ? 'bg-red-500/20 border border-red-500/40' : 'bg-white/5 border border-white/10'}`}
               onClick={() => setShowTAMDetails(!showTAMDetails)}
             >
-              <div className="text-red-300 text-sm font-semibold mb-2">🌍 TAM</div>
+              <div className="text-red-300 text-sm font-semibold mb-2 flex items-center gap-2">
+                <GlobeIcon />
+                TAM
+              </div>
               <div className="text-2xl font-bold text-white">{formatFullValue(tam)}</div>
               {showTAMDetails && (
                 <div className="text-xs text-white/70 mt-2">Total Addressable Market</div>
@@ -846,7 +883,10 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
               className={`p-4 rounded-xl cursor-pointer transition-all ${showSAMDetails ? 'bg-cyan-500/20 border border-cyan-500/40' : 'bg-white/5 border border-white/10'}`}
               onClick={() => setShowSAMDetails(!showSAMDetails)}
             >
-              <div className="text-cyan-300 text-sm font-semibold mb-2">🖐️ SAM</div>
+              <div className="text-cyan-300 text-sm font-semibold mb-2 flex items-center gap-2">
+                <HandIcon />
+                SAM
+              </div>
               <div className="text-2xl font-bold text-white">{formatFullValue(sam)}</div>
               {showSAMDetails && (
                 <div className="text-xs text-white/70 mt-2">Serviceable Available Market</div>
@@ -857,13 +897,24 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
               className={`p-4 rounded-xl cursor-pointer transition-all ${showSOMDetails ? 'bg-yellow-500/20 border border-yellow-500/40' : 'bg-white/5 border border-white/10'}`}
               onClick={() => setShowSOMDetails(!showSOMDetails)}
             >
-              <div className="text-yellow-300 text-sm font-semibold mb-2">🎯 SOM</div>
+              <div className="text-yellow-300 text-sm font-semibold mb-2 flex items-center gap-2">
+                <TargetIcon />
+                SOM
+              </div>
               <div className="text-2xl font-bold text-white">{formatFullValue(som)}</div>
               {showSOMDetails && (
                 <div className="text-xs text-white/70 mt-2">Serviceable Obtainable Market</div>
               )}
             </div>
           </div>
+
+          {/* Debug info toggle */}
+          <details className="mt-4 text-left text-xs text-white/30 max-w-md mx-auto">
+            <summary>🔍 Debug Info</summary>
+            <pre className="mt-2 p-3 bg-white/5 rounded overflow-auto max-h-60 whitespace-pre-wrap text-xs text-white/50">
+              {debugInfo || 'No debug info'}
+            </pre>
+          </details>
         </>
       )}
     </div>
