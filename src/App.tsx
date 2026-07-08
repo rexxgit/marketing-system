@@ -927,25 +927,45 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
   );
 };
 // ============================================
-// ROLE 4: PESTLE EXPERT (FIXED PARSING)
-// ============================================
-
-// ============================================
-// ROLE 4: PESTLE EXPERT (FINAL FIX - PROPER BULLET PARSING)
+// ROLE 4: PESTLE EXPERT (SVG ICONS + FIXED PARSING)
 // ============================================
 
 const PESTLEVisual = ({ plan }: { plan: string }) => {
   const [debugOpen, setDebugOpen] = useState(false);
   
   const parsePESTLE = () => {
-    const pestleData: { key: string; icon: string; title: string; insight: string; impact: string }[] = [];
+    const pestleData: { key: string; icon: React.ReactNode; title: string; insight: string; impact: string }[] = [];
     const categories = [
-      { key: 'political', icon: '🏛️', title: 'Political' },
-      { key: 'economic', icon: '📈', title: 'Economic' },
-      { key: 'social', icon: '👥', title: 'Social' },
-      { key: 'technological', icon: '💻', title: 'Technological' },
-      { key: 'legal', icon: '⚖️', title: 'Legal' },
-      { key: 'environmental', icon: '🌿', title: 'Environmental' }
+      { 
+        key: 'political', 
+        icon: <PoliticalIcon />, 
+        title: 'Political' 
+      },
+      { 
+        key: 'economic', 
+        icon: <EconomicIcon />, 
+        title: 'Economic' 
+      },
+      { 
+        key: 'social', 
+        icon: <SocialIcon />, 
+        title: 'Social' 
+      },
+      { 
+        key: 'technological', 
+        icon: <TechIcon />, 
+        title: 'Technological' 
+      },
+      { 
+        key: 'legal', 
+        icon: <LegalIcon />, 
+        title: 'Legal' 
+      },
+      { 
+        key: 'environmental', 
+        icon: <EnvironmentalIcon />, 
+        title: 'Environmental' 
+      }
     ];
 
     console.log('🔍 PESTLE Debug - Plan preview:', plan?.substring(0, 500));
@@ -971,7 +991,6 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
     for (const cat of categories) {
       let insight = '';
       let impact = 'medium';
-      let bulletCount = 0;
       
       // Find the category section - look for **Category Drivers:** or **Category:**
       const categoryPattern = new RegExp(
@@ -1003,15 +1022,10 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
           }
         }
         
-        bulletCount = bulletPoints.length;
-        
         if (bulletPoints.length > 0) {
-          // Join bullet points with proper formatting
-          insight = bulletPoints.map((p, i) => `${i + 1}. ${p}`).join('  •  ');
+          insight = bulletPoints.map((p, i) => `${i + 1}. ${p}`).join('  ');
           console.log(`✅ ${cat.title}: ${bulletPoints.length} bullet points found`);
-          console.log(`   Points: ${bulletPoints.join(', ')}`);
-        } else {
-          // If no bullet points, use the raw content
+        } else if (content.length > 10) {
           insight = content.substring(0, 150);
           console.log(`✅ ${cat.title}: using raw content`);
         }
@@ -1022,15 +1036,16 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
       // Determine impact based on insight content
       if (insight) {
         insight = insight.replace(/\*\*/g, '').trim();
-        if (insight.length > 200) {
-          insight = insight.substring(0, 200) + '...';
+        if (insight.length > 250) {
+          insight = insight.substring(0, 250) + '...';
         }
         
         const lowerInsight = insight.toLowerCase();
         if (lowerInsight.includes('high') || lowerInsight.includes('significant') || 
             lowerInsight.includes('major') || lowerInsight.includes('strong') || 
             lowerInsight.includes('growth') || lowerInsight.includes('rising') ||
-            lowerInsight.includes('increase') || lowerInsight.includes('demand')) {
+            lowerInsight.includes('increase') || lowerInsight.includes('demand') ||
+            lowerInsight.includes('drives')) {
           impact = 'high';
         } else if (lowerInsight.includes('low') || lowerInsight.includes('minor') || 
                    lowerInsight.includes('weak') || lowerInsight.includes('negligible') ||
@@ -1047,7 +1062,7 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
         });
       } else {
         console.log(`❌ No insight found for ${cat.title}`);
-        // Only add if it's not Political or Legal (they're not in the mock data)
+        // Skip Political and Legal (they're not in the mock data)
         if (cat.key !== 'political' && cat.key !== 'legal') {
           pestleData.push({
             key: cat.key,
@@ -1065,16 +1080,16 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
   };
 
   const pestleData = parsePESTLE();
-  const colorMap: Record<string, { bg: string; text: string }> = {
-    political: { bg: 'rgba(99,102,241,.2)', text: '#818cf8' },
-    economic: { bg: 'rgba(16,185,129,.2)', text: '#34d399' },
-    social: { bg: 'rgba(245,158,11,.2)', text: '#fbbf24' },
-    technological: { bg: 'rgba(6,182,212,.2)', text: '#22d3ee' },
-    legal: { bg: 'rgba(239,68,68,.2)', text: '#f87171' },
-    environmental: { bg: 'rgba(139,92,246,.2)', text: '#a78bfa' }
+  const colorMap: Record<string, { bg: string; text: string; iconColor: string }> = {
+    political: { bg: 'rgba(99,102,241,.15)', text: '#818cf8', iconColor: '#818cf8' },
+    economic: { bg: 'rgba(16,185,129,.15)', text: '#34d399', iconColor: '#34d399' },
+    social: { bg: 'rgba(245,158,11,.15)', text: '#fbbf24', iconColor: '#fbbf24' },
+    technological: { bg: 'rgba(6,182,212,.15)', text: '#22d3ee', iconColor: '#22d3ee' },
+    legal: { bg: 'rgba(239,68,68,.15)', text: '#f87171', iconColor: '#f87171' },
+    environmental: { bg: 'rgba(139,92,246,.15)', text: '#a78bfa', iconColor: '#a78bfa' }
   };
 
-  // Filter out categories with no data
+  // Show only categories that have data
   const displayData = pestleData.filter(p => p.insight !== 'No data found for this category');
 
   return (
@@ -1098,7 +1113,7 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
               <div>Displaying: {displayData.length} categories</div>
               <div className="mt-2 text-white/50 font-bold">Parsed Data:</div>
               <pre className="whitespace-pre-wrap text-[10px] text-white/30 bg-white/5 p-2 rounded">
-                {JSON.stringify(pestleData, null, 2)}
+                {JSON.stringify(pestleData.map(p => ({ ...p, icon: 'SVG' })), null, 2)}
               </pre>
               <div className="mt-2 text-white/50 font-bold">Raw Plan Preview:</div>
               <pre className="whitespace-pre-wrap text-[10px] text-white/30 bg-white/5 p-2 rounded max-h-60 overflow-auto">
@@ -1117,8 +1132,8 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {displayData.map((item) => {
-            // Count the number of bullet points for display
-            const pointCount = item.insight.split('•').length;
+            const colors = colorMap[item.key] || colorMap.political;
+            const pointCount = item.insight.split('•').filter(p => p.trim().length > 0).length;
             
             return (
               <div
@@ -1132,18 +1147,18 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
                     left: 0, 
                     width: '100%', 
                     height: '3px', 
-                    background: `linear-gradient(90deg, ${colorMap[item.key]?.text || '#818cf8'}, ${colorMap[item.key]?.text || '#818cf8'})` 
+                    background: `linear-gradient(90deg, ${colors.text}, ${colors.text})` 
                   } 
                 } as any}
               >
                 <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
                   <div
-                    className="w-10 h-10 flex items-center justify-center text-2xl rounded-xl"
-                    style={{ background: colorMap[item.key]?.bg || 'rgba(99,102,241,.2)' }}
+                    className="w-10 h-10 flex items-center justify-center rounded-xl transition-transform hover:scale-110"
+                    style={{ background: colors.bg, color: colors.iconColor }}
                   >
                     {item.icon}
                   </div>
-                  <div className="text-lg font-bold" style={{ color: colorMap[item.key]?.text || '#818cf8' }}>
+                  <div className="text-lg font-bold" style={{ color: colors.text }}>
                     {item.title}
                   </div>
                 </div>
@@ -1200,6 +1215,66 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
     </div>
   );
 };
+
+// ============================================
+// SVG ICONS FOR PESTLE
+// ============================================
+
+const PoliticalIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+    <path d="M2 17l10 5 10-5"/>
+    <path d="M2 12l10 5 10-5"/>
+  </svg>
+);
+
+const EconomicIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="1" x2="12" y2="23"/>
+    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+    <path d="M12 1v4"/>
+    <path d="M12 19v4"/>
+  </svg>
+);
+
+const SocialIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+    <circle cx="9" cy="7" r="4"/>
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </svg>
+);
+
+const TechIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+    <line x1="8" y1="21" x2="16" y2="21"/>
+    <line x1="12" y1="17" x2="12" y2="21"/>
+    <circle cx="8" cy="9" r="1" fill="currentColor"/>
+    <circle cx="16" cy="9" r="1" fill="currentColor"/>
+    <circle cx="12" cy="13" r="1" fill="currentColor"/>
+  </svg>
+);
+
+const LegalIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+    <path d="M2 17l10 5 10-5"/>
+    <path d="M2 12l10 5 10-5"/>
+    <circle cx="12" cy="12" r="3"/>
+  </svg>
+);
+
+const EnvironmentalIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+    <path d="M2 17l10 5 10-5"/>
+    <path d="M2 12l10 5 10-5"/>
+    <path d="M12 7v10"/>
+    <path d="M8 9l4 3 4-3"/>
+  </svg>
+);
 // ROLE 5: PORTER'S FORCES EXPERT
 // ============================================
 
