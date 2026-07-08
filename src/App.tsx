@@ -927,12 +927,10 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
   );
 };
 // ============================================
-// ROLE 4: PESTLE EXPERT (SIMPLE LINE-BY-LINE PARSING)
+// ROLE 4: PESTLE EXPERT (FIXED EXPLANATION DISPLAY)
 // ============================================
 
 const PESTLEVisual = ({ plan }: { plan: string }) => {
-  const [debugOpen, setDebugOpen] = useState(false);
-  
   const parsePESTLE = () => {
     const pestleData: { key: string; icon: React.ReactNode; title: string; insight: string; impact: string }[] = [];
     const categories = [
@@ -943,32 +941,21 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
       { key: 'legal', icon: <LegalIcon />, title: 'Legal' },
       { key: 'environmental', icon: <EnvironmentalIcon />, title: 'Environmental' }
     ];
-
-    console.log('🔍 PESTLE Debug - Plan preview:', plan?.substring(0, 500));
     
     // Get the PESTLE section
     let searchText = '';
     const pestleSection = plan.match(/\[PESTLE\s+OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
     if (pestleSection && pestleSection[1]) {
       searchText = pestleSection[1].trim();
-      console.log('✅ Found [PESTLE OUTPUT] section, length:', searchText.length);
-      console.log('📝 Content preview:', searchText.substring(0, 300));
     }
     
     if (!searchText) {
-      console.log('❌ No PESTLE section found');
       return [];
     }
 
-    console.log('📝 Full PESTLE section to parse:');
-    console.log(searchText);
-
-    // SIMPLE APPROACH: Split by lines and find categories
+    // Parse line by line
     const lines = searchText.split('\n');
     let currentCategory: string | null = null;
-    let currentContent: string[] = [];
-    
-    // First pass: Find all category headers and their content
     const categoryMap: Record<string, string[]> = {};
     
     for (let i = 0; i < lines.length; i++) {
@@ -977,53 +964,41 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
       // Check if this line is a category header
       let foundCategory = false;
       for (const cat of categories) {
-        // Check for **Economic Drivers:** or **Economic:**
         const headerPattern = new RegExp(`\\*\\*${cat.title}\\s+Drivers?\\*\\*:?`, 'i');
         if (headerPattern.test(line)) {
           currentCategory = cat.title;
           foundCategory = true;
           categoryMap[currentCategory] = [];
-          console.log(`📌 Found category header: ${currentCategory}`);
           break;
         }
       }
       
       // If we're in a category and this isn't a new header, collect content
       if (currentCategory && !foundCategory) {
-        // Skip empty lines
         if (line.length > 0) {
-          // Check if this line contains a bullet point
           if (line.match(/^[-•*]\s+/)) {
             const bulletPoint = line.replace(/^[-•*]\s+/, '').trim();
             if (bulletPoint.length > 2) {
               categoryMap[currentCategory].push(bulletPoint);
-              console.log(`   📝 ${currentCategory}: ${bulletPoint}`);
             }
-          } else if (!line.match(/^---/) && !line.match(/^\[/)) {
-            // If it's not a bullet but looks like content (and not a separator)
-            if (line.length > 5 && !line.includes('**')) {
-              categoryMap[currentCategory].push(line);
-              console.log(`   📝 ${currentCategory}: ${line}`);
-            }
+          } else if (!line.match(/^---/) && !line.match(/^\[/) && line.length > 5 && !line.includes('**')) {
+            categoryMap[currentCategory].push(line);
           }
         }
       }
     }
 
-    console.log('📊 Category Map:', categoryMap);
-
-    // Now build the pestle data from the category map
+    // Build the pestle data
     for (const cat of categories) {
       const content = categoryMap[cat.title] || [];
       let insight = '';
       let impact = 'medium';
       
       if (content.length > 0) {
-        // Format the insight with numbered points
-        insight = content.map((p, i) => `${i + 1}. ${p}`).join('  ');
-        console.log(`✅ ${cat.title}: ${content.length} points found`);
+        // Store as array for proper display
+        insight = JSON.stringify(content); // Store as JSON string array
+        console.log(`✅ ${cat.title}:`, content);
         
-        // Determine impact
         const fullText = content.join(' ').toLowerCase();
         if (fullText.includes('high') || fullText.includes('significant') || 
             fullText.includes('major') || fullText.includes('strong') || 
@@ -1045,21 +1020,19 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
           impact: impact
         });
       } else {
-        console.log(`⚠️ No content found for ${cat.title}`);
-        // Skip Political and Legal (they're not in the mock data)
+        // Skip Political and Legal (not in mock data)
         if (cat.key !== 'political' && cat.key !== 'legal') {
           pestleData.push({
             key: cat.key,
             icon: cat.icon,
             title: cat.title,
-            insight: 'No data found for this category',
+            insight: '[]',
             impact: 'medium'
           });
         }
       }
     }
 
-    console.log('📊 Final PESTLE data:', pestleData);
     return pestleData;
   };
 
@@ -1073,51 +1046,27 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
     environmental: { bg: 'rgba(139,92,246,.15)', text: '#a78bfa', iconColor: '#a78bfa' }
   };
 
-  // Show only categories that have data
-  const displayData = pestleData.filter(p => p.insight !== 'No data found for this category');
+  const displayData = pestleData.filter(p => p.insight !== '[]');
 
   return (
     <div className="text-center">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">PESTLE Analysis</h2>
-      
-      {/* Debug section */}
-      <div className="mb-4">
-        <button
-          onClick={() => setDebugOpen(!debugOpen)}
-          className="text-xs text-white/40 hover:text-white/70 transition-colors bg-white/5 px-3 py-1 rounded-full"
-        >
-          {debugOpen ? '🔽 Hide Debug' : '🔍 Show Debug'}
-        </button>
-        {debugOpen && (
-          <div className="mt-3 text-left max-w-4xl mx-auto bg-black/30 rounded-lg p-4 overflow-auto max-h-96">
-            <h4 className="text-xs font-bold text-white/60 mb-2">📊 Debug Info</h4>
-            <div className="text-xs text-white/40 space-y-1 font-mono">
-              <div>Plan length: {plan?.length || 0} characters</div>
-              <div>PESTLE items found: {pestleData.length}</div>
-              <div>Displaying: {displayData.length} categories</div>
-              <div className="mt-2 text-white/50 font-bold">Parsed Data:</div>
-              <pre className="whitespace-pre-wrap text-[10px] text-white/30 bg-white/5 p-2 rounded">
-                {JSON.stringify(pestleData.map(p => ({ ...p, icon: 'SVG' })), null, 2)}
-              </pre>
-              <div className="mt-2 text-white/50 font-bold">Raw Plan Preview:</div>
-              <pre className="whitespace-pre-wrap text-[10px] text-white/30 bg-white/5 p-2 rounded max-h-60 overflow-auto">
-                {plan?.substring(0, 2000) || 'No plan data'}
-              </pre>
-            </div>
-          </div>
-        )}
-      </div>
 
       {displayData.length === 0 ? (
         <div className="text-center py-10 text-white/50">
           <p>No PESTLE data found in the generated plan.</p>
-          <p className="text-sm mt-2">Try regenerating the plan or check the debug panel above.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {displayData.map((item) => {
             const colors = colorMap[item.key] || colorMap.political;
-            const pointCount = item.insight.split('•').filter(p => p.trim().length > 0).length;
+            // Parse the insight as an array
+            let explanations: string[] = [];
+            try {
+              explanations = JSON.parse(item.insight);
+            } catch {
+              explanations = [item.insight];
+            }
             
             return (
               <div
@@ -1146,26 +1095,23 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
                     {item.title}
                   </div>
                 </div>
+                
+                {/* Explanations as bullet points */}
                 <div className="text-sm text-white/80 leading-relaxed mb-3">
-                  {item.insight === 'No data found for this category' ? (
-                    <span className="text-white/30 italic">No data available</span>
-                  ) : (
-                    <div className="space-y-1 text-left">
-                      {item.insight.split('•').map((point, idx) => {
-                        const trimmed = point.trim();
-                        if (trimmed && !trimmed.match(/^\d+\./)) {
-                          return (
-                            <div key={idx} className="flex items-start gap-2 text-xs text-white/70">
-                              <span className="text-green-400 mt-0.5">▸</span>
-                              <span>{trimmed}</span>
-                            </div>
-                          );
-                        }
-                        return null;
-                      })}
+                  {explanations.length > 0 ? (
+                    <div className="space-y-2 text-left">
+                      {explanations.map((point, idx) => (
+                        <div key={idx} className="flex items-start gap-2 text-sm text-white/80">
+                          <span className="text-green-400 mt-0.5 text-xs">▸</span>
+                          <span>{point}</span>
+                        </div>
+                      ))}
                     </div>
+                  ) : (
+                    <span className="text-white/30 italic">No explanations available</span>
                   )}
                 </div>
+                
                 <div className="pt-3 border-t border-white/5 flex items-center gap-2 flex-wrap">
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
@@ -1178,22 +1124,13 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
                   >
                     {item.impact} IMPACT
                   </span>
-                  {item.insight !== 'No data found for this category' && (
-                    <span className="text-xs text-white/30">
-                      {item.insight.split('•').filter(p => p.trim().length > 0).length} point{item.insight.split('•').filter(p => p.trim().length > 0).length > 1 ? 's' : ''}
-                    </span>
-                  )}
+                  <span className="text-xs text-white/30">
+                    {explanations.length} point{explanations.length > 1 ? 's' : ''}
+                  </span>
                 </div>
               </div>
             );
           })}
-        </div>
-      )}
-      
-      {/* Show missing categories */}
-      {pestleData.length > displayData.length && (
-        <div className="mt-4 text-xs text-yellow-400/50">
-          ⚠️ {pestleData.length - displayData.length} categories have no data (Political, Legal)
         </div>
       )}
     </div>
