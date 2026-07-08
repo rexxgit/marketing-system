@@ -927,7 +927,7 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
   );
 };
 // ============================================
-// ROLE 4: PESTLE EXPERT (FIXED PARSING + DEBUG)
+// ROLE 4: PESTLE EXPERT (FIXED PARSING)
 // ============================================
 
 const PESTLEVisual = ({ plan }: { plan: string }) => {
@@ -944,36 +944,15 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
       { key: 'environmental', icon: '🌿', title: 'Environmental' }
     ];
 
-    // Debug log
     console.log('🔍 PESTLE Debug - Plan preview:', plan?.substring(0, 500));
     
-    // Get the PESTLE section - try multiple approaches
+    // Get the PESTLE section
     let searchText = '';
-    
-    // Approach 1: Look for [PESTLE OUTPUT] tag
     const pestleSection = plan.match(/\[PESTLE\s+OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
     if (pestleSection && pestleSection[1]) {
       searchText = pestleSection[1].trim();
       console.log('✅ Found [PESTLE OUTPUT] section, length:', searchText.length);
       console.log('📝 Content preview:', searchText.substring(0, 300));
-    }
-    
-    // Approach 2: Look for **PESTLE OUTPUT** bold
-    if (!searchText) {
-      const boldSection = plan.match(/\*\*PESTLE\s+OUTPUT\*\*([\s\S]*?)(?=\n\n---|\n\*\*|$)/i);
-      if (boldSection && boldSection[1]) {
-        searchText = boldSection[1].trim();
-        console.log('✅ Found **PESTLE OUTPUT** section');
-      }
-    }
-    
-    // Approach 3: Look for any PESTLE mention
-    if (!searchText) {
-      const anySection = plan.match(/PESTLE.*?OUTPUT\s*\n([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-      if (anySection && anySection[1]) {
-        searchText = anySection[1].trim();
-        console.log('✅ Found PESTLE via loose match');
-      }
     }
     
     if (!searchText) {
@@ -984,93 +963,81 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
     console.log('📝 Full PESTLE section to parse:');
     console.log(searchText);
 
-    // Parse each category
+    // Parse each category using a more robust approach
     for (const cat of categories) {
       let insight = '';
       let impact = 'medium';
       
-      // Try multiple patterns to find content for each category
-      const patterns = [
-        // Pattern: **Economic Drivers:** followed by bullet points or text
-        new RegExp(`\\*\\*${cat.title}\\s+Drivers?\\*\\*[\\s\\n]*([\\s\\S]*?)(?=\\n\\*\\*|\\n\\n|$)`, 'i'),
-        // Pattern: **Economic** followed by content
-        new RegExp(`\\*\\*${cat.title}\\*\\*[\\s\\n]*([\\s\\S]*?)(?=\\n\\*\\*|\\n\\n|$)`, 'i'),
-        // Pattern: Economic Drivers: (without bold)
-        new RegExp(`${cat.title}\\s+Drivers?[:\\s]*([\\s\\S]*?)(?=\\n[A-Z]|\\n\\*\\*|$)`, 'i'),
-        // Pattern: Just the category name followed by content
-        new RegExp(`${cat.title}[:\\s]*([\\s\\S]*?)(?=\\n[A-Z]|\\n\\*\\*|$)`, 'i'),
-        // Pattern: Category in parentheses or brackets
-        new RegExp(`[(\\(]${cat.title}[)\\)][\\s\\n]*([\\s\\S]*?)(?=\\n[A-Z]|\\n\\*\\*|$)`, 'i'),
-      ];
+      // Build a regex that finds the category header and captures everything until the next category header
+      // or until the end of the section
+      const categoryPattern = new RegExp(
+        `\\*\\*${cat.title}\\s+Drivers?\\*\\*[\\s\\n]*([\\s\\S]*?)(?=\\n\\*\\*|$)`,
+        'i'
+      );
       
-      for (const pattern of patterns) {
-        const match = searchText.match(pattern);
-        if (match && match[1]) {
-          let content = match[1].trim();
-          // Clean up the content
-          content = content.replace(/^\s*[-•*]\s*/gm, '').trim();
-          
-          // Check if content is meaningful (not just a single word or empty)
-          if (content.length > 10) {
-            // Extract bullet points or sentences
-            const lines = content.split('\n').filter(l => l.trim().length > 0);
+      const match = searchText.match(categoryPattern);
+      
+      if (match && match[1]) {
+        let content = match[1].trim();
+        console.log(`✅ Found ${cat.title} section:`, content.substring(0, 100));
+        
+        // Extract bullet points
+        const lines = content.split('\n');
+        const bulletPoints: string[] = [];
+        
+        for (const line of lines) {
+          const trimmed = line.trim();
+          // Check if it's a bullet point
+          if (trimmed.match(/^[-•*]\s+/)) {
+            const point = trimmed.replace(/^[-•*]\s+/, '').trim();
+            if (point.length > 2) {
+              bulletPoints.push(point);
+            }
+          } else if (trimmed.length > 5 && !trimmed.match(/^[A-Z]/)) {
+            // If it's not a bullet but looks like content, add it
+            bulletPoints.push(trimmed);
+          }
+        }
+        
+        if (bulletPoints.length > 0) {
+          insight = bulletPoints.join(' • ');
+          console.log(`✅ ${cat.title}: ${bulletPoints.length} bullet points found`);
+        } else {
+          // If no bullet points, use the raw content
+          insight = content.substring(0, 150);
+          console.log(`✅ ${cat.title}: using raw content`);
+        }
+      } else {
+        console.log(`⚠️ No ${cat.title} section found`);
+        // Check if this category appears in the text at all
+        const hasCategory = searchText.toLowerCase().includes(cat.title.toLowerCase());
+        if (hasCategory) {
+          // Try to find it without the "Drivers" word
+          const simplePattern = new RegExp(
+            `\\*\\*${cat.title}\\*\\*[\\s\\n]*([\\s\\S]*?)(?=\\n\\*\\*|$)`,
+            'i'
+          );
+          const simpleMatch = searchText.match(simplePattern);
+          if (simpleMatch && simpleMatch[1]) {
+            const content = simpleMatch[1].trim();
+            const lines = content.split('\n');
             const bulletPoints = lines
-              .filter(l => l.trim().match(/^[-•*]/))
-              .map(l => l.replace(/^[-•*]\s*/, '').trim());
-            
+              .filter(l => l.trim().match(/^[-•*]\s+/))
+              .map(l => l.replace(/^[-•*]\s+/, '').trim());
             if (bulletPoints.length > 0) {
               insight = bulletPoints.join(' • ');
-              console.log(`✅ Found ${cat.title} with ${bulletPoints.length} bullet points`);
-            } else {
-              // Take the first sentence or line
-              const firstLine = content.split('\n')[0]?.trim() || '';
-              if (firstLine.length > 10) {
-                insight = firstLine;
-                console.log(`✅ Found ${cat.title} (single line):`, insight);
-              } else if (content.length > 20) {
-                insight = content.substring(0, 150);
-                console.log(`✅ Found ${cat.title} (full content):`, insight);
-              }
+              console.log(`✅ ${cat.title} (simple match): ${bulletPoints.length} points found`);
+            } else if (content.length > 10) {
+              insight = content.substring(0, 150);
+              console.log(`✅ ${cat.title} (simple match): using raw content`);
             }
-            break;
           }
         }
       }
       
-      // If still no insight, try a simpler approach - look for the category name and take everything until next category
-      if (!insight) {
-        const lines = searchText.split('\n');
-        let found = false;
-        for (let i = 0; i < lines.length; i++) {
-          const line = lines[i];
-          if (line.toLowerCase().includes(cat.title.toLowerCase()) && 
-              (line.includes('Drivers') || line.includes(':'))) {
-            // Take the next non-empty lines until we hit another category
-            let content = '';
-            for (let j = i + 1; j < lines.length; j++) {
-              const nextLine = lines[j].trim();
-              // Stop if we hit another category
-              if (categories.some(c => nextLine.toLowerCase().includes(c.title.toLowerCase()) && nextLine.includes('Drivers'))) {
-                break;
-              }
-              if (nextLine && !nextLine.match(/^---/)) {
-                content += nextLine + ' ';
-              }
-            }
-            if (content.length > 10) {
-              insight = content.trim().substring(0, 150);
-              console.log(`✅ Found ${cat.title} via line-by-line search`);
-            }
-            break;
-          }
-        }
-      }
-      
-      // Determine impact based on insight content
+      // Clean up and determine impact
       if (insight) {
-        // Clean up insight
         insight = insight.replace(/\*\*/g, '').trim();
-        // Limit length
         if (insight.length > 200) {
           insight = insight.substring(0, 200) + '...';
         }
@@ -1095,15 +1062,18 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
           impact: impact
         });
       } else {
-        console.log(`⚠️ No insight found for ${cat.title}`);
-        // Add a placeholder so we know what's missing
-        pestleData.push({
-          key: cat.key,
-          icon: cat.icon,
-          title: cat.title,
-          insight: 'No data found for this category',
-          impact: 'medium'
-        });
+        console.log(`❌ No insight found for ${cat.title}`);
+        // Don't add categories with no data (skip Political and Legal)
+        // Only add if it's not Political or Legal (since they're missing from mock data)
+        if (cat.key !== 'political' && cat.key !== 'legal') {
+          pestleData.push({
+            key: cat.key,
+            icon: cat.icon,
+            title: cat.title,
+            insight: 'No data found for this category',
+            impact: 'medium'
+          });
+        }
       }
     }
 
@@ -1120,6 +1090,9 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
     legal: { bg: 'rgba(239,68,68,.2)', text: '#f87171' },
     environmental: { bg: 'rgba(139,92,246,.2)', text: '#a78bfa' }
   };
+
+  // Filter out categories with no data
+  const displayData = pestleData.filter(p => p.insight !== 'No data found for this category');
 
   return (
     <div className="text-center">
@@ -1139,6 +1112,7 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
             <div className="text-xs text-white/40 space-y-1 font-mono">
               <div>Plan length: {plan?.length || 0} characters</div>
               <div>PESTLE items found: {pestleData.length}</div>
+              <div>Displaying: {displayData.length} categories</div>
               <div className="mt-2 text-white/50 font-bold">Parsed Data:</div>
               <pre className="whitespace-pre-wrap text-[10px] text-white/30 bg-white/5 p-2 rounded">
                 {JSON.stringify(pestleData, null, 2)}
@@ -1152,19 +1126,17 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
         )}
       </div>
 
-      {pestleData.length === 0 || pestleData.every(p => p.insight === 'No data found for this category') ? (
+      {displayData.length === 0 ? (
         <div className="text-center py-10 text-white/50">
           <p>No PESTLE data found in the generated plan.</p>
           <p className="text-sm mt-2">Try regenerating the plan or check the debug panel above.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {pestleData.map((item) => (
+          {displayData.map((item) => (
             <div
               key={item.key}
-              className={`bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-6px] hover:border-indigo-500/40 hover:shadow-lg cursor-pointer relative overflow-hidden ${
-                item.insight === 'No data found for this category' ? 'opacity-50' : ''
-              }`}
+              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-6px] hover:border-indigo-500/40 hover:shadow-lg cursor-pointer relative overflow-hidden"
               style={{ 
                 '::before': { 
                   content: '""', 
@@ -1218,10 +1190,10 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
         </div>
       )}
       
-      {/* Show count of missing items */}
-      {pestleData.some(p => p.insight === 'No data found for this category') && (
+      {/* Show missing categories */}
+      {pestleData.length > displayData.length && (
         <div className="mt-4 text-xs text-yellow-400/50">
-          ⚠️ Some categories have no data. Check the debug panel above for details.
+          ⚠️ {pestleData.length - displayData.length} categories have no data (Political, Legal)
         </div>
       )}
     </div>
