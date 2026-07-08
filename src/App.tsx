@@ -927,7 +927,7 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
   );
 };
 // ============================================
-// ROLE 4: PESTLE EXPERT (FIXED REGEX - HANDLES COLON)
+// ROLE 4: PESTLE EXPERT (SIMPLE LINE-BY-LINE PARSING)
 // ============================================
 
 const PESTLEVisual = ({ plan }: { plan: string }) => {
@@ -936,36 +936,12 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
   const parsePESTLE = () => {
     const pestleData: { key: string; icon: React.ReactNode; title: string; insight: string; impact: string }[] = [];
     const categories = [
-      { 
-        key: 'political', 
-        icon: <PoliticalIcon />, 
-        title: 'Political' 
-      },
-      { 
-        key: 'economic', 
-        icon: <EconomicIcon />, 
-        title: 'Economic' 
-      },
-      { 
-        key: 'social', 
-        icon: <SocialIcon />, 
-        title: 'Social' 
-      },
-      { 
-        key: 'technological', 
-        icon: <TechIcon />, 
-        title: 'Technological' 
-      },
-      { 
-        key: 'legal', 
-        icon: <LegalIcon />, 
-        title: 'Legal' 
-      },
-      { 
-        key: 'environmental', 
-        icon: <EnvironmentalIcon />, 
-        title: 'Environmental' 
-      }
+      { key: 'political', icon: <PoliticalIcon />, title: 'Political' },
+      { key: 'economic', icon: <EconomicIcon />, title: 'Economic' },
+      { key: 'social', icon: <SocialIcon />, title: 'Social' },
+      { key: 'technological', icon: <TechIcon />, title: 'Technological' },
+      { key: 'legal', icon: <LegalIcon />, title: 'Legal' },
+      { key: 'environmental', icon: <EnvironmentalIcon />, title: 'Environmental' }
     ];
 
     console.log('🔍 PESTLE Debug - Plan preview:', plan?.substring(0, 500));
@@ -987,100 +963,77 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
     console.log('📝 Full PESTLE section to parse:');
     console.log(searchText);
 
-    // Parse each category
-    for (const cat of categories) {
-      let insight = '';
-      let impact = 'medium';
+    // SIMPLE APPROACH: Split by lines and find categories
+    const lines = searchText.split('\n');
+    let currentCategory: string | null = null;
+    let currentContent: string[] = [];
+    
+    // First pass: Find all category headers and their content
+    const categoryMap: Record<string, string[]> = {};
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
       
-      // FIXED: Handle both "**Economic Drivers:**" and "**Economic Drivers**" patterns
-      const patterns = [
-        // Pattern with colon: **Economic Drivers:**
-        new RegExp(`\\*\\*${cat.title}\\s+Drivers?\\*\\*:\\s*([\\s\\S]*?)(?=\\n\\*\\*|$)`, 'i'),
-        // Pattern without colon: **Economic Drivers**
-        new RegExp(`\\*\\*${cat.title}\\s+Drivers?\\*\\*[\\s\\n]*([\\s\\S]*?)(?=\\n\\*\\*|$)`, 'i'),
-        // Pattern with just the category name: **Economic:**
-        new RegExp(`\\*\\*${cat.title}\\*\\*:\\s*([\\s\\S]*?)(?=\\n\\*\\*|$)`, 'i'),
-        // Pattern with just the category name: **Economic**
-        new RegExp(`\\*\\*${cat.title}\\*\\*[\\s\\n]*([\\s\\S]*?)(?=\\n\\*\\*|$)`, 'i'),
-      ];
-      
-      let match = null;
-      let matchedPattern = '';
-      
-      for (const pattern of patterns) {
-        const result = searchText.match(pattern);
-        if (result && result[1]) {
-          match = result;
-          matchedPattern = pattern.toString();
-          console.log(`✅ Found ${cat.title} with pattern: ${pattern}`);
+      // Check if this line is a category header
+      let foundCategory = false;
+      for (const cat of categories) {
+        // Check for **Economic Drivers:** or **Economic:**
+        const headerPattern = new RegExp(`\\*\\*${cat.title}\\s+Drivers?\\*\\*:?`, 'i');
+        if (headerPattern.test(line)) {
+          currentCategory = cat.title;
+          foundCategory = true;
+          categoryMap[currentCategory] = [];
+          console.log(`📌 Found category header: ${currentCategory}`);
           break;
         }
       }
       
-      if (match && match[1]) {
-        let content = match[1].trim();
-        console.log(`✅ Found ${cat.title} section`);
-        console.log(`📝 ${cat.title} content:`, content.substring(0, 100));
-        
-        // Split into lines and extract bullet points
-        const lines = content.split('\n');
-        const bulletPoints: string[] = [];
-        
-        for (const line of lines) {
-          const trimmed = line.trim();
-          // Check if it's a bullet point (starts with -, •, *)
-          if (trimmed.match(/^[-•*]\s+/)) {
-            const point = trimmed.replace(/^[-•*]\s+/, '').trim();
-            if (point.length > 2) {
-              bulletPoints.push(point);
+      // If we're in a category and this isn't a new header, collect content
+      if (currentCategory && !foundCategory) {
+        // Skip empty lines
+        if (line.length > 0) {
+          // Check if this line contains a bullet point
+          if (line.match(/^[-•*]\s+/)) {
+            const bulletPoint = line.replace(/^[-•*]\s+/, '').trim();
+            if (bulletPoint.length > 2) {
+              categoryMap[currentCategory].push(bulletPoint);
+              console.log(`   📝 ${currentCategory}: ${bulletPoint}`);
             }
-          } else if (trimmed.length > 5 && !trimmed.match(/^[A-Z]/) && !trimmed.includes('**')) {
-            // If it's not a bullet but looks like content, add it
-            bulletPoints.push(trimmed);
-          }
-        }
-        
-        if (bulletPoints.length > 0) {
-          insight = bulletPoints.map((p, i) => `${i + 1}. ${p}`).join('  ');
-          console.log(`✅ ${cat.title}: ${bulletPoints.length} bullet points found`);
-        } else if (content.length > 10) {
-          insight = content.substring(0, 150);
-          console.log(`✅ ${cat.title}: using raw content`);
-        }
-      } else {
-        console.log(`⚠️ No ${cat.title} section found`);
-        // Try searching for the category name without "Drivers"
-        const simpleSearch = searchText.match(new RegExp(`${cat.title}.*?\\n([\\s\\S]*?)(?=\\n[A-Z]|\\n\\*\\*|$)`, 'i'));
-        if (simpleSearch && simpleSearch[1]) {
-          const content = simpleSearch[1].trim();
-          const lines = content.split('\n');
-          const bulletPoints = lines
-            .filter(l => l.trim().match(/^[-•*]\s+/))
-            .map(l => l.replace(/^[-•*]\s+/, '').trim());
-          if (bulletPoints.length > 0) {
-            insight = bulletPoints.map((p, i) => `${i + 1}. ${p}`).join('  ');
-            console.log(`✅ ${cat.title} (simple search): ${bulletPoints.length} points found`);
+          } else if (!line.match(/^---/) && !line.match(/^\[/)) {
+            // If it's not a bullet but looks like content (and not a separator)
+            if (line.length > 5 && !line.includes('**')) {
+              categoryMap[currentCategory].push(line);
+              console.log(`   📝 ${currentCategory}: ${line}`);
+            }
           }
         }
       }
+    }
+
+    console.log('📊 Category Map:', categoryMap);
+
+    // Now build the pestle data from the category map
+    for (const cat of categories) {
+      const content = categoryMap[cat.title] || [];
+      let insight = '';
+      let impact = 'medium';
       
-      // Determine impact based on insight content
-      if (insight) {
-        insight = insight.replace(/\*\*/g, '').trim();
-        if (insight.length > 250) {
-          insight = insight.substring(0, 250) + '...';
-        }
+      if (content.length > 0) {
+        // Format the insight with numbered points
+        insight = content.map((p, i) => `${i + 1}. ${p}`).join('  ');
+        console.log(`✅ ${cat.title}: ${content.length} points found`);
         
-        const lowerInsight = insight.toLowerCase();
-        if (lowerInsight.includes('high') || lowerInsight.includes('significant') || 
-            lowerInsight.includes('major') || lowerInsight.includes('strong') || 
-            lowerInsight.includes('growth') || lowerInsight.includes('rising') ||
-            lowerInsight.includes('increase') || lowerInsight.includes('demand') ||
-            lowerInsight.includes('drives')) {
+        // Determine impact
+        const fullText = content.join(' ').toLowerCase();
+        if (fullText.includes('high') || fullText.includes('significant') || 
+            fullText.includes('major') || fullText.includes('strong') || 
+            fullText.includes('growth') || fullText.includes('rising') ||
+            fullText.includes('increase') || fullText.includes('demand') ||
+            fullText.includes('drives')) {
           impact = 'high';
-        } else if (lowerInsight.includes('low') || lowerInsight.includes('minor') || 
-                   lowerInsight.includes('weak') || lowerInsight.includes('negligible') ||
-                   lowerInsight.includes('decline')) {
+        } else if (fullText.includes('low') || fullText.includes('minor') || 
+                   fullText.includes('weak') || fullText.includes('negligible') ||
+                   fullText.includes('decline')) {
           impact = 'low';
         }
         
@@ -1092,7 +1045,7 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
           impact: impact
         });
       } else {
-        console.log(`❌ No insight found for ${cat.title}`);
+        console.log(`⚠️ No content found for ${cat.title}`);
         // Skip Political and Legal (they're not in the mock data)
         if (cat.key !== 'political' && cat.key !== 'legal') {
           pestleData.push({
@@ -1164,6 +1117,7 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {displayData.map((item) => {
             const colors = colorMap[item.key] || colorMap.political;
+            const pointCount = item.insight.split('•').filter(p => p.trim().length > 0).length;
             
             return (
               <div
