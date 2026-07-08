@@ -1698,7 +1698,7 @@ const CompetitorsVisual = ({ plan }: { plan: string }) => {
 };
 
 // ============================================
-// ROLE 7: POSITIONING EXPERT (WITH SVG ICONS)
+// ROLE 7: POSITIONING EXPERT (FULLY SVG ICONS)
 // ============================================
 
 const PositioningVisual = ({ plan }: { plan: string }) => {
@@ -1767,7 +1767,10 @@ const PositioningVisual = ({ plan }: { plan: string }) => {
 
   const positioning = parsePositioning();
 
-  // SVG Icons
+  // ============================================
+  // SVG ICONS
+  // ============================================
+
   const TargetIcon = () => (
     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="12" r="10"/>
@@ -1794,8 +1797,16 @@ const PositioningVisual = ({ plan }: { plan: string }) => {
   );
 
   const StarIcon = () => (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+    </svg>
+  );
+
+  const QuoteIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M10 11h-4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1z"/>
+      <path d="M18 11h-4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1z"/>
+      <line x1="4" y1="21" x2="20" y2="21"/>
     </svg>
   );
 
@@ -1804,42 +1815,58 @@ const PositioningVisual = ({ plan }: { plan: string }) => {
       <h2 className="text-xl font-bold text-indigo-300 mb-6">Brand Positioning</h2>
       <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/95 rounded-2xl p-8 border border-indigo-500/30 transition-all hover:translate-y-[-5px] hover:border-indigo-500/60 hover:shadow-xl">
         <div
-          className="text-lg font-semibold leading-relaxed text-center p-6 bg-indigo-500/10 rounded-xl mb-6 border-l-4 border-r-4"
+          className="text-lg font-semibold leading-relaxed text-center p-6 bg-indigo-500/10 rounded-xl mb-6 border-l-4 border-r-4 flex items-center justify-center gap-3"
           style={{ borderLeftColor: '#6366f1', borderRightColor: '#ec4899' }}
         >
-          "{positioning.statement || 'No positioning statement found. Generate a new plan with positioning data.'}"
+          <span className="text-indigo-400 opacity-50">
+            <QuoteIcon />
+          </span>
+          <span>
+            "{positioning.statement || 'No positioning statement found. Generate a new plan with positioning data.'}"
+          </span>
+          <span className="text-indigo-400 opacity-50 transform rotate-180">
+            <QuoteIcon />
+          </span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {/* TARGET */}
           <div className="bg-white/5 rounded-xl p-4 text-center transition-all hover:bg-indigo-500/10 hover:translate-y-[-3px] group">
-            <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-400 group-hover:bg-indigo-500/30 group-hover:scale-110 transition-all">
+            <div className="w-14 h-14 mx-auto mb-3 flex items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-400 group-hover:bg-indigo-500/30 group-hover:scale-110 transition-all">
               <TargetIcon />
             </div>
-            <div className="text-xs uppercase text-indigo-300 tracking-wider mb-2">TARGET</div>
+            <div className="text-xs font-bold uppercase text-indigo-300 tracking-wider mb-2">Target Audience</div>
             <div className="text-sm font-medium text-white/90">{positioning.target}</div>
           </div>
-          <div className="bg-white/5 rounded-xl p-4 text-center transition-all hover:bg-indigo-500/10 hover:translate-y-[-3px] group">
-            <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400 group-hover:bg-emerald-500/30 group-hover:scale-110 transition-all">
+
+          {/* BENEFIT */}
+          <div className="bg-white/5 rounded-xl p-4 text-center transition-all hover:bg-emerald-500/10 hover:translate-y-[-3px] group">
+            <div className="w-14 h-14 mx-auto mb-3 flex items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400 group-hover:bg-emerald-500/30 group-hover:scale-110 transition-all">
               <DiamondIcon />
             </div>
-            <div className="text-xs uppercase text-emerald-300 tracking-wider mb-2">BENEFIT</div>
+            <div className="text-xs font-bold uppercase text-emerald-300 tracking-wider mb-2">Core Benefit</div>
             <div className="text-sm font-medium text-white/90">{positioning.benefit}</div>
           </div>
-          <div className="bg-white/5 rounded-xl p-4 text-center transition-all hover:bg-indigo-500/10 hover:translate-y-[-3px] group">
-            <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-xl bg-amber-500/20 text-amber-400 group-hover:bg-amber-500/30 group-hover:scale-110 transition-all">
+
+          {/* RTB */}
+          <div className="bg-white/5 rounded-xl p-4 text-center transition-all hover:bg-amber-500/10 hover:translate-y-[-3px] group">
+            <div className="w-14 h-14 mx-auto mb-3 flex items-center justify-center rounded-xl bg-amber-500/20 text-amber-400 group-hover:bg-amber-500/30 group-hover:scale-110 transition-all">
               <ShieldIcon />
             </div>
-            <div className="text-xs uppercase text-amber-300 tracking-wider mb-2">RTB</div>
+            <div className="text-xs font-bold uppercase text-amber-300 tracking-wider mb-2">Reason to Believe</div>
             <div className="text-sm font-medium text-white/90">{positioning.rtb}</div>
           </div>
         </div>
       </div>
+
+      {/* Core Value Section */}
       {positioning.value !== 'N/A' && (
-        <div className="mt-5 p-4 bg-indigo-500/10 rounded-xl text-center flex items-center justify-center gap-3">
-          <div className="w-8 h-8 flex items-center justify-center text-yellow-400">
+        <div className="mt-5 p-4 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 rounded-xl text-center flex items-center justify-center gap-3 border border-indigo-500/20">
+          <div className="w-10 h-10 flex items-center justify-center text-yellow-400 bg-yellow-500/20 rounded-full">
             <StarIcon />
           </div>
           <div>
-            <strong className="text-white/70">Core Value:</strong> <span className="text-indigo-300">"{positioning.value}"</span>
+            <span className="text-sm font-semibold text-white/60 uppercase tracking-wider mr-2">Core Value:</span>
+            <span className="text-indigo-300 font-medium">"{positioning.value}"</span>
           </div>
         </div>
       )}
