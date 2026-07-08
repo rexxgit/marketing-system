@@ -927,7 +927,7 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
   );
 };
 // ============================================
-// ROLE 4: PESTLE EXPERT (SVG ICONS + FIXED PARSING)
+// ROLE 4: PESTLE EXPERT (FIXED REGEX - HANDLES COLON)
 // ============================================
 
 const PESTLEVisual = ({ plan }: { plan: string }) => {
@@ -992,17 +992,35 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
       let insight = '';
       let impact = 'medium';
       
-      // Find the category section - look for **Category Drivers:** or **Category:**
-      const categoryPattern = new RegExp(
-        `\\*\\*${cat.title}\\s+Drivers?\\*\\*[\\s\\n]*([\\s\\S]*?)(?=\\n\\*\\*|$)`,
-        'i'
-      );
+      // FIXED: Handle both "**Economic Drivers:**" and "**Economic Drivers**" patterns
+      const patterns = [
+        // Pattern with colon: **Economic Drivers:**
+        new RegExp(`\\*\\*${cat.title}\\s+Drivers?\\*\\*:\\s*([\\s\\S]*?)(?=\\n\\*\\*|$)`, 'i'),
+        // Pattern without colon: **Economic Drivers**
+        new RegExp(`\\*\\*${cat.title}\\s+Drivers?\\*\\*[\\s\\n]*([\\s\\S]*?)(?=\\n\\*\\*|$)`, 'i'),
+        // Pattern with just the category name: **Economic:**
+        new RegExp(`\\*\\*${cat.title}\\*\\*:\\s*([\\s\\S]*?)(?=\\n\\*\\*|$)`, 'i'),
+        // Pattern with just the category name: **Economic**
+        new RegExp(`\\*\\*${cat.title}\\*\\*[\\s\\n]*([\\s\\S]*?)(?=\\n\\*\\*|$)`, 'i'),
+      ];
       
-      const match = searchText.match(categoryPattern);
+      let match = null;
+      let matchedPattern = '';
+      
+      for (const pattern of patterns) {
+        const result = searchText.match(pattern);
+        if (result && result[1]) {
+          match = result;
+          matchedPattern = pattern.toString();
+          console.log(`✅ Found ${cat.title} with pattern: ${pattern}`);
+          break;
+        }
+      }
       
       if (match && match[1]) {
         let content = match[1].trim();
         console.log(`✅ Found ${cat.title} section`);
+        console.log(`📝 ${cat.title} content:`, content.substring(0, 100));
         
         // Split into lines and extract bullet points
         const lines = content.split('\n');
@@ -1031,6 +1049,19 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
         }
       } else {
         console.log(`⚠️ No ${cat.title} section found`);
+        // Try searching for the category name without "Drivers"
+        const simpleSearch = searchText.match(new RegExp(`${cat.title}.*?\\n([\\s\\S]*?)(?=\\n[A-Z]|\\n\\*\\*|$)`, 'i'));
+        if (simpleSearch && simpleSearch[1]) {
+          const content = simpleSearch[1].trim();
+          const lines = content.split('\n');
+          const bulletPoints = lines
+            .filter(l => l.trim().match(/^[-•*]\s+/))
+            .map(l => l.replace(/^[-•*]\s+/, '').trim());
+          if (bulletPoints.length > 0) {
+            insight = bulletPoints.map((p, i) => `${i + 1}. ${p}`).join('  ');
+            console.log(`✅ ${cat.title} (simple search): ${bulletPoints.length} points found`);
+          }
+        }
       }
       
       // Determine impact based on insight content
@@ -1133,7 +1164,6 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {displayData.map((item) => {
             const colors = colorMap[item.key] || colorMap.political;
-            const pointCount = item.insight.split('•').filter(p => p.trim().length > 0).length;
             
             return (
               <div
@@ -1232,8 +1262,6 @@ const EconomicIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <line x1="12" y1="1" x2="12" y2="23"/>
     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-    <path d="M12 1v4"/>
-    <path d="M12 19v4"/>
   </svg>
 );
 
@@ -1275,135 +1303,6 @@ const EnvironmentalIcon = () => (
     <path d="M8 9l4 3 4-3"/>
   </svg>
 );
-// ROLE 5: PORTER'S FORCES EXPERT
-// ============================================
-
-const PortersVisual = ({ plan }: { plan: string }) => {
-  const parsePorters = () => {
-    const content = extractTagContent(plan, 'PORTERS OUTPUT');
-    const fullPlan = plan;
-    
-    const forces = [
-      { key: 'newEntrants', icon: <Users size={24} />, name: 'Threat of New Entrants' },
-      { key: 'buyerPower', icon: <ShoppingBag size={24} />, name: 'Bargaining Power of Buyers' },
-      { key: 'supplierPower', icon: <Factory size={24} />, name: 'Bargaining Power of Suppliers' },
-      { key: 'substitutes', icon: <RefreshCw size={24} />, name: 'Threat of Substitutes' },
-      { key: 'rivalry', icon: <Swords size={24} />, name: 'Industry Rivalry' }
-    ];
-
-    const parsedForces: any[] = [];
-    const searchText = content || fullPlan;
-    const lines = searchText.split('\n');
-
-    for (const force of forces) {
-      let insight = '';
-      let rating: 'high' | 'medium' | 'low' = 'medium';
-      
-      for (const line of lines) {
-        const trimmed = line.trim();
-        const lower = trimmed.toLowerCase();
-        if (lower.includes(force.key.toLowerCase()) || 
-            lower.includes(force.name.toLowerCase().replace('threat of ', '')) ||
-            lower.includes(force.name.toLowerCase())) {
-          const insightMatch = trimmed.match(/[:\-•]\s*(.+)/);
-          if (insightMatch) {
-            insight = insightMatch[1].trim();
-          } else {
-            const clean = trimmed.replace(/^[-•*]\s+/, '').replace(/^[A-Z]+:?\s*/, '');
-            if (clean.length > 10) {
-              insight = clean;
-            }
-          }
-          if (lower.includes('high') || lower.includes('strong') || lower.includes('significant')) {
-            rating = 'high';
-          } else if (lower.includes('low') || lower.includes('weak') || lower.includes('minor')) {
-            rating = 'low';
-          }
-          break;
-        }
-      }
-
-      if (insight && insight.length > 20) {
-        parsedForces.push({
-          ...force,
-          rating,
-          insight: insight
-        });
-      }
-    }
-
-    return parsedForces;
-  };
-
-  const forces = parsePorters();
-  const colorMap: Record<string, { bg: string; text: string }> = {
-    newEntrants: { bg: 'rgba(139,92,246,.2)', text: '#a78bfa' },
-    buyerPower: { bg: 'rgba(245,158,11,.2)', text: '#fbbf24' },
-    supplierPower: { bg: 'rgba(59,130,246,.2)', text: '#60a5fa' },
-    substitutes: { bg: 'rgba(239,68,68,.2)', text: '#f87171' },
-    rivalry: { bg: 'rgba(236,72,153,.2)', text: '#f472b6' }
-  };
-
-  const getRatingWidth = (rating: string): number => {
-    switch (rating) {
-      case 'high': return 85;
-      case 'medium': return 55;
-      default: return 25;
-    }
-  };
-
-  const getRatingColor = (rating: string): string => {
-    switch (rating) {
-      case 'high': return 'linear-gradient(90deg, #ef4444, #f87171)';
-      case 'medium': return 'linear-gradient(90deg, #f59e0b, #fbbf24)';
-      default: return 'linear-gradient(90deg, #10b981, #34d399)';
-    }
-  };
-
-  return (
-    <div className="text-center">
-      <h2 className="text-xl font-bold text-indigo-300 mb-6">Porter's Five Forces</h2>
-      {forces.length === 0 ? (
-        <div className="text-center py-10 text-white/50">
-          <p>No Porter's Five Forces data found in the generated plan.</p>
-          <p className="text-sm mt-2">Generate a new plan with competitive analysis.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {forces.map((force) => (
-            <div
-              key={force.key}
-              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-6px] hover:border-indigo-500/40 hover:shadow-lg cursor-pointer"
-            >
-              <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
-                <div
-                  className="w-10 h-10 flex items-center justify-center rounded-xl transition-transform hover:scale-110"
-                  style={{ background: colorMap[force.key]?.bg || 'rgba(99,102,241,.2)', color: colorMap[force.key]?.text || '#818cf8' }}
-                >
-                  {force.icon}
-                </div>
-                <div className="text-base font-bold" style={{ color: colorMap[force.key]?.text || '#818cf8' }}>
-                  {force.name}
-                </div>
-              </div>
-              <div className="mb-3">
-                <span className="text-xs font-semibold text-white/60">{force.rating.toUpperCase()} THREAT</span>
-                <div className="h-2 bg-white/10 rounded-full mt-2 overflow-hidden">
-                  <div
-                    className="h-full rounded-full"
-                    style={{ width: `${getRatingWidth(force.rating)}%`, background: getRatingColor(force.rating) }}
-                  />
-                </div>
-              </div>
-              <div className="text-sm text-white/70 mt-3 text-left leading-relaxed">{force.insight}</div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
 // ============================================
 // ROLE 6: COMPETITORS EXPERT
 // ============================================
