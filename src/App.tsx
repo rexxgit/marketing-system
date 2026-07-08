@@ -930,6 +930,10 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
 // ROLE 4: PESTLE EXPERT (FIXED PARSING)
 // ============================================
 
+// ============================================
+// ROLE 4: PESTLE EXPERT (FINAL FIX - PROPER BULLET PARSING)
+// ============================================
+
 const PESTLEVisual = ({ plan }: { plan: string }) => {
   const [debugOpen, setDebugOpen] = useState(false);
   
@@ -963,13 +967,13 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
     console.log('📝 Full PESTLE section to parse:');
     console.log(searchText);
 
-    // Parse each category using a more robust approach
+    // Parse each category
     for (const cat of categories) {
       let insight = '';
       let impact = 'medium';
+      let bulletCount = 0;
       
-      // Build a regex that finds the category header and captures everything until the next category header
-      // or until the end of the section
+      // Find the category section - look for **Category Drivers:** or **Category:**
       const categoryPattern = new RegExp(
         `\\*\\*${cat.title}\\s+Drivers?\\*\\*[\\s\\n]*([\\s\\S]*?)(?=\\n\\*\\*|$)`,
         'i'
@@ -979,29 +983,33 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
       
       if (match && match[1]) {
         let content = match[1].trim();
-        console.log(`✅ Found ${cat.title} section:`, content.substring(0, 100));
+        console.log(`✅ Found ${cat.title} section`);
         
-        // Extract bullet points
+        // Split into lines and extract bullet points
         const lines = content.split('\n');
         const bulletPoints: string[] = [];
         
         for (const line of lines) {
           const trimmed = line.trim();
-          // Check if it's a bullet point
+          // Check if it's a bullet point (starts with -, •, *)
           if (trimmed.match(/^[-•*]\s+/)) {
             const point = trimmed.replace(/^[-•*]\s+/, '').trim();
             if (point.length > 2) {
               bulletPoints.push(point);
             }
-          } else if (trimmed.length > 5 && !trimmed.match(/^[A-Z]/)) {
+          } else if (trimmed.length > 5 && !trimmed.match(/^[A-Z]/) && !trimmed.includes('**')) {
             // If it's not a bullet but looks like content, add it
             bulletPoints.push(trimmed);
           }
         }
         
+        bulletCount = bulletPoints.length;
+        
         if (bulletPoints.length > 0) {
-          insight = bulletPoints.join(' • ');
+          // Join bullet points with proper formatting
+          insight = bulletPoints.map((p, i) => `${i + 1}. ${p}`).join('  •  ');
           console.log(`✅ ${cat.title}: ${bulletPoints.length} bullet points found`);
+          console.log(`   Points: ${bulletPoints.join(', ')}`);
         } else {
           // If no bullet points, use the raw content
           insight = content.substring(0, 150);
@@ -1009,33 +1017,9 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
         }
       } else {
         console.log(`⚠️ No ${cat.title} section found`);
-        // Check if this category appears in the text at all
-        const hasCategory = searchText.toLowerCase().includes(cat.title.toLowerCase());
-        if (hasCategory) {
-          // Try to find it without the "Drivers" word
-          const simplePattern = new RegExp(
-            `\\*\\*${cat.title}\\*\\*[\\s\\n]*([\\s\\S]*?)(?=\\n\\*\\*|$)`,
-            'i'
-          );
-          const simpleMatch = searchText.match(simplePattern);
-          if (simpleMatch && simpleMatch[1]) {
-            const content = simpleMatch[1].trim();
-            const lines = content.split('\n');
-            const bulletPoints = lines
-              .filter(l => l.trim().match(/^[-•*]\s+/))
-              .map(l => l.replace(/^[-•*]\s+/, '').trim());
-            if (bulletPoints.length > 0) {
-              insight = bulletPoints.join(' • ');
-              console.log(`✅ ${cat.title} (simple match): ${bulletPoints.length} points found`);
-            } else if (content.length > 10) {
-              insight = content.substring(0, 150);
-              console.log(`✅ ${cat.title} (simple match): using raw content`);
-            }
-          }
-        }
       }
       
-      // Clean up and determine impact
+      // Determine impact based on insight content
       if (insight) {
         insight = insight.replace(/\*\*/g, '').trim();
         if (insight.length > 200) {
@@ -1046,7 +1030,7 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
         if (lowerInsight.includes('high') || lowerInsight.includes('significant') || 
             lowerInsight.includes('major') || lowerInsight.includes('strong') || 
             lowerInsight.includes('growth') || lowerInsight.includes('rising') ||
-            lowerInsight.includes('increase')) {
+            lowerInsight.includes('increase') || lowerInsight.includes('demand')) {
           impact = 'high';
         } else if (lowerInsight.includes('low') || lowerInsight.includes('minor') || 
                    lowerInsight.includes('weak') || lowerInsight.includes('negligible') ||
@@ -1063,8 +1047,7 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
         });
       } else {
         console.log(`❌ No insight found for ${cat.title}`);
-        // Don't add categories with no data (skip Political and Legal)
-        // Only add if it's not Political or Legal (since they're missing from mock data)
+        // Only add if it's not Political or Legal (they're not in the mock data)
         if (cat.key !== 'political' && cat.key !== 'legal') {
           pestleData.push({
             key: cat.key,
@@ -1133,60 +1116,78 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {displayData.map((item) => (
-            <div
-              key={item.key}
-              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-6px] hover:border-indigo-500/40 hover:shadow-lg cursor-pointer relative overflow-hidden"
-              style={{ 
-                '::before': { 
-                  content: '""', 
-                  position: 'absolute', 
-                  top: 0, 
-                  left: 0, 
-                  width: '100%', 
-                  height: '3px', 
-                  background: `linear-gradient(90deg, ${colorMap[item.key]?.text || '#818cf8'}, ${colorMap[item.key]?.text || '#818cf8'})` 
-                } 
-              } as any}
-            >
-              <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
-                <div
-                  className="w-10 h-10 flex items-center justify-center text-2xl rounded-xl"
-                  style={{ background: colorMap[item.key]?.bg || 'rgba(99,102,241,.2)' }}
-                >
-                  {item.icon}
+          {displayData.map((item) => {
+            // Count the number of bullet points for display
+            const pointCount = item.insight.split('•').length;
+            
+            return (
+              <div
+                key={item.key}
+                className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-6px] hover:border-indigo-500/40 hover:shadow-lg cursor-pointer relative overflow-hidden"
+                style={{ 
+                  '::before': { 
+                    content: '""', 
+                    position: 'absolute', 
+                    top: 0, 
+                    left: 0, 
+                    width: '100%', 
+                    height: '3px', 
+                    background: `linear-gradient(90deg, ${colorMap[item.key]?.text || '#818cf8'}, ${colorMap[item.key]?.text || '#818cf8'})` 
+                  } 
+                } as any}
+              >
+                <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
+                  <div
+                    className="w-10 h-10 flex items-center justify-center text-2xl rounded-xl"
+                    style={{ background: colorMap[item.key]?.bg || 'rgba(99,102,241,.2)' }}
+                  >
+                    {item.icon}
+                  </div>
+                  <div className="text-lg font-bold" style={{ color: colorMap[item.key]?.text || '#818cf8' }}>
+                    {item.title}
+                  </div>
                 </div>
-                <div className="text-lg font-bold" style={{ color: colorMap[item.key]?.text || '#818cf8' }}>
-                  {item.title}
+                <div className="text-sm text-white/80 leading-relaxed mb-3">
+                  {item.insight === 'No data found for this category' ? (
+                    <span className="text-white/30 italic">No data available</span>
+                  ) : (
+                    <div className="space-y-1 text-left">
+                      {item.insight.split('•').map((point, idx) => {
+                        const trimmed = point.trim();
+                        if (trimmed && !trimmed.match(/^\d+\./)) {
+                          return (
+                            <div key={idx} className="flex items-start gap-2 text-xs text-white/70">
+                              <span className="text-green-400 mt-0.5">▸</span>
+                              <span>{trimmed}</span>
+                            </div>
+                          );
+                        }
+                        return null;
+                      })}
+                    </div>
+                  )}
                 </div>
-              </div>
-              <div className="text-sm text-white/80 leading-relaxed mb-3">
-                {item.insight === 'No data found for this category' ? (
-                  <span className="text-white/30 italic">No data available</span>
-                ) : (
-                  item.insight
-                )}
-              </div>
-              <div className="pt-3 border-t border-white/5 flex items-center gap-2">
-                <span
-                  className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
-                    item.impact === 'high'
-                      ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                      : item.impact === 'medium'
-                      ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
-                      : 'bg-green-500/20 text-green-400 border border-green-500/30'
-                  }`}
-                >
-                  {item.impact} IMPACT
-                </span>
-                {item.insight !== 'No data found for this category' && (
-                  <span className="text-xs text-white/30">
-                    {item.insight.split('•').length} point{item.insight.split('•').length > 1 ? 's' : ''}
+                <div className="pt-3 border-t border-white/5 flex items-center gap-2 flex-wrap">
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
+                      item.impact === 'high'
+                        ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                        : item.impact === 'medium'
+                        ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                        : 'bg-green-500/20 text-green-400 border border-green-500/30'
+                    }`}
+                  >
+                    {item.impact} IMPACT
                   </span>
-                )}
+                  {item.insight !== 'No data found for this category' && (
+                    <span className="text-xs text-white/30">
+                      {item.insight.split('•').filter(p => p.trim().length > 0).length} point{item.insight.split('•').filter(p => p.trim().length > 0).length > 1 ? 's' : ''}
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
       
@@ -1199,7 +1200,6 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
     </div>
   );
 };
-// ============================================
 // ROLE 5: PORTER'S FORCES EXPERT
 // ============================================
 
