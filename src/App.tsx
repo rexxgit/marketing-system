@@ -927,12 +927,12 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
   );
 };
 // ============================================
-// ROLE 4: PESTLE EXPERT (FIXED EXPLANATION DISPLAY)
+// ROLE 4: PESTLE EXPERT (SIMPLIFIED PARSER)
 // ============================================
 
 const PESTLEVisual = ({ plan }: { plan: string }) => {
   const parsePESTLE = () => {
-    const pestleData: { key: string; icon: React.ReactNode; title: string; insight: string; impact: string }[] = [];
+    const pestleData: { key: string; icon: React.ReactNode; title: string; insight: string[]; impact: string }[] = [];
     const categories = [
       { key: 'political', icon: <PoliticalIcon />, title: 'Political' },
       { key: 'economic', icon: <EconomicIcon />, title: 'Economic' },
@@ -950,55 +950,78 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
     }
     
     if (!searchText) {
+      console.log('❌ No PESTLE section found');
       return [];
     }
 
-    // Parse line by line
+    console.log('📝 Full PESTLE section:', searchText);
+
+    // SIMPLE APPROACH: Split by sections using the **Category Drivers:** pattern
+    const categoryMap: Record<string, string[]> = {};
+    
+    // Initialize all categories
+    for (const cat of categories) {
+      categoryMap[cat.title] = [];
+    }
+
+    // Split the text by category headers
+    // Use a regex to find all category headers and their content
     const lines = searchText.split('\n');
     let currentCategory: string | null = null;
-    const categoryMap: Record<string, string[]> = {};
     
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
       
-      // Check if this line is a category header
-      let foundCategory = false;
+      if (line.length === 0) continue;
+      
+      // Check if this line is a category header (bold text with "Drivers")
+      let isHeader = false;
       for (const cat of categories) {
-        const headerPattern = new RegExp(`\\*\\*${cat.title}\\s+Drivers?\\*\\*:?`, 'i');
-        if (headerPattern.test(line)) {
-          currentCategory = cat.title;
-          foundCategory = true;
-          categoryMap[currentCategory] = [];
-          break;
+        // Check for patterns like: **Economic Drivers:** or **Economic Drivers** or **Economic:**
+        const patterns = [
+          `**${cat.title} Drivers:**`,
+          `**${cat.title} Drivers**`,
+          `**${cat.title}:**`,
+          `**${cat.title}**`,
+        ];
+        
+        for (const pattern of patterns) {
+          if (line.includes(pattern)) {
+            currentCategory = cat.title;
+            isHeader = true;
+            console.log(`📌 Found header: ${currentCategory}`);
+            break;
+          }
         }
+        if (isHeader) break;
       }
       
-      // If we're in a category and this isn't a new header, collect content
-      if (currentCategory && !foundCategory) {
-        if (line.length > 0) {
-          if (line.match(/^[-•*]\s+/)) {
-            const bulletPoint = line.replace(/^[-•*]\s+/, '').trim();
-            if (bulletPoint.length > 2) {
-              categoryMap[currentCategory].push(bulletPoint);
-            }
-          } else if (!line.match(/^---/) && !line.match(/^\[/) && line.length > 5 && !line.includes('**')) {
-            categoryMap[currentCategory].push(line);
+      // If we're in a category and this line has a bullet point, collect it
+      if (currentCategory && !isHeader && line.length > 0) {
+        // Check if this is a bullet point
+        const bulletMatch = line.match(/^[-•*]\s+(.+)/);
+        if (bulletMatch) {
+          const point = bulletMatch[1].trim();
+          if (point.length > 2) {
+            categoryMap[currentCategory].push(point);
+            console.log(`   📝 ${currentCategory}: ${point}`);
           }
+        } else if (!line.includes('---') && !line.includes('[') && line.length > 5 && !line.includes('**')) {
+          // If it's not a bullet but looks like content
+          categoryMap[currentCategory].push(line);
+          console.log(`   📝 ${currentCategory}: ${line}`);
         }
       }
     }
 
+    console.log('📊 Final Category Map:', categoryMap);
+
     // Build the pestle data
     for (const cat of categories) {
       const content = categoryMap[cat.title] || [];
-      let insight = '';
       let impact = 'medium';
       
       if (content.length > 0) {
-        // Store as array for proper display
-        insight = JSON.stringify(content); // Store as JSON string array
-        console.log(`✅ ${cat.title}:`, content);
-        
         const fullText = content.join(' ').toLowerCase();
         if (fullText.includes('high') || fullText.includes('significant') || 
             fullText.includes('major') || fullText.includes('strong') || 
@@ -1016,17 +1039,19 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
           key: cat.key,
           icon: cat.icon,
           title: cat.title,
-          insight: insight,
+          insight: content,
           impact: impact
         });
+        console.log(`✅ ${cat.title}: ${content.length} points found`);
       } else {
+        console.log(`⚠️ No content found for ${cat.title}`);
         // Skip Political and Legal (not in mock data)
         if (cat.key !== 'political' && cat.key !== 'legal') {
           pestleData.push({
             key: cat.key,
             icon: cat.icon,
             title: cat.title,
-            insight: '[]',
+            insight: [],
             impact: 'medium'
           });
         }
@@ -1046,7 +1071,7 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
     environmental: { bg: 'rgba(139,92,246,.15)', text: '#a78bfa', iconColor: '#a78bfa' }
   };
 
-  const displayData = pestleData.filter(p => p.insight !== '[]');
+  const displayData = pestleData.filter(p => p.insight.length > 0);
 
   return (
     <div className="text-center">
@@ -1060,13 +1085,6 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {displayData.map((item) => {
             const colors = colorMap[item.key] || colorMap.political;
-            // Parse the insight as an array
-            let explanations: string[] = [];
-            try {
-              explanations = JSON.parse(item.insight);
-            } catch {
-              explanations = [item.insight];
-            }
             
             return (
               <div
@@ -1098,9 +1116,9 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
                 
                 {/* Explanations as bullet points */}
                 <div className="text-sm text-white/80 leading-relaxed mb-3">
-                  {explanations.length > 0 ? (
+                  {item.insight.length > 0 ? (
                     <div className="space-y-2 text-left">
-                      {explanations.map((point, idx) => (
+                      {item.insight.map((point, idx) => (
                         <div key={idx} className="flex items-start gap-2 text-sm text-white/80">
                           <span className="text-green-400 mt-0.5 text-xs">▸</span>
                           <span>{point}</span>
@@ -1125,7 +1143,7 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
                     {item.impact} IMPACT
                   </span>
                   <span className="text-xs text-white/30">
-                    {explanations.length} point{explanations.length > 1 ? 's' : ''}
+                    {item.insight.length} point{item.insight.length > 1 ? 's' : ''}
                   </span>
                 </div>
               </div>
