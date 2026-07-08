@@ -927,15 +927,11 @@ const MarketSizingVennDiagram = ({ plan }: { plan: string }) => {
   );
 };
 // ============================================
-// ROLE 4: PESTLE EXPERT (AGGRESSIVE DEBUG)
+// ROLE 4: PESTLE EXPERT (FIXED PARSING + DEBUG)
 // ============================================
 
 const PESTLEVisual = ({ plan }: { plan: string }) => {
-  // Debug: Log the entire plan first 1000 chars
-  console.log('📄 Full plan preview:', plan.substring(0, 1000));
-  
-  // Check if PESTLE tag exists using multiple methods
-  console.log('🔍 Checking for PESTLE tag...');
+  const [debugOpen, setDebugOpen] = useState(false);
   
   const parsePESTLE = () => {
     const pestleData: { key: string; icon: string; title: string; insight: string; impact: string }[] = [];
@@ -948,97 +944,124 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
       { key: 'environmental', icon: '🌿', title: 'Environmental' }
     ];
 
-    // DIRECT APPROACH: Look for PESTLE section in the plan
-    const pestleSection = plan.match(/\[PESTLE\s+OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+    // Debug log
+    console.log('🔍 PESTLE Debug - Plan preview:', plan?.substring(0, 500));
+    
+    // Get the PESTLE section - try multiple approaches
     let searchText = '';
     
+    // Approach 1: Look for [PESTLE OUTPUT] tag
+    const pestleSection = plan.match(/\[PESTLE\s+OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
     if (pestleSection && pestleSection[1]) {
       searchText = pestleSection[1].trim();
-      console.log('✅ Found PESTLE section via [PESTLE OUTPUT]!');
-      console.log('📝 PESTLE content length:', searchText.length);
-      console.log('📝 PESTLE content preview:', searchText.substring(0, 300));
-    } else {
-      // Try bold format
+      console.log('✅ Found [PESTLE OUTPUT] section, length:', searchText.length);
+      console.log('📝 Content preview:', searchText.substring(0, 300));
+    }
+    
+    // Approach 2: Look for **PESTLE OUTPUT** bold
+    if (!searchText) {
       const boldSection = plan.match(/\*\*PESTLE\s+OUTPUT\*\*([\s\S]*?)(?=\n\n---|\n\*\*|$)/i);
       if (boldSection && boldSection[1]) {
         searchText = boldSection[1].trim();
-        console.log('✅ Found PESTLE section via **PESTLE OUTPUT**!');
-        console.log('📝 PESTLE content length:', searchText.length);
-        console.log('📝 PESTLE content preview:', searchText.substring(0, 300));
-      } else {
-        // Try to find PESTLE without exact tag
-        const anySection = plan.match(/PESTLE\s+OUTPUT\s*\n([\s\S]*?)(?=\n\n---|\n\[|$)/i);
-        if (anySection && anySection[1]) {
-          searchText = anySection[1].trim();
-          console.log('✅ Found PESTLE section via loose match!');
-        }
+        console.log('✅ Found **PESTLE OUTPUT** section');
+      }
+    }
+    
+    // Approach 3: Look for any PESTLE mention
+    if (!searchText) {
+      const anySection = plan.match(/PESTLE.*?OUTPUT\s*\n([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+      if (anySection && anySection[1]) {
+        searchText = anySection[1].trim();
+        console.log('✅ Found PESTLE via loose match');
       }
     }
     
     if (!searchText) {
-      console.log('❌ No PESTLE section found in plan');
-      // Try to find category keywords directly in the plan
-      console.log('🔍 Searching for category keywords in full plan...');
-      for (const cat of categories) {
-        const found = plan.toLowerCase().includes(cat.key) || plan.toLowerCase().includes(cat.title.toLowerCase());
-        console.log(`   ${cat.title}: ${found ? 'FOUND' : 'NOT FOUND'}`);
-      }
+      console.log('❌ No PESTLE section found');
       return [];
     }
-    
-    console.log('🔍 Parsing PESTLE categories...');
 
+    console.log('📝 Full PESTLE section to parse:');
+    console.log(searchText);
+
+    // Parse each category
     for (const cat of categories) {
       let insight = '';
+      let impact = 'medium';
       
-      // Try to find content for each category
+      // Try multiple patterns to find content for each category
       const patterns = [
-        // **Economic Drivers:** followed by content on the next line or same line
-        new RegExp(`\\*\\*${cat.title}\\s+Drivers\\*\\*[\\s\\n]*([^\\n]+)`, 'i'),
-        // **Economic Drivers** (without colon)
-        new RegExp(`\\*\\*${cat.title}\\s+Drivers\\*\\*\\s*\\n([^\\n]+)`, 'i'),
-        // Economic Drivers: (without bold)
-        new RegExp(`${cat.title}\\s+Drivers[:\\s]*([^\\n]+)`, 'i'),
-        // **Political:** format
-        new RegExp(`\\*\\*${cat.key}\\*\\*[:\\s]*([^\\n]+)`, 'i'),
-        // political: format
-        new RegExp(`${cat.key}[:\\s]*([^\\n]+)`, 'i'),
-        // Look for category name and take the next sentence
-        new RegExp(`${cat.title}.*?\\n\\s*([^\\n]+)`, 'i'),
-        new RegExp(`${cat.key}.*?\\n\\s*([^\\n]+)`, 'i'),
-        // Just the category name followed by any text
-        new RegExp(`${cat.title}\\s*([^\\n]+)`, 'i'),
-        new RegExp(`${cat.key}\\s*([^\\n]+)`, 'i'),
+        // Pattern: **Economic Drivers:** followed by bullet points or text
+        new RegExp(`\\*\\*${cat.title}\\s+Drivers?\\*\\*[\\s\\n]*([\\s\\S]*?)(?=\\n\\*\\*|\\n\\n|$)`, 'i'),
+        // Pattern: **Economic** followed by content
+        new RegExp(`\\*\\*${cat.title}\\*\\*[\\s\\n]*([\\s\\S]*?)(?=\\n\\*\\*|\\n\\n|$)`, 'i'),
+        // Pattern: Economic Drivers: (without bold)
+        new RegExp(`${cat.title}\\s+Drivers?[:\\s]*([\\s\\S]*?)(?=\\n[A-Z]|\\n\\*\\*|$)`, 'i'),
+        // Pattern: Just the category name followed by content
+        new RegExp(`${cat.title}[:\\s]*([\\s\\S]*?)(?=\\n[A-Z]|\\n\\*\\*|$)`, 'i'),
+        // Pattern: Category in parentheses or brackets
+        new RegExp(`[(\\(]${cat.title}[)\\)][\\s\\n]*([\\s\\S]*?)(?=\\n[A-Z]|\\n\\*\\*|$)`, 'i'),
       ];
       
       for (const pattern of patterns) {
         const match = searchText.match(pattern);
-        if (match && match[1] && match[1].trim().length > 3) {
-          insight = match[1].trim();
-          console.log(`✅ Found insight for ${cat.title}:`, insight);
-          break;
+        if (match && match[1]) {
+          let content = match[1].trim();
+          // Clean up the content
+          content = content.replace(/^\s*[-•*]\s*/gm, '').trim();
+          
+          // Check if content is meaningful (not just a single word or empty)
+          if (content.length > 10) {
+            // Extract bullet points or sentences
+            const lines = content.split('\n').filter(l => l.trim().length > 0);
+            const bulletPoints = lines
+              .filter(l => l.trim().match(/^[-•*]/))
+              .map(l => l.replace(/^[-•*]\s*/, '').trim());
+            
+            if (bulletPoints.length > 0) {
+              insight = bulletPoints.join(' • ');
+              console.log(`✅ Found ${cat.title} with ${bulletPoints.length} bullet points`);
+            } else {
+              // Take the first sentence or line
+              const firstLine = content.split('\n')[0]?.trim() || '';
+              if (firstLine.length > 10) {
+                insight = firstLine;
+                console.log(`✅ Found ${cat.title} (single line):`, insight);
+              } else if (content.length > 20) {
+                insight = content.substring(0, 150);
+                console.log(`✅ Found ${cat.title} (full content):`, insight);
+              }
+            }
+            break;
+          }
         }
       }
       
-      // If still no insight, try to find the category name and get the next line
+      // If still no insight, try a simpler approach - look for the category name and take everything until next category
       if (!insight) {
         const lines = searchText.split('\n');
+        let found = false;
         for (let i = 0; i < lines.length; i++) {
-          const line = lines[i].toLowerCase();
-          if (line.includes(cat.key) || line.includes(cat.title.toLowerCase())) {
-            // Check the next line for content
-            if (i + 1 < lines.length && lines[i + 1].trim().length > 5) {
-              insight = lines[i + 1].trim();
-              console.log(`✅ Found insight for ${cat.title} via next line:`, insight);
-              break;
+          const line = lines[i];
+          if (line.toLowerCase().includes(cat.title.toLowerCase()) && 
+              (line.includes('Drivers') || line.includes(':'))) {
+            // Take the next non-empty lines until we hit another category
+            let content = '';
+            for (let j = i + 1; j < lines.length; j++) {
+              const nextLine = lines[j].trim();
+              // Stop if we hit another category
+              if (categories.some(c => nextLine.toLowerCase().includes(c.title.toLowerCase()) && nextLine.includes('Drivers'))) {
+                break;
+              }
+              if (nextLine && !nextLine.match(/^---/)) {
+                content += nextLine + ' ';
+              }
             }
-            // Check the same line for content after the category
-            const remaining = lines[i].replace(new RegExp(cat.key, 'i'), '').replace(new RegExp(cat.title, 'i'), '').trim();
-            if (remaining.length > 5) {
-              insight = remaining;
-              console.log(`✅ Found insight for ${cat.title} via same line:`, insight);
-              break;
+            if (content.length > 10) {
+              insight = content.trim().substring(0, 150);
+              console.log(`✅ Found ${cat.title} via line-by-line search`);
             }
+            break;
           }
         }
       }
@@ -1046,13 +1069,21 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
       // Determine impact based on insight content
       if (insight) {
         // Clean up insight
-        insight = insight.replace(/\*\*/g, '').replace(/^\\s*[-•*]\\s*/, '').trim();
+        insight = insight.replace(/\*\*/g, '').trim();
+        // Limit length
+        if (insight.length > 200) {
+          insight = insight.substring(0, 200) + '...';
+        }
         
-        let impact = 'medium';
         const lowerInsight = insight.toLowerCase();
-        if (lowerInsight.includes('high') || lowerInsight.includes('significant') || lowerInsight.includes('major') || lowerInsight.includes('strong') || lowerInsight.includes('growth')) {
+        if (lowerInsight.includes('high') || lowerInsight.includes('significant') || 
+            lowerInsight.includes('major') || lowerInsight.includes('strong') || 
+            lowerInsight.includes('growth') || lowerInsight.includes('rising') ||
+            lowerInsight.includes('increase')) {
           impact = 'high';
-        } else if (lowerInsight.includes('low') || lowerInsight.includes('minor') || lowerInsight.includes('weak') || lowerInsight.includes('negligible')) {
+        } else if (lowerInsight.includes('low') || lowerInsight.includes('minor') || 
+                   lowerInsight.includes('weak') || lowerInsight.includes('negligible') ||
+                   lowerInsight.includes('decline')) {
           impact = 'low';
         }
         
@@ -1060,16 +1091,23 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
           key: cat.key,
           icon: cat.icon,
           title: cat.title,
-          insight: insight.substring(0, 120),
+          insight: insight,
           impact: impact
+        });
+      } else {
+        console.log(`⚠️ No insight found for ${cat.title}`);
+        // Add a placeholder so we know what's missing
+        pestleData.push({
+          key: cat.key,
+          icon: cat.icon,
+          title: cat.title,
+          insight: 'No data found for this category',
+          impact: 'medium'
         });
       }
     }
 
-    console.log('📊 PESTLE data found:', pestleData.length);
-    if (pestleData.length > 0) {
-      console.log('📊 Sample PESTLE item:', pestleData[0]);
-    }
+    console.log('📊 Final PESTLE data:', pestleData);
     return pestleData;
   };
 
@@ -1086,23 +1124,47 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
   return (
     <div className="text-center">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">PESTLE Analysis</h2>
-      {pestleData.length === 0 ? (
+      
+      {/* Debug section */}
+      <div className="mb-4">
+        <button
+          onClick={() => setDebugOpen(!debugOpen)}
+          className="text-xs text-white/40 hover:text-white/70 transition-colors bg-white/5 px-3 py-1 rounded-full"
+        >
+          {debugOpen ? '🔽 Hide Debug' : '🔍 Show Debug'}
+        </button>
+        {debugOpen && (
+          <div className="mt-3 text-left max-w-4xl mx-auto bg-black/30 rounded-lg p-4 overflow-auto max-h-96">
+            <h4 className="text-xs font-bold text-white/60 mb-2">📊 Debug Info</h4>
+            <div className="text-xs text-white/40 space-y-1 font-mono">
+              <div>Plan length: {plan?.length || 0} characters</div>
+              <div>PESTLE items found: {pestleData.length}</div>
+              <div className="mt-2 text-white/50 font-bold">Parsed Data:</div>
+              <pre className="whitespace-pre-wrap text-[10px] text-white/30 bg-white/5 p-2 rounded">
+                {JSON.stringify(pestleData, null, 2)}
+              </pre>
+              <div className="mt-2 text-white/50 font-bold">Raw Plan Preview:</div>
+              <pre className="whitespace-pre-wrap text-[10px] text-white/30 bg-white/5 p-2 rounded max-h-60 overflow-auto">
+                {plan?.substring(0, 2000) || 'No plan data'}
+              </pre>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {pestleData.length === 0 || pestleData.every(p => p.insight === 'No data found for this category') ? (
         <div className="text-center py-10 text-white/50">
           <p>No PESTLE data found in the generated plan.</p>
-          <p className="text-sm mt-2">The plan may not contain PESTLE analysis. Try regenerating.</p>
-          <details className="mt-4 text-left text-xs text-white/30 max-w-md mx-auto">
-            <summary>Debug: Show plan preview</summary>
-            <pre className="mt-2 p-2 bg-white/5 rounded overflow-auto max-h-60 whitespace-pre-wrap text-xs">
-              {plan.substring(0, 1500)}
-            </pre>
-          </details>
+          <p className="text-sm mt-2">Try regenerating the plan or check the debug panel above.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {pestleData.map((item) => (
             <div
               key={item.key}
-              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-6px] hover:border-indigo-500/40 hover:shadow-lg cursor-pointer relative overflow-hidden"
+              className={`bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-6px] hover:border-indigo-500/40 hover:shadow-lg cursor-pointer relative overflow-hidden ${
+                item.insight === 'No data found for this category' ? 'opacity-50' : ''
+              }`}
               style={{ 
                 '::before': { 
                   content: '""', 
@@ -1126,7 +1188,13 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
                   {item.title}
                 </div>
               </div>
-              <div className="text-sm text-white/80 leading-relaxed mb-3">{item.insight || 'No insight available'}</div>
+              <div className="text-sm text-white/80 leading-relaxed mb-3">
+                {item.insight === 'No data found for this category' ? (
+                  <span className="text-white/30 italic">No data available</span>
+                ) : (
+                  item.insight
+                )}
+              </div>
               <div className="pt-3 border-t border-white/5 flex items-center gap-2">
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
@@ -1139,15 +1207,26 @@ const PESTLEVisual = ({ plan }: { plan: string }) => {
                 >
                   {item.impact} IMPACT
                 </span>
+                {item.insight !== 'No data found for this category' && (
+                  <span className="text-xs text-white/30">
+                    {item.insight.split('•').length} point{item.insight.split('•').length > 1 ? 's' : ''}
+                  </span>
+                )}
               </div>
             </div>
           ))}
         </div>
       )}
+      
+      {/* Show count of missing items */}
+      {pestleData.some(p => p.insight === 'No data found for this category') && (
+        <div className="mt-4 text-xs text-yellow-400/50">
+          ⚠️ Some categories have no data. Check the debug panel above for details.
+        </div>
+      )}
     </div>
   );
 };
-
 // ============================================
 // ROLE 5: PORTER'S FORCES EXPERT
 // ============================================
