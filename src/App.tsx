@@ -1698,7 +1698,7 @@ const CompetitorsVisual = ({ plan }: { plan: string }) => {
 };
 
 // ============================================
-// ROLE 7: POSITIONING EXPERT
+// ROLE 7: POSITIONING EXPERT (WITH SVG ICONS)
 // ============================================
 
 const PositioningVisual = ({ plan }: { plan: string }) => {
@@ -1767,6 +1767,38 @@ const PositioningVisual = ({ plan }: { plan: string }) => {
 
   const positioning = parsePositioning();
 
+  // SVG Icons
+  const TargetIcon = () => (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <circle cx="12" cy="12" r="6"/>
+      <circle cx="12" cy="12" r="2"/>
+    </svg>
+  );
+
+  const DiamondIcon = () => (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+      <path d="M2 17l10 5 10-5"/>
+      <path d="M2 12l10 5 10-5"/>
+      <path d="M12 7v10"/>
+      <path d="M8 9l4 3 4-3"/>
+    </svg>
+  );
+
+  const ShieldIcon = () => (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      <path d="M9 12l2 2 4-4"/>
+    </svg>
+  );
+
+  const StarIcon = () => (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+    </svg>
+  );
+
   return (
     <div className="text-center">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">Brand Positioning</h2>
@@ -1778,32 +1810,42 @@ const PositioningVisual = ({ plan }: { plan: string }) => {
           "{positioning.statement || 'No positioning statement found. Generate a new plan with positioning data.'}"
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div className="bg-white/5 rounded-xl p-4 text-center transition-all hover:bg-indigo-500/10 hover:translate-y-[-3px]">
-            <div className="text-4xl mb-3">🎯</div>
+          <div className="bg-white/5 rounded-xl p-4 text-center transition-all hover:bg-indigo-500/10 hover:translate-y-[-3px] group">
+            <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-400 group-hover:bg-indigo-500/30 group-hover:scale-110 transition-all">
+              <TargetIcon />
+            </div>
             <div className="text-xs uppercase text-indigo-300 tracking-wider mb-2">TARGET</div>
             <div className="text-sm font-medium text-white/90">{positioning.target}</div>
           </div>
-          <div className="bg-white/5 rounded-xl p-4 text-center transition-all hover:bg-indigo-500/10 hover:translate-y-[-3px]">
-            <div className="text-4xl mb-3">💎</div>
-            <div className="text-xs uppercase text-indigo-300 tracking-wider mb-2">BENEFIT</div>
+          <div className="bg-white/5 rounded-xl p-4 text-center transition-all hover:bg-indigo-500/10 hover:translate-y-[-3px] group">
+            <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400 group-hover:bg-emerald-500/30 group-hover:scale-110 transition-all">
+              <DiamondIcon />
+            </div>
+            <div className="text-xs uppercase text-emerald-300 tracking-wider mb-2">BENEFIT</div>
             <div className="text-sm font-medium text-white/90">{positioning.benefit}</div>
           </div>
-          <div className="bg-white/5 rounded-xl p-4 text-center transition-all hover:bg-indigo-500/10 hover:translate-y-[-3px]">
-            <div className="text-4xl mb-3">🔒</div>
-            <div className="text-xs uppercase text-indigo-300 tracking-wider mb-2">RTB</div>
+          <div className="bg-white/5 rounded-xl p-4 text-center transition-all hover:bg-indigo-500/10 hover:translate-y-[-3px] group">
+            <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-xl bg-amber-500/20 text-amber-400 group-hover:bg-amber-500/30 group-hover:scale-110 transition-all">
+              <ShieldIcon />
+            </div>
+            <div className="text-xs uppercase text-amber-300 tracking-wider mb-2">RTB</div>
             <div className="text-sm font-medium text-white/90">{positioning.rtb}</div>
           </div>
         </div>
       </div>
       {positioning.value !== 'N/A' && (
-        <div className="mt-5 p-4 bg-indigo-500/10 rounded-xl text-center">
-          <strong className="text-white/70">Core Value:</strong> <span className="text-indigo-300">"{positioning.value}"</span>
+        <div className="mt-5 p-4 bg-indigo-500/10 rounded-xl text-center flex items-center justify-center gap-3">
+          <div className="w-8 h-8 flex items-center justify-center text-yellow-400">
+            <StarIcon />
+          </div>
+          <div>
+            <strong className="text-white/70">Core Value:</strong> <span className="text-indigo-300">"{positioning.value}"</span>
+          </div>
         </div>
       )}
     </div>
   );
 };
-
 // ============================================
 // ROLE 8: 4Ps EXPERT
 // ============================================
