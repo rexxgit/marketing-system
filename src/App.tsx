@@ -1213,6 +1213,303 @@ const EnvironmentalIcon = () => (
   </svg>
 );
 // ============================================
+// ROLE 5: PORTER'S FIVE FORCES VISUAL
+// ============================================
+
+const PortersVisual = ({ plan }: { plan: string }) => {
+  const parsePorters = () => {
+    const content = extractTagContent(plan, 'PORTERS OUTPUT');
+    const fullPlan = plan;
+    
+    const forces = [
+      { 
+        key: 'newEntrants', 
+        icon: <NewEntrantsIcon />, 
+        name: 'Threat of New Entrants',
+        description: 'How easy is it for new competitors to enter the market?'
+      },
+      { 
+        key: 'buyerPower', 
+        icon: <BuyerPowerIcon />, 
+        name: 'Bargaining Power of Buyers',
+        description: 'How much power do customers have to negotiate prices?'
+      },
+      { 
+        key: 'supplierPower', 
+        icon: <SupplierPowerIcon />, 
+        name: 'Bargaining Power of Suppliers',
+        description: 'How much power do suppliers have to raise prices?'
+      },
+      { 
+        key: 'substitutes', 
+        icon: <SubstitutesIcon />, 
+        name: 'Threat of Substitutes',
+        description: 'How easily can customers switch to alternative products?'
+      },
+      { 
+        key: 'rivalry', 
+        icon: <RivalryIcon />, 
+        name: 'Industry Rivalry',
+        description: 'How intense is the competition among existing firms?'
+      }
+    ];
+
+    const parsedForces: any[] = [];
+    const searchText = content || fullPlan;
+    const lines = searchText.split('\n');
+
+    for (const force of forces) {
+      let insight = '';
+      let rating: 'high' | 'medium' | 'low' = 'medium';
+      
+      const forceKeywords = [
+        force.name.toLowerCase(),
+        force.key.toLowerCase().replace(/([A-Z])/g, ' $1').trim().toLowerCase(),
+        force.name.replace('Threat of ', '').toLowerCase(),
+        force.name.replace('Bargaining Power of ', '').toLowerCase()
+      ];
+      
+      for (const line of lines) {
+        const trimmed = line.trim();
+        const lower = trimmed.toLowerCase();
+        
+        let found = false;
+        for (const keyword of forceKeywords) {
+          if (lower.includes(keyword) && trimmed.length > 10) {
+            found = true;
+            break;
+          }
+        }
+        
+        if (found) {
+          const insightMatch = trimmed.match(/[:\-•]\s*(.+)/);
+          if (insightMatch) {
+            insight = insightMatch[1].trim();
+          } else {
+            const clean = trimmed.replace(/^[-•*]\s+/, '').replace(/^[A-Z]+:?\s*/, '');
+            if (clean.length > 10) {
+              insight = clean;
+            }
+          }
+          
+          const lowerInsight = (insight || trimmed).toLowerCase();
+          if (lowerInsight.includes('high') || lowerInsight.includes('strong') || 
+              lowerInsight.includes('significant') || lowerInsight.includes('intense')) {
+            rating = 'high';
+          } else if (lowerInsight.includes('low') || lowerInsight.includes('weak') || 
+                     lowerInsight.includes('minor') || lowerInsight.includes('limited')) {
+            rating = 'low';
+          } else {
+            rating = 'medium';
+          }
+          break;
+        }
+      }
+
+      if (!insight) {
+        const pattern = new RegExp(`${force.name}[\\s\\S]*?([\\s\\S]*?)(?=\\n\\n|\\n[A-Z]|$)`, 'i');
+        const match = searchText.match(pattern);
+        if (match && match[1]) {
+          const contentText = match[1].trim();
+          if (contentText.length > 10) {
+            insight = contentText.substring(0, 100);
+            const lowerInsight = contentText.toLowerCase();
+            if (lowerInsight.includes('high') || lowerInsight.includes('strong')) {
+              rating = 'high';
+            } else if (lowerInsight.includes('low') || lowerInsight.includes('weak')) {
+              rating = 'low';
+            }
+          }
+        }
+      }
+
+      if (insight && insight.length > 5) {
+        parsedForces.push({
+          ...force,
+          rating,
+          insight: insight.substring(0, 120)
+        });
+      }
+    }
+
+    if (parsedForces.length === 0) {
+      return forces.map(force => ({
+        ...force,
+        rating: 'medium' as 'high' | 'medium' | 'low',
+        insight: 'Data not available in the generated plan. Try regenerating with more detail.'
+      }));
+    }
+
+    return parsedForces;
+  };
+
+  const forces = parsePorters();
+  const colorMap: Record<string, { bg: string; text: string; iconColor: string }> = {
+    newEntrants: { bg: 'rgba(139,92,246,.15)', text: '#a78bfa', iconColor: '#a78bfa' },
+    buyerPower: { bg: 'rgba(245,158,11,.15)', text: '#fbbf24', iconColor: '#fbbf24' },
+    supplierPower: { bg: 'rgba(59,130,246,.15)', text: '#60a5fa', iconColor: '#60a5fa' },
+    substitutes: { bg: 'rgba(239,68,68,.15)', text: '#f87171', iconColor: '#f87171' },
+    rivalry: { bg: 'rgba(236,72,153,.15)', text: '#f472b6', iconColor: '#f472b6' }
+  };
+
+  const getRatingWidth = (rating: string): number => {
+    switch (rating) {
+      case 'high': return 85;
+      case 'medium': return 55;
+      default: return 25;
+    }
+  };
+
+  const getRatingColor = (rating: string): string => {
+    switch (rating) {
+      case 'high': return 'linear-gradient(90deg, #ef4444, #f87171)';
+      case 'medium': return 'linear-gradient(90deg, #f59e0b, #fbbf24)';
+      default: return 'linear-gradient(90deg, #10b981, #34d399)';
+    }
+  };
+
+  const getRatingLabel = (rating: string): string => {
+    switch (rating) {
+      case 'high': return 'HIGH THREAT';
+      case 'medium': return 'MEDIUM THREAT';
+      default: return 'LOW THREAT';
+    }
+  };
+
+  return (
+    <div className="text-center">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">Porter's Five Forces</h2>
+      
+      {forces.length === 0 ? (
+        <div className="text-center py-10 text-white/50">
+          <p>No Porter's Five Forces data found in the generated plan.</p>
+          <p className="text-sm mt-2">Generate a new plan with competitive analysis.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {forces.map((force) => {
+            const colors = colorMap[force.key] || colorMap.rivalry;
+            const ratingWidth = getRatingWidth(force.rating);
+            const ratingColor = getRatingColor(force.rating);
+            
+            return (
+              <div
+                key={force.key}
+                className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-xl p-5 border border-white/10 transition-all hover:translate-y-[-6px] hover:border-indigo-500/40 hover:shadow-lg cursor-pointer relative overflow-hidden"
+                style={{ 
+                  '::before': { 
+                    content: '""', 
+                    position: 'absolute', 
+                    top: 0, 
+                    left: 0, 
+                    width: '100%', 
+                    height: '3px', 
+                    background: `linear-gradient(90deg, ${colors.text}, ${colors.text})` 
+                  } 
+                } as any}
+              >
+                <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
+                  <div
+                    className="w-10 h-10 flex items-center justify-center rounded-xl transition-transform hover:scale-110"
+                    style={{ background: colors.bg, color: colors.iconColor }}
+                  >
+                    {force.icon}
+                  </div>
+                  <div className="flex-1 text-left">
+                    <div className="text-sm font-bold" style={{ color: colors.text }}>
+                      {force.name}
+                    </div>
+                    <div className="text-[10px] text-white/40">
+                      {force.description}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mb-3">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-xs font-semibold text-white/60">
+                      {getRatingLabel(force.rating)}
+                    </span>
+                    <span className="text-xs text-white/40">
+                      {force.rating === 'high' ? '⚠️ High Risk' : force.rating === 'medium' ? '⚡ Moderate Risk' : '✅ Low Risk'}
+                    </span>
+                  </div>
+                  <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{ width: `${ratingWidth}%`, background: ratingColor }}
+                    />
+                  </div>
+                </div>
+                
+                <div className="text-sm text-white/70 mt-3 text-left leading-relaxed">
+                  {force.insight}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ============================================
+// SVG ICONS FOR PORTER'S FIVE FORCES
+// ============================================
+
+const NewEntrantsIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 5v14"/>
+    <path d="M5 12h14"/>
+    <circle cx="12" cy="12" r="10"/>
+    <circle cx="12" cy="12" r="3"/>
+  </svg>
+);
+
+const BuyerPowerIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 7h-4.5A2.5 2.5 0 0 0 13 9.5v0A2.5 2.5 0 0 0 15.5 12H20"/>
+    <path d="M20 7v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7"/>
+    <circle cx="8" cy="10" r="1" fill="currentColor"/>
+    <circle cx="16" cy="10" r="1" fill="currentColor"/>
+    <path d="M4 14h4"/>
+    <path d="M16 14h4"/>
+  </svg>
+);
+
+const SupplierPowerIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+    <path d="M2 17l10 5 10-5"/>
+    <path d="M2 12l10 5 10-5"/>
+    <path d="M12 7v5"/>
+    <path d="M8 9.5l4 2.5 4-2.5"/>
+  </svg>
+);
+
+const SubstitutesIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 2L3 20"/>
+    <path d="M10 5l4 4"/>
+    <path d="M16 3l5 5"/>
+    <path d="M7 15l4 4"/>
+    <path d="M3 16l5 5"/>
+    <circle cx="19" cy="5" r="2"/>
+    <circle cx="5" cy="19" r="2"/>
+  </svg>
+);
+
+const RivalryIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M7 12h10"/>
+    <path d="M12 7v10"/>
+    <circle cx="12" cy="12" r="9"/>
+    <path d="M15 9l-6 6"/>
+    <path d="M9 9l6 6"/>
+  </svg>
+);
+// ============================================
 // ROLE 6: COMPETITORS EXPERT
 // ============================================
 
