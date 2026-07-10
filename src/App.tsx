@@ -3021,110 +3021,180 @@ const OKRDiagram = ({ plan }: { plan: string }) => {
 
 const RoadmapVisual = ({ plan }: { plan: string }) => {
   const [hoveredPhase, setHoveredPhase] = useState<number | null>(null);
-  const content = extractTagContent(plan, 'ROADMAP OUTPUT');
   
   // ============================================
   // ROLE 1: ROADMAP EXPERT - Parse roadmap data
   // ============================================
   const parseRoadmap = () => {
+    // Try multiple ways to get roadmap content
+    let content = extractTagContent(plan, 'ROADMAP OUTPUT');
+    
+    // If not found, try alternative tags
     if (!content) {
-      return [
-        { 
-          title: 'Foundation Phase', 
-          days: 'Days 1-14', 
-          items: [
-            'Define product vision and core features',
-            'Build MVP with essential functionality',
-            'Set up analytics and tracking infrastructure'
-          ],
-          status: 'completed' as const,
-          progress: 100
-        },
-        { 
-          title: 'Growth Phase', 
-          days: 'Days 15-30', 
-          items: [
-            'Launch initial marketing campaigns',
-            'Onboard first 100 early adopters',
-            'Collect user feedback and iterate'
-          ],
-          status: 'in-progress' as const,
-          progress: 65
-        },
-        { 
-          title: 'Scale Phase', 
-          days: 'Days 31-60', 
-          items: [
-            'Scale marketing efforts across channels',
-            'Achieve 1,000 active users milestone',
-            'Optimize product based on user data'
-          ],
-          status: 'pending' as const,
-          progress: 25
-        },
-        { 
-          title: 'Expansion Phase', 
-          days: 'Days 61-90', 
-          items: [
-            'Expand to new markets and segments',
-            'Launch premium tier and enterprise offerings',
-            'Achieve $100K in monthly recurring revenue'
-          ],
-          status: 'pending' as const,
-          progress: 0
-        }
-      ];
+      content = extractTagContent(plan, 'ROADMAP');
     }
-
-    const phases: any[] = [];
-    const lines = content.split('\n');
-    let currentPhase: any = null;
-    let phaseCount = 0;
-
-    for (const line of lines) {
-      const trimmed = line.trim();
-      if (!trimmed) continue;
-
-      if (trimmed.match(/^Phase|^Week|^Day|^Step/) || trimmed.match(/^[-•*]\s*(Phase|Week|Day|Step)/i)) {
-        if (currentPhase && currentPhase.items.length > 0) phases.push(currentPhase);
-        phaseCount++;
-        const cleanTitle = trimmed.replace(/^[-•*]\s+/, '').trim();
-        currentPhase = { title: cleanTitle.substring(0, 30), days: '', items: [], status: 'pending' as const, progress: 0 };
-        const dayMatch = cleanTitle.match(/\d+-\d+/);
-        if (dayMatch) currentPhase.days = `Days ${dayMatch[0]}`;
-      } else if (trimmed.match(/^[-•*]\s+/) && currentPhase) {
-        const item = trimmed.replace(/^[-•*]\s+/, '').trim();
-        if (item.length > 3) {
-          currentPhase.items.push(item.substring(0, 60));
-        }
-      } else if (trimmed.match(/^\d+\.\s+/) && currentPhase) {
-        const item = trimmed.replace(/^\d+\.\s+/, '').trim();
-        if (item.length > 3) {
-          currentPhase.items.push(item.substring(0, 60));
-        }
+    if (!content) {
+      content = extractTagContent(plan, 'ROAD MAP');
+    }
+    
+    // If still no content, try to find it directly in the plan
+    if (!content) {
+      const roadmapMatch = plan.match(/\[ROADMAP\s+OUTPUT\]([\s\S]*?)(?=\n\n---|\n\[|$)/i);
+      if (roadmapMatch && roadmapMatch[1]) {
+        content = roadmapMatch[1].trim();
       }
     }
-    if (currentPhase && currentPhase.items.length > 0) phases.push(currentPhase);
+    
+    // If content exists, parse it
+    if (content) {
+      const phases: any[] = [];
+      const lines = content.split('\n');
+      let currentPhase: any = null;
+      let phaseCount = 0;
 
-    // Add status and progress to phases
-    return phases.slice(0, 4).map((phase, index) => {
-      const totalPhases = phases.slice(0, 4).length;
-      let status: 'completed' | 'in-progress' | 'pending' = 'pending';
-      let progress = 0;
-      
-      if (index < totalPhases - 1) {
-        status = 'completed';
-        progress = 100;
-      } else if (index === totalPhases - 1) {
-        status = 'in-progress';
-        progress = 65;
-      } else {
-        status = 'pending';
-        progress = 0;
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed) continue;
+
+        // Check for phase headers
+        if (trimmed.match(/^Phase|^Week|^Day|^Step|^\d+\./) || 
+            trimmed.match(/^[-•*]\s*(Phase|Week|Day|Step)/i) ||
+            trimmed.match(/^[A-Z][a-z]+ Phase/)) {
+          
+          if (currentPhase && currentPhase.items.length > 0) {
+            phases.push(currentPhase);
+          }
+          phaseCount++;
+          
+          // Clean up the title
+          let cleanTitle = trimmed.replace(/^[-•*]\s+/, '').replace(/^\d+\.\s+/, '').trim();
+          // Remove any markdown bold or italic
+          cleanTitle = cleanTitle.replace(/\*\*/g, '').replace(/\*/g, '');
+          // Limit title length
+          cleanTitle = cleanTitle.substring(0, 30);
+          
+          currentPhase = { 
+            title: cleanTitle || `Phase ${phaseCount}`, 
+            days: '', 
+            items: [], 
+            status: 'pending' as const, 
+            progress: 0 
+          };
+          
+          // Try to extract days from the title
+          const dayMatch = cleanTitle.match(/\d+-\d+/);
+          if (dayMatch) {
+            currentPhase.days = `Days ${dayMatch[0]}`;
+          } else {
+            // Try to find days in the line
+            const dayMatch2 = trimmed.match(/Days?\s+(\d+[-–]\d+)/i);
+            if (dayMatch2) {
+              currentPhase.days = `Days ${dayMatch2[1]}`;
+            }
+          }
+        } else if (trimmed.match(/^[-•*]\s+/) && currentPhase) {
+          // This is a bullet point item
+          const item = trimmed.replace(/^[-•*]\s+/, '').trim();
+          if (item.length > 3) {
+            currentPhase.items.push(item.substring(0, 60));
+          }
+        } else if (trimmed.match(/^\d+\.\s+/) && currentPhase) {
+          // This is a numbered item
+          const item = trimmed.replace(/^\d+\.\s+/, '').trim();
+          if (item.length > 3) {
+            currentPhase.items.push(item.substring(0, 60));
+          }
+        } else if (trimmed.length > 5 && !trimmed.match(/^---/) && !trimmed.match(/^\[/) && currentPhase) {
+          // If it's not a bullet but looks like content, add it
+          if (!trimmed.includes('**') && !trimmed.includes('|')) {
+            currentPhase.items.push(trimmed.substring(0, 60));
+          }
+        }
       }
       
-      return { ...phase, status, progress };
-    });
+      // Don't forget the last phase
+      if (currentPhase && currentPhase.items.length > 0) {
+        phases.push(currentPhase);
+      }
+      
+      // If we have phases, add status and progress
+      if (phases.length > 0) {
+        return phases.slice(0, 4).map((phase, index) => {
+          const totalPhases = phases.slice(0, 4).length;
+          let status: 'completed' | 'in-progress' | 'pending' = 'pending';
+          let progress = 0;
+          
+          // Determine status based on position
+          if (index === 0) {
+            status = 'completed';
+            progress = 100;
+          } else if (index === 1) {
+            status = 'in-progress';
+            progress = 65;
+          } else {
+            status = 'pending';
+            progress = 0;
+          }
+          
+          return { ...phase, status, progress };
+        });
+      }
+    }
+    
+    // ============================================
+    // FALLBACK: Generate mock roadmap data from plan content
+    // ============================================
+    console.log('📝 No roadmap data found, generating from plan content...');
+    
+    const planContent = plan.toLowerCase();
+    const generatedPhases = [];
+    
+    // Phase 1: Foundation
+    let phase1Items = ['Define product vision and core features', 'Build MVP with essential functionality'];
+    if (planContent.includes('customer') || planContent.includes('audience')) {
+      phase1Items.push('Identify target customer segments');
+    }
+    if (planContent.includes('product') || planContent.includes('service')) {
+      phase1Items.push('Validate product-market fit');
+    }
+    
+    // Phase 2: Growth
+    let phase2Items = ['Launch marketing campaigns', 'Onboard early adopters'];
+    if (planContent.includes('social') || planContent.includes('media')) {
+      phase2Items.push('Build social media presence');
+    }
+    if (planContent.includes('content')) {
+      phase2Items.push('Create content marketing strategy');
+    }
+    
+    // Phase 3: Scale
+    let phase3Items = ['Scale marketing efforts', 'Optimize user acquisition channels'];
+    if (planContent.includes('partnership') || planContent.includes('partner')) {
+      phase3Items.push('Establish strategic partnerships');
+    }
+    if (planContent.includes('analytics') || planContent.includes('data')) {
+      phase3Items.push('Implement analytics and tracking');
+    }
+    
+    // Phase 4: Expansion
+    let phase4Items = ['Expand to new markets', 'Launch premium offerings'];
+    if (planContent.includes('enterprise') || planContent.includes('b2b')) {
+      phase4Items.push('Develop enterprise solutions');
+    }
+    if (planContent.includes('international') || planContent.includes('global')) {
+      phase4Items.push('Explore international expansion');
+    }
+    
+    // Build phases with status
+    const phaseData = [
+      { title: 'Foundation Phase', days: 'Days 1-14', items: phase1Items.slice(0, 4), status: 'completed' as const, progress: 100 },
+      { title: 'Growth Phase', days: 'Days 15-30', items: phase2Items.slice(0, 4), status: 'in-progress' as const, progress: 65 },
+      { title: 'Scale Phase', days: 'Days 31-60', items: phase3Items.slice(0, 4), status: 'pending' as const, progress: 25 },
+      { title: 'Expansion Phase', days: 'Days 61-90', items: phase4Items.slice(0, 4), status: 'pending' as const, progress: 0 }
+    ];
+    
+    console.log('📊 Generated roadmap phases:', phaseData);
+    return phaseData;
   };
 
   const phases = parseRoadmap();
@@ -3140,36 +3210,19 @@ const RoadmapVisual = ({ plan }: { plan: string }) => {
     }
   };
 
-  const getPhaseIcon = (status: string): React.ReactNode => {
+  const getPhaseLabel = (status: string): string => {
     switch (status) {
-      case 'completed':
-        return (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-        );
-      case 'in-progress':
-        return (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <polyline points="12 6 12 12 16 14"/>
-          </svg>
-        );
-      default:
-        return (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-          </svg>
-        );
+      case 'completed': return '✅ Complete';
+      case 'in-progress': return '⏳ In Progress';
+      default: return '⏱️ Pending';
     }
   };
 
   // ============================================
   // ROLE 3: SYNTHESIZER - Multi-directional layout
   // ============================================
-  const getPhaseLayout = (index: number, total: number) => {
-    const positions = ['left', 'right', 'left', 'right'];
-    return positions[index] || 'left';
+  const getPhaseLayout = (index: number): 'left' | 'right' => {
+    return index % 2 === 0 ? 'left' : 'right';
   };
 
   return (
@@ -3179,64 +3232,75 @@ const RoadmapVisual = ({ plan }: { plan: string }) => {
       {phases.length === 0 ? (
         <div className="text-center py-10 text-white/50">
           <p>No roadmap data found. Please generate a new plan with roadmap data.</p>
+          <p className="text-sm mt-2 text-white/30">You can also regenerate the plan with more details.</p>
         </div>
       ) : (
-        <div className="relative">
+        <div className="relative max-w-4xl mx-auto">
           {/* Vertical timeline line */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-indigo-500 via-green-400 to-emerald-500 transform -translate-x-1/2 opacity-30" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-indigo-500 via-green-400 to-emerald-500 transform -translate-x-1/2 opacity-20" />
           
-          <div className="flex flex-col gap-8 py-4 relative z-10">
+          <div className="flex flex-col gap-6 py-4 relative z-10">
             {phases.map((phase, index) => {
               const isHovered = hoveredPhase === index;
-              const layout = getPhaseLayout(index, phases.length);
+              const layout = getPhaseLayout(index);
               const color = getPhaseColor(phase.status);
               const isLeft = layout === 'left';
               const progress = phase.progress || 0;
               
+              // Ensure phase has items
+              const items = phase.items && phase.items.length > 0 ? phase.items : ['No specific tasks defined'];
+              
               return (
                 <div 
                   key={index}
-                  className={`flex items-center ${isLeft ? 'flex-row' : 'flex-row-reverse'} relative`}
+                  className={`flex items-stretch ${isLeft ? 'flex-row' : 'flex-row-reverse'} relative`}
                   onMouseEnter={() => setHoveredPhase(index)}
                   onMouseLeave={() => setHoveredPhase(null)}
                 >
                   {/* Timeline connector */}
-                  <div className="w-1/2 flex justify-center">
+                  <div className="w-1/2 flex justify-center items-start pt-2">
                     <div className="relative flex flex-col items-center">
                       {/* Phase circle with glow */}
                       <div 
-                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer relative ${
+                        className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer relative ${
                           isHovered ? 'scale-125' : 'scale-100'
                         }`}
                         style={{ 
-                          background: `radial-gradient(circle at center, ${color}40, ${color}10)`,
+                          background: `radial-gradient(circle at center, ${color}30, ${color}05)`,
                           border: `3px solid ${color}`,
-                          boxShadow: isHovered ? `0 0 30px ${color}60` : 'none'
+                          boxShadow: isHovered ? `0 0 40px ${color}50` : `0 0 20px ${color}20`
                         }}
                       >
                         <span className="text-white font-bold text-sm">
                           {index + 1}
                         </span>
                         {phase.status === 'completed' && (
-                          <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center text-[8px] text-white">
+                          <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center text-[10px] text-white shadow-lg shadow-green-500/30">
                             ✓
+                          </div>
+                        )}
+                        {phase.status === 'in-progress' && (
+                          <div className="absolute -top-1 -right-1 w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center text-[10px] text-white shadow-lg shadow-yellow-500/30 animate-pulse">
+                            ●
                           </div>
                         )}
                       </div>
                       
                       {/* Progress line below circle */}
-                      <div className="h-12 w-0.5 bg-gradient-to-b from-current to-transparent opacity-20" style={{ color }} />
+                      {index < phases.length - 1 && (
+                        <div className="h-12 w-0.5 bg-gradient-to-b from-current to-transparent opacity-20" style={{ color }} />
+                      )}
                     </div>
                   </div>
 
                   {/* Content card */}
                   <div 
-                    className={`w-1/2 ${isLeft ? 'pr-8 text-left' : 'pl-8 text-left'} transition-all duration-300 ${
-                      isHovered ? 'opacity-100' : 'opacity-80'
+                    className={`w-1/2 ${isLeft ? 'pr-6 text-left' : 'pl-6 text-left'} transition-all duration-300 ${
+                      isHovered ? 'opacity-100' : 'opacity-90'
                     }`}
                   >
                     <div 
-                      className={`bg-gradient-to-br from-slate-800/85 to-slate-900/95 rounded-xl p-5 border transition-all duration-300 ${
+                      className={`bg-gradient-to-br from-slate-800/85 to-slate-900/95 rounded-xl p-5 border transition-all duration-300 h-full ${
                         isHovered ? 'border-indigo-500/60 shadow-xl shadow-indigo-500/10 transform scale-[1.02]' : 'border-white/10'
                       }`}
                       style={{ 
@@ -3246,9 +3310,9 @@ const RoadmapVisual = ({ plan }: { plan: string }) => {
                     >
                       {/* Header */}
                       <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
                           <span className="text-base font-bold text-indigo-300">
-                            {phase.title}
+                            {phase.title || `Phase ${index + 1}`}
                           </span>
                           <span 
                             className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
@@ -3262,7 +3326,7 @@ const RoadmapVisual = ({ plan }: { plan: string }) => {
                           </span>
                         </div>
                         <span className="text-xs text-white/40 bg-black/30 px-2 py-0.5 rounded-full">
-                          {phase.days || 'Timeline'}
+                          {phase.days || `Phase ${index + 1}`}
                         </span>
                       </div>
 
@@ -3285,7 +3349,7 @@ const RoadmapVisual = ({ plan }: { plan: string }) => {
 
                       {/* Items */}
                       <ul className="space-y-1.5">
-                        {phase.items.map((item: string, i: number) => (
+                        {items.slice(0, 4).map((item: string, i: number) => (
                           <li key={i} className="flex items-start gap-2 text-sm text-white/70 group/item">
                             <span className="text-indigo-400 mt-0.5 text-[10px]">▸</span>
                             <span className="leading-tight">{item}</span>
@@ -3297,13 +3361,7 @@ const RoadmapVisual = ({ plan }: { plan: string }) => {
                       {isHovered && (
                         <div className="mt-3 pt-2 border-t border-white/5">
                           <span className="text-[10px] text-white/30 flex items-center gap-1">
-                            {phase.status === 'completed' ? (
-                              <span className="text-green-400">✅ Phase complete</span>
-                            ) : phase.status === 'in-progress' ? (
-                              <span className="text-yellow-400">⏳ In progress</span>
-                            ) : (
-                              <span className="text-white/30">⏱️ Upcoming phase</span>
-                            )}
+                            {getPhaseLabel(phase.status)}
                           </span>
                         </div>
                       )}
@@ -3323,7 +3381,7 @@ const RoadmapVisual = ({ plan }: { plan: string }) => {
           <span>Completed</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+          <div className="w-3 h-3 rounded-full bg-yellow-500 animate-pulse"></div>
           <span>In Progress</span>
         </div>
         <div className="flex items-center gap-2">
@@ -3335,6 +3393,13 @@ const RoadmapVisual = ({ plan }: { plan: string }) => {
           <span>Hover Effect</span>
         </div>
       </div>
+      
+      {/* Show if data was generated */}
+      {phases.length > 0 && (
+        <div className="mt-2 text-[10px] text-white/20">
+          {phases.length} phases loaded
+        </div>
+      )}
     </div>
   );
 };
