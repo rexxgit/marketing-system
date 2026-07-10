@@ -2093,10 +2093,11 @@ const SWOTVisual = ({ plan }: { plan: string }) => {
 };
 
 // ============================================
-// ROLE 10: JOURNEY MAP EXPERT
+// ROLE 10: JOURNEY MAP EXPERT (WITH HOVER GLOW)
 // ============================================
 
 const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
+  const [hoveredStage, setHoveredStage] = useState<number | null>(null);
   const content = extractTagContent(plan, 'JOURNEY OUTPUT');
   const fullPlan = plan;
   
@@ -2121,24 +2122,31 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
           const desc = parts.length > 1 ? parts.slice(1).join(' ').trim().substring(0, 40) : '';
           
           let action = '';
+          let progress = 0;
           switch(name) {
             case 'AWARENESS':
               action = 'Run targeted social media ads and influencer partnerships';
+              progress = 20;
               break;
             case 'CONSIDERATION':
               action = 'Offer free trials and demo videos showcasing value';
+              progress = 40;
               break;
             case 'PURCHASE':
               action = 'Streamline checkout with multiple payment options';
+              progress = 60;
               break;
             case 'RETENTION':
               action = 'Send personalized follow-ups and loyalty rewards';
+              progress = 80;
               break;
             case 'ADVOCACY':
               action = 'Create referral program with incentives for both parties';
+              progress = 100;
               break;
             default:
               action = 'Engage customers with personalized communication';
+              progress = 50;
           }
           
           stages.push({
@@ -2146,7 +2154,8 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
             name: name,
             desc: desc || `${name} stage - ${action}`,
             icon: icons[i % icons.length],
-            action: action
+            action: action,
+            progress: progress
           });
           dayCounter++;
           break;
@@ -2163,12 +2172,14 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
             const name = text.substring(0, 15).toUpperCase();
             const desc = text.substring(0, 30);
             const action = `Engage customers through ${name.toLowerCase()} strategies`;
+            const progress = Math.min((stages.length + 1) * 20, 100);
             stages.push({
               day: dayCounter * 7,
               name: name,
               desc: desc,
               icon: icons[stages.length % icons.length],
-              action: action
+              action: action,
+              progress: progress
             });
             dayCounter++;
           }
@@ -2177,46 +2188,179 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
     }
     
     return stages.length > 0 ? stages.slice(0, 5) : [
-      { day: 1, name: 'AWARENESS', desc: 'Start with targeted marketing campaigns', icon: '📱', action: 'Run social media ads and content marketing' },
-      { day: 7, name: 'CONSIDERATION', desc: 'Provide detailed product information', icon: '💡', action: 'Share case studies and customer testimonials' },
-      { day: 14, name: 'PURCHASE', desc: 'Make buying process seamless', icon: '💰', action: 'Optimize checkout and offer payment flexibility' },
-      { day: 21, name: 'RETENTION', desc: 'Keep customers engaged post-purchase', icon: '🛠️', action: 'Send regular updates and exclusive offers' },
-      { day: 30, name: 'ADVOCACY', desc: 'Turn customers into brand advocates', icon: '⭐', action: 'Implement referral program and user-generated content' }
+      { day: 7, name: 'AWARENESS', desc: 'Start with targeted marketing campaigns', icon: '📱', action: 'Run social media ads and content marketing', progress: 20 },
+      { day: 14, name: 'CONSIDERATION', desc: 'Provide detailed product information', icon: '💡', action: 'Share case studies and customer testimonials', progress: 40 },
+      { day: 21, name: 'PURCHASE', desc: 'Make buying process seamless', icon: '💰', action: 'Optimize checkout and offer payment flexibility', progress: 60 },
+      { day: 28, name: 'RETENTION', desc: 'Keep customers engaged post-purchase', icon: '🛠️', action: 'Send regular updates and exclusive offers', progress: 80 },
+      { day: 35, name: 'ADVOCACY', desc: 'Turn customers into brand advocates', icon: '⭐', action: 'Implement referral program and user-generated content', progress: 100 }
     ];
   };
   
   const stages = parseJourney();
 
+  // SVG Icons
+  const CheckIcon = () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  );
+
+  const ProgressDot = ({ progress, isHovered }: { progress: number; isHovered: boolean }) => {
+    const size = isHovered ? 56 : 48;
+    const strokeWidth = isHovered ? 6 : 4;
+    const circumference = 2 * Math.PI * (size / 2 - strokeWidth);
+    const offset = circumference - (progress / 100) * circumference;
+    
+    return (
+      <div className="relative" style={{ width: size, height: size }}>
+        {/* Background circle */}
+        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="transform -rotate-90">
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={size / 2 - strokeWidth}
+            fill="none"
+            stroke="rgba(255,255,255,0.1)"
+            strokeWidth={strokeWidth}
+          />
+          {/* Progress circle with glow */}
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={size / 2 - strokeWidth}
+            fill="none"
+            stroke={isHovered ? '#10b981' : '#6366f1'}
+            strokeWidth={strokeWidth}
+            strokeDasharray={circumference}
+            strokeDashoffset={offset}
+            strokeLinecap="round"
+            className="transition-all duration-700 ease-out"
+          />
+        </svg>
+        {/* Glow effect on hover */}
+        {isHovered && (
+          <div 
+            className="absolute inset-0 rounded-full animate-pulse"
+            style={{
+              background: 'radial-gradient(circle, rgba(16,185,129,0.4) 0%, transparent 70%)',
+              transform: 'scale(1.4)',
+              zIndex: -1
+            }}
+          />
+        )}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className={`text-xs font-bold transition-all duration-300 ${isHovered ? 'text-green-400 scale-110' : 'text-white/70'}`}>
+            {progress}%
+          </span>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="text-center">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">Customer Journey Map</h2>
       <div className="bg-gradient-to-br from-slate-800/85 to-slate-900/95 rounded-2xl p-8 border border-indigo-500/20 overflow-x-auto">
-        <div className="relative min-w-[600px] py-5">
-          <div className="absolute top-[30px] left-10 right-10 h-1 bg-gradient-to-r from-indigo-500 to-pink-500" style={{ background: 'repeating-linear-gradient(90deg, #6366f1, #6366f1 12px, transparent 12px, transparent 24px)' }} />
-          <div className="absolute top-6 left-0 text-2xl">🏁</div>
-          <div className="absolute top-6 right-0 text-2xl">🎯</div>
-          <div className="flex justify-between relative z-10">
-            {stages.map((stage, idx) => (
-              <div key={idx} className="flex flex-col items-center gap-3 cursor-pointer transition-all hover:translate-y-[-8px] group">
-                <div
-                  className="w-5 h-5 rounded-full z-20 transition-all hover:bg-pink-500 hover:scale-125"
-                  style={{ background: '#6366f1', boxShadow: '0 0 0 4px rgba(99,102,241,.2)' }}
-                />
-                <span className="text-xs text-white/50 bg-black/40 px-2 py-1 rounded-full">Day {stage.day}</span>
-                <span className="text-xs font-bold text-indigo-300">{stage.icon} {stage.name}</span>
-                <span className="text-xs text-white/50 max-w-[100px] text-center">{stage.desc}</span>
-                <div className="text-xs text-green-400/70 max-w-[120px] text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 px-3 py-1 rounded-full">
-                  💡 {stage.action}
-                </div>
-              </div>
-            ))}
+        <div className="relative min-w-[700px] py-8">
+          {/* Timeline line */}
+          <div className="absolute top-[52px] left-12 right-12 h-1 rounded-full">
+            <div className="w-full h-full bg-gradient-to-r from-indigo-500 via-green-400 to-emerald-500" style={{ opacity: 0.3 }} />
           </div>
+          
+          {/* Start marker */}
+          <div className="absolute top-10 left-0 text-white/30 text-xs font-semibold flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-indigo-400 inline-block"></span>
+            Start
+          </div>
+          
+          {/* End marker */}
+          <div className="absolute top-10 right-0 text-white/30 text-xs font-semibold flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+            Complete
+          </div>
+          
+          <div className="flex justify-between relative z-10 px-2">
+            {stages.map((stage, idx) => {
+              const isHovered = hoveredStage === idx;
+              const progress = stage.progress || 0;
+              
+              return (
+                <div 
+                  key={idx} 
+                  className="flex flex-col items-center gap-3 cursor-pointer transition-all duration-300 group"
+                  onMouseEnter={() => setHoveredStage(idx)}
+                  onMouseLeave={() => setHoveredStage(null)}
+                >
+                  {/* Progress circle with glow */}
+                  <div className="relative">
+                    <ProgressDot progress={progress} isHovered={isHovered} />
+                    
+                    {/* Green glow on hover */}
+                    {isHovered && (
+                      <div 
+                        className="absolute inset-0 rounded-full"
+                        style={{
+                          boxShadow: '0 0 40px rgba(16,185,129,0.5), 0 0 80px rgba(16,185,129,0.2)',
+                          transform: 'scale(1.1)',
+                          zIndex: -1
+                        }}
+                      />
+                    )}
+                    
+                    {/* Completion checkmark when progress is 100% */}
+                    {progress === 100 && (
+                      <div className="absolute -top-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center text-white text-[10px] shadow-lg shadow-emerald-500/30">
+                        <CheckIcon />
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Day label */}
+                  <span className={`text-xs font-medium transition-all duration-300 ${isHovered ? 'text-green-400' : 'text-white/40'} bg-black/40 px-3 py-1 rounded-full`}>
+                    Day {stage.day}
+                  </span>
+                  
+                  {/* Stage name */}
+                  <span className={`text-xs font-bold transition-all duration-300 ${isHovered ? 'text-green-400 scale-105' : 'text-indigo-300'}`}>
+                    {stage.icon} {stage.name}
+                  </span>
+                  
+                  {/* Description */}
+                  <span className={`text-xs text-center max-w-[100px] transition-all duration-300 ${isHovered ? 'text-white/80' : 'text-white/50'}`}>
+                    {stage.desc}
+                  </span>
+                  
+                  {/* Action tooltip - appears on hover */}
+                  <div className={`text-[10px] text-green-400/80 max-w-[140px] text-center transition-all duration-300 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full border border-green-500/20 ${
+                    isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
+                  }`}>
+                    💡 {stage.action}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+      
+      {/* Legend */}
+      <div className="mt-4 flex justify-center items-center gap-6 text-xs text-white/40 flex-wrap">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full border-2 border-indigo-500"></div>
+          <span>In Progress</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full border-2 border-green-400" style={{ boxShadow: '0 0 12px rgba(16,185,129,0.3)' }}></div>
+          <span>Hover (Green Glow)</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-emerald-500 flex items-center justify-center text-[6px] text-white">✓</div>
+          <span>Complete (100%)</span>
         </div>
       </div>
     </div>
   );
 };
-
 // ============================================
 // ROLE 11: KPIs EXPERT
 // ============================================
