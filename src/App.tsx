@@ -3016,12 +3016,16 @@ const OKRDiagram = ({ plan }: { plan: string }) => {
   );
 };
 // ============================================
-// ROLE 13: ROADMAP EXPERT
+// ROLE 13: ROADMAP EXPERT (MULTI-DIRECTIONAL DESIGN)
 // ============================================
 
 const RoadmapVisual = ({ plan }: { plan: string }) => {
+  const [hoveredPhase, setHoveredPhase] = useState<number | null>(null);
   const content = extractTagContent(plan, 'ROADMAP OUTPUT');
   
+  // ============================================
+  // ROLE 1: ROADMAP EXPERT - Parse roadmap data
+  // ============================================
   const parseRoadmap = () => {
     if (!content) {
       return [
@@ -3032,7 +3036,9 @@ const RoadmapVisual = ({ plan }: { plan: string }) => {
             'Define product vision and core features',
             'Build MVP with essential functionality',
             'Set up analytics and tracking infrastructure'
-          ] 
+          ],
+          status: 'completed' as const,
+          progress: 100
         },
         { 
           title: 'Growth Phase', 
@@ -3041,7 +3047,9 @@ const RoadmapVisual = ({ plan }: { plan: string }) => {
             'Launch initial marketing campaigns',
             'Onboard first 100 early adopters',
             'Collect user feedback and iterate'
-          ] 
+          ],
+          status: 'in-progress' as const,
+          progress: 65
         },
         { 
           title: 'Scale Phase', 
@@ -3050,7 +3058,9 @@ const RoadmapVisual = ({ plan }: { plan: string }) => {
             'Scale marketing efforts across channels',
             'Achieve 1,000 active users milestone',
             'Optimize product based on user data'
-          ] 
+          ],
+          status: 'pending' as const,
+          progress: 25
         },
         { 
           title: 'Expansion Phase', 
@@ -3059,7 +3069,9 @@ const RoadmapVisual = ({ plan }: { plan: string }) => {
             'Expand to new markets and segments',
             'Launch premium tier and enterprise offerings',
             'Achieve $100K in monthly recurring revenue'
-          ] 
+          ],
+          status: 'pending' as const,
+          progress: 0
         }
       ];
     }
@@ -3067,6 +3079,7 @@ const RoadmapVisual = ({ plan }: { plan: string }) => {
     const phases: any[] = [];
     const lines = content.split('\n');
     let currentPhase: any = null;
+    let phaseCount = 0;
 
     for (const line of lines) {
       const trimmed = line.trim();
@@ -3074,8 +3087,9 @@ const RoadmapVisual = ({ plan }: { plan: string }) => {
 
       if (trimmed.match(/^Phase|^Week|^Day|^Step/) || trimmed.match(/^[-•*]\s*(Phase|Week|Day|Step)/i)) {
         if (currentPhase && currentPhase.items.length > 0) phases.push(currentPhase);
+        phaseCount++;
         const cleanTitle = trimmed.replace(/^[-•*]\s+/, '').trim();
-        currentPhase = { title: cleanTitle.substring(0, 30), days: '', items: [] };
+        currentPhase = { title: cleanTitle.substring(0, 30), days: '', items: [], status: 'pending' as const, progress: 0 };
         const dayMatch = cleanTitle.match(/\d+-\d+/);
         if (dayMatch) currentPhase.days = `Days ${dayMatch[0]}`;
       } else if (trimmed.match(/^[-•*]\s+/) && currentPhase) {
@@ -3092,45 +3106,234 @@ const RoadmapVisual = ({ plan }: { plan: string }) => {
     }
     if (currentPhase && currentPhase.items.length > 0) phases.push(currentPhase);
 
-    return phases.length > 0 ? phases.slice(0, 4) : [
-      { 
-        title: 'Foundation', 
-        days: 'Days 1-7', 
-        items: ['No roadmap data available'] 
-      },
-      { 
-        title: 'Awareness', 
-        days: 'Days 8-14', 
-        items: ['Generate a new plan for detailed roadmap'] 
+    // Add status and progress to phases
+    return phases.slice(0, 4).map((phase, index) => {
+      const totalPhases = phases.slice(0, 4).length;
+      let status: 'completed' | 'in-progress' | 'pending' = 'pending';
+      let progress = 0;
+      
+      if (index < totalPhases - 1) {
+        status = 'completed';
+        progress = 100;
+      } else if (index === totalPhases - 1) {
+        status = 'in-progress';
+        progress = 65;
+      } else {
+        status = 'pending';
+        progress = 0;
       }
-    ];
+      
+      return { ...phase, status, progress };
+    });
   };
 
   const phases = parseRoadmap();
 
+  // ============================================
+  // ROLE 2: MARKETING MANAGEMENT - Strategic context
+  // ============================================
+  const getPhaseColor = (status: string): string => {
+    switch (status) {
+      case 'completed': return '#10b981';
+      case 'in-progress': return '#f59e0b';
+      default: return '#64748b';
+    }
+  };
+
+  const getPhaseIcon = (status: string): React.ReactNode => {
+    switch (status) {
+      case 'completed':
+        return (
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        );
+      case 'in-progress':
+        return (
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        );
+      default:
+        return (
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+          </svg>
+        );
+    }
+  };
+
+  // ============================================
+  // ROLE 3: SYNTHESIZER - Multi-directional layout
+  // ============================================
+  const getPhaseLayout = (index: number, total: number) => {
+    const positions = ['left', 'right', 'left', 'right'];
+    return positions[index] || 'left';
+  };
+
   return (
     <div className="text-center">
-      <h2 className="text-xl font-bold text-indigo-300 mb-6">30-Day Roadmap</h2>
-      <div className="flex flex-col gap-4">
-        {phases.map((phase, idx) => (
-          <div
-            key={idx}
-            className="bg-gradient-to-br from-slate-800/85 to-slate-900/95 rounded-xl p-5 border-l-4 border-indigo-500 transition-all hover:translate-x-2 hover:border-pink-500"
-          >
-            <div className="flex justify-between items-center mb-3 flex-wrap gap-2">
-              <span className="text-base font-bold text-indigo-300">📋 {phase.title}</span>
-              <span className="text-xs text-white/50 bg-black/30 px-3 py-1 rounded-full">{phase.days || 'Timeline'}</span>
-            </div>
-            <ul className="pl-5 space-y-1">
-              {phase.items.map((item: string, i: number) => (
-                <li key={i} className="text-sm text-white/70 flex items-center gap-2">
-                  <Check size={14} className="text-green-400 flex-shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">Strategic Roadmap</h2>
+      
+      {phases.length === 0 ? (
+        <div className="text-center py-10 text-white/50">
+          <p>No roadmap data found. Please generate a new plan with roadmap data.</p>
+        </div>
+      ) : (
+        <div className="relative">
+          {/* Vertical timeline line */}
+          <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-indigo-500 via-green-400 to-emerald-500 transform -translate-x-1/2 opacity-30" />
+          
+          <div className="flex flex-col gap-8 py-4 relative z-10">
+            {phases.map((phase, index) => {
+              const isHovered = hoveredPhase === index;
+              const layout = getPhaseLayout(index, phases.length);
+              const color = getPhaseColor(phase.status);
+              const isLeft = layout === 'left';
+              const progress = phase.progress || 0;
+              
+              return (
+                <div 
+                  key={index}
+                  className={`flex items-center ${isLeft ? 'flex-row' : 'flex-row-reverse'} relative`}
+                  onMouseEnter={() => setHoveredPhase(index)}
+                  onMouseLeave={() => setHoveredPhase(null)}
+                >
+                  {/* Timeline connector */}
+                  <div className="w-1/2 flex justify-center">
+                    <div className="relative flex flex-col items-center">
+                      {/* Phase circle with glow */}
+                      <div 
+                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer relative ${
+                          isHovered ? 'scale-125' : 'scale-100'
+                        }`}
+                        style={{ 
+                          background: `radial-gradient(circle at center, ${color}40, ${color}10)`,
+                          border: `3px solid ${color}`,
+                          boxShadow: isHovered ? `0 0 30px ${color}60` : 'none'
+                        }}
+                      >
+                        <span className="text-white font-bold text-sm">
+                          {index + 1}
+                        </span>
+                        {phase.status === 'completed' && (
+                          <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center text-[8px] text-white">
+                            ✓
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Progress line below circle */}
+                      <div className="h-12 w-0.5 bg-gradient-to-b from-current to-transparent opacity-20" style={{ color }} />
+                    </div>
+                  </div>
+
+                  {/* Content card */}
+                  <div 
+                    className={`w-1/2 ${isLeft ? 'pr-8 text-left' : 'pl-8 text-left'} transition-all duration-300 ${
+                      isHovered ? 'opacity-100' : 'opacity-80'
+                    }`}
+                  >
+                    <div 
+                      className={`bg-gradient-to-br from-slate-800/85 to-slate-900/95 rounded-xl p-5 border transition-all duration-300 ${
+                        isHovered ? 'border-indigo-500/60 shadow-xl shadow-indigo-500/10 transform scale-[1.02]' : 'border-white/10'
+                      }`}
+                      style={{ 
+                        borderLeftColor: color,
+                        borderLeftWidth: isHovered ? '4px' : '3px'
+                      }}
+                    >
+                      {/* Header */}
+                      <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+                        <div className="flex items-center gap-3">
+                          <span className="text-base font-bold text-indigo-300">
+                            {phase.title}
+                          </span>
+                          <span 
+                            className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                            style={{
+                              backgroundColor: `${color}20`,
+                              color: color,
+                              border: `1px solid ${color}30`
+                            }}
+                          >
+                            {phase.status.toUpperCase().replace('-', ' ')}
+                          </span>
+                        </div>
+                        <span className="text-xs text-white/40 bg-black/30 px-2 py-0.5 rounded-full">
+                          {phase.days || 'Timeline'}
+                        </span>
+                      </div>
+
+                      {/* Progress bar */}
+                      <div className="mb-3">
+                        <div className="flex justify-between text-[10px] text-white/40 mb-0.5">
+                          <span>Progress</span>
+                          <span>{progress}%</span>
+                        </div>
+                        <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all duration-500"
+                            style={{
+                              width: `${progress}%`,
+                              background: `linear-gradient(90deg, ${color}, ${color}dd)`
+                            }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Items */}
+                      <ul className="space-y-1.5">
+                        {phase.items.map((item: string, i: number) => (
+                          <li key={i} className="flex items-start gap-2 text-sm text-white/70 group/item">
+                            <span className="text-indigo-400 mt-0.5 text-[10px]">▸</span>
+                            <span className="leading-tight">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      {/* Hover action hint */}
+                      {isHovered && (
+                        <div className="mt-3 pt-2 border-t border-white/5">
+                          <span className="text-[10px] text-white/30 flex items-center gap-1">
+                            {phase.status === 'completed' ? (
+                              <span className="text-green-400">✅ Phase complete</span>
+                            ) : phase.status === 'in-progress' ? (
+                              <span className="text-yellow-400">⏳ In progress</span>
+                            ) : (
+                              <span className="text-white/30">⏱️ Upcoming phase</span>
+                            )}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        ))}
+        </div>
+      )}
+
+      {/* Legend */}
+      <div className="mt-6 flex justify-center items-center gap-6 text-xs text-white/40 flex-wrap">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-green-500"></div>
+          <span>Completed</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+          <span>In Progress</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-slate-600"></div>
+          <span>Pending</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full border-2 border-indigo-500" style={{ boxShadow: '0 0 12px rgba(99,102,241,0.3)' }}></div>
+          <span>Hover Effect</span>
+        </div>
       </div>
     </div>
   );
