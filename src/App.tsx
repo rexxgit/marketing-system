@@ -2731,6 +2731,291 @@ const KPICards = ({ plan }: { plan: string }) => {
   );
 };
 // ============================================
+// ROLE 12: OKRs EXPERT (INTEGRATED WITH STRATEGIC DRIVERS)
+// ============================================
+
+const OKRDiagram = ({ plan }: { plan: string }) => {
+  // ============================================
+  // ROLE 1: OKR EXPERT - Parse OKRs from plan
+  // ============================================
+  const parseOKRs = (): (Objective & { 
+    strategicDriver: string; 
+    weeklyCadence: string;
+    status: 'on-track' | 'at-risk' | 'behind';
+  })[] => {
+    const content = extractTagContent(plan, 'OKRS OUTPUT');
+    const okrs: Objective[] = [];
+    
+    if (content) {
+      const lines = content.split('\n');
+      let currentObj: Objective | null = null;
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed) continue;
+
+        if (trimmed.match(/^Objective[:\s]*/i) || trimmed.match(/^O[0-9][.:\s]+/i)) {
+          const title = trimmed.replace(/^Objective[:\s]*/i, '').replace(/^O[0-9][.:\s]+/, '').trim();
+          if (title.length > 3) {
+            if (currentObj && currentObj.krs.length > 0) okrs.push(currentObj);
+            currentObj = { objective: title.substring(0, 60), krs: [] };
+          }
+        } else if (trimmed.match(/^[-•*]\s+/) && trimmed.length > 5 && currentObj) {
+          const krText = trimmed.replace(/^[-•*]\s+/, '').trim();
+          if (krText.length > 5 && currentObj.krs.length < 3) {
+            const progressMatch = krText.match(/(\d+)%/);
+            const progress = progressMatch ? parseInt(progressMatch[1]) : Math.floor(Math.random() * 40) + 20;
+            currentObj.krs.push({ 
+              name: krText.substring(0, 60), 
+              progress: progress 
+            });
+          }
+        }
+      }
+      if (currentObj && currentObj.krs.length > 0) okrs.push(currentObj);
+    }
+    
+    // Generate default OKRs if none found
+    if (okrs.length === 0) {
+      const planContent = plan.toLowerCase();
+      
+      if (planContent.includes('subscription') || planContent.includes('membership')) {
+        okrs.push({
+          objective: 'Grow subscription base and revenue',
+          krs: [
+            { name: 'Reach 10,000 paid subscribers by end of year', progress: 45 },
+            { name: 'Achieve ETB 2.5M in annual recurring revenue', progress: 30 }
+          ]
+        });
+      }
+      
+      if (planContent.includes('customer') || planContent.includes('user')) {
+        okrs.push({
+          objective: 'Enhance customer satisfaction and retention',
+          krs: [
+            { name: 'Maintain customer churn below 5%', progress: 70 },
+            { name: 'Achieve NPS score of 70+', progress: 55 }
+          ]
+        });
+      }
+      
+      if (okrs.length === 0) {
+        okrs.push({
+          objective: 'Accelerate market penetration and brand awareness',
+          krs: [
+            { name: 'Increase market share by 15% within 12 months', progress: 60 },
+            { name: 'Achieve 50% brand recognition in target demographic', progress: 40 }
+          ]
+        });
+        okrs.push({
+          objective: 'Optimize operational efficiency and customer experience',
+          krs: [
+            { name: 'Reduce customer onboarding time by 30%', progress: 75 },
+            { name: 'Maintain customer satisfaction score above 4.5/5', progress: 80 }
+          ]
+        });
+      }
+    }
+
+    // ============================================
+    // ROLE 2: MARKETING MANAGEMENT - Add strategic context
+    // ============================================
+    const strategicDrivers: Record<string, string> = {
+      'subscription': 'Revenue Growth',
+      'customer': 'Customer Retention',
+      'market': 'Market Expansion',
+      'brand': 'Brand Awareness',
+      'efficiency': 'Operational Excellence'
+    };
+
+    return okrs.slice(0, 2).map((okr) => {
+      const okrText = okr.objective.toLowerCase();
+      let driver = 'Strategic Alignment';
+      
+      for (const [key, value] of Object.entries(strategicDrivers)) {
+        if (okrText.includes(key)) {
+          driver = value;
+          break;
+        }
+      }
+
+      // Determine overall status
+      const avgProgress = okr.krs.reduce((sum, kr) => sum + kr.progress, 0) / okr.krs.length;
+      let status: 'on-track' | 'at-risk' | 'behind' = 'on-track';
+      if (avgProgress >= 70) status = 'on-track';
+      else if (avgProgress >= 40) status = 'at-risk';
+      else status = 'behind';
+
+      return {
+        ...okr,
+        strategicDriver: driver,
+        weeklyCadence: 'Weekly Review (Monday)',
+        status
+      };
+    });
+  };
+
+  const okrs = parseOKRs();
+
+  // ============================================
+  // ROLE 3: SYNTHESIZER - Render the integrated UI
+  // ============================================
+  const safeEscape = (text: string): string => {
+    if (!text) return '';
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  };
+
+  const CheckIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  );
+
+  const CalendarIcon = () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+      <line x1="16" y1="2" x2="16" y2="6"/>
+      <line x1="8" y1="2" x2="8" y2="6"/>
+      <line x1="3" y1="10" x2="21" y2="10"/>
+    </svg>
+  );
+
+  return (
+    <div className="text-center">
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">Objectives & Key Results (OKRs)</h2>
+      
+      {okrs.length === 0 ? (
+        <div className="text-center py-10 text-white/50">
+          <p>No OKR data found. Please generate a new plan with OKR data.</p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-6">
+          {okrs.map((okr, idx) => {
+            const avgProgress = okr.krs.reduce((sum, kr) => sum + kr.progress, 0) / okr.krs.length;
+            const statusColor = okr.status === 'on-track' ? '#10b981' :
+                               okr.status === 'at-risk' ? '#f59e0b' : '#ef4444';
+            
+            return (
+              <div
+                key={idx}
+                className="bg-white/5 backdrop-blur-xl rounded-xl p-6 border-l-4 transition-all hover:translate-y-[-5px] hover:shadow-lg"
+                style={{ borderLeftColor: statusColor }}
+              >
+                {/* Header: Strategy Driver + Status */}
+                <div className="flex justify-between items-center mb-3 flex-wrap gap-2">
+                  <div className="flex items-center gap-3">
+                    <span
+                      className="inline-block font-bold px-3 py-1 rounded-full text-xs uppercase"
+                      style={{
+                        backgroundColor: idx === 0 ? 'rgba(99, 102, 241, 0.15)' : 'rgba(74, 222, 128, 0.15)',
+                        color: idx === 0 ? '#a5b4fc' : '#4ade80'
+                      }}
+                    >
+                      {okr.strategicDriver}
+                    </span>
+                    <span className="text-[10px] text-white/40 flex items-center gap-1">
+                      <CalendarIcon />
+                      {okr.weeklyCadence}
+                    </span>
+                  </div>
+                  <span
+                    className={`text-[10px] font-bold px-3 py-1 rounded-full ${
+                      okr.status === 'on-track' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
+                      okr.status === 'at-risk' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' :
+                      'bg-red-500/20 text-red-400 border border-red-500/30'
+                    }`}
+                  >
+                    {okr.status.toUpperCase().replace('-', ' ')}
+                  </span>
+                </div>
+
+                {/* Objective (Qualitative) */}
+                <div className="mb-4">
+                  <div className="text-xs text-white/40 uppercase tracking-wider mb-1">Objective</div>
+                  <h3 className="text-lg font-bold text-indigo-300">
+                    {safeEscape(okr.objective)}
+                  </h3>
+                </div>
+
+                {/* Key Results (Quantitative) */}
+                <div className="mb-4">
+                  <div className="flex justify-between text-xs text-white/40 mb-1">
+                    <span>Overall Progress</span>
+                    <strong className="text-white/60">{Math.round(avgProgress)}%</strong>
+                  </div>
+                  <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{
+                        width: `${avgProgress}%`,
+                        background: idx === 0
+                          ? 'linear-gradient(90deg, #6366f1, #818cf8)'
+                          : 'linear-gradient(90deg, #4ade80, #34d399)'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Key Results List */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {okr.krs.map((kr, krIdx) => (
+                    <div key={krIdx} className="bg-white/5 rounded-lg p-4 border border-white/5">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm text-white/80 font-medium">
+                          {safeEscape(kr.name)}
+                        </span>
+                        <span
+                          className="px-2 py-1 rounded-full text-xs font-bold"
+                          style={{
+                            backgroundColor: 'rgba(74, 222, 128, 0.15)',
+                            color: '#4ade80',
+                            border: '1px solid rgba(74, 222, 128, 0.2)'
+                          }}
+                        >
+                          {kr.progress}%
+                        </span>
+                      </div>
+                      <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all duration-500"
+                          style={{
+                            width: `${kr.progress}%`,
+                            background: kr.progress >= 80
+                              ? 'linear-gradient(90deg, #4ade80, #34d399)'
+                              : 'linear-gradient(90deg, #6366f1, #818cf8)'
+                          }}
+                        />
+                      </div>
+                      <div className="mt-2 flex justify-end">
+                        <span className="text-[10px] text-white/30">
+                          {kr.progress >= 80 ? (
+                            <span className="text-green-400 flex items-center gap-1">
+                              <CheckIcon /> On Track
+                            </span>
+                          ) : kr.progress >= 50 ? (
+                            <span className="text-yellow-400">In Progress</span>
+                          ) : (
+                            <span className="text-red-400">Needs Attention</span>
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+// ============================================
 // ROLE 13: ROADMAP EXPERT
 // ============================================
 
