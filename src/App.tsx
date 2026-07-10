@@ -2362,19 +2362,22 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
   );
 };
 // ============================================
-// ROLE 11: KPIs EXPERT (COMPLETE WORKING VERSION)
+// ROLE 11: KPIs EXPERT (INTEGRATED WITH ALL 12 ROLES)
 // ============================================
 
 const KPICards = ({ plan }: { plan: string }) => {
   // ============================================
-  // ROLE 1: KPI EXPERT - Extract KPI data from plan
+  // ROLE 1: KPI EXPERT - Extract & Define KPIs
   // ============================================
   const parseKPIs = (): (KPI & { 
     status: 'on-target' | 'at-risk' | 'behind'; 
     action: string; 
-    okrLink: string 
+    okrLink: string;
+    role: string;
+    category: 'leading' | 'lagging' | 'correlated';
+    importance: 'primary' | 'secondary' | 'supporting';
   })[] => {
-    // First, try to extract KPI data from the plan
+    // Extract KPI data from the plan
     const content = extractTagContent(plan, 'KPI OUTPUT');
     let kpis: KPI[] = [];
     
@@ -2397,56 +2400,31 @@ const KPICards = ({ plan }: { plan: string }) => {
       }
     }
     
-    // If no KPIs found, generate some from the plan content
+    // If no KPIs found, generate based on the plan content
     if (kpis.length === 0) {
       const planContent = plan.toLowerCase();
       
-      if (planContent.includes('subscription') || planContent.includes('membership') || planContent.includes('revenue')) {
-        kpis.push({
-          label: 'Monthly Recurring Revenue',
-          value: 'ETB 225K',
-          trend: '18.5',
-          isUp: true
-        });
+      // Map plan keywords to relevant KPIs
+      const kpiMap = [
+        { keywords: ['subscription', 'membership', 'revenue'], label: 'Monthly Recurring Revenue', value: 'ETB 225K', trend: '18.5', isUp: true },
+        { keywords: ['customer', 'user', 'active'], label: 'Active Users', value: '12,450', trend: '22.3', isUp: true },
+        { keywords: ['conversion', 'sign-up', 'rate'], label: 'Conversion Rate', value: '14.2%', trend: '8.7', isUp: true },
+        { keywords: ['churn', 'retention', 'loyalty'], label: 'Customer Churn', value: '4.8%', trend: '12.5', isUp: false },
+        { keywords: ['satisfaction', 'nps', 'score'], label: 'Net Promoter Score', value: '72', trend: '5.1', isUp: true }
+      ];
+      
+      for (const kpiDef of kpiMap) {
+        if (kpiDef.keywords.some(kw => planContent.includes(kw))) {
+          kpis.push({
+            label: kpiDef.label,
+            value: kpiDef.value,
+            trend: kpiDef.trend,
+            isUp: kpiDef.isUp
+          });
+        }
       }
       
-      if (planContent.includes('customer') || planContent.includes('user') || planContent.includes('active')) {
-        kpis.push({
-          label: 'Active Users',
-          value: '12,450',
-          trend: '22.3',
-          isUp: true
-        });
-      }
-      
-      if (planContent.includes('conversion') || planContent.includes('sign-up') || planContent.includes('rate')) {
-        kpis.push({
-          label: 'Conversion Rate',
-          value: '14.2%',
-          trend: '8.7',
-          isUp: true
-        });
-      }
-      
-      if (planContent.includes('churn') || planContent.includes('retention') || planContent.includes('loyalty')) {
-        kpis.push({
-          label: 'Customer Churn',
-          value: '4.8%',
-          trend: '12.5',
-          isUp: false
-        });
-      }
-      
-      if (planContent.includes('satisfaction') || planContent.includes('nps') || planContent.includes('score')) {
-        kpis.push({
-          label: 'Net Promoter Score',
-          value: '72',
-          trend: '5.1',
-          isUp: true
-        });
-      }
-      
-      // If still no KPIs, add default ones
+      // Fallback default KPIs
       if (kpis.length === 0) {
         kpis = [
           { label: 'Revenue Growth', value: 'ETB 850K', trend: '15.2', isUp: true },
@@ -2542,6 +2520,17 @@ const KPICards = ({ plan }: { plan: string }) => {
     // ============================================
     // ROLE 3: SYNTHESIZER - Combine KPI + OKR + Insights
     // ============================================
+    const roleMapping = [
+      { label: 'Revenue Growth', role: 'Market Sizing', category: 'lagging', importance: 'primary' },
+      { label: 'Monthly Recurring Revenue', role: 'Market Sizing', category: 'lagging', importance: 'primary' },
+      { label: 'Customer Acquisition Cost', role: '4Ps', category: 'leading', importance: 'secondary' },
+      { label: 'Customer Lifetime Value', role: 'Customer Journey', category: 'lagging', importance: 'primary' },
+      { label: 'Active Users', role: 'Segmentation', category: 'leading', importance: 'secondary' },
+      { label: 'Conversion Rate', role: '4Ps', category: 'leading', importance: 'secondary' },
+      { label: 'Customer Churn', role: 'Customer Journey', category: 'lagging', importance: 'primary' },
+      { label: 'Net Promoter Score', role: 'Positioning', category: 'lagging', importance: 'secondary' }
+    ];
+
     return kpis.map((kpi) => {
       // Determine status and recommended action
       let status: 'on-target' | 'at-risk' | 'behind' = 'on-target';
@@ -2560,10 +2549,14 @@ const KPICards = ({ plan }: { plan: string }) => {
       } else if (!kpi.isUp && trendNum >= 8) {
         status = 'behind';
         action = 'Significant decline. Conduct root cause analysis.';
-      } else {
-        status = 'on-target';
-        action = 'Maintain current momentum.';
       }
+
+      // Map KPI to role
+      const roleInfo = roleMapping.find(r => r.label === kpi.label) || {
+        role: 'KPIs',
+        category: 'leading' as const,
+        importance: 'secondary' as const
+      };
 
       // Link to relevant OKR
       let okrLink = 'Aligns with overall strategy.';
@@ -2591,17 +2584,23 @@ const KPICards = ({ plan }: { plan: string }) => {
             }
           }
         }
-        // If no match found, link to first OKR
         if (okrLink === 'Aligns with overall strategy.' && okrs.length > 0) {
           okrLink = `🎯 "${okrs[0].objective}"`;
         }
       }
 
-      return { ...kpi, status, action, okrLink };
+      return { 
+        ...kpi, 
+        status, 
+        action, 
+        okrLink,
+        role: roleInfo.role,
+        category: roleInfo.category as 'leading' | 'lagging' | 'correlated',
+        importance: roleInfo.importance as 'primary' | 'secondary' | 'supporting'
+      };
     });
   };
 
-  // Get the enhanced KPIs
   const enhancedKpis = parseKPIs();
 
   // SVG Icons
@@ -2636,6 +2635,24 @@ const KPICards = ({ plan }: { plan: string }) => {
             const statusLabel = kpi.status === 'on-target' ? 'On Target' :
                                kpi.status === 'at-risk' ? 'At Risk' : 'Behind';
             
+            // Get role color
+            const roleColors: Record<string, string> = {
+              'Segmentation': '#4ade80',
+              'Market Sizing': '#22d3ee',
+              'PESTLE': '#fbbf24',
+              "Porter's Forces": '#a78bfa',
+              'Competitors': '#f472b6',
+              'Positioning': '#818cf8',
+              '4Ps': '#34d399',
+              'SWOT': '#f87171',
+              'Customer Journey': '#60a5fa',
+              'KPIs': '#f59e0b',
+              'OKRs': '#10b981',
+              'Roadmap': '#ec4899'
+            };
+            
+            const roleColor = roleColors[kpi.role] || '#64748b';
+            
             return (
               <div
                 key={index}
@@ -2648,9 +2665,27 @@ const KPICards = ({ plan }: { plan: string }) => {
                   style={{ background: statusColor }}
                 />
                 
+                {/* Role badge */}
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                    style={{ 
+                      background: `${roleColor}20`, 
+                      color: roleColor,
+                      border: `1px solid ${roleColor}30`
+                    }}>
+                    {kpi.role}
+                  </span>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                    kpi.importance === 'primary' ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30' :
+                    'bg-white/10 text-white/40'
+                  }`}>
+                    {kpi.importance}
+                  </span>
+                </div>
+                
                 {/* KPI METRIC & VALUE */}
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-semibold text-white/40 uppercase tracking-wider">{kpi.label}</span>
+                  <span className="text-xs font-semibold text-white/60 uppercase tracking-wider">{kpi.label}</span>
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                     kpi.status === 'on-target' ? 'bg-green-500/20 text-green-400' :
                     kpi.status === 'at-risk' ? 'bg-yellow-500/20 text-yellow-400' :
@@ -2671,8 +2706,13 @@ const KPICards = ({ plan }: { plan: string }) => {
                   </div>
                 </div>
 
+                {/* KPI Category */}
+                <div className="text-[9px] text-white/30 uppercase tracking-wider mb-1">
+                  {kpi.category} indicator
+                </div>
+
                 {/* STRATEGIC CONTEXT & RECOMMENDED ACTION */}
-                <div className="mt-3 pt-3 border-t border-white/10 space-y-1.5">
+                <div className="mt-2 pt-2 border-t border-white/10 space-y-1.5">
                   <p className="text-[10px] text-white/50 flex items-start gap-1.5">
                     <span className="text-indigo-400 font-bold text-[10px] mt-0.5">📌</span>
                     <span className="leading-tight">{kpi.okrLink}</span>
