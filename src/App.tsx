@@ -2362,16 +2362,21 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
   );
 };
 // ============================================
-// ROLE 11: KPIs EXPERT (INTEGRATED WITH OKRs & STRATEGIC INSIGHTS)
+// ROLE 11: KPIs EXPERT (COMPLETE WORKING VERSION)
 // ============================================
 
 const KPICards = ({ plan }: { plan: string }) => {
   // ============================================
   // ROLE 1: KPI EXPERT - Extract KPI data from plan
   // ============================================
-  const extractKpiDataFromPlan = (plan: string): KPI[] => {
+  const parseKPIs = (): (KPI & { 
+    status: 'on-target' | 'at-risk' | 'behind'; 
+    action: string; 
+    okrLink: string 
+  })[] => {
+    // First, try to extract KPI data from the plan
     const content = extractTagContent(plan, 'KPI OUTPUT');
-    const kpis: KPI[] = [];
+    let kpis: KPI[] = [];
     
     if (content) {
       const lines = content.split('\n');
@@ -2395,11 +2400,9 @@ const KPICards = ({ plan }: { plan: string }) => {
     // If no KPIs found, generate some from the plan content
     if (kpis.length === 0) {
       const planContent = plan.toLowerCase();
-      const generatedKpis: KPI[] = [];
       
-      // Look for keywords in the plan to generate relevant KPIs
       if (planContent.includes('subscription') || planContent.includes('membership') || planContent.includes('revenue')) {
-        generatedKpis.push({
+        kpis.push({
           label: 'Monthly Recurring Revenue',
           value: 'ETB 225K',
           trend: '18.5',
@@ -2408,7 +2411,7 @@ const KPICards = ({ plan }: { plan: string }) => {
       }
       
       if (planContent.includes('customer') || planContent.includes('user') || planContent.includes('active')) {
-        generatedKpis.push({
+        kpis.push({
           label: 'Active Users',
           value: '12,450',
           trend: '22.3',
@@ -2417,7 +2420,7 @@ const KPICards = ({ plan }: { plan: string }) => {
       }
       
       if (planContent.includes('conversion') || planContent.includes('sign-up') || planContent.includes('rate')) {
-        generatedKpis.push({
+        kpis.push({
           label: 'Conversion Rate',
           value: '14.2%',
           trend: '8.7',
@@ -2426,7 +2429,7 @@ const KPICards = ({ plan }: { plan: string }) => {
       }
       
       if (planContent.includes('churn') || planContent.includes('retention') || planContent.includes('loyalty')) {
-        generatedKpis.push({
+        kpis.push({
           label: 'Customer Churn',
           value: '4.8%',
           trend: '12.5',
@@ -2435,7 +2438,7 @@ const KPICards = ({ plan }: { plan: string }) => {
       }
       
       if (planContent.includes('satisfaction') || planContent.includes('nps') || planContent.includes('score')) {
-        generatedKpis.push({
+        kpis.push({
           label: 'Net Promoter Score',
           value: '72',
           trend: '5.1',
@@ -2444,35 +2447,27 @@ const KPICards = ({ plan }: { plan: string }) => {
       }
       
       // If still no KPIs, add default ones
-      if (generatedKpis.length === 0) {
-        return [
+      if (kpis.length === 0) {
+        kpis = [
           { label: 'Revenue Growth', value: 'ETB 850K', trend: '15.2', isUp: true },
           { label: 'Customer Acquisition Cost', value: 'ETB 45', trend: '7.8', isUp: false },
           { label: 'Customer Lifetime Value', value: 'ETB 1,200', trend: '10.4', isUp: true },
           { label: 'Net Promoter Score', value: '72', trend: '5.1', isUp: true }
         ];
       }
-      
-      return generatedKpis;
     }
 
-    return kpis.length > 0 ? kpis.slice(0, 4) : [
-      { label: 'Monthly Recurring Revenue', value: 'ETB 225K', trend: '18.5', isUp: true },
-      { label: 'Active Users', value: '12,450', trend: '22.3', isUp: true },
-      { label: 'Conversion Rate', value: '14.2%', trend: '8.7', isUp: true },
-      { label: 'Customer Churn', value: '4.8%', trend: '12.5', isUp: false }
-    ];
-  };
+    // Limit to 4 KPIs
+    kpis = kpis.slice(0, 4);
 
-  // ============================================
-  // ROLE 2: MARKETING MANAGEMENT EXPERT - Extract OKRs
-  // ============================================
-  const extractOkrsFromPlan = (plan: string): Objective[] => {
-    const content = extractTagContent(plan, 'OKRS OUTPUT');
-    const okrs: Objective[] = [];
+    // ============================================
+    // ROLE 2: MARKETING MANAGEMENT - Extract OKRs
+    // ============================================
+    const okrContent = extractTagContent(plan, 'OKRS OUTPUT');
+    let okrs: Objective[] = [];
     
-    if (content) {
-      const lines = content.split('\n');
+    if (okrContent) {
+      const lines = okrContent.split('\n');
       let currentObj: Objective | null = null;
 
       for (const line of lines) {
@@ -2503,10 +2498,9 @@ const KPICards = ({ plan }: { plan: string }) => {
     // Generate default OKRs if none found
     if (okrs.length === 0) {
       const planContent = plan.toLowerCase();
-      const generatedOkrs: Objective[] = [];
       
       if (planContent.includes('subscription') || planContent.includes('membership')) {
-        generatedOkrs.push({
+        okrs.push({
           objective: 'Grow subscription base and revenue',
           krs: [
             { name: 'Reach 10,000 paid subscribers by end of year', progress: 45 },
@@ -2516,7 +2510,7 @@ const KPICards = ({ plan }: { plan: string }) => {
       }
       
       if (planContent.includes('customer') || planContent.includes('user')) {
-        generatedOkrs.push({
+        okrs.push({
           objective: 'Enhance customer satisfaction and retention',
           krs: [
             { name: 'Maintain customer churn below 5%', progress: 70 },
@@ -2525,103 +2519,100 @@ const KPICards = ({ plan }: { plan: string }) => {
         });
       }
       
-      if (generatedOkrs.length > 0) {
-        return generatedOkrs;
+      if (okrs.length === 0) {
+        okrs = [
+          {
+            objective: 'Accelerate market penetration and brand awareness',
+            krs: [
+              { name: 'Increase market share by 15% within 12 months', progress: 60 },
+              { name: 'Achieve 50% brand recognition in target demographic', progress: 40 }
+            ]
+          },
+          {
+            objective: 'Optimize operational efficiency and customer experience',
+            krs: [
+              { name: 'Reduce customer onboarding time by 30%', progress: 75 },
+              { name: 'Maintain customer satisfaction score above 4.5/5', progress: 80 }
+            ]
+          }
+        ];
       }
-      
-      return [
-        {
-          objective: 'Accelerate market penetration and brand awareness',
-          krs: [
-            { name: 'Increase market share by 15% within 12 months', progress: 60 },
-            { name: 'Achieve 50% brand recognition in target demographic', progress: 40 }
-          ]
-        },
-        {
-          objective: 'Optimize operational efficiency and customer experience',
-          krs: [
-            { name: 'Reduce customer onboarding time by 30%', progress: 75 },
-            { name: 'Maintain customer satisfaction score above 4.5/5', progress: 80 }
-          ]
-        }
-      ];
     }
 
-    return okrs.length > 0 ? okrs.slice(0, 2) : [];
+    // ============================================
+    // ROLE 3: SYNTHESIZER - Combine KPI + OKR + Insights
+    // ============================================
+    return kpis.map((kpi) => {
+      // Determine status and recommended action
+      let status: 'on-target' | 'at-risk' | 'behind' = 'on-target';
+      let action = 'Monitor closely.';
+      
+      const trendNum = parseFloat(kpi.trend);
+      if (kpi.isUp && trendNum >= 10) {
+        status = 'on-target';
+        action = 'Continue current strategy. Maintain momentum.';
+      } else if (kpi.isUp && trendNum < 5) {
+        status = 'at-risk';
+        action = 'Growth slowing. Boost marketing efforts.';
+      } else if (!kpi.isUp && trendNum < 8) {
+        status = 'at-risk';
+        action = 'Declining. Analyze and adjust approach.';
+      } else if (!kpi.isUp && trendNum >= 8) {
+        status = 'behind';
+        action = 'Significant decline. Conduct root cause analysis.';
+      } else {
+        status = 'on-target';
+        action = 'Maintain current momentum.';
+      }
+
+      // Link to relevant OKR
+      let okrLink = 'Aligns with overall strategy.';
+      const kpiLabel = kpi.label.toLowerCase();
+      
+      if (okrs.length > 0) {
+        for (const okr of okrs) {
+          const okrText = okr.objective.toLowerCase();
+          if (kpiLabel.includes('revenue') || kpiLabel.includes('subscription') || kpiLabel.includes('growth')) {
+            if (okrText.includes('revenue') || okrText.includes('subscription') || okrText.includes('growth')) {
+              okrLink = `🎯 "${okr.objective}"`;
+              break;
+            }
+          }
+          if (kpiLabel.includes('churn') || kpiLabel.includes('retention') || kpiLabel.includes('satisfaction')) {
+            if (okrText.includes('customer') || okrText.includes('retention') || okrText.includes('satisfaction')) {
+              okrLink = `🎯 "${okr.objective}"`;
+              break;
+            }
+          }
+          if (kpiLabel.includes('conversion') || kpiLabel.includes('acquisition')) {
+            if (okrText.includes('market') || okrText.includes('penetration') || okrText.includes('growth')) {
+              okrLink = `🎯 "${okr.objective}"`;
+              break;
+            }
+          }
+        }
+        // If no match found, link to first OKR
+        if (okrLink === 'Aligns with overall strategy.' && okrs.length > 0) {
+          okrLink = `🎯 "${okrs[0].objective}"`;
+        }
+      }
+
+      return { ...kpi, status, action, okrLink };
+    });
   };
 
-  // ============================================
-  // ROLE 3: SYNTHESIZER - Combine KPI + OKR + Strategic Insights
-  // ============================================
-  const kpis = extractKpiDataFromPlan(plan);
-  const okrs = extractOkrsFromPlan(plan);
-
-  // Enhanced KPI with status, action, and OKR link
-  const enhancedKpis = kpis.map((kpi) => {
-    // ROLE 1: Determine status and recommended action
-    let status: 'on-target' | 'at-risk' | 'behind' = 'on-target';
-    let action = 'Monitor closely.';
-    
-    // Determine status based on trend and direction
-    const trendNum = parseFloat(kpi.trend);
-    if (kpi.isUp && trendNum >= 10) {
-      status = 'on-target';
-      action = 'Continue current strategy.';
-    } else if (kpi.isUp && trendNum < 5) {
-      status = 'at-risk';
-      action = 'Boost marketing efforts.';
-    } else if (!kpi.isUp && trendNum < 8) {
-      status = 'at-risk';
-      action = 'Analyze and adjust approach.';
-    } else if (!kpi.isUp && trendNum >= 8) {
-      status = 'behind';
-      action = 'Conduct root cause analysis.';
-    } else {
-      status = 'on-target';
-      action = 'Maintain momentum.';
-    }
-
-    // ROLE 2: Link to relevant OKR
-    let okrLink = 'Aligns with overall strategy.';
-    const kpiLabel = kpi.label.toLowerCase();
-    
-    if (okrs.length > 0) {
-      for (const okr of okrs) {
-        const okrText = okr.objective.toLowerCase();
-        if (kpiLabel.includes('revenue') || kpiLabel.includes('subscription') || kpiLabel.includes('growth')) {
-          if (okrText.includes('revenue') || okrText.includes('subscription') || okrText.includes('growth')) {
-            okrLink = `Aligns with: "${okr.objective}"`;
-            break;
-          }
-        }
-        if (kpiLabel.includes('churn') || kpiLabel.includes('retention') || kpiLabel.includes('satisfaction')) {
-          if (okrText.includes('customer') || okrText.includes('retention') || okrText.includes('satisfaction')) {
-            okrLink = `Aligns with: "${okr.objective}"`;
-            break;
-          }
-        }
-        if (kpiLabel.includes('conversion') || kpiLabel.includes('acquisition')) {
-          if (okrText.includes('market') || okrText.includes('penetration') || okrText.includes('growth')) {
-            okrLink = `Aligns with: "${okr.objective}"`;
-            break;
-          }
-        }
-        okrLink = `Supports: "${okr.objective}"`;
-      }
-    }
-
-    return { ...kpi, status, action, okrLink };
-  });
+  // Get the enhanced KPIs
+  const enhancedKpis = parseKPIs();
 
   // SVG Icons
-  const TrendingUp = ({ size = 16 }: { size?: number }) => (
+  const TrendingUpIcon = ({ size = 16 }: { size?: number }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
       <polyline points="17 6 23 6 23 12"/>
     </svg>
   );
 
-  const TrendingDown = ({ size = 16 }: { size?: number }) => (
+  const TrendingDownIcon = ({ size = 16 }: { size?: number }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/>
       <polyline points="17 18 23 18 23 12"/>
@@ -2642,6 +2633,9 @@ const KPICards = ({ plan }: { plan: string }) => {
             const statusColor = kpi.status === 'on-target' ? '#10b981' :
                                kpi.status === 'at-risk' ? '#f59e0b' : '#ef4444';
             
+            const statusLabel = kpi.status === 'on-target' ? 'On Target' :
+                               kpi.status === 'at-risk' ? 'At Risk' : 'Behind';
+            
             return (
               <div
                 key={index}
@@ -2650,7 +2644,7 @@ const KPICards = ({ plan }: { plan: string }) => {
               >
                 {/* Status indicator dot */}
                 <div 
-                  className="absolute top-3 right-3 w-2 h-2 rounded-full animate-pulse"
+                  className="absolute top-3 right-3 w-2.5 h-2.5 rounded-full animate-pulse"
                   style={{ background: statusColor }}
                 />
                 
@@ -2662,7 +2656,7 @@ const KPICards = ({ plan }: { plan: string }) => {
                     kpi.status === 'at-risk' ? 'bg-yellow-500/20 text-yellow-400' :
                     'bg-red-500/20 text-red-400'
                   }`}>
-                    {kpi.status.toUpperCase().replace('-', ' ')}
+                    {statusLabel}
                   </span>
                 </div>
                 
@@ -2672,7 +2666,7 @@ const KPICards = ({ plan }: { plan: string }) => {
                     kpi.isUp ? 'text-green-400 bg-green-400/10 border border-green-400/20' :
                                'text-red-400 bg-red-400/10 border border-red-400/20'
                   }`}>
-                    {kpi.isUp ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
+                    {kpi.isUp ? <TrendingUpIcon size={14} /> : <TrendingDownIcon size={14} />}
                     {kpi.trend}%
                   </div>
                 </div>
@@ -2680,7 +2674,7 @@ const KPICards = ({ plan }: { plan: string }) => {
                 {/* STRATEGIC CONTEXT & RECOMMENDED ACTION */}
                 <div className="mt-3 pt-3 border-t border-white/10 space-y-1.5">
                   <p className="text-[10px] text-white/50 flex items-start gap-1.5">
-                    <span className="text-indigo-400 font-bold text-[10px] mt-0.5">🎯</span>
+                    <span className="text-indigo-400 font-bold text-[10px] mt-0.5">📌</span>
                     <span className="leading-tight">{kpi.okrLink}</span>
                   </p>
                   <p className="text-[10px] text-white/60 italic flex items-start gap-1.5">
@@ -2696,7 +2690,6 @@ const KPICards = ({ plan }: { plan: string }) => {
     </div>
   );
 };
-
 // ============================================
 // ROLE 13: ROADMAP EXPERT
 // ============================================
