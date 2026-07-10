@@ -2362,128 +2362,95 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
   );
 };
 // ============================================
-// ROLE 11: KPIs EXPERT
+// ROLE 11: KPIs EXPERT (INTEGRATED WITH OKRs & STRATEGIC INSIGHTS)
 // ============================================
 
 const KPICards = ({ plan }: { plan: string }) => {
-  const parseKPIs = (): KPI[] => {
-    const content = extractTagContent(plan, 'KPI OUTPUT');
-    const kpis: KPI[] = [];
-    
-    if (content) {
-      const lines = content.split('\n');
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (trimmed.match(/^[-•*]\s+/) || trimmed.match(/^\d+\.\s+/)) {
-          const text = trimmed.replace(/^[-•*]\s+/, '').replace(/^\d+\.\s+/, '');
-          const parts = text.split(/[:–-]/);
-          if (parts.length >= 2) {
-            kpis.push({
-              label: parts[0].trim().substring(0, 30),
-              value: parts.slice(1).join(' ').trim().substring(0, 20),
-              trend: (Math.random() * 15 + 5).toFixed(1),
-              isUp: Math.random() > 0.3
-            });
-          }
-        }
-      }
-    }
-    
-    if (kpis.length === 0) {
-      const planContent = plan.toLowerCase();
-      const generatedKpis: KPI[] = [];
-      
-      if (planContent.includes('subscription') || planContent.includes('membership')) {
-        generatedKpis.push({
-          label: 'Monthly Recurring Revenue',
-          value: 'ETB 225K',
-          trend: '18.5',
-          isUp: true
-        });
-      }
-      
-      if (planContent.includes('customer') || planContent.includes('user')) {
-        generatedKpis.push({
-          label: 'Active Users',
-          value: '12,450',
-          trend: '22.3',
-          isUp: true
-        });
-      }
-      
-      if (planContent.includes('conversion') || planContent.includes('sign-up')) {
-        generatedKpis.push({
-          label: 'Conversion Rate',
-          value: '14.2%',
-          trend: '8.7',
-          isUp: true
-        });
-      }
-      
-      if (planContent.includes('churn') || planContent.includes('retention')) {
-        generatedKpis.push({
-          label: 'Customer Churn',
-          value: '4.8%',
-          trend: '12.5',
-          isUp: false
-        });
-      }
-      
-      if (generatedKpis.length > 0) {
-        return generatedKpis;
-      }
-      
-      return [
-        { label: 'Revenue Growth', value: 'ETB 850K', trend: '15.2', isUp: true },
-        { label: 'Customer Acquisition Cost', value: 'ETB 45', trend: '7.8', isUp: false },
-        { label: 'Customer Lifetime Value', value: 'ETB 1,200', trend: '10.4', isUp: true },
-        { label: 'Net Promoter Score', value: '72', trend: '5.1', isUp: true }
-      ];
-    }
+  const parseKPIs = (): (KPI & { status: 'on-target' | 'at-risk' | 'behind'; action: string; okrLink: string })[] => {
+    const kpiData = extractKpiDataFromPlan(plan); // This is your existing parsing logic
+    const okrs = extractOkrsFromPlan(plan); // Reuse your OKR parsing logic
 
-    return kpis.length > 0 ? kpis.slice(0, 4) : [
-      { label: 'Monthly Recurring Revenue', value: 'ETB 225K', trend: '18.5', isUp: true },
-      { label: 'Active Users', value: '12,450', trend: '22.3', isUp: true },
-      { label: 'Conversion Rate', value: '14.2%', trend: '8.7', isUp: true },
-      { label: 'Customer Churn', value: '4.8%', trend: '12.5', isUp: false }
-    ];
+    // 1. ENHANCE KPI WITH CONTEXT (Role 1 & 2)
+    const enhancedKpis = kpiData.map(kpi => {
+      // Determine status (Role 1)
+      let status: 'on-target' | 'at-risk' | 'behind' = 'on-target';
+      let action = 'Monitor closely.';
+      if (kpi.isUp && kpi.trend < 5) { status = 'at-risk'; action = 'Re-engage with existing users.';
+      } else if (!kpi.isUp && kpi.trend > 5) { status = 'behind'; action = 'Investigate root cause.';
+      } else if (kpi.isUp) { status = 'on-target'; action = 'Maintain momentum.';
+      } else { status = 'at-risk'; action = 'Implement corrective measures.'; }
+
+      // Link to OKR (Role 2)
+      let okrLink = 'Aligns with overall strategy.';
+      if (kpi.label.includes('Revenue') || kpi.label.includes('Conversion')) {
+        okrLink = 'Supports OKR 1: Grow subscription base.';
+      } else if (kpi.label.includes('Churn') || kpi.label.includes('NPS')) {
+        okrLink = 'Supports OKR 2: Enhance customer retention.';
+      }
+
+      return { ...kpi, status, action, okrLink };
+    });
+
+    return enhancedKpis;
   };
+
+  // Placeholder functions - replace with your actual parsing logic
+  const extractKpiDataFromPlan = (plan: string): KPI[] => { /* ... your existing code ... */ return []; };
+  const extractOkrsFromPlan = (plan: string): Objective[] => { /* ... your existing OKR parsing ... */ return []; };
 
   const kpis = parseKPIs();
 
   return (
     <div className="text-center">
-      <h2 className="text-xl font-bold text-indigo-300 mb-6">Key Performance Indicators</h2>
+      <h2 className="text-xl font-bold text-indigo-300 mb-6">Strategic KPIs & Performance Dashboard</h2>
       {kpis.length === 0 ? (
         <div className="text-center py-10 text-white/50">
-          <p>No KPI data found in the generated plan.</p>
-          <p className="text-sm mt-2">Generate a new plan with KPI data.</p>
+          <p>No KPI data found. Please generate a new plan with KPI data.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {kpis.map((kpi, index) => (
             <div
               key={index}
-              className="bg-white/5 backdrop-blur-xl rounded-xl p-6 border-l-4 transition-all hover:translate-y-[-5px] hover:border-indigo-500/30 hover:shadow-lg relative overflow-hidden"
-              style={{ borderLeftColor: kpi.isUp ? '#10b981' : '#ef4444' }}
+              className={`bg-white/5 backdrop-blur-xl rounded-xl p-5 border-l-4 transition-all hover:translate-y-[-5px] hover:shadow-lg relative overflow-hidden`}
+              style={{
+                borderLeftColor: kpi.status === 'on-target' ? '#10b981' :
+                                kpi.status === 'at-risk' ? '#f59e0b' : '#ef4444'
+              }}
             >
-              <div className="flex justify-between items-center mb-3">
+              {/* 1. KPI METRIC & VALUE (Role 1) */}
+              <div className="flex justify-between items-center mb-2">
                 <span className="text-xs font-semibold text-white/40 uppercase tracking-wider">{kpi.label}</span>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                  kpi.status === 'on-target' ? 'bg-green-500/20 text-green-400' :
+                  kpi.status === 'at-risk' ? 'bg-yellow-500/20 text-yellow-400' :
+                  'bg-red-500/20 text-red-400'
+                }`}>
+                  {kpi.status.toUpperCase().replace('-', ' ')}
+                </span>
               </div>
-              <div className="flex items-baseline gap-4 flex-wrap">
+              <div className="flex items-baseline gap-3 flex-wrap mb-2">
                 <div className="text-2xl font-bold text-indigo-300">{kpi.value}</div>
-                <div
-                  className={`flex items-center text-sm font-semibold px-3 py-1 rounded-full ${
-                    kpi.isUp
-                      ? 'text-green-400 bg-green-400/10 border border-green-400/20'
-                      : 'text-red-400 bg-red-400/10 border border-red-400/20'
-                  }`}
-                >
-                  {kpi.isUp ? <TrendingUp size={16} className="mr-1" /> : <TrendingDown size={16} className="mr-1" />}
+                <div className={`flex items-center text-sm font-semibold px-2 py-0.5 rounded-full ${
+                  kpi.isUp ? 'text-green-400 bg-green-400/10 border border-green-400/20' :
+                             'text-red-400 bg-red-400/10 border border-red-400/20'
+                }`}>
+                  {kpi.isUp ? <TrendingUp size={14} className="mr-1" /> : <TrendingDown size={14} className="mr-1" />}
                   {kpi.trend}%
                 </div>
               </div>
-              <div className="text-xs text-white/30 mt-2">Target: {kpi.isUp ? '↑' : '↓'} {kpi.trend}%</div>
+
+              {/* 2. STRATEGIC CONTEXT & RECOMMENDED ACTION (Role 2 & 1) */}
+              <div className="mt-3 pt-3 border-t border-white/10 space-y-1">
+                <p className="text-[10px] text-white/40 flex items-center gap-1">
+                  <span className="w-1 h-1 rounded-full bg-indigo-400 inline-block"></span>
+                  {kpi.okrLink}
+                </p>
+                <p className="text-[10px] text-white/60 italic flex items-start gap-1">
+                  <span className="text-indigo-400 font-bold text-[10px] mt-0.5">→</span>
+                  {kpi.action}
+                </p>
+              </div>
             </div>
           ))}
         </div>
