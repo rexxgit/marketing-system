@@ -2012,9 +2012,18 @@ const SWOTVisual = ({ plan }: { plan: string }) => {
   );
 };
 
-// 9. CUSTOMER JOURNEY VISUAL
+// ============================================
+// ROLE 9: CUSTOMER JOURNEY VISUAL (ENHANCED WITH TODO LISTS)
+// ============================================
+
 const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
   const [hoveredStage, setHoveredStage] = useState<number | null>(null);
+  const [todoItems, setTodoItems] = useState<{ [key: number]: { text: string; completed: boolean; inProgress: boolean }[] }>({});
+  const [newTodoText, setNewTodoText] = useState<{ [key: number]: string }>({});
+  const [showAddTodo, setShowAddTodo] = useState<{ [key: number]: boolean }>({});
+  const [editingTodo, setEditingTodo] = useState<{ stageIndex: number; todoIndex: number } | null>(null);
+  const [editTodoText, setEditTodoText] = useState<string>('');
+
   const content = extractTagContent(plan, 'JOURNEY OUTPUT');
   const fullPlan = plan;
   
@@ -2072,7 +2081,13 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
             desc: desc || `${name} stage - ${action}`,
             icon: icons[i % icons.length],
             action: action,
-            progress: progress
+            progress: progress,
+            suggestedTodos: [
+              `Define ${name.toLowerCase()} strategy and goals`,
+              `Create ${name.toLowerCase()} content calendar`,
+              `Set up ${name.toLowerCase()} metrics and tracking`,
+              `Launch ${name.toLowerCase()} campaign`
+            ]
           });
           dayCounter++;
           break;
@@ -2096,7 +2111,12 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
               desc: desc,
               icon: icons[stages.length % icons.length],
               action: action,
-              progress: progress
+              progress: progress,
+              suggestedTodos: [
+                `Plan ${name.toLowerCase()} initiatives`,
+                `Execute ${name.toLowerCase()} activities`,
+                `Measure ${name.toLowerCase()} performance`
+              ]
             });
             dayCounter++;
           }
@@ -2105,15 +2125,92 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
     }
     
     return stages.length > 0 ? stages.slice(0, 5) : [
-      { day: 7, name: 'AWARENESS', desc: 'Start with targeted marketing campaigns', icon: '📱', action: 'Run social media ads and content marketing', progress: 20 },
-      { day: 14, name: 'CONSIDERATION', desc: 'Provide detailed product information', icon: '💡', action: 'Share case studies and customer testimonials', progress: 40 },
-      { day: 21, name: 'PURCHASE', desc: 'Make buying process seamless', icon: '💰', action: 'Optimize checkout and offer payment flexibility', progress: 60 },
-      { day: 28, name: 'RETENTION', desc: 'Keep customers engaged post-purchase', icon: '🛠️', action: 'Send regular updates and exclusive offers', progress: 80 },
-      { day: 35, name: 'ADVOCACY', desc: 'Turn customers into brand advocates', icon: '⭐', action: 'Implement referral program and user-generated content', progress: 100 }
+      { 
+        day: 7, 
+        name: 'AWARENESS', 
+        desc: 'Start with targeted marketing campaigns', 
+        icon: '📱', 
+        action: 'Run social media ads and content marketing', 
+        progress: 20,
+        suggestedTodos: [
+          'Create brand awareness campaign',
+          'Set up social media presence',
+          'Launch initial advertising'
+        ]
+      },
+      { 
+        day: 14, 
+        name: 'CONSIDERATION', 
+        desc: 'Provide detailed product information', 
+        icon: '💡', 
+        action: 'Share case studies and customer testimonials', 
+        progress: 40,
+        suggestedTodos: [
+          'Develop case studies',
+          'Create comparison guides',
+          'Build product demo'
+        ]
+      },
+      { 
+        day: 21, 
+        name: 'PURCHASE', 
+        desc: 'Make buying process seamless', 
+        icon: '💰', 
+        action: 'Optimize checkout and offer payment flexibility', 
+        progress: 60,
+        suggestedTodos: [
+          'Optimize checkout flow',
+          'Implement payment options',
+          'Create purchase incentives'
+        ]
+      },
+      { 
+        day: 28, 
+        name: 'RETENTION', 
+        desc: 'Keep customers engaged post-purchase', 
+        icon: '🛠️', 
+        action: 'Send regular updates and exclusive offers', 
+        progress: 80,
+        suggestedTodos: [
+          'Set up email nurture sequence',
+          'Create loyalty program',
+          'Plan customer feedback surveys'
+        ]
+      },
+      { 
+        day: 35, 
+        name: 'ADVOCACY', 
+        desc: 'Turn customers into brand advocates', 
+        icon: '⭐', 
+        action: 'Implement referral program and user-generated content', 
+        progress: 100,
+        suggestedTodos: [
+          'Launch referral program',
+          'Collect user testimonials',
+          'Build community platform'
+        ]
+      }
     ];
   };
   
   const stages = parseJourney();
+
+  // Initialize todo items for each stage with suggested todos
+  React.useEffect(() => {
+    const initialTodos: { [key: number]: { text: string; completed: boolean; inProgress: boolean }[] } = {};
+    stages.forEach((stage, index) => {
+      if (!todoItems[index]) {
+        initialTodos[index] = stage.suggestedTodos.map((todo: string) => ({
+          text: todo,
+          completed: false,
+          inProgress: false
+        }));
+      }
+    });
+    if (Object.keys(initialTodos).length > 0) {
+      setTodoItems(prev => ({ ...prev, ...initialTodos }));
+    }
+  }, [stages.length]);
 
   const CheckIcon = () => (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -2170,6 +2267,283 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
     );
   };
 
+  // Todo list component for each stage
+  const TodoList = ({ stageIndex }: { stageIndex: number }) => {
+    const todos = todoItems[stageIndex] || [];
+    const stage = stages[stageIndex];
+    const isAdding = showAddTodo[stageIndex] || false;
+    const newText = newTodoText[stageIndex] || '';
+
+    const handleAddTodo = () => {
+      if (newText.trim()) {
+        setTodoItems(prev => ({
+          ...prev,
+          [stageIndex]: [...(prev[stageIndex] || []), { text: newText.trim(), completed: false, inProgress: false }]
+        }));
+        setNewTodoText(prev => ({ ...prev, [stageIndex]: '' }));
+        setShowAddTodo(prev => ({ ...prev, [stageIndex]: false }));
+      }
+    };
+
+    const handleToggleComplete = (todoIndex: number) => {
+      setTodoItems(prev => {
+        const updated = [...(prev[stageIndex] || [])];
+        updated[todoIndex].completed = !updated[todoIndex].completed;
+        // If completed, remove inProgress status
+        if (updated[todoIndex].completed) {
+          updated[todoIndex].inProgress = false;
+        }
+        return { ...prev, [stageIndex]: updated };
+      });
+    };
+
+    const handleToggleInProgress = (todoIndex: number) => {
+      setTodoItems(prev => {
+        const updated = [...(prev[stageIndex] || [])];
+        updated[todoIndex].inProgress = !updated[todoIndex].inProgress;
+        // If inProgress, remove completed status
+        if (updated[todoIndex].inProgress) {
+          updated[todoIndex].completed = false;
+        }
+        return { ...prev, [stageIndex]: updated };
+      });
+    };
+
+    const handleDeleteTodo = (todoIndex: number) => {
+      setTodoItems(prev => {
+        const updated = [...(prev[stageIndex] || [])];
+        updated.splice(todoIndex, 1);
+        return { ...prev, [stageIndex]: updated };
+      });
+    };
+
+    const handleEditTodo = (todoIndex: number) => {
+      const todo = todos[todoIndex];
+      setEditingTodo({ stageIndex, todoIndex });
+      setEditTodoText(todo.text);
+    };
+
+    const handleSaveEdit = () => {
+      if (editingTodo && editTodoText.trim()) {
+        setTodoItems(prev => {
+          const updated = [...(prev[editingTodo.stageIndex] || [])];
+          updated[editingTodo.todoIndex].text = editTodoText.trim();
+          return { ...prev, [editingTodo.stageIndex]: updated };
+        });
+        setEditingTodo(null);
+        setEditTodoText('');
+      }
+    };
+
+    const handleCancelEdit = () => {
+      setEditingTodo(null);
+      setEditTodoText('');
+    };
+
+    // Keyboard support
+    const handleKeyDown = (e: React.KeyboardEvent, action: () => void) => {
+      if (e.key === 'Enter') {
+        action();
+      }
+      if (e.key === 'Escape') {
+        setShowAddTodo(prev => ({ ...prev, [stageIndex]: false }));
+        setEditingTodo(null);
+        setEditTodoText('');
+      }
+    };
+
+    return (
+      <div className="mt-4 pt-3 border-t border-white/10">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-xs font-semibold text-white/60 uppercase tracking-wider">
+            📋 Todo List ({todos.filter(t => t.completed).length}/{todos.length})
+          </span>
+          <button
+            onClick={() => setShowAddTodo(prev => ({ ...prev, [stageIndex]: !prev[stageIndex] }))}
+            className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-1 bg-indigo-500/20 px-3 py-1 rounded-full border border-indigo-500/30 hover:bg-indigo-500/30"
+          >
+            + Add Task
+          </button>
+        </div>
+
+        {/* Add todo input */}
+        {isAdding && (
+          <div className="mb-3 flex gap-2">
+            <input
+              type="text"
+              value={newText}
+              onChange={(e) => setNewTodoText(prev => ({ ...prev, [stageIndex]: e.target.value }))}
+              onKeyDown={(e) => handleKeyDown(e, handleAddTodo)}
+              placeholder="Enter new task..."
+              className="flex-1 bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-sm text-white placeholder-white/40 focus:outline-none focus:border-indigo-500 transition-all"
+              autoFocus
+            />
+            <button
+              onClick={handleAddTodo}
+              className="px-3 py-1.5 bg-indigo-500 text-white text-sm rounded-lg hover:bg-indigo-600 transition-colors"
+            >
+              Add
+            </button>
+            <button
+              onClick={() => setShowAddTodo(prev => ({ ...prev, [stageIndex]: false }))}
+              className="px-3 py-1.5 bg-white/10 text-white/60 text-sm rounded-lg hover:bg-white/20 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        )}
+
+        {/* Todo list */}
+        <div className="space-y-2 max-h-48 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+          {todos.length === 0 ? (
+            <div className="text-xs text-white/30 italic text-center py-2">
+              No tasks yet. Click "Add Task" to create one.
+            </div>
+          ) : (
+            todos.map((todo, idx) => {
+              const isEditing = editingTodo && editingTodo.stageIndex === stageIndex && editingTodo.todoIndex === idx;
+              
+              return (
+                <div
+                  key={idx}
+                  className={`group flex items-center gap-2 p-2 rounded-lg transition-all duration-300 ${
+                    todo.completed ? 'bg-green-500/10 border border-green-500/20' :
+                    todo.inProgress ? 'bg-blue-500/10 border border-blue-500/20' :
+                    'bg-white/5 hover:bg-white/10 border border-transparent'
+                  }`}
+                >
+                  {/* Status indicator */}
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
+                    <button
+                      onClick={() => handleToggleComplete(idx)}
+                      className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all ${
+                        todo.completed ? 'border-green-500 bg-green-500' :
+                        todo.inProgress ? 'border-blue-500 bg-blue-500/20' :
+                        'border-white/30 hover:border-green-500'
+                      }`}
+                      title="Mark as completed"
+                    >
+                      {todo.completed && <CheckIcon />}
+                      {todo.inProgress && <span className="text-blue-400 text-[8px]">●</span>}
+                    </button>
+                    <button
+                      onClick={() => handleToggleInProgress(idx)}
+                      className={`text-[8px] font-bold px-1.5 py-0.5 rounded transition-all ${
+                        todo.inProgress ? 'bg-blue-500 text-white' :
+                        todo.completed ? 'bg-green-500/20 text-green-400' :
+                        'bg-white/10 text-white/40 hover:bg-blue-500/20 hover:text-blue-400'
+                      }`}
+                      title="Mark as in progress"
+                    >
+                      IP
+                    </button>
+                  </div>
+
+                  {/* Todo text with strike-through when completed */}
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editTodoText}
+                      onChange={(e) => setEditTodoText(e.target.value)}
+                      onKeyDown={(e) => handleKeyDown(e, handleSaveEdit)}
+                      className="flex-1 bg-white/10 border border-indigo-500/50 rounded px-2 py-0.5 text-sm text-white focus:outline-none"
+                      autoFocus
+                    />
+                  ) : (
+                    <span
+                      className={`flex-1 text-sm transition-all duration-300 ${
+                        todo.completed ? 'text-green-400 line-through' :
+                        todo.inProgress ? 'text-blue-400' :
+                        'text-white/80'
+                      }`}
+                      style={{
+                        textDecoration: todo.completed ? 'line-through' : 'none',
+                        textDecorationColor: todo.completed ? '#4ade80' : 'transparent'
+                      }}
+                    >
+                      {todo.text}
+                    </span>
+                  )}
+
+                  {/* Action buttons */}
+                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                    {isEditing ? (
+                      <>
+                        <button
+                          onClick={handleSaveEdit}
+                          className="text-green-400 hover:text-green-300 text-xs px-1.5 py-0.5"
+                          title="Save"
+                        >
+                          ✓
+                        </button>
+                        <button
+                          onClick={handleCancelEdit}
+                          className="text-red-400 hover:text-red-300 text-xs px-1.5 py-0.5"
+                          title="Cancel"
+                        >
+                          ✕
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => handleEditTodo(idx)}
+                          className="text-white/30 hover:text-white/60 text-xs px-1.5 py-0.5"
+                          title="Edit"
+                        >
+                          ✎
+                        </button>
+                        <button
+                          onClick={() => handleDeleteTodo(idx)}
+                          className="text-red-400/50 hover:text-red-400 text-xs px-1.5 py-0.5"
+                          title="Delete"
+                        >
+                          ✕
+                        </button>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Status label */}
+                  <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded flex-shrink-0 ${
+                    todo.completed ? 'bg-green-500/30 text-green-300 border border-green-500/30' :
+                    todo.inProgress ? 'bg-blue-500/30 text-blue-300 border border-blue-500/30' :
+                    'bg-white/10 text-white/40 border border-white/10'
+                  }`}>
+                    {todo.completed ? 'DONE' : todo.inProgress ? 'IN PROG' : 'TODO'}
+                  </span>
+                </div>
+              );
+            })
+          )}
+        </div>
+
+        {/* Quick add suggestion */}
+        {todos.length > 0 && todos.length < 5 && (
+          <div className="mt-2 flex flex-wrap gap-1">
+            {stage.suggestedTodos && stage.suggestedTodos
+              .filter((s: string) => !todos.some(t => t.text === s))
+              .slice(0, 2)
+              .map((suggestion: string, idx: number) => (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    setTodoItems(prev => ({
+                      ...prev,
+                      [stageIndex]: [...(prev[stageIndex] || []), { text: suggestion, completed: false, inProgress: false }]
+                    }));
+                  }}
+                  className="text-[10px] text-white/40 hover:text-white/60 bg-white/5 hover:bg-white/10 px-2 py-0.5 rounded-full border border-white/10 transition-all"
+                >
+                  + {suggestion}
+                </button>
+              ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="text-center">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">Customer Journey Map</h2>
@@ -2194,7 +2568,7 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
               return (
                 <div 
                   key={idx} 
-                  className="flex flex-col items-center gap-3 cursor-pointer transition-all duration-300 group"
+                  className="flex flex-col items-center gap-3 cursor-pointer transition-all duration-300 group w-40"
                   onMouseEnter={() => setHoveredStage(idx)}
                   onMouseLeave={() => setHoveredStage(null)}
                 >
@@ -2216,19 +2590,30 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
                       </div>
                     )}
                   </div>
+                  
                   <span className={`text-xs font-medium transition-all duration-300 ${isHovered ? 'text-green-400' : 'text-white/40'} bg-black/40 px-3 py-1 rounded-full`}>
                     Day {stage.day}
                   </span>
+                  
                   <span className={`text-xs font-bold transition-all duration-300 ${isHovered ? 'text-green-400 scale-105' : 'text-indigo-300'}`}>
                     {stage.icon} {stage.name}
                   </span>
+                  
                   <span className={`text-xs text-center max-w-[100px] transition-all duration-300 ${isHovered ? 'text-white/80' : 'text-white/50'}`}>
                     {stage.desc}
                   </span>
+                  
                   <div className={`text-[10px] text-green-400/80 max-w-[140px] text-center transition-all duration-300 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full border border-green-500/20 ${
                     isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
                   }`}>
                     💡 {stage.action}
+                  </div>
+
+                  {/* Todo List - visible on hover */}
+                  <div className={`w-full transition-all duration-300 ${
+                    isHovered ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0 overflow-hidden pointer-events-none'
+                  }`}>
+                    <TodoList stageIndex={idx} />
                   </div>
                 </div>
               );
@@ -2236,6 +2621,8 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
           </div>
         </div>
       </div>
+      
+      {/* Legend */}
       <div className="mt-4 flex justify-center items-center gap-6 text-xs text-white/40 flex-wrap">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full border-2 border-indigo-500"></div>
@@ -2249,6 +2636,23 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
           <div className="w-3 h-3 rounded-full bg-emerald-500 flex items-center justify-center text-[6px] text-white">✓</div>
           <span>Complete (100%)</span>
         </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full border-2 border-blue-400"></div>
+          <span>Task In Progress</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-green-400"></div>
+          <span>Task Completed</span>
+        </div>
+      </div>
+
+      {/* Instructions */}
+      <div className="mt-3 text-[10px] text-white/30 flex justify-center gap-6 flex-wrap">
+        <span>💡 Hover a stage to see its todo list</span>
+        <span>✓ Click checkbox to mark as completed (green line through text)</span>
+        <span>▶ Click "IP" to mark as in progress (blue text)</span>
+        <span>✎ Edit or delete tasks as needed</span>
+        <span>+ Add your own custom tasks</span>
       </div>
     </div>
   );
