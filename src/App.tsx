@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Target, BarChart3, Zap, Building2, Search, MapPin, Grid3X3, Diamond,
   Route, TrendingUp, Crosshair, Calendar, Paintbrush, Home, ClipboardList,
