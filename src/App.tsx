@@ -2196,7 +2196,7 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
   const stages = parseJourney();
 
   // Initialize todo items for each stage with suggested todos
-  React.useEffect(() => {
+  useEffect(() => {
     const initialTodos: { [key: number]: { text: string; completed: boolean; inProgress: boolean }[] } = {};
     stages.forEach((stage, index) => {
       if (!todoItems[index]) {
@@ -2289,7 +2289,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
       setTodoItems(prev => {
         const updated = [...(prev[stageIndex] || [])];
         updated[todoIndex].completed = !updated[todoIndex].completed;
-        // If completed, remove inProgress status
         if (updated[todoIndex].completed) {
           updated[todoIndex].inProgress = false;
         }
@@ -2301,7 +2300,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
       setTodoItems(prev => {
         const updated = [...(prev[stageIndex] || [])];
         updated[todoIndex].inProgress = !updated[todoIndex].inProgress;
-        // If inProgress, remove completed status
         if (updated[todoIndex].inProgress) {
           updated[todoIndex].completed = false;
         }
@@ -2340,7 +2338,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
       setEditTodoText('');
     };
 
-    // Keyboard support
     const handleKeyDown = (e: React.KeyboardEvent, action: () => void) => {
       if (e.key === 'Enter') {
         action();
@@ -2366,7 +2363,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
           </button>
         </div>
 
-        {/* Add todo input */}
         {isAdding && (
           <div className="mb-3 flex gap-2">
             <input
@@ -2393,8 +2389,7 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
           </div>
         )}
 
-        {/* Todo list */}
-        <div className="space-y-2 max-h-48 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+        <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
           {todos.length === 0 ? (
             <div className="text-xs text-white/30 italic text-center py-2">
               No tasks yet. Click "Add Task" to create one.
@@ -2412,7 +2407,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
                     'bg-white/5 hover:bg-white/10 border border-transparent'
                   }`}
                 >
-                  {/* Status indicator */}
                   <div className="flex items-center gap-1.5 flex-shrink-0">
                     <button
                       onClick={() => handleToggleComplete(idx)}
@@ -2439,7 +2433,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
                     </button>
                   </div>
 
-                  {/* Todo text with strike-through when completed */}
                   {isEditing ? (
                     <input
                       type="text"
@@ -2465,7 +2458,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
                     </span>
                   )}
 
-                  {/* Action buttons */}
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
                     {isEditing ? (
                       <>
@@ -2504,7 +2496,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
                     )}
                   </div>
 
-                  {/* Status label */}
                   <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded flex-shrink-0 ${
                     todo.completed ? 'bg-green-500/30 text-green-300 border border-green-500/30' :
                     todo.inProgress ? 'bg-blue-500/30 text-blue-300 border border-blue-500/30' :
@@ -2518,7 +2509,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
           )}
         </div>
 
-        {/* Quick add suggestion */}
         {todos.length > 0 && todos.length < 5 && (
           <div className="mt-2 flex flex-wrap gap-1">
             {stage.suggestedTodos && stage.suggestedTodos
@@ -2609,7 +2599,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
                     💡 {stage.action}
                   </div>
 
-                  {/* Todo List - visible on hover */}
                   <div className={`w-full transition-all duration-300 ${
                     isHovered ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0 overflow-hidden pointer-events-none'
                   }`}>
@@ -2622,7 +2611,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
         </div>
       </div>
       
-      {/* Legend */}
       <div className="mt-4 flex justify-center items-center gap-6 text-xs text-white/40 flex-wrap">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full border-2 border-indigo-500"></div>
@@ -2646,7 +2634,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
         </div>
       </div>
 
-      {/* Instructions */}
       <div className="mt-3 text-[10px] text-white/30 flex justify-center gap-6 flex-wrap">
         <span>💡 Hover a stage to see its todo list</span>
         <span>✓ Click checkbox to mark as completed (green line through text)</span>
