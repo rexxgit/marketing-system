@@ -2048,31 +2048,24 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
           const desc = parts.length > 1 ? parts.slice(1).join(' ').trim().substring(0, 40) : '';
           
           let action = '';
-          let progress = 0;
           switch(name) {
             case 'AWARENESS':
               action = 'Run targeted social media ads and influencer partnerships';
-              progress = 20;
               break;
             case 'CONSIDERATION':
               action = 'Offer free trials and demo videos showcasing value';
-              progress = 40;
               break;
             case 'PURCHASE':
               action = 'Streamline checkout with multiple payment options';
-              progress = 60;
               break;
             case 'RETENTION':
               action = 'Send personalized follow-ups and loyalty rewards';
-              progress = 80;
               break;
             case 'ADVOCACY':
               action = 'Create referral program with incentives for both parties';
-              progress = 100;
               break;
             default:
               action = 'Engage customers with personalized communication';
-              progress = 50;
           }
           
           stages.push({
@@ -2081,7 +2074,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
             desc: desc || `${name} stage - ${action}`,
             icon: icons[i % icons.length],
             action: action,
-            progress: progress,
           });
           dayCounter++;
           break;
@@ -2098,14 +2090,12 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
             const name = text.substring(0, 15).toUpperCase();
             const desc = text.substring(0, 30);
             const action = `Engage customers through ${name.toLowerCase()} strategies`;
-            const progress = Math.min((stages.length + 1) * 20, 100);
             stages.push({
               day: dayCounter * 7,
               name: name,
               desc: desc,
               icon: icons[stages.length % icons.length],
               action: action,
-              progress: progress,
             });
             dayCounter++;
           }
@@ -2119,40 +2109,35 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
         name: 'AWARENESS', 
         desc: 'Start with targeted marketing campaigns', 
         icon: '📱', 
-        action: 'Run social media ads and content marketing', 
-        progress: 20,
+        action: 'Run social media ads and content marketing',
       },
       { 
         day: 14, 
         name: 'CONSIDERATION', 
         desc: 'Provide detailed product information', 
         icon: '💡', 
-        action: 'Share case studies and customer testimonials', 
-        progress: 40,
+        action: 'Share case studies and customer testimonials',
       },
       { 
         day: 21, 
         name: 'PURCHASE', 
         desc: 'Make buying process seamless', 
         icon: '💰', 
-        action: 'Optimize checkout and offer payment flexibility', 
-        progress: 60,
+        action: 'Optimize checkout and offer payment flexibility',
       },
       { 
         day: 28, 
         name: 'RETENTION', 
         desc: 'Keep customers engaged post-purchase', 
         icon: '🛠️', 
-        action: 'Send regular updates and exclusive offers', 
-        progress: 80,
+        action: 'Send regular updates and exclusive offers',
       },
       { 
         day: 35, 
         name: 'ADVOCACY', 
         desc: 'Turn customers into brand advocates', 
         icon: '⭐', 
-        action: 'Implement referral program and user-generated content', 
-        progress: 100,
+        action: 'Implement referral program and user-generated content',
       }
     ];
   };
@@ -2178,21 +2163,27 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
     </svg>
   );
 
-  const ProgressDot = ({ progress, isHovered }: { progress: number; isHovered: boolean }) => {
-    const size = isHovered ? 56 : 48;
-    const strokeWidth = isHovered ? 6 : 4;
-    const circumference = 2 * Math.PI * (size / 2 - strokeWidth);
-    const offset = circumference - (progress / 100) * circumference;
+  // Progress Dot with smooth animation - no pulsing
+  const ProgressDot = ({ isHovered }: { isHovered: boolean }) => {
+    const size = isHovered ? 52 : 48;
+    const strokeWidth = isHovered ? 4 : 3;
     
     return (
-      <div className="relative" style={{ width: size, height: size }}>
-        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="transform -rotate-90">
+      <div 
+        className="relative transition-all duration-500 ease-out"
+        style={{ 
+          width: size, 
+          height: size,
+          transform: isHovered ? 'scale(1.05)' : 'scale(1)'
+        }}
+      >
+        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
           <circle
             cx={size / 2}
             cy={size / 2}
             r={size / 2 - strokeWidth}
             fill="none"
-            stroke="rgba(255,255,255,0.1)"
+            stroke="rgba(255,255,255,0.08)"
             strokeWidth={strokeWidth}
           />
           <circle
@@ -2200,27 +2191,18 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
             cy={size / 2}
             r={size / 2 - strokeWidth}
             fill="none"
-            stroke={isHovered ? '#10b981' : '#6366f1'}
+            stroke={isHovered ? '#818cf8' : '#4f46e5'}
             strokeWidth={strokeWidth}
-            strokeDasharray={circumference}
-            strokeDashoffset={offset}
+            strokeDasharray="100"
+            strokeDashoffset="100"
             strokeLinecap="round"
             className="transition-all duration-700 ease-out"
+            style={{ strokeDashoffset: 0 }}
           />
         </svg>
-        {isHovered && (
-          <div 
-            className="absolute inset-0 rounded-full animate-pulse"
-            style={{
-              background: 'radial-gradient(circle, rgba(16,185,129,0.4) 0%, transparent 70%)',
-              transform: 'scale(1.4)',
-              zIndex: -1
-            }}
-          />
-        )}
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className={`text-xs font-bold transition-all duration-300 ${isHovered ? 'text-green-400 scale-110' : 'text-white/70'}`}>
-            {progress}%
+          <span className={`text-xs font-bold transition-all duration-300 ${isHovered ? 'text-indigo-300 scale-105' : 'text-white/60'}`}>
+            {isHovered ? '●' : '○'}
           </span>
         </div>
       </div>
@@ -2318,15 +2300,15 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
     };
 
     return (
-      <div className="mt-2 pt-2 border-t border-white/10">
+      <div className="mt-2 pt-2 border-t border-white/5">
         {/* Progress Bar */}
-        <div className="flex items-center gap-3 mb-2">
-          <span className="text-[10px] font-semibold text-white/60 uppercase tracking-wider whitespace-nowrap">
-            📋 Progress
+        <div className="flex items-center gap-2 mb-1.5">
+          <span className="text-[9px] font-medium text-white/40 uppercase tracking-wider whitespace-nowrap">
+            Progress
           </span>
-          <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
+          <div className="flex-1 h-1 bg-white/5 rounded-full overflow-hidden">
             <div
-              className="h-full rounded-full transition-all duration-500"
+              className="h-full rounded-full transition-all duration-700 ease-out"
               style={{
                 width: `${completionPercentage}%`,
                 background: completionPercentage === 100 
@@ -2335,36 +2317,36 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
               }}
             />
           </div>
-          <span className="text-[10px] font-bold text-white/60 whitespace-nowrap">
-            {completionPercentage}% ({todos.filter(t => t.completed).length}/{todos.length})
+          <span className="text-[9px] font-semibold text-white/40 whitespace-nowrap">
+            {completionPercentage}%
           </span>
         </div>
 
         {/* Horizontal Todo Items */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-1.5">
           {todos.map((todo, idx) => {
             const isEditing = editingTodo && editingTodo.stageIndex === stageIndex && editingTodo.todoIndex === idx;
             
             return (
               <div
                 key={idx}
-                className={`group flex items-center gap-1.5 px-2 py-1 rounded-full transition-all duration-300 ${
-                  todo.completed ? 'bg-green-500/15 border border-green-500/20' :
-                  todo.inProgress ? 'bg-blue-500/15 border border-blue-500/20' :
+                className={`group flex items-center gap-1 px-2 py-0.5 rounded-full transition-all duration-300 ${
+                  todo.completed ? 'bg-green-500/10 border border-green-500/15' :
+                  todo.inProgress ? 'bg-blue-500/10 border border-blue-500/15' :
                   'bg-white/5 hover:bg-white/10 border border-transparent hover:border-white/10'
                 }`}
               >
                 <button
                   onClick={() => handleToggleComplete(idx)}
-                  className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${
+                  className={`w-3 h-3 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${
                     todo.completed ? 'border-green-500 bg-green-500' :
                     todo.inProgress ? 'border-blue-500 bg-blue-500/20' :
-                    'border-white/30 hover:border-green-500'
+                    'border-white/20 hover:border-green-500'
                   }`}
                   title="Mark as completed"
                 >
                   {todo.completed && <CheckIcon />}
-                  {todo.inProgress && <span className="text-blue-400 text-[6px]">●</span>}
+                  {todo.inProgress && <span className="text-blue-400 text-[5px]">●</span>}
                 </button>
 
                 {isEditing ? (
@@ -2373,19 +2355,19 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
                     value={editTodoText}
                     onChange={(e) => setEditTodoText(e.target.value)}
                     onKeyDown={(e) => handleKeyDown(e, handleSaveEdit)}
-                    className="bg-white/10 border border-indigo-500/50 rounded px-1.5 py-0.5 text-xs text-white focus:outline-none min-w-[80px]"
+                    className="bg-white/10 border border-indigo-500/50 rounded px-1.5 py-0.5 text-xs text-white focus:outline-none min-w-[60px]"
                     autoFocus
                   />
                 ) : (
                   <span
-                    className={`text-xs transition-all duration-300 whitespace-nowrap ${
-                      todo.completed ? 'text-green-400 line-through' :
-                      todo.inProgress ? 'text-blue-400' :
-                      'text-white/80'
+                    className={`text-[10px] transition-all duration-300 whitespace-nowrap ${
+                      todo.completed ? 'text-green-400/70 line-through' :
+                      todo.inProgress ? 'text-blue-400/70' :
+                      'text-white/60'
                     }`}
                     style={{
                       textDecoration: todo.completed ? 'line-through' : 'none',
-                      textDecorationColor: todo.completed ? '#4ade80' : 'transparent'
+                      textDecorationColor: todo.completed ? 'rgba(74,222,128,0.5)' : 'transparent'
                     }}
                   >
                     {todo.text}
@@ -2397,14 +2379,14 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
                     <>
                       <button
                         onClick={handleSaveEdit}
-                        className="text-green-400 hover:text-green-300 text-[10px] px-1"
+                        className="text-green-400 hover:text-green-300 text-[8px] px-0.5"
                         title="Save"
                       >
                         ✓
                       </button>
                       <button
                         onClick={handleCancelEdit}
-                        className="text-red-400 hover:text-red-300 text-[10px] px-1"
+                        className="text-red-400 hover:text-red-300 text-[8px] px-0.5"
                         title="Cancel"
                       >
                         ✕
@@ -2414,10 +2396,10 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
                     <>
                       <button
                         onClick={() => handleToggleInProgress(idx)}
-                        className={`text-[8px] font-bold px-1 py-0.5 rounded transition-all ${
-                          todo.inProgress ? 'bg-blue-500 text-white' :
-                          todo.completed ? 'bg-green-500/20 text-green-400' :
-                          'bg-white/10 text-white/40 hover:bg-blue-500/20 hover:text-blue-400'
+                        className={`text-[7px] font-bold px-1 py-0.5 rounded transition-all ${
+                          todo.inProgress ? 'bg-blue-500/30 text-blue-300' :
+                          todo.completed ? 'bg-green-500/20 text-green-400/50' :
+                          'bg-white/5 text-white/30 hover:bg-blue-500/20 hover:text-blue-400'
                         }`}
                         title="Mark as in progress"
                       >
@@ -2425,14 +2407,14 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
                       </button>
                       <button
                         onClick={() => handleEditTodo(idx)}
-                        className="text-white/30 hover:text-white/60 text-[10px] px-1"
+                        className="text-white/20 hover:text-white/50 text-[8px] px-0.5"
                         title="Edit"
                       >
                         ✎
                       </button>
                       <button
                         onClick={() => handleDeleteTodo(idx)}
-                        className="text-red-400/50 hover:text-red-400 text-[10px] px-1"
+                        className="text-red-400/30 hover:text-red-400 text-[8px] px-0.5"
                         title="Delete"
                       >
                         ✕
@@ -2441,10 +2423,10 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
                   )}
                 </div>
 
-                <span className={`text-[7px] font-bold px-1 py-0.5 rounded flex-shrink-0 ${
-                  todo.completed ? 'bg-green-500/30 text-green-300 border border-green-500/30' :
-                  todo.inProgress ? 'bg-blue-500/30 text-blue-300 border border-blue-500/30' :
-                  'bg-white/10 text-white/40 border border-white/10'
+                <span className={`text-[6px] font-bold px-1 py-0.5 rounded flex-shrink-0 ${
+                  todo.completed ? 'bg-green-500/20 text-green-400/70 border border-green-500/15' :
+                  todo.inProgress ? 'bg-blue-500/20 text-blue-400/70 border border-blue-500/15' :
+                  'bg-white/5 text-white/30 border border-white/5'
                 }`}>
                   {todo.completed ? 'DONE' : todo.inProgress ? 'PROG' : 'TODO'}
                 </span>
@@ -2456,7 +2438,7 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
           {!isAdding ? (
             <button
               onClick={() => setShowAddTodo(prev => ({ ...prev, [stageIndex]: true }))}
-              className="flex items-center gap-1 px-2 py-1 rounded-full text-[10px] text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 hover:border-indigo-500/40 transition-all whitespace-nowrap"
+              className="flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[9px] text-indigo-400/70 hover:text-indigo-300 bg-indigo-500/5 hover:bg-indigo-500/15 border border-indigo-500/10 hover:border-indigo-500/30 transition-all whitespace-nowrap"
             >
               + Add
             </button>
@@ -2468,18 +2450,18 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
                 onChange={(e) => setNewTodoText(prev => ({ ...prev, [stageIndex]: e.target.value }))}
                 onKeyDown={(e) => handleKeyDown(e, handleAddTodo)}
                 placeholder="New task..."
-                className="bg-white/10 border border-indigo-500/50 rounded px-2 py-0.5 text-xs text-white placeholder-white/40 focus:outline-none min-w-[100px]"
+                className="bg-white/10 border border-indigo-500/40 rounded px-2 py-0.5 text-[10px] text-white placeholder-white/30 focus:outline-none min-w-[80px]"
                 autoFocus
               />
               <button
                 onClick={handleAddTodo}
-                className="px-2 py-0.5 bg-indigo-500 text-white text-[10px] rounded hover:bg-indigo-600 transition-colors"
+                className="px-2 py-0.5 bg-indigo-500/80 text-white text-[9px] rounded hover:bg-indigo-600 transition-colors"
               >
                 Add
               </button>
               <button
                 onClick={() => setShowAddTodo(prev => ({ ...prev, [stageIndex]: false }))}
-                className="px-2 py-0.5 bg-white/10 text-white/60 text-[10px] rounded hover:bg-white/20 transition-colors"
+                className="px-1.5 py-0.5 bg-white/5 text-white/40 text-[9px] rounded hover:bg-white/10 transition-colors"
               >
                 ✕
               </button>
@@ -2501,7 +2483,7 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
           <div className="flex-1 min-w-[100px]">
             <div className="h-2 bg-white/10 rounded-full overflow-hidden">
               <div
-                className="h-full rounded-full transition-all duration-500"
+                className="h-full rounded-full transition-all duration-700 ease-out"
                 style={{
                   width: `${stages.reduce((acc, _, idx) => acc + getStageProgress(idx), 0) / stages.length}%`,
                   background: 'linear-gradient(90deg, #6366f1, #10b981)'
@@ -2520,60 +2502,59 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
           {/* Timeline */}
           <div className="flex justify-between items-start relative">
             {/* Connecting line */}
-            <div className="absolute top-[30px] left-[30px] right-[30px] h-0.5 bg-gradient-to-r from-indigo-500 via-green-400 to-emerald-500 opacity-30" />
+            <div className="absolute top-[24px] left-[30px] right-[30px] h-0.5 bg-gradient-to-r from-indigo-500/20 via-green-400/20 to-emerald-500/20" />
             
             {stages.map((stage, idx) => {
               const isHovered = hoveredStage === idx;
-              const progress = stage.progress || 0;
               const stageCompletion = getStageProgress(idx);
               
               return (
                 <div 
                   key={idx} 
-                  className="flex flex-col items-center gap-2 cursor-pointer transition-all duration-300 group"
+                  className="flex flex-col items-center gap-1.5 cursor-pointer transition-all duration-300 group"
                   style={{ minWidth: '120px', maxWidth: '160px' }}
                   onMouseEnter={() => setHoveredStage(idx)}
                   onMouseLeave={() => setHoveredStage(null)}
                 >
-                  {/* Progress Circle */}
-                  <div className="relative">
-                    <ProgressDot progress={progress} isHovered={isHovered} />
-                    {progress === 100 && (
-                      <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center text-white text-[8px] shadow-lg shadow-emerald-500/30">
+                  {/* Progress Circle - smooth, no pulsing */}
+                  <div className="relative transition-all duration-500 ease-out">
+                    <ProgressDot isHovered={isHovered} />
+                    {stageCompletion === 100 && todosExist(idx) && (
+                      <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-500/80 rounded-full flex items-center justify-center text-white text-[6px] shadow-lg shadow-emerald-500/10">
                         <CheckIcon />
                       </div>
                     )}
                   </div>
                   
                   {/* Day and Name */}
-                  <span className={`text-[10px] font-medium transition-all duration-300 ${isHovered ? 'text-green-400' : 'text-white/40'} bg-black/40 px-2 py-0.5 rounded-full whitespace-nowrap`}>
+                  <span className={`text-[10px] font-medium transition-all duration-300 ${isHovered ? 'text-indigo-300' : 'text-white/30'} bg-black/30 px-2 py-0.5 rounded-full whitespace-nowrap`}>
                     Day {stage.day}
                   </span>
                   
-                  <span className={`text-[11px] font-bold transition-all duration-300 ${isHovered ? 'text-green-400 scale-105' : 'text-indigo-300'} text-center`}>
+                  <span className={`text-[11px] font-bold transition-all duration-300 ${isHovered ? 'text-indigo-300' : 'text-indigo-400/70'} text-center`}>
                     {stage.icon} {stage.name}
                   </span>
                   
-                  <span className="text-[10px] text-center text-white/50 leading-tight max-w-[120px]">
+                  <span className="text-[9px] text-center text-white/40 leading-tight max-w-[120px]">
                     {stage.desc}
                   </span>
 
-                  {/* Stage Progress Indicator */}
-                  <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                  {/* Stage Progress Indicator - smooth */}
+                  <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
                     <div
-                      className="h-full rounded-full transition-all duration-500"
+                      className="h-full rounded-full transition-all duration-700 ease-out"
                       style={{
                         width: `${stageCompletion}%`,
                         background: stageCompletion === 100 ? '#10b981' : '#6366f1'
                       }}
                     />
                   </div>
-                  <span className="text-[8px] text-white/30">
+                  <span className="text-[8px] text-white/25">
                     {stageCompletion}% complete
                   </span>
 
                   {/* Todo List - Always visible below */}
-                  <div className="w-full mt-1">
+                  <div className="w-full mt-0.5">
                     <TodoList stageIndex={idx} />
                   </div>
                 </div>
@@ -2584,28 +2565,28 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
       </div>
       
       {/* Legend */}
-      <div className="mt-4 flex justify-center items-center gap-4 text-[10px] text-white/40 flex-wrap">
+      <div className="mt-4 flex justify-center items-center gap-4 text-[10px] text-white/30 flex-wrap">
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full border-2 border-indigo-500"></div>
-          <span>In Progress</span>
+          <div className="w-2.5 h-2.5 rounded-full border-2 border-indigo-500/50"></div>
+          <span>Stage Progress</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 flex items-center justify-center text-[5px] text-white">✓</div>
+          <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/60 flex items-center justify-center text-[5px] text-white">✓</div>
           <span>Complete</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full border-2 border-blue-400"></div>
+          <div className="w-2.5 h-2.5 rounded-full border-2 border-blue-400/50"></div>
           <span>Task In Progress</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-green-400"></div>
+          <div className="w-2.5 h-2.5 rounded-full bg-green-400/60"></div>
           <span>Task Completed</span>
         </div>
       </div>
 
       {/* Instructions */}
-      <div className="mt-2 text-[9px] text-white/25 flex justify-center gap-4 flex-wrap">
-        <span>✓ Click checkbox to complete (green line-through)</span>
+      <div className="mt-2 text-[8px] text-white/20 flex justify-center gap-4 flex-wrap">
+        <span>✓ Click to complete (green line-through)</span>
         <span>▶ Click "IP" for in progress (blue)</span>
         <span>✎ Edit or delete tasks</span>
         <span>+ Add custom tasks</span>
