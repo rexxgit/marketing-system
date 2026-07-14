@@ -2013,16 +2013,16 @@ const SWOTVisual = ({ plan }: { plan: string }) => {
 };
 
 // ============================================
-// ROLE 9: CUSTOMER JOURNEY VISUAL (ENHANCED WITH TODO LISTS)
+// ROLE 9: CUSTOMER JOURNEY VISUAL (ENHANCED WITH TODO LISTS - HORIZONTAL)
 // ============================================
 
 const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
-  const [hoveredStage, setHoveredStage] = useState<number | null>(null);
   const [todoItems, setTodoItems] = useState<{ [key: number]: { text: string; completed: boolean; inProgress: boolean }[] }>({});
   const [newTodoText, setNewTodoText] = useState<{ [key: number]: string }>({});
   const [showAddTodo, setShowAddTodo] = useState<{ [key: number]: boolean }>({});
   const [editingTodo, setEditingTodo] = useState<{ stageIndex: number; todoIndex: number } | null>(null);
   const [editTodoText, setEditTodoText] = useState<string>('');
+  const [hoveredStage, setHoveredStage] = useState<number | null>(null);
 
   const content = extractTagContent(plan, 'JOURNEY OUTPUT');
   const fullPlan = plan;
@@ -2082,12 +2082,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
             icon: icons[i % icons.length],
             action: action,
             progress: progress,
-            suggestedTodos: [
-              `Define ${name.toLowerCase()} strategy and goals`,
-              `Create ${name.toLowerCase()} content calendar`,
-              `Set up ${name.toLowerCase()} metrics and tracking`,
-              `Launch ${name.toLowerCase()} campaign`
-            ]
           });
           dayCounter++;
           break;
@@ -2112,11 +2106,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
               icon: icons[stages.length % icons.length],
               action: action,
               progress: progress,
-              suggestedTodos: [
-                `Plan ${name.toLowerCase()} initiatives`,
-                `Execute ${name.toLowerCase()} activities`,
-                `Measure ${name.toLowerCase()} performance`
-              ]
             });
             dayCounter++;
           }
@@ -2132,11 +2121,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
         icon: '📱', 
         action: 'Run social media ads and content marketing', 
         progress: 20,
-        suggestedTodos: [
-          'Create brand awareness campaign',
-          'Set up social media presence',
-          'Launch initial advertising'
-        ]
       },
       { 
         day: 14, 
@@ -2145,11 +2129,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
         icon: '💡', 
         action: 'Share case studies and customer testimonials', 
         progress: 40,
-        suggestedTodos: [
-          'Develop case studies',
-          'Create comparison guides',
-          'Build product demo'
-        ]
       },
       { 
         day: 21, 
@@ -2158,11 +2137,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
         icon: '💰', 
         action: 'Optimize checkout and offer payment flexibility', 
         progress: 60,
-        suggestedTodos: [
-          'Optimize checkout flow',
-          'Implement payment options',
-          'Create purchase incentives'
-        ]
       },
       { 
         day: 28, 
@@ -2171,11 +2145,6 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
         icon: '🛠️', 
         action: 'Send regular updates and exclusive offers', 
         progress: 80,
-        suggestedTodos: [
-          'Set up email nurture sequence',
-          'Create loyalty program',
-          'Plan customer feedback surveys'
-        ]
       },
       { 
         day: 35, 
@@ -2184,27 +2153,18 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
         icon: '⭐', 
         action: 'Implement referral program and user-generated content', 
         progress: 100,
-        suggestedTodos: [
-          'Launch referral program',
-          'Collect user testimonials',
-          'Build community platform'
-        ]
       }
     ];
   };
   
   const stages = parseJourney();
 
-  // Initialize todo items for each stage with suggested todos
+  // Initialize empty todo items for each stage
   useEffect(() => {
     const initialTodos: { [key: number]: { text: string; completed: boolean; inProgress: boolean }[] } = {};
     stages.forEach((stage, index) => {
-      if (!todoItems[index]) {
-        initialTodos[index] = stage.suggestedTodos.map((todo: string) => ({
-          text: todo,
-          completed: false,
-          inProgress: false
-        }));
+      if (!todoItems[index] || todoItems[index].length === 0) {
+        initialTodos[index] = [];
       }
     });
     if (Object.keys(initialTodos).length > 0) {
@@ -2267,12 +2227,20 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
     );
   };
 
-  // Todo list component for each stage
+  // Calculate completion percentage for a stage
+  const getStageProgress = (stageIndex: number): number => {
+    const todos = todoItems[stageIndex] || [];
+    if (todos.length === 0) return 0;
+    const completed = todos.filter(t => t.completed).length;
+    return Math.round((completed / todos.length) * 100);
+  };
+
+  // Todo list component for each stage - HORIZONTAL LAYOUT
   const TodoList = ({ stageIndex }: { stageIndex: number }) => {
     const todos = todoItems[stageIndex] || [];
-    const stage = stages[stageIndex];
     const isAdding = showAddTodo[stageIndex] || false;
     const newText = newTodoText[stageIndex] || '';
+    const completionPercentage = getStageProgress(stageIndex);
 
     const handleAddTodo = () => {
       if (newText.trim()) {
@@ -2350,186 +2318,174 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
     };
 
     return (
-      <div className="mt-4 pt-3 border-t border-white/10">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-semibold text-white/60 uppercase tracking-wider">
-            📋 Todo List ({todos.filter(t => t.completed).length}/{todos.length})
+      <div className="mt-2 pt-2 border-t border-white/10">
+        {/* Progress Bar */}
+        <div className="flex items-center gap-3 mb-2">
+          <span className="text-[10px] font-semibold text-white/60 uppercase tracking-wider whitespace-nowrap">
+            📋 Progress
           </span>
-          <button
-            onClick={() => setShowAddTodo(prev => ({ ...prev, [stageIndex]: !prev[stageIndex] }))}
-            className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-1 bg-indigo-500/20 px-3 py-1 rounded-full border border-indigo-500/30 hover:bg-indigo-500/30"
-          >
-            + Add Task
-          </button>
+          <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-500"
+              style={{
+                width: `${completionPercentage}%`,
+                background: completionPercentage === 100 
+                  ? 'linear-gradient(90deg, #10b981, #34d399)' 
+                  : 'linear-gradient(90deg, #6366f1, #818cf8)'
+              }}
+            />
+          </div>
+          <span className="text-[10px] font-bold text-white/60 whitespace-nowrap">
+            {completionPercentage}% ({todos.filter(t => t.completed).length}/{todos.length})
+          </span>
         </div>
 
-        {isAdding && (
-          <div className="mb-3 flex gap-2">
-            <input
-              type="text"
-              value={newText}
-              onChange={(e) => setNewTodoText(prev => ({ ...prev, [stageIndex]: e.target.value }))}
-              onKeyDown={(e) => handleKeyDown(e, handleAddTodo)}
-              placeholder="Enter new task..."
-              className="flex-1 bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-sm text-white placeholder-white/40 focus:outline-none focus:border-indigo-500 transition-all"
-              autoFocus
-            />
-            <button
-              onClick={handleAddTodo}
-              className="px-3 py-1.5 bg-indigo-500 text-white text-sm rounded-lg hover:bg-indigo-600 transition-colors"
-            >
-              Add
-            </button>
-            <button
-              onClick={() => setShowAddTodo(prev => ({ ...prev, [stageIndex]: false }))}
-              className="px-3 py-1.5 bg-white/10 text-white/60 text-sm rounded-lg hover:bg-white/20 transition-colors"
-            >
-              Cancel
-            </button>
-          </div>
-        )}
-
-        <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
-          {todos.length === 0 ? (
-            <div className="text-xs text-white/30 italic text-center py-2">
-              No tasks yet. Click "Add Task" to create one.
-            </div>
-          ) : (
-            todos.map((todo, idx) => {
-              const isEditing = editingTodo && editingTodo.stageIndex === stageIndex && editingTodo.todoIndex === idx;
-              
-              return (
-                <div
-                  key={idx}
-                  className={`group flex items-center gap-2 p-2 rounded-lg transition-all duration-300 ${
-                    todo.completed ? 'bg-green-500/10 border border-green-500/20' :
-                    todo.inProgress ? 'bg-blue-500/10 border border-blue-500/20' :
-                    'bg-white/5 hover:bg-white/10 border border-transparent'
+        {/* Horizontal Todo Items */}
+        <div className="flex flex-wrap items-center gap-2">
+          {todos.map((todo, idx) => {
+            const isEditing = editingTodo && editingTodo.stageIndex === stageIndex && editingTodo.todoIndex === idx;
+            
+            return (
+              <div
+                key={idx}
+                className={`group flex items-center gap-1.5 px-2 py-1 rounded-full transition-all duration-300 ${
+                  todo.completed ? 'bg-green-500/15 border border-green-500/20' :
+                  todo.inProgress ? 'bg-blue-500/15 border border-blue-500/20' :
+                  'bg-white/5 hover:bg-white/10 border border-transparent hover:border-white/10'
+                }`}
+              >
+                <button
+                  onClick={() => handleToggleComplete(idx)}
+                  className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${
+                    todo.completed ? 'border-green-500 bg-green-500' :
+                    todo.inProgress ? 'border-blue-500 bg-blue-500/20' :
+                    'border-white/30 hover:border-green-500'
                   }`}
+                  title="Mark as completed"
                 >
-                  <div className="flex items-center gap-1.5 flex-shrink-0">
-                    <button
-                      onClick={() => handleToggleComplete(idx)}
-                      className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all ${
-                        todo.completed ? 'border-green-500 bg-green-500' :
-                        todo.inProgress ? 'border-blue-500 bg-blue-500/20' :
-                        'border-white/30 hover:border-green-500'
-                      }`}
-                      title="Mark as completed"
-                    >
-                      {todo.completed && <CheckIcon />}
-                      {todo.inProgress && <span className="text-blue-400 text-[8px]">●</span>}
-                    </button>
-                    <button
-                      onClick={() => handleToggleInProgress(idx)}
-                      className={`text-[8px] font-bold px-1.5 py-0.5 rounded transition-all ${
-                        todo.inProgress ? 'bg-blue-500 text-white' :
-                        todo.completed ? 'bg-green-500/20 text-green-400' :
-                        'bg-white/10 text-white/40 hover:bg-blue-500/20 hover:text-blue-400'
-                      }`}
-                      title="Mark as in progress"
-                    >
-                      IP
-                    </button>
-                  </div>
+                  {todo.completed && <CheckIcon />}
+                  {todo.inProgress && <span className="text-blue-400 text-[6px]">●</span>}
+                </button>
 
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={editTodoText}
-                      onChange={(e) => setEditTodoText(e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(e, handleSaveEdit)}
-                      className="flex-1 bg-white/10 border border-indigo-500/50 rounded px-2 py-0.5 text-sm text-white focus:outline-none"
-                      autoFocus
-                    />
-                  ) : (
-                    <span
-                      className={`flex-1 text-sm transition-all duration-300 ${
-                        todo.completed ? 'text-green-400 line-through' :
-                        todo.inProgress ? 'text-blue-400' :
-                        'text-white/80'
-                      }`}
-                      style={{
-                        textDecoration: todo.completed ? 'line-through' : 'none',
-                        textDecorationColor: todo.completed ? '#4ade80' : 'transparent'
-                      }}
-                    >
-                      {todo.text}
-                    </span>
-                  )}
-
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                    {isEditing ? (
-                      <>
-                        <button
-                          onClick={handleSaveEdit}
-                          className="text-green-400 hover:text-green-300 text-xs px-1.5 py-0.5"
-                          title="Save"
-                        >
-                          ✓
-                        </button>
-                        <button
-                          onClick={handleCancelEdit}
-                          className="text-red-400 hover:text-red-300 text-xs px-1.5 py-0.5"
-                          title="Cancel"
-                        >
-                          ✕
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => handleEditTodo(idx)}
-                          className="text-white/30 hover:text-white/60 text-xs px-1.5 py-0.5"
-                          title="Edit"
-                        >
-                          ✎
-                        </button>
-                        <button
-                          onClick={() => handleDeleteTodo(idx)}
-                          className="text-red-400/50 hover:text-red-400 text-xs px-1.5 py-0.5"
-                          title="Delete"
-                        >
-                          ✕
-                        </button>
-                      </>
-                    )}
-                  </div>
-
-                  <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded flex-shrink-0 ${
-                    todo.completed ? 'bg-green-500/30 text-green-300 border border-green-500/30' :
-                    todo.inProgress ? 'bg-blue-500/30 text-blue-300 border border-blue-500/30' :
-                    'bg-white/10 text-white/40 border border-white/10'
-                  }`}>
-                    {todo.completed ? 'DONE' : todo.inProgress ? 'IN PROG' : 'TODO'}
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={editTodoText}
+                    onChange={(e) => setEditTodoText(e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(e, handleSaveEdit)}
+                    className="bg-white/10 border border-indigo-500/50 rounded px-1.5 py-0.5 text-xs text-white focus:outline-none min-w-[80px]"
+                    autoFocus
+                  />
+                ) : (
+                  <span
+                    className={`text-xs transition-all duration-300 whitespace-nowrap ${
+                      todo.completed ? 'text-green-400 line-through' :
+                      todo.inProgress ? 'text-blue-400' :
+                      'text-white/80'
+                    }`}
+                    style={{
+                      textDecoration: todo.completed ? 'line-through' : 'none',
+                      textDecorationColor: todo.completed ? '#4ade80' : 'transparent'
+                    }}
+                  >
+                    {todo.text}
                   </span>
+                )}
+
+                <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                  {isEditing ? (
+                    <>
+                      <button
+                        onClick={handleSaveEdit}
+                        className="text-green-400 hover:text-green-300 text-[10px] px-1"
+                        title="Save"
+                      >
+                        ✓
+                      </button>
+                      <button
+                        onClick={handleCancelEdit}
+                        className="text-red-400 hover:text-red-300 text-[10px] px-1"
+                        title="Cancel"
+                      >
+                        ✕
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => handleToggleInProgress(idx)}
+                        className={`text-[8px] font-bold px-1 py-0.5 rounded transition-all ${
+                          todo.inProgress ? 'bg-blue-500 text-white' :
+                          todo.completed ? 'bg-green-500/20 text-green-400' :
+                          'bg-white/10 text-white/40 hover:bg-blue-500/20 hover:text-blue-400'
+                        }`}
+                        title="Mark as in progress"
+                      >
+                        IP
+                      </button>
+                      <button
+                        onClick={() => handleEditTodo(idx)}
+                        className="text-white/30 hover:text-white/60 text-[10px] px-1"
+                        title="Edit"
+                      >
+                        ✎
+                      </button>
+                      <button
+                        onClick={() => handleDeleteTodo(idx)}
+                        className="text-red-400/50 hover:text-red-400 text-[10px] px-1"
+                        title="Delete"
+                      >
+                        ✕
+                      </button>
+                    </>
+                  )}
                 </div>
-              );
-            })
+
+                <span className={`text-[7px] font-bold px-1 py-0.5 rounded flex-shrink-0 ${
+                  todo.completed ? 'bg-green-500/30 text-green-300 border border-green-500/30' :
+                  todo.inProgress ? 'bg-blue-500/30 text-blue-300 border border-blue-500/30' :
+                  'bg-white/10 text-white/40 border border-white/10'
+                }`}>
+                  {todo.completed ? 'DONE' : todo.inProgress ? 'PROG' : 'TODO'}
+                </span>
+              </div>
+            );
+          })}
+
+          {/* Add Task Button */}
+          {!isAdding ? (
+            <button
+              onClick={() => setShowAddTodo(prev => ({ ...prev, [stageIndex]: true }))}
+              className="flex items-center gap-1 px-2 py-1 rounded-full text-[10px] text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 hover:border-indigo-500/40 transition-all whitespace-nowrap"
+            >
+              + Add
+            </button>
+          ) : (
+            <div className="flex items-center gap-1">
+              <input
+                type="text"
+                value={newText}
+                onChange={(e) => setNewTodoText(prev => ({ ...prev, [stageIndex]: e.target.value }))}
+                onKeyDown={(e) => handleKeyDown(e, handleAddTodo)}
+                placeholder="New task..."
+                className="bg-white/10 border border-indigo-500/50 rounded px-2 py-0.5 text-xs text-white placeholder-white/40 focus:outline-none min-w-[100px]"
+                autoFocus
+              />
+              <button
+                onClick={handleAddTodo}
+                className="px-2 py-0.5 bg-indigo-500 text-white text-[10px] rounded hover:bg-indigo-600 transition-colors"
+              >
+                Add
+              </button>
+              <button
+                onClick={() => setShowAddTodo(prev => ({ ...prev, [stageIndex]: false }))}
+                className="px-2 py-0.5 bg-white/10 text-white/60 text-[10px] rounded hover:bg-white/20 transition-colors"
+              >
+                ✕
+              </button>
+            </div>
           )}
         </div>
-
-        {todos.length > 0 && todos.length < 5 && (
-          <div className="mt-2 flex flex-wrap gap-1">
-            {stage.suggestedTodos && stage.suggestedTodos
-              .filter((s: string) => !todos.some(t => t.text === s))
-              .slice(0, 2)
-              .map((suggestion: string, idx: number) => (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    setTodoItems(prev => ({
-                      ...prev,
-                      [stageIndex]: [...(prev[stageIndex] || []), { text: suggestion, completed: false, inProgress: false }]
-                    }));
-                  }}
-                  className="text-[10px] text-white/40 hover:text-white/60 bg-white/5 hover:bg-white/10 px-2 py-0.5 rounded-full border border-white/10 transition-all"
-                >
-                  + {suggestion}
-                </button>
-              ))}
-          </div>
-        )}
       </div>
     );
   };
@@ -2537,71 +2493,87 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
   return (
     <div className="text-center">
       <h2 className="text-xl font-bold text-indigo-300 mb-6">Customer Journey Map</h2>
-      <div className="bg-gradient-to-br from-slate-800/85 to-slate-900/95 rounded-2xl p-8 border border-indigo-500/20 overflow-x-auto">
-        <div className="relative min-w-[700px] py-8">
-          <div className="absolute top-[52px] left-12 right-12 h-1 rounded-full">
-            <div className="w-full h-full bg-gradient-to-r from-indigo-500 via-green-400 to-emerald-500" style={{ opacity: 0.3 }} />
+      
+      {/* Overall Progress */}
+      <div className="mb-6 bg-white/5 rounded-xl p-4 border border-white/10">
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <span className="text-sm font-semibold text-white/60">Overall Journey Progress</span>
+          <div className="flex-1 min-w-[100px]">
+            <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-500"
+                style={{
+                  width: `${stages.reduce((acc, _, idx) => acc + getStageProgress(idx), 0) / stages.length}%`,
+                  background: 'linear-gradient(90deg, #6366f1, #10b981)'
+                }}
+              />
+            </div>
           </div>
-          <div className="absolute top-10 left-0 text-white/30 text-xs font-semibold flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-indigo-400 inline-block"></span>
-            Start
-          </div>
-          <div className="absolute top-10 right-0 text-white/30 text-xs font-semibold flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
-            Complete
-          </div>
-          <div className="flex justify-between relative z-10 px-2">
+          <span className="text-sm font-bold text-white/80">
+            {Math.round(stages.reduce((acc, _, idx) => acc + getStageProgress(idx), 0) / stages.length)}%
+          </span>
+        </div>
+      </div>
+
+      <div className="bg-gradient-to-br from-slate-800/85 to-slate-900/95 rounded-2xl p-6 border border-indigo-500/20 overflow-x-auto">
+        <div className="relative min-w-[900px]">
+          {/* Timeline */}
+          <div className="flex justify-between items-start relative">
+            {/* Connecting line */}
+            <div className="absolute top-[30px] left-[30px] right-[30px] h-0.5 bg-gradient-to-r from-indigo-500 via-green-400 to-emerald-500 opacity-30" />
+            
             {stages.map((stage, idx) => {
               const isHovered = hoveredStage === idx;
               const progress = stage.progress || 0;
+              const stageCompletion = getStageProgress(idx);
               
               return (
                 <div 
                   key={idx} 
-                  className="flex flex-col items-center gap-3 cursor-pointer transition-all duration-300 group w-40"
+                  className="flex flex-col items-center gap-2 cursor-pointer transition-all duration-300 group"
+                  style={{ minWidth: '120px', maxWidth: '160px' }}
                   onMouseEnter={() => setHoveredStage(idx)}
                   onMouseLeave={() => setHoveredStage(null)}
                 >
+                  {/* Progress Circle */}
                   <div className="relative">
                     <ProgressDot progress={progress} isHovered={isHovered} />
-                    {isHovered && (
-                      <div 
-                        className="absolute inset-0 rounded-full"
-                        style={{
-                          boxShadow: '0 0 40px rgba(16,185,129,0.5), 0 0 80px rgba(16,185,129,0.2)',
-                          transform: 'scale(1.1)',
-                          zIndex: -1
-                        }}
-                      />
-                    )}
                     {progress === 100 && (
-                      <div className="absolute -top-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center text-white text-[10px] shadow-lg shadow-emerald-500/30">
+                      <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center text-white text-[8px] shadow-lg shadow-emerald-500/30">
                         <CheckIcon />
                       </div>
                     )}
                   </div>
                   
-                  <span className={`text-xs font-medium transition-all duration-300 ${isHovered ? 'text-green-400' : 'text-white/40'} bg-black/40 px-3 py-1 rounded-full`}>
+                  {/* Day and Name */}
+                  <span className={`text-[10px] font-medium transition-all duration-300 ${isHovered ? 'text-green-400' : 'text-white/40'} bg-black/40 px-2 py-0.5 rounded-full whitespace-nowrap`}>
                     Day {stage.day}
                   </span>
                   
-                  <span className={`text-xs font-bold transition-all duration-300 ${isHovered ? 'text-green-400 scale-105' : 'text-indigo-300'}`}>
+                  <span className={`text-[11px] font-bold transition-all duration-300 ${isHovered ? 'text-green-400 scale-105' : 'text-indigo-300'} text-center`}>
                     {stage.icon} {stage.name}
                   </span>
                   
-                  <span className={`text-xs text-center max-w-[100px] transition-all duration-300 ${isHovered ? 'text-white/80' : 'text-white/50'}`}>
+                  <span className="text-[10px] text-center text-white/50 leading-tight max-w-[120px]">
                     {stage.desc}
                   </span>
-                  
-                  <div className={`text-[10px] text-green-400/80 max-w-[140px] text-center transition-all duration-300 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full border border-green-500/20 ${
-                    isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
-                  }`}>
-                    💡 {stage.action}
-                  </div>
 
-                  <div className={`w-full transition-all duration-300 ${
-                    isHovered ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0 overflow-hidden pointer-events-none'
-                  }`}>
+                  {/* Stage Progress Indicator */}
+                  <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{
+                        width: `${stageCompletion}%`,
+                        background: stageCompletion === 100 ? '#10b981' : '#6366f1'
+                      }}
+                    />
+                  </div>
+                  <span className="text-[8px] text-white/30">
+                    {stageCompletion}% complete
+                  </span>
+
+                  {/* Todo List - Always visible below */}
+                  <div className="w-full mt-1">
                     <TodoList stageIndex={idx} />
                   </div>
                 </div>
@@ -2611,40 +2583,36 @@ const CustomerJourneyVisual = ({ plan }: { plan: string }) => {
         </div>
       </div>
       
-      <div className="mt-4 flex justify-center items-center gap-6 text-xs text-white/40 flex-wrap">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full border-2 border-indigo-500"></div>
+      {/* Legend */}
+      <div className="mt-4 flex justify-center items-center gap-4 text-[10px] text-white/40 flex-wrap">
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full border-2 border-indigo-500"></div>
           <span>In Progress</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full border-2 border-green-400" style={{ boxShadow: '0 0 12px rgba(16,185,129,0.3)' }}></div>
-          <span>Hover (Green Glow)</span>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 flex items-center justify-center text-[5px] text-white">✓</div>
+          <span>Complete</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-emerald-500 flex items-center justify-center text-[6px] text-white">✓</div>
-          <span>Complete (100%)</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full border-2 border-blue-400"></div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full border-2 border-blue-400"></div>
           <span>Task In Progress</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-green-400"></div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full bg-green-400"></div>
           <span>Task Completed</span>
         </div>
       </div>
 
-      <div className="mt-3 text-[10px] text-white/30 flex justify-center gap-6 flex-wrap">
-        <span>💡 Hover a stage to see its todo list</span>
-        <span>✓ Click checkbox to mark as completed (green line through text)</span>
-        <span>▶ Click "IP" to mark as in progress (blue text)</span>
-        <span>✎ Edit or delete tasks as needed</span>
-        <span>+ Add your own custom tasks</span>
+      {/* Instructions */}
+      <div className="mt-2 text-[9px] text-white/25 flex justify-center gap-4 flex-wrap">
+        <span>✓ Click checkbox to complete (green line-through)</span>
+        <span>▶ Click "IP" for in progress (blue)</span>
+        <span>✎ Edit or delete tasks</span>
+        <span>+ Add custom tasks</span>
       </div>
     </div>
   );
 };
-
 // 10. KPIs VISUAL
 const KPICards = ({ plan }: { plan: string }) => {
   const parseKPIs = (): (KPI & { 
